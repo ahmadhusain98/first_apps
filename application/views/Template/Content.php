@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?= $page ?></title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<?= base_url() ?>assets/fontawesome/css/all.min.css">
+
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Scripts -->
+    <script src="<?= base_url() ?>assets/plugins/jquery/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="<?= base_url() ?>assets/dist/css/adminlte.min.css">
+
+    <!-- sweetalert -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- animate -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Select2 js -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+
+    <!-- Bootstrap 4 -->
+    <script src="<?= base_url() ?>assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables  & Plugins -->
+    <script src="<?= base_url() ?>assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/jszip/jszip.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <link rel="icon" href="<?= base_url('assets/img/web/') . $web->logo ?>" type="image/ico">
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+
+
+    <!-- responsive -->
+    <style>
+        /* select2 */
+        .select2-selection__rendered {
+            line-height: 31px !important;
+        }
+
+        .select2-container .select2-selection--single {
+            height: 37px !important;
+        }
+
+        .select2-selection__arrow {
+            height: 37px !important;
+        }
+
+        .border-primary {
+            border: 1px solid #007bff;
+        }
+
+        .border-danger {
+            border: 1px solid #c82333;
+        }
+
+        /* For mobile phones: */
+        [class*="col-"] {
+            width: 100%;
+        }
+
+        @media only screen and (min-width: 768px) {
+
+            /* For desktop: */
+            .col-1 {
+                width: 8.33%;
+            }
+
+            .col-2 {
+                width: 16.66%;
+            }
+
+            .col-3 {
+                width: 25%;
+            }
+
+            .col-4 {
+                width: 33.33%;
+            }
+
+            .col-5 {
+                width: 41.66%;
+            }
+
+            .col-6 {
+                width: 50%;
+            }
+
+            .col-7 {
+                width: 58.33%;
+            }
+
+            .col-8 {
+                width: 66.66%;
+            }
+
+            .col-9 {
+                width: 75%;
+            }
+
+            .col-10 {
+                width: 83.33%;
+            }
+
+            .col-11 {
+                width: 91.66%;
+            }
+
+            .col-12 {
+                width: 100%;
+            }
+        }
+
+        .btn-circle {
+            width: 30px;
+            height: 30px;
+            padding: 6px 0px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.42857;
+        }
+    </style>
+
+    <?php
+    // $sess = $this->session->userdata('kode_user');
+    // $user_sess = $this->M_global->getData('user', ['kode_user' => $sess]);
+    // if ($user_sess->actived < 1) {
+    //     redirect('Auth/logout');
+    // }
+    ?>
+
+    <div class="wrapper">
+
+        <!-- Preloader -->
+        <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="<?= base_url() ?>assets/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+        </div>
+
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" type="button" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <span type="button" class="nav-link" id="time"></span>
+                </li>
+            </ul>
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+
+                <!-- Messages Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" type="button" readonly>
+                        <span class="badge badge-info"><?= 'Shift ~ ke: ' . $this->data["shift"] ?></span>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" type="button">
+                        <ion-icon name="chatbubbles-outline" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Perpesanan"></ion-icon>
+                        <span class="badge badge-danger navbar-badge">3</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <a type="button" class="dropdown-item">
+                            <!-- Message Start -->
+                            <div class="media">
+                                <img src="<?= base_url() ?>assets/dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                <div class="media-body">
+                                    <h3 class="dropdown-item-title">
+                                        John Pierce
+                                        <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
+                                    </h3>
+                                    <p class="text-sm">I got your message bro</p>
+                                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                                </div>
+                            </div>
+                            <!-- Message End -->
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a type="button" class="dropdown-item dropdown-footer">See All Messages</a>
+                    </div>
+                </li>
+                <!-- Notifications Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    <?php $sintak = $this->db->query("SELECT * FROM barang_out_header WHERE status_jual = 0 ORDER BY id DESC LIMIT 10")->result(); ?>
+                    <a class="nav-link" data-toggle="dropdown" type="button">
+                        <ion-icon name="notifications-outline" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Notifikasi"></ion-icon>
+                        <?php if (count($sintak) > 0) : ?>
+                            <span class="badge badge-warning navbar-badge"><?= number_format(count($sintak)) ?></span>
+                        <?php endif ?>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header"><?= number_format(count($sintak)) ?> Transaksi Belum Dibayar</span>
+                        <div class="dropdown-divider"></div>
+                        <a type="button" class="dropdown-item text-center">
+                            <?php
+                            if (count($sintak) > 0) :
+                                foreach ($sintak as $s) :
+                            ?>
+                                    <a type="button" onclick="getUrl('Kasir/form_kasir/0')" class="pl-3" style="text-decoration: none; font-size: 12px;">
+                                        <i class="fas fa-envelope"></i> <?= $s->invoice ?>
+                                    </a>
+                                <?php
+                                endforeach;
+                            else : ?>
+                                <span style="font-size: 12px; color: grey;">Tidak Ada Transaksi</span>
+                            <?php endif;
+                            ?>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a type="button" class="dropdown-item dropdown-footer" onclick="getUrl('Transaksi/barang_out')">Lihat Semua Penjualan</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" class="btn text-danger" style="background-color: transparent;" onclick="exit()" title="Keluar"><ion-icon name="power-outline"></ion-icon></button>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-image: url(<?= base_url() ?>assets/img/web/<?= $web->bg_theme ?>); background-position: center; background-size: cover;">
+            <!-- Brand Logo -->
+            <a type="button" onclick="getUrl('Home')" class="brand-link" style="backdrop-filter: blur(10px);">
+                <img src="<?= base_url('assets/img/web/') . $web->logo ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light"><?= $nama_apps ?></span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar" style="backdrop-filter: blur(10px);">
+                <!-- Sidebar user panel -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="<?= base_url('assets/user/') . $this->data["foto"] ?>" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info">
+                        <a type="button" onclick="getUrl('Profile')" class="d-block"><?= $this->data["nama"] ?></a>
+                    </div>
+                </div>
+
+                <!-- SidebarSearch Form -->
+                <!-- <div class="form-inline">
+                    <div class="input-group" data-widget="sidebar-search">
+                        <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-sidebar">
+                                <i class="fas fa-search fa-fw"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Sidebar -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <?php
+                        // ambil menu dari table m_menu kemudian tampung ke variable $menu
+                        $menu = $this->db->get('m_menu')->result();
+
+                        // loop $menu
+                        foreach ($menu as $m) :
+                            if ($m->url == $this->uri->segment(1)) { // jika url menu sama dengan segment 1 dari url
+                                // aktifkan
+                                $aktifUrl = 'active';
+                            } else { // selain itu
+                                // nonaktifkan
+                                $aktifUrl = '';
+                            }
+                        ?>
+                            <?php
+                            $cek_sm = $this->db->query('SELECT * FROM sub_menu WHERE id_menu = "' . $m->id . '"')->num_rows();
+                            if ($cek_sm < 1) :
+                            ?>
+                                <li class="nav-item">
+                                    <a type="button" class="nav-link <?= $aktifUrl ?>" onclick="getUrl('<?= $m->url ?>')">
+                                        &nbsp;<?= $m->icon ?>
+                                        <p>
+                                            <?= $m->nama ?>
+                                        </p>
+                                    </a>
+                                </li>
+                            <?php else : ?>
+                                <li class="nav-item">
+                                    <a type="button" class="nav-link <?= $aktifUrl ?>">
+                                        &nbsp;<?= $m->icon ?>
+                                        <p>
+                                            <?= $m->nama ?>
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <?php
+                                        $sub_menu = $this->db->get_where("sub_menu", ["id_menu" => $m->id])->result();
+                                        foreach ($sub_menu as $sm) :
+                                            $cek_submenu2 = $this->db->query("SELECT sm2.* FROM sub_menu2 sm2 JOIN sub_menu sm ON sm2.id_submenu = sm.id WHERE sm.url_submenu IS NULL AND sm2.id_submenu = '$sm->id'")->num_rows();
+                                        ?>
+                                            <li class="nav-item">
+                                                <?php if ($cek_submenu2 > 0) : ?>
+                                                    <a type="button" class="nav-link">
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $sm->icon ?>
+                                                        <p>
+                                                            <?php
+                                                            echo $sm->submenu;
+                                                            if ($cek_submenu2 > 0) :
+                                                            ?>
+                                                                <i class="right fas fa-angle-left"></i>
+                                                            <?php endif; ?>
+                                                        </p>
+                                                    </a>
+                                                    <ul class="nav nav-treeview">
+                                                        <?php
+                                                        $sub_menu2 = $this->db->get_where("sub_menu2", ["id_submenu" => $sm->id])->result();
+                                                        foreach ($sub_menu2 as $sm2) :
+                                                        ?>
+                                                            <li class="nav-item">
+                                                                <a type="button" class="nav-link" onclick="getUrl('<?= $m->url . '/' . $sm2->url_submenu2 ?>')">
+                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $sm2->icon ?>
+                                                                    <p><?= $sm2->nama ?></p>
+                                                                </a>
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                <?php else : ?>
+                                                    <a type="button" class="nav-link" onclick="getUrl('<?= $m->url . '/' . $sm->url_submenu ?>')">
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $sm->icon ?>
+                                                        <p>
+                                                            <?= $sm->submenu; ?>
+                                                        </p>
+                                                    </a>
+                                                <?php endif; ?>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </li>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- wrapper -->
+        <div class="content-wrapper" style="background-color: #171717;">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6"></div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a type="button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Tooltip on left" title="Beranda" onclick="getUrl('Home')" class="text-light"><ion-icon name="home-outline"></ion-icon></a></li>
+                                <?php if ($this->uri->segment(1) != 'Home') : ?>
+                                    <?php
+                                    $sub_menul = $this->db->query("SELECT * FROM sub_menu sm WHERE sm.id_menu IN (SELECT id FROM m_menu WHERE url = '" . $this->data["menu"] . "')")->num_rows();
+                                    if ($sub_menul > 0) :
+                                    ?>
+                                        <li class="breadcrumb-item active text-white"><?= $this->data["menu"] ?></li>
+                                        <li class="breadcrumb-item active text-white"><?= $page ?></li>
+                                    <?php else : ?>
+                                        <li class="breadcrumb-item active text-white"><?= $page ?></li>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- modal loading proses -->
+            <div class="modal fade" id="loading">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body text-center">
+                            <img src="<?= base_url() ?>assets/img/loading_2.gif" style="width: 100%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- body -->
+            <section class="content">
+                <div class="container-fluid">
+                    <?= $content ?>
+                    <br>
+                </div>
+            </section>
+        </div>
+
+        <!-- footer -->
+        <footer class="main-footer">
+            <strong>Copyright &copy; downtoup.dev</strong>
+            2024
+            <div class="float-right d-none d-sm-inline-block">
+                <b>Version</b> <?= $web_version ?> <button type="button" class="btn btn-danger btn-xs" onclick="clean_db()">Kosongkan Transaksi</button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ionicon -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <!-- myscript -->
+    <script>
+        // load pertama kali
+        const siteUrl = '<?= site_url() ?>';
+
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+        // load pertama kali saat sistem berjalan
+        $("#open_pass").hide();
+
+        $(".select2_global").select2({
+            placeholder: $(this).data('placeholder'),
+            width: '100%',
+            allowClear: true,
+        });
+
+        display_ct();
+
+        // fungsi clean db
+        function clean_db() {
+            Swal.fire({
+                title: "Kamu yakin?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, kosongkan!"
+            }).then((result) => {
+                if (result.isConfirmed) { // jika di konfirmasi "Ya"
+                    // arahkan ke fungsi logout di controller Auth
+                    $.ajax({
+                        url: siteUrl + 'Auth/clean_db',
+                        type: 'POST',
+                        dataType: 'JSON',
+                        success: function(result) {
+                            if (result.status == 1) {
+                                Swal.fire({
+                                    title: "Database",
+                                    text: "Berhasil di reset!",
+                                    icon: "success"
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "Database",
+                                    text: "Gagal di reset!",
+                                    icon: "info"
+                                });
+                            }
+                        },
+                        error: function(result) { // jika fungsi error
+                            // jalankan fungsi error
+                            error_proccess();
+                        }
+                    });
+                }
+            });
+        }
+
+        function display_c() {
+            var refresh = 1000; // Refresh rate in milli seconds
+            mytime = setTimeout('display_ct()', refresh)
+        }
+
+        function display_ct() {
+            var x = new Date()
+            var x1 = x.getMonth() + 1 + "/" + x.getDate() + "/" + x.getFullYear();
+            x1 = x1 + " - " + x.getHours() + ":" + x.getMinutes() + ":" + x.getSeconds();
+            document.getElementById('time').innerHTML = x1;
+            display_c();
+        }
+
+        // fungsi hyperlink js
+        function getUrl(url) {
+            location.href = siteUrl + url;
+        }
+
+        // fungsi tampil/sembunyi password
+        function pass() {
+            if (document.getElementById("password").type == "password") { // jika icon password gembok di klik
+                // ubah tipe password menjadi text
+                document.getElementById("password").type = "text";
+
+                // tampilkan icon buka
+                $("#open_pass").show();
+
+                // sembunyikan icon gembok
+                $("#lock_pass").hide();
+            } else { // selain itu
+                // ubah tipe password menjadi passwword
+                document.getElementById("password").type = "password";
+                // sembunyikan icon buka
+                $("#open_pass").hide();
+
+                // tampilkan icon gembok
+                $("#lock_pass").show();
+            }
+        }
+
+        // fungsi keluar sistem
+        function exit() {
+            Swal.fire({
+                title: "Kamu yakin?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, keluar!"
+            }).then((result) => {
+                if (result.isConfirmed) { // jika di konfirmasi "Ya"
+                    // arahkan ke fungsi logout di controller Auth
+                    getUrl('Auth/logout')
+                }
+            });
+        }
+
+        // notifikasi error
+        function error_proccess() {
+            Swal.fire({
+                title: "Error",
+                text: "Error dalam pemrosesan!",
+                icon: "error"
+            });
+            return;
+        }
+
+        // huruf besar diawal kata
+        function ubah_nama(nama, forid) {
+            // var nama_barang = nama.charAt(0).toUpperCase() + nama.slice(1);
+            str = nama.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                return letter.toUpperCase();
+            });
+            $("#" + forid).val(str);
+        }
+
+        // fungsi cek value harus berupa email
+        function validateEmail(email) {
+            var re = /\S+@\S+\.\S+/;
+            return re.test(email);
+        }
+
+        // cek email berdsasarkan email
+        function cekEmail(forid) {
+            if (validateEmail($('#' + forid).val()) == false) {
+                $("#loading").modal("hide");
+
+                Swal.fire("Email", "Format sudah valid?", "question");
+                return;
+            }
+        }
+
+        // cek panjang karakter
+        function cekLength(param, forid) {
+            if (forid == 'kodepos') { // jika id nya kodepos
+
+                // jalankan fungsi
+                if (param.length > 5) { // jika panjang karakter lebih dari 5
+                    // munculkan notif
+                    Swal.fire('Kode Pos', "Maksimal 5 digit", "question");
+                }
+
+                // ambil 5 karakter dari depan lalu lempar ke id-nya
+                $('#' + forid).val(param.slice(0, 5));
+            } else if (forid == 'nik') { // jika id nya nik
+
+                // jalankan fungsi
+                if (param.length != 16) { // jika panjang karakter lebih dari 5
+                    // munculkan notif
+                    Swal.fire('NIK', "Harus 16 digit", "question");
+                }
+
+                // ambil 5 karakter dari depan lalu lempar ke id-nya
+                $('#' + forid).val(param.slice(0, 16));
+
+            } else if (forid == 'npwp') { // jika id nya npwp
+
+                // jalankan fungsi
+                if (param.length != 16) { // jika panjang karakter lebih dari 5
+                    // munculkan notif
+                    Swal.fire('NPWP', "Harus 16 digit", "question");
+                }
+
+                // ambil 5 karakter dari depan lalu lempar ke id-nya
+                $('#' + forid).val(param.slice(0, 16));
+
+            } else if (forid == 'sip') { // jika id nya sip
+
+                // jalankan fungsi
+                if (param.length != 15) { // jika panjang karakter lebih dari 5
+                    // munculkan notif
+                    Swal.fire('SIP', "Harus 15 digit", "question");
+                }
+
+                // ambil 5 karakter dari depan lalu lempar ke id-nya
+                $('#' + forid).val(param.slice(0, 15));
+
+            }
+        }
+
+        // fungsi ambil alamat
+        function getAddress(param, forid) {
+            // ambil karakter by forid (nik)
+            var prov = param.slice(0, 2);
+            var kot = param.slice(0, 4);
+            var kec = param.slice(0, 6);
+
+            // jalankan fungsi
+            showAddress(prov, 'provinsi');
+            showAddress(kot, 'kabupaten');
+            showAddress(kec, 'kecamatan');
+        }
+
+        // fungsi menampilkan isi address
+        function showAddress(param, forid) {
+
+            if (param == '' || param == null || forid == '' || forid == null) {
+                return Swal.fire('Kesalahan', "Terdapat kesalahan saat memuat!, coba lagi", "question");
+            }
+
+            if (forid == 'provinsi') { // jika forid = provinsi
+                // isi table menjadi m_provinsi
+                forid2 = 'm_provinsi';
+            } else { // selain itu
+                // isi table berdasarkan lemparan
+                forid2 = forid;
+            }
+
+            // jalankan fungsi
+            $.ajax({
+                url: siteUrl + 'Master_show/getInfo/' + forid2 + '/' + param,
+                type: 'POST',
+                dataType: 'JSON',
+                success: function(result) { // jika fungsi berjalan
+                    $('#' + forid).html(`<option value="${result.id}">${result.text}</option>`);
+                },
+                error: function(result) { // jika fungsi error
+                    // jalankan fungsi error
+                    error_proccess();
+                }
+            });
+        }
+
+        // fungsi format Rupiah
+        function formatRp(num, forid) {
+            num = num.toString().replace(/\$|\,/g, '');
+
+            num = Math.ceil(num);
+
+            if (isNaN(num)) num = "0";
+
+            sign = (num == (num = Math.abs(num)));
+            num = Math.floor(num * 100 + 0.50000000001);
+            cents = num % 100;
+            num = Math.floor(num / 100).toString();
+
+            if (cents < 10) cents = "0" + cents;
+
+            for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3); i++) {
+                num = num.substring(0, num.length - (4 * i + 3)) + ',' +
+                    num.substring(num.length - (4 * i + 3));
+            }
+
+            var result = (((sign) ? '' : '-') + '' + num);
+            $('#' + forid).val(result);
+        }
+
+        // fungsi format Rupiah NoId
+        function formatRpNoId(num) {
+            num = num.toString().replace(/\$|\,/g, '');
+
+            num = Math.ceil(num);
+
+            if (isNaN(num)) num = "0";
+
+            sign = (num == (num = Math.abs(num)));
+            num = Math.floor(num * 100 + 0.50000000001);
+            cents = num % 100;
+            num = Math.floor(num / 100).toString();
+
+            if (cents < 10) cents = "0" + cents;
+
+            for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3); i++) {
+                num = num.substring(0, num.length - (4 * i + 3)) + ',' +
+                    num.substring(num.length - (4 * i + 3));
+            }
+
+            return (((sign) ? '' : '-') + '' + num);
+        }
+
+        // fungsi print
+        function print(url) {
+            window.open(`${siteUrl}Report/${url}/1`, '_blank');
+        }
+
+        function printsingle(url) {
+            window.open(`${siteUrl}${url}/1`, '_blank');
+        }
+
+        // datatable
+        $('#tableSederhana').DataTable({
+            "destroy": true,
+            "processing": true,
+            "responsive": true,
+            "serverSide": false,
+            "scrollCollapse": false,
+            "paging": true,
+            "oLanguage": {
+                "sEmptyTable": "<div class='text-center'>Data Kosong</div>",
+                "sInfoEmpty": "",
+                "sInfoFiltered": "",
+                "sSearch": "",
+                "sSearchPlaceholder": "Cari data...",
+                "sInfo": " Jumlah _TOTAL_ Data (_START_ - _END_)",
+                "sLengthMenu": "_MENU_ Baris",
+                "sZeroRecords": "<div class='text-center'>Data Kosong</div>",
+                "oPaginate": {
+                    "sPrevious": "Sebelumnya",
+                    "sNext": "Berikutnya"
+                }
+            },
+            "aLengthMenu": [
+                [5, 15, 20, -1],
+                [5, 15, 20, "Semua"]
+            ],
+            "columnDefs": [{
+                "targets": [-1],
+                "orderable": false,
+            }, ],
+        });
+
+        <?php if (!empty($list_data)) : ?>
+            table.DataTable({
+                "destroy": true,
+                "processing": true,
+                "responsive": true,
+                "serverSide": true,
+                "order": [],
+                "ajax": {
+                    "url": siteUrl + '<?= $list_data . "/" . $param1 ?>',
+                    "type": "POST",
+                },
+                "scrollCollapse": false,
+                "paging": true,
+                "oLanguage": {
+                    "sEmptyTable": "<div class='text-center'>Data Kosong</div>",
+                    "sInfoEmpty": "",
+                    "sInfoFiltered": "",
+                    "sSearch": "",
+                    "sSearchPlaceholder": "Cari data...",
+                    "sInfo": " Jumlah _TOTAL_ Data (_START_ - _END_)",
+                    "sLengthMenu": "_MENU_ Baris",
+                    "sZeroRecords": "<div class='text-center'>Data Kosong</div>",
+                    "oPaginate": {
+                        "sPrevious": "Sebelumnya",
+                        "sNext": "Berikutnya"
+                    }
+                },
+                "aLengthMenu": [
+                    [5, 15, 20, -1],
+                    [5, 15, 20, "Semua"]
+                ],
+                "columnDefs": [{
+                    "targets": [-1],
+                    "orderable": false,
+                }, ],
+            });
+
+            // fungsi filter tanggal dan parameter jika ada (jika tidak ada di kosongkan)
+            function filter(x = '') {
+                var dari = $('#dari').val();
+                var sampai = $('#sampai').val();
+                if (x == '' || x == null) {
+                    var parameterString = `2~${dari}~${sampai}`;
+                } else {
+                    var parameterString = `2~${dari}~${sampai}/${x}`;
+                }
+                table.DataTable().ajax.url(siteUrl + '<?= $list_data ?>' + parameterString).load();
+            }
+        <?php endif; ?>
+
+        function reloadTable() {
+            if ($.fn.DataTable.isDataTable(table)) {
+                table.DataTable().ajax.reload(null, false);
+            }
+        }
+
+        // fungsi select2 global
+        // inisial
+        initailizeSelect2_provinsi();
+        initailizeSelect2_kabupaten(param = '');
+        initailizeSelect2_kecamatan(param = '');
+        initailizeSelect2_member();
+        initailizeSelect2_user();
+        initailizeSelect2_poli();
+        initailizeSelect2_dokter_poli(param = 'K00001');
+        initailizeSelect2_ruang();
+        initailizeSelect2_supplier();
+        initailizeSelect2_gudang_int();
+        initailizeSelect2_gudang_log();
+        initailizeSelect2_pekerjaan();
+        initailizeSelect2_agama();
+        initailizeSelect2_pendidikan();
+        initailizeSelect2_pendaftaran(param = 'K00001');
+        initailizeSelect2_penjualan();
+        initailizeSelect2_penjualan_retur();
+        initailizeSelect2_bank();
+        initailizeSelect2_tipe_bank();
+        initailizeSelect2_jual_for_retur();
+        initailizeSelect2_promo(min_buy = '0');
+
+        // fungsi
+        function initailizeSelect2_provinsi() {
+            $(".select2_provinsi").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Provinsi',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataProvinsi',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function select2_default(param) {
+            $("." + param).select2({
+                placeholder: $(this).data('placeholder'),
+                width: '100%',
+            });
+        }
+
+        function initailizeSelect2_kabupaten(param) {
+            if (param == '' || param == null || param == 'null') { // jika parameter kosong/ null
+                // jalankan fungsi select2_default
+                select2_default('select2_kabupaten');
+            } else { // selain itu
+                // jalan fungsi select2 asli
+                $(".select2_kabupaten").select2({
+                    allowClear: true,
+                    multiple: false,
+                    placeholder: '~ Pilih Kabupaten',
+                    dropdownAutoWidth: true,
+                    width: '100%',
+                    language: {
+                        inputTooShort: function() {
+                            return 'Ketikan Nomor minimal 1 huruf';
+                        }
+                    },
+                    ajax: {
+                        url: siteUrl + 'Select2_master/dataKabupaten/' + param,
+                        type: 'POST',
+                        dataType: 'JSON',
+                        delay: 100,
+                        data: function(result) {
+                            return {
+                                searchTerm: result.term
+                            };
+                        },
+
+                        processResults: function(result) {
+                            return {
+                                results: result
+                            };
+                        },
+                        cache: true
+                    }
+                });
+            }
+        }
+
+        function initailizeSelect2_kecamatan(param) {
+            if (param == '' || param == null || param == 'null') { // jika parameter kosong/ null
+                // jalankan fungsi select2_default
+                select2_default('select2_kecamatan');
+            } else { // selain itu
+                // jalan fungsi select2 asli
+                $(".select2_kecamatan").select2({
+                    allowClear: true,
+                    multiple: false,
+                    placeholder: '~ Pilih Kecamatan',
+                    dropdownAutoWidth: true,
+                    width: '100%',
+                    language: {
+                        inputTooShort: function() {
+                            return 'Ketikan Nomor minimal 1 huruf';
+                        }
+                    },
+                    ajax: {
+                        url: siteUrl + 'Select2_master/dataKecamatan/' + param,
+                        type: 'POST',
+                        dataType: 'JSON',
+                        delay: 100,
+                        data: function(result) {
+                            return {
+                                searchTerm: result.term
+                            };
+                        },
+
+                        processResults: function(result) {
+                            return {
+                                results: result
+                            };
+                        },
+                        cache: true
+                    }
+                });
+            }
+        }
+
+        function initailizeSelect2_member() {
+            $(".select2_member").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Member',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataMember',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_user() {
+            $(".select2_user").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih User',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataUser',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_poli() {
+            $(".select2_poli").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Poli',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataPoli',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_dokter_poli(param) {
+            if (param == '' || param == null || param == 'null') { // jika parameter kosong/ null
+                // jalankan fungsi select2_default
+                select2_default('select2_dokter_poli');
+            } else { // selain itu
+                // jalan fungsi select2 asli
+                $(".select2_dokter_poli").select2({
+                    allowClear: true,
+                    multiple: false,
+                    placeholder: '~ Pilih Dokter',
+                    dropdownAutoWidth: true,
+                    width: '100%',
+                    language: {
+                        inputTooShort: function() {
+                            return 'Ketikan Nomor minimal 1 huruf';
+                        }
+                    },
+                    ajax: {
+                        url: siteUrl + 'Select2_master/dataDokterPoli/' + param,
+                        type: 'POST',
+                        dataType: 'JSON',
+                        delay: 100,
+                        data: function(result) {
+                            return {
+                                searchTerm: result.term
+                            };
+                        },
+
+                        processResults: function(result) {
+                            return {
+                                results: result
+                            };
+                        },
+                        cache: true
+                    }
+                });
+            }
+        }
+
+        function initailizeSelect2_ruang() {
+            $(".select2_ruang").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Ruang',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataRuang',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_supplier() {
+            $(".select2_supplier").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Supplier',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataSupplier',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_gudang_int() {
+            $(".select2_gudang_int").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Gudang',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataGudangInt',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_gudang_log() {
+            $(".select2_gudang_log").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Gudang',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataGudangLog',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_pekerjaan() {
+            $(".select2_pekerjaan").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Pekerjaan',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataPekerjaan',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_agama() {
+            $(".select2_agama").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Agama',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataAgama',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_pendidikan() {
+            $(".select2_pendidikan").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Pendidikan',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataPendidikan',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_pendaftaran(param) {
+            $(".select2_pendaftaran").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Pendaftaran',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataPendaftaran/' + param,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_penjualan() {
+            $(".select2_penjualan").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Penjualan',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataPenjualan',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_penjualan_retur() {
+            $(".select2_penjualan_retur").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Retur Jual',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataReturJual',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_bank() {
+            $(".select2_bank").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Bank',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataBank',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_tipe_bank() {
+            $(".select2_tipe_bank").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Tipe Bank',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataTipeBank',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_jual_for_retur() {
+            $(".select2_jual_for_retur").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Penjualan Untuk Di Retur',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataJualForRetur',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_promo(min_buy) {
+            $(".select2_promo").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Promo',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataPromo/' + min_buy,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+    </script>
+
+    <!-- AdminLTE App -->
+    <script src="<?= base_url() ?>assets/dist/js/adminlte.min.js"></script>
+
+    <!-- AdminLTE for demo purposes -->
+    <script src="<?= base_url() ?>assets/dist/js/demo.js"></script>
+</body>
+
+</html>

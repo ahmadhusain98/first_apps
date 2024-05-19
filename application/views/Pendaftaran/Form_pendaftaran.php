@@ -1,0 +1,397 @@
+<form method="post" id="form_pendaftaran">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"># Form Pendaftaran</span>
+                    <span class="float-right"><button type="button" class="btn btn-sm btn-success" onclick="getUrl('Health/form_daftar/0')"><ion-icon name="person-add-outline"></ion-icon> Member Baru</button></span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="No. Transaksi" placeholder="No. Transaksi (Otomatis)" id="no_trx" name="no_trx" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_trx : '') ?>" readonly>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <ion-icon name="id-card-outline"></ion-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="No. Antrian" placeholder="No. Antrian (Otomatis)" id="no_antrian" name="no_antrian" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_antrian : '') ?>" readonly>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <ion-icon name="hand-left-outline"></ion-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <select name="kode_member" id="kode_member" class="form-control select2_member" data-placeholder="~ Cari Member" onchange="getRiwayat(this.value)">
+                                    <?php
+                                    if (!empty($data_pendaftaran)) :
+                                        $member = $this->M_global->getData('member', ['kode_member' => $data_pendaftaran->kode_member]);
+                                        echo '<option value="' . $member->kode_member . '">' . $member->kode_member . ' ~ ' . $member->nama . '</option>';
+                                    endif;
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <select name="kode_poli" id="kode_poli" class="form-control select2_poli" data-placeholder="~ Pilih Poli" onchange="getDokter(this.value)">
+                                    <?php
+                                    if (!empty($data_pendaftaran)) :
+                                        $poli = $this->M_global->getData('m_poli', ['kode_poli' => $data_pendaftaran->kode_poli]);
+                                        echo '<option value="' . $poli->kode_poli . '">' . $poli->kode_poli . ' ~ ' . $poli->keterangan . '</option>';
+                                    endif;
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group mb-3">
+                                        <input type="date" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Tgl Masuk" placeholder="Tgl Masuk" id="tgl_masuk" name="tgl_masuk" value="<?= (!empty($data_pendaftaran) ? date('Y-m-d', strtotime($data_pendaftaran->tgl_daftar)) : date('Y-m-d')) ?>" readonly>
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <ion-icon name="calendar-number-outline"></ion-icon>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group mb-3">
+                                        <input type="time" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Jam Masuk" placeholder="Jam Masuk" id="jam_masuk" name="jam_masuk" value="<?= (!empty($data_pendaftaran) ? date('H:i:s', strtotime($data_pendaftaran->jam_daftar)) : date('H:i:s')) ?>" readonly>
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <ion-icon name="time-outline"></ion-icon>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <select name="kode_dokter" id="kode_dokter" class="form-control select2_dokter_poli" data-placeholder="~ Pilih Dokter">
+                                    <?php
+                                    if (!empty($data_pendaftaran)) :
+                                        $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $data_pendaftaran->kode_dokter]);
+                                        echo '<option value="' . $dokter->kode_dokter . '">' . $dokter->kode_dokter . ' ~ ' . $dokter->nama . '</option>';
+                                    endif;
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <select name="kode_ruang" id="kode_ruang" class="form-control select2_ruang" data-placeholder="~ Pilih Ruang">
+                                    <?php
+                                    if (!empty($data_pendaftaran)) :
+                                        $ruang = $this->M_global->getData('m_ruang', ['kode_ruang' => $data_pendaftaran->kode_ruang]);
+                                        echo '<option value="' . $ruang->kode_ruang . '">' . $ruang->kode_ruang . ' ~ ' . $ruang->keterangan . '</option>';
+                                    endif;
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Health/pendaftaran')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
+                            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_pendaftaran) ? 'Perbarui' : 'Simpan') ?></button>
+                            <?php if (!empty($data_pendaftaran)) : ?>
+                                <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Health/form_pendaftaran/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                            <?php else : ?>
+                                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+                            <?php endif ?>
+                            <button type="button" class="btn btn-primary float-right btn-sm mr-2" onclick="updateMember()" id="btnUMember"><ion-icon name="create-outline"></ion-icon> Update Data Member</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <div class="h4 font-weight-bold"># Riwayat Member</div>
+            </div>
+            <div class="card-body">
+                <div class="ro">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-bordered" id="tableRiwayat">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>#</th>
+                                        <th>No. Transaksi</th>
+                                        <th>Tgl/Jam Daftar</th>
+                                        <th>Tgl/Jam Keluar</th>
+                                        <th>Poli</th>
+                                        <th>Dokter</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bodyRiwayat">
+                                    <?php if (!empty($data_pendaftaran)) : ?>
+                                        <?php $no = 1;
+                                        foreach ($riwayat as $r) : ?>
+                                            <tr>
+                                                <td><?= $no ?></td>
+                                                <td><?= $r->no_trx ?></td>
+                                                <td><?= date('Y-m-d', strtotime($r->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($r->jam_daftar)) ?></td>
+                                                <td><?= '<span class="text-center">' . (($r->status_trx < 1) ? '-' : date('d/m/Y', strtotime($r->tgl_keluar)) . ' ~ ' . date('H:i:s', strtotime($r->jam_keluar))) . '</>' ?></td>
+                                                <td><?= $this->M_global->getData('m_poli', ['kode_poli' => $r->kode_poli])->keterangan ?></td>
+                                                <td><?= $this->M_global->getData('dokter', ['kode_dokter' => $r->kode_dokter])->nama ?></td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getDetail('<?= $r->no_trx ?>')"><ion-icon name="information-circle-outline"></ion-icon></button>
+                                                </td>
+                                            </tr>
+                                        <?php $no++;
+                                        endforeach; ?>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // variable
+    var table = $('#tableRiwayat');
+    var body = $('#bodyRiwayat');
+    var no_trx = $('#no_trx');
+    var kode_member = $('#kode_member');
+    var kode_poli = $('#kode_poli');
+    var kode_dokter = $('#kode_dokter');
+    var kode_ruang = $('#kode_ruang');
+
+    const form = $('#form_pendaftaran');
+    const btnSimpan = $('#btnSimpan');
+
+    // fungsi get dokter berdasarkan kode poli
+    function getDokter(kode_poli) {
+        kode_dokter.empty();
+
+        if (kode_poli == '' || kode_poli == null) { // jika kode poli kosong/ null
+            // tampilkan notif
+            Swal.fire("Poli", "Sudah dipilih?", "question");
+            // set param jadi kosong
+            var param = '';
+        } else {
+            // set param menjadi kode poli
+            var param = kode_poli;
+        }
+
+        // jalankan select2 berdasarkan param
+        initailizeSelect2_dokter_poli(param);
+    }
+
+    // fungsi save/update
+    function save() {
+        btnSimpan.attr('disabled', true);
+
+        if (kode_member.val() == '' || kode_member.val() == null) { // jika kode_member kosong/ null
+            btnSimpan.attr('disabled', false);
+
+            return Swal.fire("Member", "Sudah dipilih?", "question");
+        }
+
+        if (kode_poli.val() == '' || kode_poli.val() == null) { // jika kode_poli kosong/ null
+            btnSimpan.attr('disabled', false);
+
+            return Swal.fire("Poli", "Sudah dipilih?", "question");
+        }
+
+        if (kode_dokter.val() == '' || kode_dokter.val() == null) { // jika kode_dokter kosong/ null
+            btnSimpan.attr('disabled', false);
+
+            return Swal.fire("Dokter", "Sudah dipilih?", "question");
+        }
+
+        if (kode_ruang.val() == '' || kode_ruang.val() == null) { // jika kode_ruang kosong/ null
+            btnSimpan.attr('disabled', false);
+
+            return Swal.fire("Ruang", "Sudah dipilih?", "question");
+        }
+
+        if (no_trx.val() == '' || no_trx.val() == null) { // jika kode no_trx kosong/ null
+            // isi param = 1
+            var param = 1;
+        } else { // selain itu
+            // isi param = 2
+            var param = 2;
+        }
+
+        // jalankan proses cek logistik
+        if (param == 1) {
+            $.ajax({
+                url: siteUrl + 'Health/cekStatusMember',
+                type: 'POST',
+                dataType: 'JSON',
+                data: form.serialize(),
+                success: function(result) { // jika fungsi berjalan dengan baik
+                    if (result.status == 1) { // jika mendapatkan respon 1
+                        // jalankan fungsi proses berdasarkan param
+                        proses(param);
+                    } else { // selain itu
+                        btnSimpan.attr('disabled', false);
+
+                        Swal.fire("Member", "Dengan ID <b>" + result.kode_member + "</b> sudah terdaftar!, silahkan selesaikan dahulu", "info");
+                    }
+                },
+                error: function(result) { // jika fungsi error
+                    btnSimpan.attr('disabled', false);
+
+                    $("#loading").modal("hide");
+
+                    error_proccess();
+                }
+            });
+        } else {
+            proses(param);
+        }
+    }
+
+    // fungsi proses
+    function proses(param) {
+        $("#loading").modal("show");
+
+        if (param == 1) { // jika param 1 berarti insert/tambah
+            var message = 'dibuat!';
+        } else { // selain itu berarti update/ubah
+            var message = 'diperbarui!';
+        }
+
+        // jalankan proses dengan param insert/update
+        $.ajax({
+            url: siteUrl + 'Health/pendaftaran_proses/' + param,
+            type: "POST",
+            data: form.serialize(),
+            dataType: "JSON",
+            success: function(result) { // jika fungsi berjalan dengan baik
+                btnSimpan.attr('disabled', false);
+
+                if (result.status == 1) { // jika mendapatkan respon 1
+                    $("#loading").modal("hide");
+
+                    Swal.fire("Pendaftaran", "Berhasil " + message, "success").then(() => {
+                        question_cetak(result.no_trx);
+                    });
+                } else { // selain itu
+                    $("#loading").modal("hide");
+
+                    Swal.fire("Pendaftaran", "Gagal " + message + ", silahkan dicoba kembali", "info");
+                }
+            },
+            error: function(result) { // jika fungsi error
+                btnSimpan.attr('disabled', false);
+
+                $("#loading").modal("hide");
+
+                error_proccess();
+            }
+        });
+    }
+
+    function question_cetak(x) {
+        Swal.fire({
+            title: "Cetak Bukti?",
+            text: 'Cetak bukti pendaftaran!',
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Cetak",
+            cancelButtonText: "Tidak!"
+        }).then((result) => {
+            if (result.isConfirmed) { // jika yakin
+                window.open(siteUrl + 'Health/print_pendaftaran/' + x, '_blank');
+                getUrl('Health/pendaftaran');
+            } else {
+                getUrl('Health/pendaftaran');
+            }
+        });
+    }
+
+    // fungsi ambil riwayat
+    function getRiwayat(kode_member) {
+        if (kode_member == '' || kode_member == null) { // jika kode_member kosong/ null
+            // kosongkan body
+            return body.empty();
+        }
+
+        // kosongkan body
+        body.empty();
+
+        // jalankan fungsi
+        $.ajax({
+            url: siteUrl + 'Health/getRiwayat/' + kode_member,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(result) { // jika fungsi berjalan
+                var no = 1;
+
+                // loop hasil
+                $.each(result, function(index, value) {
+                    if (value.tgl_keluar == null) { // jika tgl keluarnya null
+                        // beri nilai minus/ strip
+                        var keluar = "-";
+                    } else { // selain itu
+                        // beri nilai sesuai record db
+                        var keluar = value.tgl_keluar + ' ~ ' + value.jam_keluar;
+                    }
+
+                    // tampilkan ke bodyRiwayat
+                    body.append(`<tr>
+                        <td>${no}</td>
+                        <td>${value.no_trx}</td>
+                        <td>${value.tgl_daftar} ~ ${value.jam_daftar}</td>
+                        <td>${keluar}</td>
+                        <td>${value.nama_poli}</td>
+                        <td>${value.nama_dokter}</td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getDetail('${value.no_trx}')"><ion-icon name="information-circle-outline"></ion-icon></button>
+                        </td>
+                    </tr>`);
+                    no++;
+                });
+            },
+            error: function(result) { // jika fungsi error
+
+                // jalankan fungsi error
+                error_proccess();
+            }
+        });
+    }
+
+    // fungsi update data member
+    function updateMember() {
+        var param = kode_member.val();
+        if (param == '' || param == null) {
+            return Swal.fire("Member", "Sudah dipilih?", "question");
+        }
+
+        getUrl('Health/form_daftar/' + param);
+    }
+
+    // fungsi lihat detail
+    function getDetail(param) {}
+</script>
