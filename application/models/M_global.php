@@ -25,6 +25,12 @@ class M_global extends CI_Model
         return $this->db->get_where($table, $kondisi)->num_rows();
     }
 
+    // fungsi cek jumlah data
+    function jumDataResult($table)
+    {
+        return $this->db->get($table)->num_rows();
+    }
+
     // fungsi insert data
     function insertData($table, $isi)
     {

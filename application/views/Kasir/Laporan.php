@@ -16,6 +16,7 @@
                                         <optgroup label="Jenis Laporan">
                                             <option value="1">1) Penjualan</option>
                                             <option value="2">2) Retur Penjualan</option>
+                                            <option value="3">3) Laporan Penjualan Poli</option>
                                         </optgroup>
                                     </select>
                                 </div>
@@ -68,6 +69,22 @@
 
     // fungsi cetak
     function cetak(param) {
+        if (laporan.val() == '' || laporan.val() == null) { // jika laporan null/ kosong
+            return Swal.fire("Laporan", "Form sudah diisi?", "question");
+        }
+
+        if (dari.val() == '' || dari.val() == null) { // jika dari null/ kosong
+            return Swal.fire("Periode Dari", "Form sudah diisi?", "question");
+        }
+
+        if (sampai.val() == '' || sampai.val() == null) { // jika sampai null/ kosong
+            return Swal.fire("Periode Sampai", "Form sudah diisi?", "question");
+        }
+
+        if (kode_user.val() == '' || kode_user.val() == null) { // jika kode_user null/ kosong
+            return Swal.fire("User", "Form sudah diisi?", "question");
+        }
+
         var parameterString = `/${param}?laporan=${laporan.val()}&dari=${dari.val()}&sampai=${sampai.val()}&kode_user=${kode_user.val()}`;
         window.open(`${siteUrl}Kasir/report_print${parameterString}`, '_blank');
     }

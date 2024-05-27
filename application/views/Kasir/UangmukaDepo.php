@@ -13,6 +13,21 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        <div class="col-md-6 offset-6 col-12">
+                            <div class="row float-right">
+                                <div class="col-md-5 col-5 mb-3">
+                                    <input type="date" name="dari" id="dari" class="form-control" value="<?= date('Y-m-d') ?>">
+                                </div>
+                                <div class="col-md-5 col-5 mb-3">
+                                    <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
+                                </div>
+                                <div class="col-md-2 col-2 mb-3">
+                                    <button type="button" class="btn btn-secondary btn-sm float-right" onclick="filter()" title="Filter" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom"><ion-icon name="filter-outline"></ion-icon></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover table-bordered" id="tableUangMukaDepo" width="100%">

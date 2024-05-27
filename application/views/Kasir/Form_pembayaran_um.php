@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card shadow">
-                <div class="card-header font-weight-bold h4"># Form Pembayaran <?= (($param2) ? 'Retur' : ''); ?></div>
+                <div class="card-header font-weight-bold h4"># Form Deposit</div>
                 <div class="card-body">
                     <div class="card shadow">
                         <div class="card-header h5"># Form</div>
@@ -221,12 +221,12 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Kasir')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Kasir/deposit_um')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
                         </div>
                         <div class="col-md-6">
                             <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_pembayaran) ? 'Perbarui' : 'Simpan') ?></button>
                             <?php if (!empty($data_pembayaran)) : ?>
-                                <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Kasir/form_kasir/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                                <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Kasir/form_uangmuka/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
                             <?php else : ?>
                                 <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
                             <?php endif ?>
@@ -260,9 +260,6 @@
     <?php else :  ?>
         document.getElementById('cek_cash').checked = true;
         fortableCard.hide();
-        <?php if (!$param2) : ?>
-            btnSimpan.attr('disabled', true);
-        <?php endif;  ?>
     <?php endif;  ?>
 
     function cek_cc(isi) {

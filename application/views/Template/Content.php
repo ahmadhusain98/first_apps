@@ -235,7 +235,7 @@
                             if (count($sintak) > 0) :
                                 foreach ($sintak as $s) :
                             ?>
-                                    <a type="button" onclick="getUrl('Kasir/form_kasir/0')" class="pl-3" style="text-decoration: none; font-size: 12px;">
+                                    <a type="button" href="<?= site_url('Kasir/form_kasir/0') ?>" class="pl-3" style="text-decoration: none; font-size: 12px;">
                                         <i class="fas fa-envelope"></i> <?= $s->invoice ?>
                                     </a>
                                 <?php
@@ -246,7 +246,7 @@
                             ?>
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a type="button" class="dropdown-item dropdown-footer" onclick="getUrl('Transaksi/barang_out')">Lihat Semua Penjualan</a>
+                        <a type="button" class="dropdown-item dropdown-footer" href="<?= site_url('Transaksi/barang_out') ?>">Lihat Semua Penjualan</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -259,7 +259,7 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-image: url(<?= base_url() ?>assets/img/web/<?= $web->bg_theme ?>); background-position: center; background-size: cover;">
             <!-- Brand Logo -->
-            <a type="button" onclick="getUrl('Home')" class="brand-link" style="backdrop-filter: blur(10px);">
+            <a type="button" href="<?= site_url('Home') ?>" class="brand-link" style="backdrop-filter: blur(10px);">
                 <img src="<?= base_url('assets/img/web/') . $web->logo ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light"><?= $nama_apps ?></span>
             </a>
@@ -272,7 +272,7 @@
                         <img src="<?= base_url('assets/user/') . $this->data["foto"] ?>" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a type="button" onclick="getUrl('Profile')" class="d-block"><?= $this->data["nama"] ?></a>
+                        <a type="button" href="<?= site_url('Profile') ?>" class="d-block"><?= $this->data["nama"] ?></a>
                     </div>
                 </div>
 
@@ -351,7 +351,7 @@
                                                         foreach ($sub_menu2 as $sm2) :
                                                         ?>
                                                             <li class="nav-item">
-                                                                <a type="button" class="nav-link" onclick="getUrl('<?= $m->url . '/' . $sm2->url_submenu2 ?>')">
+                                                                <a type="button" class="nav-link" href="<?= site_url($m->url . '/' . $sm2->url_submenu2) ?>">
                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $sm2->icon ?>
                                                                     <p><?= $sm2->nama ?></p>
                                                                 </a>
@@ -359,7 +359,7 @@
                                                         <?php endforeach; ?>
                                                     </ul>
                                                 <?php else : ?>
-                                                    <a type="button" class="nav-link" onclick="getUrl('<?= $m->url . '/' . $sm->url_submenu ?>')">
+                                                    <a type="button" class="nav-link" href="<?= site_url($m->url . '/' . $sm->url_submenu) ?>">
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $sm->icon ?>
                                                         <p>
                                                             <?= $sm->submenu; ?>

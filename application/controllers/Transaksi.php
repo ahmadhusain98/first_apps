@@ -1099,39 +1099,39 @@ class Transaksi extends CI_Controller
                     </tr>';
 
                     // detail barang
-                    $detail = $this->M_global->getDataResult('barang_in_detail', ['invoice' => $h->invoice]);
+                    $detail   = $this->M_global->getDataResult('barang_in_detail', ['invoice' => $h->invoice]);
 
-                    $no = 1;
-                    $tdiskon = 0;
-                    $tpajak = 0;
-                    $ttotal = 0;
+                    $no       = 1;
+                    $tdiskon  = 0;
+                    $tpajak   = 0;
+                    $ttotal   = 0;
                     foreach ($detail as $d) {
-                        $tdiskon += $d->discrp;
-                        $tpajak += $d->pajakrp;
-                        $ttotal += $d->jumlah;
+                        $tdiskon    += $d->discrp;
+                        $tpajak     += $d->pajakrp;
+                        $ttotal     += $d->jumlah;
 
                         if ($param == 1) {
-                            $harga = number_format($d->harga);
-                            $qty = number_format($d->qty);
-                            $discpr = number_format($d->discpr);
-                            $discrp = number_format($d->discrp);
-                            $pajak = number_format($d->pajakrp);
-                            $jumlah = number_format($d->jumlah);
+                            $harga    = number_format($d->harga);
+                            $qty      = number_format($d->qty);
+                            $discpr   = number_format($d->discpr);
+                            $discrp   = number_format($d->discrp);
+                            $pajak    = number_format($d->pajakrp);
+                            $jumlah   = number_format($d->jumlah);
 
                             $tdiskonx = number_format($tdiskon);
-                            $tpajakx = number_format($tpajak);
-                            $ttotalx = number_format($ttotal);
+                            $tpajakx  = number_format($tpajak);
+                            $ttotalx  = number_format($ttotal);
                         } else {
-                            $harga = ceil($d->harga);
-                            $qty = ceil($d->qty);
-                            $discpr = ceil($d->discpr);
-                            $discrp = ceil($d->discrp);
-                            $pajak = ceil($d->pajakrp);
-                            $jumlah = ceil($d->jumlah);
+                            $harga    = ceil($d->harga);
+                            $qty      = ceil($d->qty);
+                            $discpr   = ceil($d->discpr);
+                            $discrp   = ceil($d->discrp);
+                            $pajak    = ceil($d->pajakrp);
+                            $jumlah   = ceil($d->jumlah);
 
                             $tdiskonx = ceil($tdiskon);
-                            $tpajakx = ceil($tpajak);
-                            $ttotalx = ceil($ttotal);
+                            $tpajakx  = ceil($tpajak);
+                            $ttotalx  = ceil($ttotal);
                         }
                         $body .= '<tr>
                             <td style="border: 1px solid black;">' . $no . '</td>
@@ -1248,39 +1248,39 @@ class Transaksi extends CI_Controller
                 </tr>';
 
                 // detail barang
-                $detail = $this->M_global->getDataResult('barang_in_retur_detail', ['invoice' => $h->invoice]);
+                $detail   = $this->M_global->getDataResult('barang_in_retur_detail', ['invoice' => $h->invoice]);
 
-                $no = 1;
-                $tdiskon = 0;
-                $tpajak = 0;
-                $ttotal = 0;
+                $no       = 1;
+                $tdiskon  = 0;
+                $tpajak   = 0;
+                $ttotal   = 0;
                 foreach ($detail as $d) {
                     $tdiskon += $d->discrp;
                     $tpajak += $d->pajakrp;
                     $ttotal += $d->jumlah;
 
                     if ($param == 1) {
-                        $harga = number_format($d->harga);
-                        $qty = number_format($d->qty);
-                        $discpr = number_format($d->discpr);
-                        $discrp = number_format($d->discrp);
-                        $pajak = number_format($d->pajakrp);
-                        $jumlah = number_format($d->jumlah);
+                        $harga    = number_format($d->harga);
+                        $qty      = number_format($d->qty);
+                        $discpr   = number_format($d->discpr);
+                        $discrp   = number_format($d->discrp);
+                        $pajak    = number_format($d->pajakrp);
+                        $jumlah   = number_format($d->jumlah);
 
                         $tdiskonx = number_format($tdiskon);
-                        $tpajakx = number_format($tpajak);
-                        $ttotalx = number_format($ttotal);
+                        $tpajakx  = number_format($tpajak);
+                        $ttotalx  = number_format($ttotal);
                     } else {
-                        $harga = ceil($d->harga);
-                        $qty = ceil($d->qty);
-                        $discpr = ceil($d->discpr);
-                        $discrp = ceil($d->discrp);
-                        $pajak = ceil($d->pajakrp);
-                        $jumlah = ceil($d->jumlah);
+                        $harga    = ceil($d->harga);
+                        $qty      = ceil($d->qty);
+                        $discpr   = ceil($d->discpr);
+                        $discrp   = ceil($d->discrp);
+                        $pajak    = ceil($d->pajakrp);
+                        $jumlah   = ceil($d->jumlah);
 
                         $tdiskonx = ceil($tdiskon);
-                        $tpajakx = ceil($tpajak);
-                        $ttotalx = ceil($ttotal);
+                        $tpajakx  = ceil($tpajak);
+                        $ttotalx  = ceil($ttotal);
                     }
                     $body .= '<tr>
                         <td style="border: 1px solid black;">' . $no . '</td>
@@ -1386,21 +1386,21 @@ class Transaksi extends CI_Controller
             } else {
                 $body .= '<tbody>';
 
-                $no = 1;
-                $stok_akhir = 0;
+                $no           = 1;
+                $stok_akhir   = 0;
                 foreach ($detail as $d) {
                     $stok_akhir += ($d->masuk - $d->keluar);
 
                     if ($param == 1) {
-                        $harga = number_format($d->harga);
-                        $masuk = number_format($d->masuk);
-                        $keluar = number_format($d->keluar);
-                        $akhir = number_format($stok_akhir);
+                        $harga    = number_format($d->harga);
+                        $masuk    = number_format($d->masuk);
+                        $keluar   = number_format($d->keluar);
+                        $akhir    = number_format($stok_akhir);
                     } else {
-                        $harga = ceil($d->harga);
-                        $masuk = ceil($d->masuk);
-                        $keluar = ceil($d->keluar);
-                        $akhir = ceil($stok_akhir);
+                        $harga    = ceil($d->harga);
+                        $masuk    = ceil($d->masuk);
+                        $keluar   = ceil($d->keluar);
+                        $akhir    = ceil($stok_akhir);
                     }
 
                     $body .= '<tr>
@@ -1581,19 +1581,19 @@ class Transaksi extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        $barang_out_header = $this->M_global->getData('barang_out_header', ['invoice' => $invoice]);
-        $barang_out_detail = $this->M_global->getDataResult('barang_out_detail', ['invoice' => $invoice]);
-        $member = $this->M_global->getData('member', ['kode_member' => $barang_out_header->kode_member]);
+        $barang_out_header    = $this->M_global->getData('barang_out_header', ['invoice' => $invoice]);
+        $barang_out_detail    = $this->M_global->getDataResult('barang_out_detail', ['invoice' => $invoice]);
+        $member               = $this->M_global->getData('member', ['kode_member' => $barang_out_header->kode_member]);
 
-        $judul = 'Pendaftaran ' . $invoice;
-        $filename = $judul;
+        $judul                = 'Pendaftaran ' . $invoice;
+        $filename             = $judul;
 
         if ($barang_out_header->status_jual == 1) {
-            $open = '<input type="checkbox" style="width: 80px;" checked="checked"> Terbayar';
-            $close = '<input type="checkbox" style="width: 80px;"> Belum Bayar';
+            $open   = '<input type="checkbox" style="width: 80px;" checked="checked"> Terbayar';
+            $close  = '<input type="checkbox" style="width: 80px;"> Belum Bayar';
         } else {
-            $open = '<input type="checkbox" style="width: 80px;"> Terbayar';
-            $close = '<input type="checkbox" style="width: 80px;" checked="checked"> Belum Bayar';
+            $open   = '<input type="checkbox" style="width: 80px;"> Terbayar';
+            $close  = '<input type="checkbox" style="width: 80px;" checked="checked"> Belum Bayar';
         }
 
         $body .= '<table style="width: 100%; font-size: 12px;" cellpadding="2px">';

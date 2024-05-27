@@ -725,7 +725,7 @@ class Kasir extends CI_Controller
             $position = 'L';
 
             // isi body
-            $detail = $this->db->query("SELECT p.* FROM pembayaran p WHERE p.tgl_pembayaran>= '$dari' AND p.tgl_pembayaran <= '$sampai' AND inv_jual IN (SELECT invoice FROM barang_out_header)")->result();
+            $detail = $this->db->query("SELECT p.* FROM pembayaran p WHERE p.tgl_pembayaran>= '$dari' AND p.tgl_pembayaran <= '$sampai' AND p.kode_user = '$kode_user' AND inv_jual IN (SELECT invoice FROM barang_out_header)")->result();
 
             // body header
             $body .= '<table style="width: 100%; font-size: 11px;">
@@ -738,6 +738,11 @@ class Kasir extends CI_Controller
                     <td style="width: 10%;">Periode</td>
                     <td style="width: 2%;"> : </td>
                     <td colspan="2">' . date('d-m-Y', strtotime($dari)) . ' ~ ' . date('d-m-Y', strtotime($sampai)) . '</td>
+                </tr>
+                <tr>
+                    <td style="width: 10%;">Kasir</td>
+                    <td style="width: 2%;"> : </td>
+                    <td colspan="2">' . $this->M_global->getData('user', ['kode_user' => $kode_user])->nama . '</td>
                 </tr>
             </table>';
 
@@ -768,8 +773,8 @@ class Kasir extends CI_Controller
             }
 
             $body .= '<th style="width: 10%; border: 1px solid black; background-color: red; color: white;">Nama</th>';
-            $body .= '<th style="width: 10%; border: 1px solid black; background-color: red; color: white;">Potongan</th>';
-            $body .= '<th style="width: 10%; border: 1px solid black; background-color: red; color: white;">Subtotal</th>';
+            $body .= '<th style="width: 10%; border: 1px solid black; background-color: red; color: white;">Potongan (%)</th>';
+            $body .= '<th style="width: 10%; border: 1px solid black; background-color: red; color: white;">Subtotal (Rp)</th>';
 
             $body .= '</tr>';
 
@@ -837,10 +842,12 @@ class Kasir extends CI_Controller
                         $potongan_promo   = $promo->discpr;
                         $subtotal_promo   = ($total_jual * ($promo->discpr / 100));
                     } else {
+                        $nama_promo     = '';
                         $total_jual     = 0;
                         $potongan_promo = 0;
                         $subtotal_promo = 0;
                     }
+
                     if ($param == 1) {
                         $tjual = number_format($total_jual);
                         $pprom = number_format($potongan_promo);
@@ -867,11 +874,11 @@ class Kasir extends CI_Controller
 
             $body .= '</tbody>';
             $body .= '</table>';
-        } else {
+        } else if ($laporan == 2) {
             $file = 'Laporan Retur Penjualan Kasir';
 
             // isi body
-            $detail = $this->db->query("SELECT p.* FROM pembayaran p WHERE p.tgl_pembayaran>= '$dari' AND p.tgl_pembayaran <= '$sampai' AND inv_jual IN (SELECT invoice FROM barang_out_retur_header)")->result();
+            $detail = $this->db->query("SELECT p.* FROM pembayaran p WHERE p.tgl_pembayaran>= '$dari' AND p.tgl_pembayaran <= '$sampai' AND p.kode_user = '$kode_user' AND inv_jual IN (SELECT invoice FROM barang_out_retur_header)")->result();
 
             // body header
             $body .= '<table style="width: 100%; font-size: 11px;">
@@ -884,6 +891,11 @@ class Kasir extends CI_Controller
                     <td style="width: 10%;">Periode</td>
                     <td style="width: 2%;"> : </td>
                     <td colspan="2">' . date('d-m-Y', strtotime($dari)) . ' ~ ' . date('d-m-Y', strtotime($sampai)) . '</td>
+                </tr>
+                <tr>
+                    <td style="width: 10%;">Kasir</td>
+                    <td style="width: 2%;"> : </td>
+                    <td colspan="2">' . $this->M_global->getData('user', ['kode_user' => $kode_user])->nama . '</td>
                 </tr>
             </table>';
 
@@ -933,6 +945,162 @@ class Kasir extends CI_Controller
             $body .= '</tbody>';
 
             $body .= '</table>';
+        } else {
+            $file = 'Laporan Penjualan Poli';
+            $position = 'L';
+
+            // isi body
+            $detail = $this->db->query("SELECT p.*,
+            IF(boh.kode_poli = 'K00001', boh.total, 0) AS kulit,
+            IF(boh.kode_poli = 'U00001', boh.total, 0) AS umum,
+            IF(boh.kode_poli = 'G00001', boh.total, 0) AS gigi,
+            IF(boh.kode_poli = 'S00001', boh.total, 0) AS spa,
+            IF(boh.kode_poli = 'T00001', boh.total, 0) AS tht
+            FROM pembayaran p
+            JOIN barang_out_header boh ON p.inv_jual = boh.invoice 
+            WHERE p.tgl_pembayaran>= '$dari' AND p.tgl_pembayaran <= '$sampai'
+            AND p.kode_user = '$kode_user'")->result();
+
+            // body header
+            $body .= '<table style="width: 100%; font-size: 11px;">
+                <tr>
+                    <td style="width: 10%;">Perihal</td>
+                    <td style="width: 2%;"> : </td>
+                    <td colspan="2">' . $file . '</td>
+                </tr>
+                <tr>
+                    <td style="width: 10%;">Periode</td>
+                    <td style="width: 2%;"> : </td>
+                    <td colspan="2">' . date('d-m-Y', strtotime($dari)) . ' ~ ' . date('d-m-Y', strtotime($sampai)) . '</td>
+                </tr>
+                <tr>
+                    <td style="width: 10%;">Kasir</td>
+                    <td style="width: 2%;"> : </td>
+                    <td colspan="2">' . $this->M_global->getData('user', ['kode_user' => $kode_user])->nama . '</td>
+                </tr>
+            </table>';
+
+            $body .= $breaktable;
+
+            $body .= '<table style="width: 100%; font-size: 12px;" cellpadding="5px">';
+            $body .= '<thead>';
+
+            $poli = $this->M_global->getResult('m_poli');
+
+            $body .= '<tr>
+                <th rowspan="2" style="width: 5%; border: 1px solid black; background-color: red; color: white;">#</th>
+                <th rowspan="2" style="width: 15%; border: 1px solid black; background-color: red; color: white;">Kwitansi</th>
+                <th rowspan="2" style="width: 20%; border: 1px solid black; background-color: red; color: white;">Member</th>
+                <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: red; color: white;">Jumlah Bayar</th>
+                <th colspan="' . count($poli) . '" style="width: ' . count($poli) . '0%; border: 1px solid black; background-color: red; color: white;">Poli</th>
+                <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: red; color: white;">Kembalian</th>
+                <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: red; color: white;">Total</th>
+            </tr>
+            <tr>';
+
+            foreach ($poli as $p) {
+                $body .= '<th style="width: 10%; border: 1px solid black; background-color: red; color: white;">' . $p->keterangan . '</th>';
+            }
+
+            $body .= '</tr>';
+
+            $body .= '</thead>';
+
+            $body .= '<tbody>';
+
+            $no       = 1;
+            $_umum    = 0;
+            $_kulit   = 0;
+            $_spa     = 0;
+            $_gigi    = 0;
+            $_tht     = 0;
+            foreach ($detail as $d) {
+                $cek_member = $this->M_global->getData('barang_out_header', ['invoice' => $d->inv_jual]);
+
+                if ($cek_member) {
+                    $member = $this->M_global->getData('member', ['kode_member' => $cek_member->kode_member])->nama;
+                } else {
+                    $member = 'Masyarakat Umum';
+                }
+
+                $_umum    += $d->umum;
+                $_kulit   += $d->kulit;
+                $_spa     += $d->spa;
+                $_gigi    += $d->gigi;
+                $_tht     += $d->tht;
+
+                if ($param == 1) {
+                    $total        = number_format($d->total);
+                    $cash         = number_format($d->cash);
+                    $kembalian    = number_format($d->kembalian);
+                    $result       = number_format($d->total - $d->kembalian);
+
+                    $umum         = number_format($d->umum);
+                    $kulit        = number_format($d->kulit);
+                    $spa          = number_format($d->spa);
+                    $gigi         = number_format($d->gigi);
+                    $tht          = number_format($d->tht);
+
+                    $_umum_       = number_format($_umum);
+                    $_kulit_      = number_format($_kulit);
+                    $_spa_        = number_format($_spa);
+                    $_gigi_       = number_format($_gigi);
+                    $_tht_        = number_format($_tht);
+                } else {
+                    $total        = ceil($d->total);
+                    $cash         = ceil($d->cash);
+                    $kembalian    = ceil($d->kembalian);
+                    $result       = ceil($d->total - $d->kembalian);
+
+                    $umum         = ceil($d->umum);
+                    $kulit        = ceil($d->kulit);
+                    $spa          = ceil($d->spa);
+                    $gigi         = ceil($d->gigi);
+                    $tht          = ceil($d->tht);
+
+                    $_umum_       = ceil($_umum);
+                    $_kulit_      = ceil($_kulit);
+                    $_spa_        = ceil($_spa);
+                    $_gigi_       = ceil($_gigi);
+                    $_tht_        = ceil($_tht);
+                }
+
+                $body .= '<tr>
+                    <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
+                    <td style="border: 1px solid black;">' . $d->invoice . '</td>
+                    <td style="border: 1px solid black;">' . $cek_member->kode_member . ' ~ ' . $member . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . $total . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . $umum . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . $kulit . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . $spa . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . $gigi . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . $tht . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . $kembalian . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . $result . '</td>
+                </tr>';
+
+                $no++;
+            }
+
+
+            $body .= '</tbody>';
+
+            $body .= '<tfoot>';
+
+            $body .= '<tr>
+                <th colspan="4" style="width: 5%; border: 1px solid black; background-color: red; color: white;">Total</th>
+                <th style="width: 10%; border: 1px solid black; background-color: red; color: white; text-align: right;">' . $_umum_ . '</th>
+                <th style="width: 10%; border: 1px solid black; background-color: red; color: white; text-align: right;">' . $_kulit_ . '</th>
+                <th style="width: 10%; border: 1px solid black; background-color: red; color: white; text-align: right;">' . $_spa_ . '</th>
+                <th style="width: 10%; border: 1px solid black; background-color: red; color: white; text-align: right;">' . $_gigi_ . '</th>
+                <th style="width: 10%; border: 1px solid black; background-color: red; color: white; text-align: right;">' . $_tht_ . '</th>
+                <th style="width: 10%; border: 1px solid black; background-color: red; color: white; text-align: right;">Kembalian</th>
+                <th style="width: 10%; border: 1px solid black; background-color: red; color: white; text-align: right;">Total</th>
+            </tr>';
+
+            $body .= '</tfoot>';
+
+            $body .= '</table>';
         }
 
         $judul = $file . ' Periode: ' . date('d-m-Y', strtotime($dari)) . ' ~ ' . date('d-m-Y', strtotime($sampai));
@@ -964,7 +1132,7 @@ class Kasir extends CI_Controller
     }
 
     // fungsi list uang muka
-    public function uangmuka_list($param1 = 1, $param2 = '')
+    public function uangmuka_list($param1 = '')
     {
         // parameter untuk list table
         $table            = 'uang_muka';
@@ -972,48 +1140,15 @@ class Kasir extends CI_Controller
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
-        $kondisi_param2   = '';
-        $kondisi_param1   = 'last_tgl';
-
-        // kondisi role
-        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
-        $confirmed        = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->confirmed;
+        $kondisi_param1   = '';
 
         // table server side tampung kedalam variable $list
-        $dat    = explode("~", $param1);
-        if ($dat[0] == 1) {
-            $bulan   = date('m');
-            $tahun   = date('Y');
-            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2);
-        } else {
-            $bulan   = date('Y-m-d', strtotime($dat[1]));
-            $tahun   = date('Y-m-d', strtotime($dat[2]));
-            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 2, $bulan, $tahun, $param2, $kondisi_param2);
-        }
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
         $data             = [];
         $no               = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
-            if ($updated > 0) {
-                $upd_diss = '';
-            } else {
-                $upd_diss = 'disabled';
-            }
-
-            if ($deleted > 0) {
-                $del_diss = '';
-            } else {
-                $del_diss = 'disabled';
-            }
-
-            if ($confirmed > 0) {
-                $confirm_diss = '';
-            } else {
-                $confirm_diss = 'disabled';
-            }
-
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->kode_member . ' ~ ' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama;
@@ -1028,8 +1163,8 @@ class Kasir extends CI_Controller
         // hasil server side
         $output = [
             "draw"            => $_POST['draw'],
-            "recordsTotal"    => $this->M_datatables2->count_all($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2),
-            "recordsFiltered" => $this->M_datatables2->count_filtered($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2),
+            "recordsTotal"    => $this->M_datatables->count_all($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "recordsFiltered" => $this->M_datatables->count_filtered($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
             "data"            => $data,
         ];
 
@@ -1134,13 +1269,13 @@ class Kasir extends CI_Controller
     }
 
     // form uangmuka page
-    public function form_uangmuka($param, $param2 = '')
+    public function form_uangmuka($param)
     {
         // website config
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param == 0) {
+        if ($param == '0') {
             $pembayaran     = null;
             $bayar_detail   = null;
         } else {
@@ -1158,7 +1293,6 @@ class Kasir extends CI_Controller
             'list_data'         => '',
             'data_pembayaran'   => $pembayaran,
             'bayar_detail'      => $bayar_detail,
-            'param2'            => $param2,
         ];
 
         $this->template->load('Template/Content', 'Kasir/Form_pembayaran_um', $parameter);
