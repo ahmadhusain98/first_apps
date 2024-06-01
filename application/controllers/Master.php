@@ -1158,10 +1158,10 @@ class Master extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != 0) {
-            $barang = $this->M_global->getData('barang', ['kode_barang' => $param]);
-        } else {
+        if ($param == '0') {
             $barang = null;
+        } else {
+            $barang = $this->M_global->getData('barang', ['kode_barang' => $param]);
         }
 
         $parameter = [

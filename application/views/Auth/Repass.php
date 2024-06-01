@@ -62,7 +62,6 @@
     // fungsi atur ulang sandi
     function aturSandi() {
         // tampilkan loading
-        $('#loading').modal('show');
 
         // jalankan fungsi
         $.ajax({
@@ -73,7 +72,6 @@
             success: function(result) { // jika fungsi berjalan
                 if (result.status == 1) { // jika mendapatkan hasil status 1
                     // sembunyikan loading
-                    $('#loading').modal('hide');
 
                     Swal.fire({
                         title: "Sandi",
@@ -85,7 +83,6 @@
                     });
                 } else {
                     // sembunyikan loading
-                    $('#loading').modal('hide');
 
                     Swal.fire({
                         title: "Sandi",
@@ -97,7 +94,6 @@
             },
             error: function(result) { // jika fungsi gagal berjalan
                 // sembunyikan loading
-                $('#loading').modal('hide');
 
                 // tampilkan notifikasi error
                 error_proccess()

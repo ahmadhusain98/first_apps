@@ -86,20 +86,17 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                     type: 'POST',
                     dataType: 'JSON',
                     success: function(result) { // jika fungsi berjalan dengan baik
-                        $("#loading").modal("hide");
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
                             reloadTable();
 
                             Swal.fire("Retur Penjualan", "Berhasil di hapus!", "success");
                         } else { // selain itu
-                            $("#loading").modal("hide");
 
                             Swal.fire("Retur Penjualan", "Gagal di hapus!, silahkan dicoba kembali", "info");
                         }
                     },
                     error: function(result) { // jika fungsi error
-                        $("#loading").modal("hide");
 
                         error_proccess();
                     }
@@ -136,20 +133,17 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                     type: 'POST',
                     dataType: 'JSON',
                     success: function(result) { // jika fungsi berjalan dengan baik
-                        $("#loading").modal("hide");
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
                             reloadTable();
 
                             Swal.fire("Retur Penjualan", "Berhasil " + pesan2, "success");
                         } else { // selain itu
-                            $("#loading").modal("hide");
 
                             Swal.fire("Retur Penjualan", "Gagal " + pesan2 + ", silahkan dicoba kembali", "info");
                         }
                     },
                     error: function(result) { // jika fungsi error
-                        $("#loading").modal("hide");
 
                         error_proccess();
                     }
@@ -191,20 +185,17 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                     type: 'POST',
                     dataType: 'JSON',
                     success: function(result) { // jika fungsi berjalan dengan baik
-                        $("#loading").modal("hide");
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
                             reloadTable();
 
                             Swal.fire("Penjualan", "Berhasil " + pesan2, "success");
                         } else { // selain itu
-                            $("#loading").modal("hide");
 
                             Swal.fire("Penjualan", "Gagal " + pesan2 + ", silahkan dicoba kembali", "info");
                         }
                     },
                     error: function(result) { // jika fungsi error
-                        $("#loading").modal("hide");
 
                         error_proccess();
                     }

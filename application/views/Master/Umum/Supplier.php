@@ -71,19 +71,16 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                     success: function(result) { // jika fungsi berjalan dengan baik
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
-                            $("#loading").modal("hide");
 
                             Swal.fire("Pemasok", "Berhasil di hapus!", "success").then(() => {
                                 reloadTable();
                             });
                         } else { // selain itu
-                            $("#loading").modal("hide");
 
                             Swal.fire("Pemasok", "Gagal di hapus!, silahkan dicoba kembali", "info");
                         }
                     },
                     error: function(result) { // jika fungsi error
-                        $("#loading").modal("hide");
 
                         error_proccess();
                     }

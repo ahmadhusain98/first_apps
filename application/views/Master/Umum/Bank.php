@@ -108,15 +108,12 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                         // jalankan fungsi proses berdasarkan param
                         proses(param);
                     } else { // selain itu
-                        $("#loading").modal("hide");
 
                         Swal.fire("Keterangan", "Sudah ada!, silahkan isi keterangan lain ", "info");
                     }
                 },
                 error: function(result) { // jika fungsi error
                     btnSimpan.attr('disabled', false);
-
-                    $("#loading").modal("hide");
 
                     error_proccess();
                 }
@@ -146,22 +143,18 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 btnSimpan.attr('disabled', false);
 
                 if (result.status == 1) { // jika mendapatkan respon 1
-                    $("#loading").modal("hide");
 
                     Swal.fire("Bank", "Berhasil " + message, "success").then(() => {
                         reset();
                         reloadTable();
                     });
                 } else { // selain itu
-                    $("#loading").modal("hide");
 
                     Swal.fire("Bank", "Gagal " + message + ", silahkan dicoba kembali", "info");
                 }
             },
             error: function(result) { // jika fungsi error
                 btnSimpan.attr('disabled', false);
-
-                $("#loading").modal("hide");
 
                 error_proccess();
             }
@@ -216,21 +209,17 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                         btnSimpan.attr('disabled', false);
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
-                            $("#loading").modal("hide");
 
                             Swal.fire("Bank", "Berhasil di hapus!", "success").then(() => {
                                 reloadTable();
                             });
                         } else { // selain itu
-                            $("#loading").modal("hide");
 
                             Swal.fire("Bank", "Gagal di hapus!, silahkan dicoba kembali", "info");
                         }
                     },
                     error: function(result) { // jika fungsi error
                         btnSimpan.attr('disabled', false);
-
-                        $("#loading").modal("hide");
 
                         error_proccess();
                     }

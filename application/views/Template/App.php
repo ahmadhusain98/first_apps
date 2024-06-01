@@ -298,7 +298,6 @@
         // fungsi kirimkan kode
         function getCode(param, email) {
             // tampilkan loading
-            $("#loading").modal("show");
 
             // jalankan fungsi
             $.ajax({
@@ -307,7 +306,6 @@
                 dataType: "JSON",
                 success: function(result) { // jika fungsi berjalan
                     // sembunyikan loading
-                    $("#loading").modal("hide");
 
                     if (result.status == 1) { // jika mendapatkan hasil status 1
                         Swal.fire({
@@ -331,7 +329,6 @@
                 },
                 error: function(result) { // jika fungsi gagal berjalan
                     // sembunyikan loaing
-                    $("#loading").modal("hide");
 
                     // tampilkan notifikasi error
                     error_proccess()

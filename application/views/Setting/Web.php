@@ -169,8 +169,6 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     }
 
     function proses() {
-        $("#loading").modal("show");
-
         // jalankan proses
         var form = $('#form_web')[0];
         var data = new FormData(form);
@@ -189,21 +187,17 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 btnSimpan.attr('disabled', false);
 
                 if (result.status == 1) {
-                    $("#loading").modal("hide");
 
                     Swal.fire("Profile Website", "Berhasil di perbarui!", "success").then(() => {
                         getUrl('Setting_apps');
                     });
                 } else {
-                    $("#loading").modal("hide");
 
                     Swal.fire("Profile Website", "Gagal di perbarui!, silahkan dicoba kembali", "info");
                 }
             },
             error: function(result) {
                 btnSimpan.attr('disabled', false);
-
-                $("#loading").modal("hide");
 
                 error_proccess();
             }

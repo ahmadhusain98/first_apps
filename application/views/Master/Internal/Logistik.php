@@ -91,20 +91,17 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                     type: 'POST',
                     dataType: 'JSON',
                     success: function(result) { // jika fungsi berjalan dengan baik
-                        $("#loading").modal("hide");
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
                             Swal.fire("Logistik", "Berhasil di hapus!", "success").then(() => {
                                 reloadTable();
                             });
                         } else { // selain itu
-                            $("#loading").modal("hide");
 
                             Swal.fire("Logistik", "Gagal di hapus!, silahkan dicoba kembali", "info");
                         }
                     },
                     error: function(result) { // jika fungsi error
-                        $("#loading").modal("hide");
 
                         error_proccess();
                     }

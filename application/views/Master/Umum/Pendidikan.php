@@ -205,21 +205,17 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                         btnSimpan.attr('disabled', false);
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
-                            $("#loading").modal("hide");
 
                             Swal.fire("Pendidikan", "Berhasil di hapus!", "success").then(() => {
                                 reloadTable();
                             });
                         } else { // selain itu
-                            $("#loading").modal("hide");
 
                             Swal.fire("Pendidikan", "Gagal di hapus!, silahkan dicoba kembali", "info");
                         }
                     },
                     error: function(result) { // jika fungsi error
                         btnSimpan.attr('disabled', false);
-
-                        $("#loading").modal("hide");
 
                         error_proccess();
                     }

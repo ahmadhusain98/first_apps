@@ -79,7 +79,7 @@
     // fungsi cek role
     function cekUserRole(x) {
         if (x == '' || x == null) {
-            $("#loading").modal("hide");
+
 
             Swal.fire("Email", "Form sudah diisi?", "question");
             return;
@@ -102,7 +102,7 @@
                 }
             },
             error: function(result) {
-                $("#loading").modal("hide");
+
 
                 error_proccess()
             }
@@ -112,21 +112,21 @@
     function login() {
 
         if (email.val() == "" || email.val() == null) {
-            $("#loading").modal("hide");
+
 
             Swal.fire("Email", "Form sudah diisi?", "question");
             return;
         }
 
         if (validateEmail(email.val()) == false) {
-            $("#loading").modal("hide");
+
 
             Swal.fire("Email", "Format sudah valid?", "question");
             return;
         }
 
         if (password.val() == "" || password.val() == null) {
-            $("#loading").modal("hide");
+
 
             Swal.fire("Sandi", "Form sudah diisi?", "question");
             return;
@@ -134,7 +134,7 @@
 
         if (kode_role.val() != 'R0005') {
             if (shift.val() == "" || shift.val() == null) {
-                $("#loading").modal("hide");
+
 
                 Swal.fire("Shift", "Sudah dipilih?", "question");
                 return;
@@ -147,7 +147,7 @@
             data: form.serialize(),
             dataType: "JSON",
             success: function(result) {
-                $("#loading").modal("hide");
+
 
                 if (result.status == 1) {
                     if (result.kode_role == 'R0005') {
@@ -164,7 +164,7 @@
                 }
             },
             error: function(result) {
-                $("#loading").modal("hide");
+
 
                 error_proccess()
             }

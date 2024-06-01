@@ -173,8 +173,6 @@
     }
 
     function proses(kode_member) {
-        $("#loading").modal("show");
-
         // jalankan proses
         var form = $('#form_akun')[0];
         var data = new FormData(form);
@@ -193,21 +191,17 @@
                 btnSimpan.attr('disabled', false);
 
                 if (result.status == 1) {
-                    $("#loading").modal("hide");
 
                     Swal.fire("Profile Akun", "Berhasil di perbarui!", "success").then(() => {
                         getUrl('Profile/profile_member');
                     });
                 } else {
-                    $("#loading").modal("hide");
 
                     Swal.fire("Profile Akun", "Gagal di perbarui!, silahkan dicoba kembali", "info");
                 }
             },
             error: function(result) {
                 btnSimpan.attr('disabled', false);
-
-                $("#loading").modal("hide");
 
                 error_proccess();
             }

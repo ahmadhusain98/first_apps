@@ -131,8 +131,6 @@
             var param = 2;
         }
 
-        $("#loading").modal("show");
-
         // jalankan proses cek gudang
         if (param == 1) {
             $.ajax({
@@ -145,15 +143,12 @@
                         // jalankan fungsi proses berdasarkan param
                         proses(param);
                     } else { // selain itu
-                        $("#loading").modal("hide");
 
                         Swal.fire("Nama", "Sudah ada!, silahkan isi nama lain ", "info");
                     }
                 },
                 error: function(result) { // jika fungsi error
                     btnSimpan.attr('disabled', false);
-
-                    $("#loading").modal("hide");
 
                     error_proccess();
                 }
@@ -183,21 +178,17 @@
                 btnSimpan.attr('disabled', false);
 
                 if (result.status == 1) { // jika mendapatkan respon 1
-                    $("#loading").modal("hide");
 
                     Swal.fire("Gudang", "Berhasil " + message, "success").then(() => {
                         getUrl('Master/gudang');
                     });
                 } else { // selain itu
-                    $("#loading").modal("hide");
 
                     Swal.fire("Gudang", "Gagal " + message + ", silahkan dicoba kembali", "info");
                 }
             },
             error: function(result) { // jika fungsi error
                 btnSimpan.attr('disabled', false);
-
-                $("#loading").modal("hide");
 
                 error_proccess();
             }

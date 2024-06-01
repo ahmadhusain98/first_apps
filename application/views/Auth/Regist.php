@@ -85,8 +85,6 @@
     // cek email berdsasarkan email
     function cekEmail(forid) {
         if (validateEmail($('#' + forid).val()) == false) {
-            $("#loading").modal("hide");
-
             Swal.fire("Email", "Format sudah valid?", "question");
             return;
         }
@@ -95,46 +93,39 @@
     // fungsi daftarkan akun
     function regist() {
         // tampilkan loading
-        $("#loading").modal("show");
 
         if (nama.val() == "" || nama.val() == null) { // jika nama null/ kosong
             // sembunyikan loading
-            $("#loading").modal("hide");
 
             return Swal.fire("Nama Lengkap", "Form sudah diisi?", "question");
         }
 
         if (email.val() == "" || email.val() == null) { // jika email null/ kosong
             // sembunyikan loading
-            $("#loading").modal("hide");
 
             return Swal.fire("Email", "Form sudah diisi?", "question");
         }
 
         if (nohp.val() == "" || nohp.val() == null) { // jika nohp null/ kosong
             // sembunyikan loading
-            $("#loading").modal("hide");
 
             return Swal.fire("No. Hp", "Form sudah diisi?", "question");
         }
 
         if (password.val() == "" || password.val() == null) { // jika password null/ kosong
             // sembunyikan loading
-            $("#loading").modal("hide");
 
             return Swal.fire("Sandi", "Form sudah diisi?", "question");
         }
 
         if (jkel.val() == "" || jkel.val() == null) { // jika jkel null/ kosong
             // sembunyikan loading
-            $("#loading").modal("hide");
 
             return Swal.fire("Gender", "Form sudah diisi?", "question");
         }
 
         if (kode.val() == "" || kode.val() == null) { // jika kode null/ kosong
             // sembunyikan loading
-            $("#loading").modal("hide");
 
             return Swal.fire("Kode Verifikasi", "Form sudah diisi?", "question");
         }
@@ -147,7 +138,7 @@
             dataType: "JSON",
             success: function(result) { // jika fungsi berjalan
                 // sembunyikan loading
-                $("#loading").modal("hide");
+
 
                 if (result.status == 1) { // jika mendapatkan hasil status 1
                     Swal.fire({
@@ -180,7 +171,6 @@
             },
             error: function(result) { // jika fungsi gagal berjalan
                 // sembunyikan loading
-                $("#loading").modal("hide");
 
                 // tampilkan notifikasi error
                 error_proccess()

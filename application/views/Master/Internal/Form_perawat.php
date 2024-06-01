@@ -385,8 +385,6 @@
                 error: function(result) { // jika fungsi error
                     btnSimpan.attr('disabled', false);
 
-                    $("#loading").modal("hide");
-
                     error_proccess();
                 }
             });
@@ -397,7 +395,6 @@
 
     // fungsi proses dengan param
     function proses(param) {
-        $("#loading").modal("show");
 
         if (param == 1) { // jika param 1 berarti insert/tambah
             var message = 'dibuat!';
@@ -415,21 +412,17 @@
                 btnSimpan.attr('disabled', false);
 
                 if (result.status == 1) { // jika mendapatkan respon 1
-                    $("#loading").modal("hide");
 
                     Swal.fire("Perawat", "Berhasil " + message, "success").then(() => {
                         getUrl('Master/perawat');
                     });
                 } else { // selain itu
-                    $("#loading").modal("hide");
 
                     Swal.fire("Perawat", "Gagal " + message + ", silahkan dicoba kembali", "info");
                 }
             },
             error: function(result) { // jika fungsi error
                 btnSimpan.attr('disabled', false);
-
-                $("#loading").modal("hide");
 
                 error_proccess();
             }

@@ -581,7 +581,6 @@
         // cek email berdsasarkan email
         function cekEmail(forid) {
             if (validateEmail($('#' + forid).val()) == false) {
-                $("#loading").modal("hide");
 
                 Swal.fire("Email", "Format sudah valid?", "question");
                 return;

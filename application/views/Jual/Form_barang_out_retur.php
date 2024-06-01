@@ -549,8 +549,6 @@
             var param = 2;
         }
 
-        $("#loading").modal("show");
-
         // jalankan proses cek barang
         proses(param);
     }
@@ -574,21 +572,17 @@
                 btnSimpan.attr('disabled', false);
 
                 if (result.status == 1) { // jika mendapatkan respon 1
-                    $("#loading").modal("hide");
 
                     Swal.fire("Retur Penjualan", "Berhasil " + message, "success").then(() => {
                         getUrl('Transaksi/barang_out_retur');
                     });
                 } else { // selain itu
-                    $("#loading").modal("hide");
 
                     Swal.fire("Retur Penjualan", "Gagal " + message + ", silahkan dicoba kembali", "info");
                 }
             },
             error: function(result) { // jika fungsi error
                 btnSimpan.attr('disabled', false);
-
-                $("#loading").modal("hide");
 
                 error_proccess();
             }
