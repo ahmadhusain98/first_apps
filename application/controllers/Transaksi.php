@@ -412,7 +412,7 @@ class Transaksi extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != 0) {
+        if ($param != '0') {
             $barang_in     = $this->M_global->getData('barang_in_header', ['invoice' => $param]);
             $barang_detail = $this->M_global->getDataResult('barang_in_detail', ['invoice' => $param]);
         } else {
@@ -776,7 +776,7 @@ class Transaksi extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != 0) {
+        if ($param != '0') {
             $barang_in_retur    = $this->M_global->getData('barang_in_retur_header', ['invoice' => $param]);
             $barang_detail      = $this->M_global->getDataResult('barang_in_retur_detail', ['invoice' => $param]);
             $pembeli            = $this->db->query('SELECT * FROM barang_in_header WHERE is_valid = 1')->result();
@@ -1711,7 +1711,7 @@ class Transaksi extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != 0) {
+        if ($param != '0') {
             $barang_out     = $this->M_global->getData('barang_out_header', ['invoice' => $param]);
             $barang_detail  = $this->M_global->getDataResult('barang_out_detail', ['invoice' => $param]);
         } else {
@@ -2136,7 +2136,7 @@ class Transaksi extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != 0) {
+        if ($param != '0') {
             $barang_out_retur   = $this->M_global->getData('barang_out_retur_header', ['invoice' => $param]);
             $barang_detail      = $this->M_global->getDataResult('barang_out_retur_detail', ['invoice' => $param]);
         } else {
@@ -2689,5 +2689,280 @@ class Transaksi extends CI_Controller
 
         // jalankan fungsi cetak_pdf
         cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    /*
+    * Stok
+    **/
+
+    // penyesuaian_stok page
+    public function penyesuaian_stok()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Transaksi',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Penyesuaian Stok',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => 'Transaksi/penyesuaian_stok_list/',
+            'param1'        => '',
+        ];
+
+        $this->template->load('Template/Content', 'Barang/Penyesuaian_stok', $parameter);
+    }
+
+    // fungsi list penyesuaian_stok
+    public function penyesuaian_stok_list($param1 = 1, $param2 = '')
+    {
+        // parameter untuk list table
+        $table            = 'penyesuaian_header';
+        $colum            = ['id', 'invoice', 'tgl_penyesuaian', 'jam_penyesuaian', 'kode_user', 'kode_gudang', 'tipe_penyesuaian', 'acc', 'user_acc', 'tgl_acc', 'jam_acc'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['id' => 'asc'];
+        $kondisi_param2   = 'kode_gudang';
+        $kondisi_param1   = 'tgl_penyesuaian';
+
+        // kondisi role
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $confirmed        = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->confirmed;
+
+        // table server side tampung kedalam variable $list
+        $dat    = explode("~", $param1);
+        if ($dat[0] == 1) {
+            $bulan   = date('m');
+            $tahun   = date('Y');
+            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2);
+        } else {
+            $bulan   = date('Y-m-d', strtotime($dat[1]));
+            $tahun   = date('Y-m-d', strtotime($dat[2]));
+            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 2, $bulan, $tahun, $param2, $kondisi_param2);
+        }
+        $data             = [];
+        $no               = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($updated > 0) {
+                if ($rd->acc > 0) {
+                    $upd_diss = 'disabled';
+                } else {
+                    $upd_diss = '';
+                }
+            } else {
+                $upd_diss = 'disabled';
+            }
+
+            if ($deleted > 0) {
+                if ($rd->acc > 0) {
+                    $del_diss = 'disabled';
+                } else {
+                    $del_diss = '';
+                }
+            } else {
+                $del_diss = 'disabled';
+            }
+
+            if ($confirmed > 0) {
+                $confirm_diss = '';
+            } else {
+                $confirm_diss = 'disabled';
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = date('d/m/Y', strtotime($rd->tgl_penyesuaian)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_penyesuaian));
+            $row[]  = $rd->invoice . '<span class="float-right">' . (($rd->acc == 1) ? '<span class="badge badge-primary">ACC</span>' : '<span class="badge badge-danger">Belum di ACC</span>') . '</span>';
+            $row[]  = $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->kode_gudang])->nama;
+            $row[]  = '<div class="text-center">' . (($rd->tipe_penyesuaian == 1) ? '<span class="badge badge-primary text-center">SO</span>' : '<span class="badge badge-success text-center">Adjusment</span>') . '</div>';
+            if ($rd->acc < 1) {
+                $valid = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-success" title="ACC" onclick="valided(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '>
+                    <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+                </button>';
+            } else {
+                $valid = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-dark" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '>
+                    <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+                </button>';
+            }
+            $row[]  = '<div class="text-center">
+                ' . $valid . '
+                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '>
+                    <ion-icon name="create-outline"></ion-icon>
+                </button>
+                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '>
+                    <ion-icon name="close-circle-outline"></ion-icon>
+                </button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables2->count_all($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2),
+            "recordsFiltered" => $this->M_datatables2->count_filtered($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    // form penyesuaian_stok page
+    public function form_penyesuaian_stok($param)
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        if ($param != '0') {
+            $penyesuaian_stok    = $this->M_global->getData('penyesuaian_header', ['invoice' => $param]);
+            $barang_detail      = $this->M_global->getDataResult('penyesuaian_detail', ['invoice' => $param]);
+        } else {
+            $penyesuaian_stok    = null;
+            $barang_detail      = null;
+        }
+
+        $parameter = [
+            $this->data,
+            'judul'                 => 'Transaksi',
+            'nama_apps'             => $web_setting->nama,
+            'page'                  => 'Penyesuaian Stok',
+            'web'                   => $web_setting,
+            'web_version'           => $web_version->version,
+            'list_data'             => '',
+            'data_penyesuaian_stok' => $penyesuaian_stok,
+            'barang_detail'         => $barang_detail,
+            'role'                  => $this->M_global->getResult('m_role'),
+            'pajak'                 => $this->M_global->getData('m_pajak', ['id' => 1])->persentase,
+            'list_barang'           => $this->M_global->getResult('barang'),
+        ];
+
+        $this->template->load('Template/Content', 'Barang/Form_penyesuaian_stok', $parameter);
+    }
+
+    // fungsi proses insert/update penyesuaian stok
+    public function penyesuaian_stok_proses($param)
+    {
+        // header
+        if ($param == 1) { // jika param = 1
+            $invoice              = _invoicePenyesuaianStok();
+        } else { // selain itu
+            $invoice              = $this->input->post('invoice');
+        }
+
+        $tgl_penyesuaian          = $this->input->post('tgl_penyesuaian');
+        $jam_penyesuaian          = $this->input->post('jam_penyesuaian');
+        $kode_gudang              = $this->input->post('kode_gudang');
+        $tipe_penyesuaian         = $this->input->post('tipe_penyesuaian');
+        $kode_user                = $this->session->userdata('kode_user');
+
+        // detail
+        $kode_penyesuaian_stok    = $this->input->post('kode_penyesuaian_stok');
+        $qty_ps                   = $this->input->post('qty_ps');
+
+        // cek jumlah detail barang
+        $jum                      = count($kode_penyesuaian_stok);
+
+        // tampung isi header
+        $isi_header = [
+            'invoice'           => $invoice,
+            'tgl_penyesuaian'   => $tgl_penyesuaian,
+            'jam_penyesuaian'   => $jam_penyesuaian,
+            'kode_gudang'       => $kode_gudang,
+            'tipe_penyesuaian'  => $tipe_penyesuaian,
+            'acc'               => 0,
+            'kode_user'         => $kode_user,
+        ];
+
+        if ($param == 2) { // jika param = 2
+            // jalankan fungsi cek
+            $cek = [
+                $this->M_global->updateData('penyesuaian_header', $isi_header, ['invoice' => $invoice]), // update header
+                $this->M_global->delData('penyesuaian_detail', ['invoice' => $invoice]), // delete detail
+            ];
+        } else { // selain itu
+            // jalankan fungsi cek
+            $cek = $this->M_global->insertData('penyesuaian_header', $isi_header); // insert header
+        }
+
+        if ($cek) { // jika fungsi cek berjalan
+            // lakukan loop
+            for ($x = 0; $x <= ($jum - 1); $x++) {
+                $kode_barang    = $kode_penyesuaian_stok[$x];
+                $qty            = str_replace(',', '', $qty_ps[$x]);
+
+                // tamping isi detail
+                $isi_detail = [
+                    'invoice'       => $invoice,
+                    'kode_barang'   => $kode_barang,
+                    'qty'           => $qty,
+                ];
+
+                // insert detail
+                $this->M_global->insertData('penyesuaian_detail', $isi_detail);
+            }
+
+            // beri nilai status = 1 kirim ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // beri nilai status = 0 kirim ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi hapus barang in
+    public function delPenyeStok($invoice)
+    {
+        // jalankan fungsi cek
+        $cek = [
+            $this->M_global->delData('penyesuaian_detail', ['invoice' => $invoice]), // del data detail pembelian
+            $this->M_global->delData('penyesuaian_header', ['invoice' => $invoice]), // del data header pembelian
+        ];
+
+        if ($cek) { // jika fungsi cek berjalan
+            // kirim status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirim status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi acc/re-acc
+    public function accpenyesuaian_stok($invoice, $acc)
+    {
+        // header barang by invoice
+        $header = $this->M_global->getData('penyesuaian_header', ['invoice' => $invoice]);
+        // kode_gudang
+        $kode_gudang = $header->kode_gudang;
+
+        // detail barang
+        $detail = $this->M_global->getDataResult('penyesuaian_detail', ['invoice' => $invoice]);
+
+        if ($acc == 0) { // jika acc = 0
+            $cek = $this->M_global->updateData('penyesuaian_header', ['acc' => 0, 'tgl_acc' => null, 'jam_acc' => null], ['invoice' => $invoice]);
+
+            hitungStokAdjOut($detail, $kode_gudang, $invoice);
+        } else { // selain itu
+            // update acc jadi 1
+            $cek = $this->M_global->updateData('penyesuaian_header', ['acc' => 1, 'tgl_acc' => date('Y-m-d'), 'jam_acc' => date('H:i:s')], ['invoice' => $invoice]);
+
+            hitungStokAdjIn($detail, $kode_gudang, $invoice);
+        }
+
+        if ($cek) { // jika fungsi cek berjalan
+            // kirim status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirim status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
     }
 }

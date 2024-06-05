@@ -88,8 +88,10 @@
 
     // fungsi cetak
     function cetak(param) {
-        if (kode_supplier.val() == '' || kode_supplier.val() == null) {
-            return Swal.fire("Pemasok", "Form sudah diisi?", "question");
+        if (laporan.val() != 3 || laporan.val() != '3') {
+            if (kode_supplier.val() == '' || kode_supplier.val() == null) {
+                return Swal.fire("Pemasok", "Form sudah diisi?", "question");
+            }
         }
 
         if (kode_gudang.val() == '' || kode_gudang.val() == null) {

@@ -933,3 +933,100 @@ function _code_promo()
     }
     return $kode_member;
 }
+
+function _invoicePenyesuaianStok()
+{
+    $CI           = &get_instance();
+
+    $now          = date('Y-m-d');
+
+    $lastNumber   = $CI->db->query('SELECT * FROM penyesuaian_header WHERE tgl_penyesuaian = "' . $now . '" ORDER BY id DESC LIMIT 1')->row();
+    $number       = 1;
+    if ($lastNumber) {
+        $number   = $CI->db->query('SELECT * FROM penyesuaian_header WHERE tgl_penyesuaian = "' . $now . '"')->num_rows() + 1;
+        $invoice  = 'PS~' . date('dmY') . sprintf("%05d", $number);
+    } else {
+        $number   = 0;
+        $invoice  = 'PS~' . date('dmY') . "00001";
+    }
+    return $invoice;
+}
+
+function hitungStokAdjIn($detail, $kode_gudang, $invoice)
+{
+    $CI   = &get_instance();
+
+    $date = date('Y-m-d');
+    $time = date('H:i:s');
+    $user = $CI->session->userdata('kode_user');
+
+    foreach ($detail as $d) {
+        $cek = $CI->M_global->jumDataRow('barang_stok', ['kode_gudang' => $kode_gudang, 'kode_barang' => $d->kode_barang]);
+
+        if ($cek < 1) {
+            $isi_stok = [
+                'kode_barang'   => $d->kode_barang,
+                'kode_gudang'   => $kode_gudang,
+                'so'            => 0,
+                'penyesuaian'   => $d->qty,
+                'akhir'         => $d->qty,
+                'last_tgl_trx'  => $date,
+                'last_jam_trx'  => $time,
+                'last_no_trx'   => $invoice,
+                'last_user'     => $user,
+            ];
+
+            $CI->M_global->insertData('barang_stok', $isi_stok);
+        } else {
+            $CI->db->query("UPDATE barang_stok SET 
+            masuk = masuk + $d->qty, 
+            akhir = akhir + $d->qty, 
+            penyesuaian = $d->qty,
+            last_tgl_trx = '$date', 
+            last_jam_trx = '$time',
+            last_no_trx = '$invoice',
+            last_user = '$user' 
+            WHERE kode_barang = '$d->kode_barang' AND kode_gudang = '$kode_gudang'");
+        }
+    }
+}
+
+function hitungStokAdjOut($detail, $kode_gudang, $invoice)
+{
+    $CI   = &get_instance();
+
+    $date = date('Y-m-d');
+    $time = date('H:i:s');
+    $user = $CI->session->userdata('kode_user');
+
+    foreach ($detail as $d) {
+        $cek = $CI->M_global->jumDataRow('barang_stok', ['kode_gudang' => $kode_gudang, 'kode_barang' => $d->kode_barang]);
+
+        if ($cek < 1) {
+            $isi_stok = [
+                'kode_barang'   => $d->kode_barang,
+                'kode_gudang'   => $kode_gudang,
+                'masuk'         => 0 - $d->qty,
+                'akhir'         => 0 - $d->qty,
+                'so'            => 0,
+                'penyesuaian'   => 0 - $d->qty,
+                'last_tgl_trx'  => $date,
+                'last_jam_trx'  => $time,
+                'last_no_trx'   => $invoice,
+                'last_user'     => $user,
+            ];
+
+            $CI->M_global->insertData('barang_stock', $isi_stok);
+        } else {
+            $CI->db->query("UPDATE barang_stok SET 
+            masuk = masuk - $d->qty, 
+            akhir = akhir - $d->qty,
+            penyesuaian = penyesuaian - $d->qty,
+            last_tgl_trx = '$date', 
+            last_jam_trx = '$time',
+            last_no_trx = '$invoice',
+            last_user = '$user' 
+            WHERE kode_barang = '$d->kode_barang' AND kode_gudang = '$kode_gudang'");
+        }
+    }
+}
