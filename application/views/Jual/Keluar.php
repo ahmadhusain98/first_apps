@@ -1,5 +1,6 @@
 <?php
 $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->created;
+echo _lock_so();
 ?>
 
 <div class="row">
@@ -8,7 +9,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
             <div class="card">
                 <div class="card-header">
                     <span class="font-weight-bold h4"># Penjualan</span>
-                    <button type="button" class="btn btn-sm float-right mb-1 btn-success ml-1" onclick="getUrl('Transaksi/form_barang_out/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                    <button type="button" class="btn btn-sm float-right mb-1 btn-success ml-1" onclick="getUrl('Transaksi/form_barang_out/0')" <?= (($created > 0) ? _lock_button() : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
                     <button type="button" class="btn btn-sm float-right mb-1 btn-primary ml-1" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
                 </div>
                 <div class="card-body">

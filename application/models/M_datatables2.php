@@ -20,6 +20,7 @@ class M_datatables2 extends CI_Model
         }
         $this->db->select($colum);
         $this->db->from($table);
+
         if (!empty($param2)) {
 
             if ($jns == 1) {
@@ -33,10 +34,10 @@ class M_datatables2 extends CI_Model
                 if ($param2 != 'semua') {
                     $this->db->where([$kondisi_param2 => $param2]);
                 }
+
                 $this->db->where([$kondisi_param1 . ' >=' => $bulan, $kondisi_param1 . ' <= ' => $tahun]);
             }
         } else {
-
             if ($jns == 1) {
                 $tanggal = date('Y-m-d');
                 $this->db->where([$kondisi_param1 . $add_kondisi => $tanggal]);
@@ -44,7 +45,9 @@ class M_datatables2 extends CI_Model
                 $this->db->where([$kondisi_param1 . ' >=' => $bulan, $kondisi_param1 . ' <= ' => $tahun]);
             }
         }
+
         $i = 0;
+
         foreach ($colum as $item) {
             if ($_POST['search']['value']) {
                 if ($i === 0) {
@@ -53,11 +56,13 @@ class M_datatables2 extends CI_Model
                 } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
+
                 if (count($colum) - 1 == $i)
                     $this->db->group_end();
             }
             $i++;
         }
+
         if (isset($_POST['order'])) {
             $this->db->order_by($colum[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else if (isset($order_arr)) {
@@ -89,10 +94,11 @@ class M_datatables2 extends CI_Model
         } else {
             $add_kondisi = '';
         }
+
         $this->db->select($colum);
         $this->db->from($table);
-        if (!empty($param2)) {
 
+        if (!empty($param2)) {
             if ($jns == 1) {
                 $tanggal = date('Y-m-d');
                 $this->db->where([$kondisi_param1 . $add_kondisi => $tanggal]);
@@ -107,7 +113,6 @@ class M_datatables2 extends CI_Model
                 $this->db->where([$kondisi_param1 . ' >=' => $bulan, $kondisi_param1 . ' <= ' => $tahun]);
             }
         } else {
-
             if ($jns == 1) {
                 $tanggal = date('Y-m-d');
                 $this->db->where([$kondisi_param1 . $add_kondisi => $tanggal]);
@@ -115,6 +120,7 @@ class M_datatables2 extends CI_Model
                 $this->db->where([$kondisi_param1 . ' >=' => $bulan, $kondisi_param1 . ' <= ' => $tahun]);
             }
         }
+
         return $this->db->count_all_results();
     }
 }

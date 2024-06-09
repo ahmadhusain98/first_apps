@@ -93,7 +93,7 @@ class Transaksi extends CI_Controller
                     if ($rd->is_valid > 0) {
                         $upd_diss = 'disabled';
                     } else {
-                        $upd_diss = '';
+                        $upd_diss =  _lock_button();
                     }
                 }
             } else {
@@ -107,7 +107,7 @@ class Transaksi extends CI_Controller
                     if ($rd->is_valid > 0) {
                         $del_diss = 'disabled';
                     } else {
-                        $del_diss = '';
+                        $del_diss =  _lock_button();
                     }
                 }
             } else {
@@ -115,7 +115,7 @@ class Transaksi extends CI_Controller
             }
 
             if ($confirmed > 0) {
-                $confirm_diss = '';
+                $confirm_diss =  _lock_button();
             } else {
                 $confirm_diss = 'disabled';
             }
@@ -266,39 +266,39 @@ class Transaksi extends CI_Controller
         </tr>';
 
         // detail barang
-        $detail = $this->M_global->getDataResult('barang_in_detail', ['invoice' => $header->invoice]);
+        $detail   = $this->M_global->getDataResult('barang_in_detail', ['invoice' => $header->invoice]);
 
-        $no = 1;
-        $tdiskon = 0;
-        $tpajak = 0;
-        $ttotal = 0;
+        $no       = 1;
+        $tdiskon  = 0;
+        $tpajak   = 0;
+        $ttotal   = 0;
         foreach ($detail as $d) {
-            $tdiskon += $d->discrp;
-            $tpajak += $d->pajakrp;
-            $ttotal += $d->jumlah;
+            $tdiskon    += $d->discrp;
+            $tpajak     += $d->pajakrp;
+            $ttotal     += $d->jumlah;
 
             if ($param == 1) {
-                $harga = number_format($d->harga);
-                $qty = number_format($d->qty);
-                $discpr = number_format($d->discpr);
-                $discrp = number_format($d->discrp);
-                $pajak = number_format($d->pajakrp);
-                $jumlah = number_format($d->jumlah);
+                $harga    = number_format($d->harga);
+                $qty      = number_format($d->qty);
+                $discpr   = number_format($d->discpr);
+                $discrp   = number_format($d->discrp);
+                $pajak    = number_format($d->pajakrp);
+                $jumlah   = number_format($d->jumlah);
 
                 $tdiskonx = number_format($tdiskon);
-                $tpajakx = number_format($tpajak);
-                $ttotalx = number_format($ttotal);
+                $tpajakx  = number_format($tpajak);
+                $ttotalx  = number_format($ttotal);
             } else {
-                $harga = ceil($d->harga);
-                $qty = ceil($d->qty);
-                $discpr = ceil($d->discpr);
-                $discrp = ceil($d->discrp);
-                $pajak = ceil($d->pajakrp);
-                $jumlah = ceil($d->jumlah);
+                $harga    = ceil($d->harga);
+                $qty      = ceil($d->qty);
+                $discpr   = ceil($d->discpr);
+                $discrp   = ceil($d->discrp);
+                $pajak    = ceil($d->pajakrp);
+                $jumlah   = ceil($d->jumlah);
 
                 $tdiskonx = ceil($tdiskon);
-                $tpajakx = ceil($tpajak);
-                $ttotalx = ceil($ttotal);
+                $tpajakx  = ceil($tpajak);
+                $ttotalx  = ceil($ttotal);
             }
             $body .= '<tr>
                 <td style="border: 1px solid black;">' . $no . '</td>
@@ -689,7 +689,7 @@ class Transaksi extends CI_Controller
                     if ($rd->is_valid > 0) {
                         $upd_diss = 'disabled';
                     } else {
-                        $upd_diss = '';
+                        $upd_diss =  _lock_button();
                     }
                 }
             } else {
@@ -703,7 +703,7 @@ class Transaksi extends CI_Controller
                     if ($rd->is_valid > 0) {
                         $del_diss = 'disabled';
                     } else {
-                        $del_diss = '';
+                        $del_diss = _lock_button();
                     }
                 }
             } else {
@@ -711,7 +711,7 @@ class Transaksi extends CI_Controller
             }
 
             if ($confirmed > 0) {
-                $confirm_diss = '';
+                $confirm_diss = _lock_button();
             } else {
                 $confirm_diss = 'disabled';
             }
@@ -1496,7 +1496,7 @@ class Transaksi extends CI_Controller
                     if ($rd->status_jual > 0) {
                         $upd_diss = 'disabled';
                     } else {
-                        $upd_diss = '';
+                        $upd_diss =  _lock_button();
                     }
                 }
             } else {
@@ -1510,7 +1510,7 @@ class Transaksi extends CI_Controller
                     if ($rd->status_jual > 0) {
                         $del_diss = 'disabled';
                     } else {
-                        $del_diss = '';
+                        $del_diss = _lock_button();
                     }
                 }
             } else {
@@ -1521,7 +1521,7 @@ class Transaksi extends CI_Controller
                 if ($rd->status_jual > 0) {
                     $confirm_diss = 'disabled';
                 } else {
-                    $confirm_diss = '';
+                    $confirm_diss = _lock_button();
                 }
             } else {
                 $confirm_diss = 'disabled';
@@ -2058,7 +2058,7 @@ class Transaksi extends CI_Controller
                     if ($rd->status_retur > 0) {
                         $upd_diss = 'disabled';
                     } else {
-                        $upd_diss = '';
+                        $upd_diss =  _lock_button();
                     }
                 }
             } else {
@@ -2072,7 +2072,7 @@ class Transaksi extends CI_Controller
                     if ($rd->status_retur > 0) {
                         $del_diss = 'disabled';
                     } else {
-                        $del_diss = '';
+                        $del_diss = _lock_button();
                     }
                 }
             } else {
@@ -2083,7 +2083,7 @@ class Transaksi extends CI_Controller
                 if ($rd->status_retur > 0) {
                     $confirm_diss = 'disabled';
                 } else {
-                    $confirm_diss = '';
+                    $confirm_diss = _lock_button();
                 }
             } else {
                 $confirm_diss = 'disabled';
@@ -2717,7 +2717,7 @@ class Transaksi extends CI_Controller
     }
 
     // fungsi list penyesuaian_stok
-    public function penyesuaian_stok_list($param1 = 1, $param2 = '')
+    public function penyesuaian_stok_list($param1 = 1, $param2 = '0')
     {
         // parameter untuk list table
         $table            = 'penyesuaian_header';
@@ -2725,7 +2725,7 @@ class Transaksi extends CI_Controller
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
-        $kondisi_param2   = 'kode_gudang';
+        $kondisi_param2   = 'tipe_penyesuaian';
         $kondisi_param1   = 'tgl_penyesuaian';
 
         // kondisi role
@@ -2753,7 +2753,7 @@ class Transaksi extends CI_Controller
                 if ($rd->acc > 0) {
                     $upd_diss = 'disabled';
                 } else {
-                    $upd_diss = '';
+                    $upd_diss =  _lock_button();
                 }
             } else {
                 $upd_diss = 'disabled';
@@ -2763,14 +2763,14 @@ class Transaksi extends CI_Controller
                 if ($rd->acc > 0) {
                     $del_diss = 'disabled';
                 } else {
-                    $del_diss = '';
+                    $del_diss = _lock_button();
                 }
             } else {
                 $del_diss = 'disabled';
             }
 
             if ($confirmed > 0) {
-                $confirm_diss = '';
+                $confirm_diss = _lock_button();
             } else {
                 $confirm_diss = 'disabled';
             }
@@ -2962,6 +2962,168 @@ class Transaksi extends CI_Controller
             echo json_encode(['status' => 1]);
         } else { // selain itu
             // kirim status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    /*
+    * Stok Opname
+    **/
+
+    // so page
+    public function so()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $now = date('Y-m-d');
+
+        $cek_jadwal_so = $this->M_global->getData('jadwal_so', ['tgl_sampai >=' => $now]);
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Transaksi',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Stock Opname',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => 'Transaksi/so_list/',
+            'param1'        => '',
+            'cek_jadwal'    => $cek_jadwal_so,
+        ];
+
+        $this->template->load('Template/Content', 'Barang/So', $parameter);
+    }
+
+    // fungsi list so
+    public function so_list($param1 = 1, $param2 = '1')
+    {
+        // parameter untuk list table
+        $table            = 'penyesuaian_header';
+        $colum            = ['id', 'invoice', 'tgl_penyesuaian', 'jam_penyesuaian', 'kode_user', 'kode_gudang', 'tipe_penyesuaian', 'acc', 'user_acc', 'tgl_acc', 'jam_acc'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['id' => 'asc'];
+        $kondisi_param2   = 'tipe_penyesuaian';
+        $kondisi_param1   = 'tgl_penyesuaian';
+
+        // kondisi role
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $confirmed        = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->confirmed;
+
+        // table server side tampung kedalam variable $list
+        $dat    = explode("~", $param1);
+
+        if ($dat[0] == 1) {
+            $bulan   = date('m');
+            $tahun   = date('Y');
+            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2);
+        } else {
+            $bulan   = date('Y-m-d', strtotime($dat[1]));
+            $tahun   = date('Y-m-d', strtotime($dat[2]));
+            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 2, $bulan, $tahun, $param2, $kondisi_param2);
+        }
+
+        $data             = [];
+        $no               = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($updated > 0) {
+                if ($rd->acc > 0) {
+                    $upd_diss = 'disabled';
+                } else {
+                    $upd_diss =  _lock_button();
+                }
+            } else {
+                $upd_diss = 'disabled';
+            }
+
+            if ($deleted > 0) {
+                if ($rd->acc > 0) {
+                    $del_diss = 'disabled';
+                } else {
+                    $del_diss = _lock_button();
+                }
+            } else {
+                $del_diss = 'disabled';
+            }
+
+            if ($confirmed > 0) {
+                $confirm_diss = _lock_button();
+            } else {
+                $confirm_diss = 'disabled';
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = date('d/m/Y', strtotime($rd->tgl_penyesuaian)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_penyesuaian));
+            $row[]  = $rd->invoice . '<span class="float-right">' . (($rd->acc == 1) ? '<span class="badge badge-primary">ACC</span>' : '<span class="badge badge-danger">Belum di ACC</span>') . '</span>';
+            $row[]  = $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->kode_gudang])->nama;
+            $row[]  = '<div class="text-center">' . (($rd->tipe_penyesuaian == 1) ? '<span class="badge badge-primary text-center">SO</span>' : '<span class="badge badge-success text-center">Adjusment</span>') . '</div>';
+            if ($rd->acc < 1) {
+                $valid = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-success" title="ACC" onclick="valided(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '>
+                    <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+                </button>';
+            } else {
+                $valid = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-dark" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '>
+                    <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+                </button>';
+            }
+            $row[]  = '<div class="text-center">
+                ' . $valid . '
+                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '>
+                    <ion-icon name="create-outline"></ion-icon>
+                </button>
+                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '>
+                    <ion-icon name="close-circle-outline"></ion-icon>
+                </button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables2->count_all($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2),
+            "recordsFiltered" => $this->M_datatables2->count_filtered($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    public function schedule_so()
+    {
+        $id             = $this->input->post('id_so');
+        $tgl_dari_so    = $this->input->post('tgl_dari_so');
+        $jam_dari_so    = $this->input->post('jam_dari_so');
+        $tgl_sampai_so  = $this->input->post('tgl_sampai_so');
+        $jam_sampai_so  = $this->input->post('jam_sampai_so');
+        $status         = 1;
+        $kode_user      = $this->session->userdata('kode_user');
+
+        $data_so = [
+            'tgl_dari'      => $tgl_dari_so,
+            'jam_dari'      => $jam_dari_so,
+            'tgl_sampai'    => $tgl_sampai_so,
+            'jam_sampai'    => $jam_sampai_so,
+            'status'        => $status,
+            'kode_user'     => $kode_user,
+        ];
+
+        if ($id == '' || $id == null) {
+            $cek = $this->M_global->insertData('jadwal_so', $data_so);
+        } else {
+            $cek = $this->M_global->updateData('jadwal_so', $data_so, ['id' => $id]);
+        }
+
+        if ($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
             echo json_encode(['status' => 0]);
         }
     }

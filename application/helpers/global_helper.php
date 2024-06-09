@@ -1030,3 +1030,53 @@ function hitungStokAdjOut($detail, $kode_gudang, $invoice)
         }
     }
 }
+
+function _lock_so()
+{
+    $CI       = &get_instance();
+
+    $date     = date('Y-m-d');
+    $clock    = date('H:i:s');
+
+    $last_so  = $CI->db->query("SELECT * FROM jadwal_so ORDER BY id DESC LIMIT 1")->row();
+
+    if ($last_so) {
+        $cek_so   = $CI->db->query("SELECT * FROM jadwal_so WHERE tgl_sampai >= '$date' AND jam_sampai >= '$clock' AND id = '$last_so->id'")->row();
+
+        if ($cek_so) {
+            $lock = '<div class="alert alert-danger text-center" role="alert">
+                    Saat ini sedang dalam proses Stock Opname, Transaksi sedang tidak bisa dilakukan!
+                </div>';
+        } else {
+            $lock = '';
+        }
+    } else {
+        $lock = '';
+    }
+
+    return $lock;
+}
+
+function _lock_button()
+{
+    $CI       = &get_instance();
+
+    $date     = date('Y-m-d');
+    $clock    = date('H:i:s');
+
+    $last_so  = $CI->db->query("SELECT * FROM jadwal_so ORDER BY id DESC LIMIT 1")->row();
+
+    if ($last_so) {
+        $cek_so   = $CI->db->query("SELECT * FROM jadwal_so WHERE tgl_sampai >= '$date' AND jam_sampai >= '$clock' AND id = '$last_so->id'")->row();
+
+        if ($cek_so) {
+            $lock = 'disabled';
+        } else {
+            $lock = '';
+        }
+    } else {
+        $lock = '';
+    }
+
+    return $lock;
+}

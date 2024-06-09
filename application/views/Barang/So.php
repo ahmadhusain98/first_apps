@@ -2,13 +2,116 @@
 $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->created;
 ?>
 
+<?= _lock_so() ?>
+
 <div class="row">
     <div class="col-md-12">
-        <form method="post" id="form_penyesuaian_stok">
+        <form id="form_schedule_so" method="post">
             <div class="card">
                 <div class="card-header">
-                    <span class="font-weight-bold h4"># Penyesuaian Stok</span>
-                    <button type="button" class="btn btn-sm float-right mb-1 btn-success ml-1" onclick="getUrl('Transaksi/form_penyesuaian_stok/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                    <span class="font-weight-bold h4"># Jadwal SO</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-12 mb-3">
+                            <div class="row text-center">
+                                <div class="col-md-12">
+                                    <span class="h5">PERIODE DARI</span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Tanggal</label>
+                                    <input type="hidden" id="id_so" name="id_so" value="<?= ((!empty($cek_jadwal)) ? $cek_jadwal->id : null) ?>">
+                                    <input type="date" name="tgl_dari_so" id="tgl_dari_so" value="<?= ((!empty($cek_jadwal)) ? date('Y-m-d', strtotime($cek_jadwal->tgl_dari)) : date('Y-m-d')) ?>" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Jam</label>
+                                    <input type="time" name="jam_dari_so" id="jam_dari_so" value="<?= ((!empty($cek_jadwal)) ? date('H:i:s', strtotime($cek_jadwal->jam_dari)) : date('H:i:s', strtotime('23:59:59'))) ?>" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12 mb-3">
+                            <div class="row text-center">
+                                <div class="col-md-12">
+                                    <span class="h5">PERIODE SAMPAI</span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Tanggal</label>
+                                    <input type="date" name="tgl_sampai_so" id="tgl_sampai_so" value="<?= ((!empty($cek_jadwal)) ? date('Y-m-d', strtotime($cek_jadwal->tgl_sampai)) : date('Y-m-d')) ?>" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Jam</label>
+                                    <input type="time" name="jam_sampai_so" id="jam_sampai_so" value="<?= ((!empty($cek_jadwal)) ? date('H:i:s', strtotime($cek_jadwal->jam_sampai)) : date('H:i:s', strtotime('23:59:59'))) ?>" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-danger btn-sm float-right" id="btnSchedule" onclick="buat_schedule()"><ion-icon name="options-outline"></ion-icon> Jalankan Proses SO</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const form_lock = $('#form_schedule_so')
+    var tgl_dari_so = $('#tgl_dari_so')
+    var jam_dari_so = $('#jam_dari_so')
+    var tgl_sampai_so = $('#tgl_sampai_so')
+    var jam_sampai_so = $('#jam_sampai_so')
+
+    function buat_schedule() {
+        if (tgl_dari_so.val() == '' || jam_dari_so.val() == '' || tgl_sampai_so.val() == '' || jam_sampai_so.val() == '' ||
+            tgl_dari_so.val() == null || jam_dari_so.val() == null || tgl_sampai_so.val() == null || jam_sampai_so.val() == null
+        ) {
+            return Swal.fire("Jadwal SO", "Form harus lengkap!, silahkan dicoba kembali", "info");
+        }
+
+        $.ajax({
+            url: siteUrl + 'Transaksi/schedule_so',
+            type: 'POST',
+            data: form_lock.serialize(),
+            dataType: 'JSON',
+            success: function(result) { // jika fungsi berjalan dengan baik
+
+                if (result.status == 1) { // jika mendapatkan hasil 1
+                    Swal.fire("Jadwal Stok", "Berhasil di kunci!", "success").then(() => {
+                        reloadTable();
+                    });
+                } else { // selain itu
+
+                    Swal.fire("Jadwal Stok", "Gagal di kunci!, silahkan dicoba kembali", "info");
+                }
+            },
+            error: function(result) { // jika fungsi error
+
+                error_proccess();
+            }
+        })
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" id="form_so">
+            <div class="card">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"># Stock Opname</span>
+                    <button type="button" class="btn btn-sm float-right mb-1 btn-success ml-1" onclick="getUrl('Transaksi/form_so/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
                     <button type="button" class="btn btn-sm float-right mb-1 btn-primary ml-1" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
                 </div>
                 <div class="card-body">

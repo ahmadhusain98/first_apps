@@ -218,6 +218,7 @@
                         <a type="button" class="dropdown-item dropdown-footer">See All Messages</a>
                     </div>
                 </li>
+
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
                     <?php $sintak = $this->db->query("SELECT * FROM barang_out_header WHERE status_jual = 0 ORDER BY id DESC LIMIT 10")->result(); ?>
