@@ -818,9 +818,9 @@
         <?php endif; ?>
 
         function reloadTable() {
-            if ($.fn.DataTable.isDataTable(table)) {
-                table.DataTable().ajax.reload(null, false);
-            }
+            // if ($.fn.DataTable.isDataTable(table)) {
+            table.DataTable().ajax.reload(null, false);
+            // }
         }
 
         // fungsi select2 global
