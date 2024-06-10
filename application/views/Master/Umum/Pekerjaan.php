@@ -52,8 +52,8 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                                 <tr class="text-center">
                                                     <th width="5%">#</th>
                                                     <th width="20%">ID</th>
-                                                    <th width="55%">Keterangan</th>
-                                                    <th width="20%">Aksi</th>
+                                                    <th width="65%">Keterangan</th>
+                                                    <th width="10%">Aksi</th>
                                                 </tr>
                                             </thead>
                                         </table>

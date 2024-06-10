@@ -8,8 +8,11 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
             <div class="card">
                 <div class="card-header">
                     <span class="font-weight-bold h4"># Pemasok</span>
-                    <button type="button" class="btn btn-sm btn-success float-right ml-2" onclick="getUrl('Master/form_supplier/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
-                    <button type="button" class="btn btn-sm btn-primary float-right" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
+                    <div class="btn-group btn-group-sm float-right" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-warning" onclick="print('supplier')"><ion-icon name="print-outline"></ion-icon> Cetak</button>
+                        <button type="button" class="btn btn-primary" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
+                        <button type="button" class="btn btn-success" onclick="getUrl('Master/form_supplier/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -25,7 +28,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                             <th>Email</th>
                                             <th>Fax</th>
                                             <th width="20%">Alamat</th>
-                                            <th width="20%">Aksi</th>
+                                            <th width="10%">Aksi</th>
                                         </tr>
                                     </thead>
                                 </table>

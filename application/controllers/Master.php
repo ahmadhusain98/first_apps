@@ -98,12 +98,10 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_satuan;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_satuan . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon> Ubah
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_satuan . "'" . ')" ' . $upd_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '>
-                    <ion-icon name="close-circle-outline"></ion-icon> Hapus
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_satuan . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_satuan . "'" . ')" ' . $upd_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -267,12 +265,10 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_kategori;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_kategori . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon> Ubah
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_kategori . "'" . ')" ' . $del_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '>
-                    <ion-icon name="close-circle-outline"></ion-icon> Hapus
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_kategori . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_kategori . "'" . ')" ' . $del_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -478,12 +474,10 @@ class Master extends CI_Controller
             $row[]  = $rd->fax;
             $row[]  = $rd->alamat;
             $row[]  = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_supplier . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon> Ubah
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_supplier . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon> Hapus
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_supplier . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_supplier . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -688,12 +682,10 @@ class Master extends CI_Controller
             $row[]  = '<div class="text-right">' . ((!empty($pajak)) ? $pajak->persentase : '-') . '</div>';
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_gudang . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon> Ubah
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_gudang . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon> Hapus
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_gudang . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_gudang . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -853,12 +845,10 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_bank;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_bank . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon> Ubah
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_bank . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon> Hapus
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_bank . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_bank . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -1021,12 +1011,10 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_pekerjaan;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_pekerjaan . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon> Ubah
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_pekerjaan . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon> Hapus
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_pekerjaan . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_pekerjaan . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -1488,17 +1476,15 @@ class Master extends CI_Controller
             $row[]  = $rd->nama;
             $row[]  = $this->M_global->getData('m_satuan', ['kode_satuan' => $rd->kode_satuan])->keterangan;
             $row[]  = $this->M_global->getData('m_kategori', ['kode_kategori' => $rd->kode_kategori])->keterangan;
-            $row[]  = '<div class="text-right">' . number_format($rd->hna, 2) . '</div>';
-            $row[]  = '<div class="text-right">' . number_format($rd->hpp, 2) . '</div>';
-            $row[]  = '<div class="text-right">' . number_format($rd->harga_jual, 2) . '</div>';
-            $row[]  = '<div class="text-right">' . number_format($rd->nilai_persediaan, 2) . '</div>';
+            $row[]  = '<div class="text-right">' . number_format($rd->hna) . '</div>';
+            $row[]  = '<div class="text-right">' . number_format($rd->hpp) . '</div>';
+            $row[]  = '<div class="text-right">' . number_format($rd->harga_jual) . '</div>';
+            $row[]  = '<div class="text-right">' . number_format($rd->nilai_persediaan) . '</div>';
             $row[]  = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_logistik . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon> Ubah
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_logistik . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon> Hapus
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-dark" title="Ubah" title="Ubah" onclick="ubah(' . "'" . $rd->kode_logistik . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_logistik . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -1674,23 +1660,19 @@ class Master extends CI_Controller
             $row[]  = $rd->email;
             $row[]  = (($rd->jkel == 'P') ? 'Laki-laki' : 'Perempuan');
             $row[]  = '<div class="text-center">' . (($rd->actived == 1) ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-dark">Non-aktif</span>') . '</div>';
+
             if ($rd->actived > 0) {
-                $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-warning" title="Non-aktifkan" onclick="actived(' . "'" . $rd->kode_user . "', 0" . ')" ' . $upd_diss . '>
-                    <ion-icon name="ban-outline"></ion-icon>
-                </button>';
+                $actived_akun = '<button type="button" class="btn btn-dark" title="Non-aktifkan" onclick="actived(' . "'" . $rd->kode_user . "', 0" . ')" ' . $upd_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
             } else {
-                $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-success" title="Aktifkan" onclick="actived(' . "'" . $rd->kode_user . "', 1" . ')" ' . $upd_diss . '>
-                    <ion-icon name="checkmark-done-circle-outline"></ion-icon>
-                </button>';
+                $actived_akun = '<button type="button" class="btn btn-dark" title="Aktifkan" onclick="actived(' . "'" . $rd->kode_user . "', 1" . ')" ' . $upd_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>';
             }
+
             $row[]  = '<div class="text-center">
-                ' . $actived_akun . '
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_user . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_user . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    ' . $actived_akun . '
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_user . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_user . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -1915,12 +1897,10 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_agama;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_agama . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon> Ubah
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_agama . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon> Hapus
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_agama . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_agama . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -2083,12 +2063,10 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_pendidikan;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_pendidikan . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon> Ubah
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_pendidikan . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon> Hapus
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_pendidikan . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_pendidikan . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -2262,12 +2240,10 @@ class Master extends CI_Controller
             }
 
             $row[]  = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_poli . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon> Ubah
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_poli . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon> Hapus
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_poli . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_poli . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -2445,24 +2421,21 @@ class Master extends CI_Controller
             }
             $row[]  = $dpoli;
             $row[]  = '<div class="text-center">' . (($rd->status == 1) ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-dark">Non-aktif</span>') . '</div>';
+
             if ($rd->status > 0) {
-                $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-warning" title="Non-aktifkan" onclick="actived(' . "'" . $rd->kode_dokter . "', 0" . ')" ' . $upd_diss . '>
-                    <ion-icon name="ban-outline"></ion-icon>
-                </button>';
+                $actived_akun = '<button type="button" class="btn btn-dark" title="Non-aktifkan" onclick="actived(' . "'" . $rd->kode_dokter . "', 0" . ')" ' . $upd_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
             } else {
-                $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-success" title="Aktifkan" onclick="actived(' . "'" . $rd->kode_dokter . "', 1" . ')" ' . $upd_diss . '>
-                    <ion-icon name="checkmark-done-circle-outline"></ion-icon>
-                </button>';
+                $actived_akun = '<button type="button" class="btn btn-dark" title="Aktifkan" onclick="actived(' . "'" . $rd->kode_dokter . "', 1" . ')" ' . $upd_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>';
             }
+
             $row[]  = '<div class="text-center">
-                ' . $actived_akun . '
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_dokter . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_dokter . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    ' . $actived_akun . '
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_dokter . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_dokter . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
+
             $data[] = $row;
         }
 
@@ -2727,23 +2700,19 @@ class Master extends CI_Controller
             }
             $row[]  = $dpoli;
             $row[]  = '<div class="text-center">' . (($rd->status == 1) ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-dark">Non-aktif</span>') . '</div>';
+
             if ($rd->status > 0) {
-                $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-warning" title="Non-aktifkan" onclick="actived(' . "'" . $rd->kode_perawat . "', 0" . ')" ' . $upd_diss . '>
-                    <ion-icon name="ban-outline"></ion-icon>
-                </button>';
+                $actived_akun = '<button type="button" class="btn btn-dark" title="Non-aktifkan" onclick="actived(' . "'" . $rd->kode_perawat . "', 0" . ')" ' . $upd_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
             } else {
-                $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-success" title="Aktifkan" onclick="actived(' . "'" . $rd->kode_perawat . "', 1" . ')" ' . $upd_diss . '>
-                    <ion-icon name="checkmark-done-circle-outline"></ion-icon>
-                </button>';
+                $actived_akun = '<button type="button" class="btn btn-dark" title="Aktifkan" onclick="actived(' . "'" . $rd->kode_perawat . "', 1" . ')" ' . $upd_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>';
             }
+
             $row[]  = '<div class="text-center">
-                ' . $actived_akun . '
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_perawat . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_perawat . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    ' . $actived_akun . '
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_perawat . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_perawat . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -2984,12 +2953,10 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_jenis;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_jenis . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon> Ubah
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_jenis . "'" . ')" ' . $del_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '>
-                    <ion-icon name="close-circle-outline"></ion-icon> Hapus
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_jenis . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_jenis . "'" . ')" ' . $del_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
