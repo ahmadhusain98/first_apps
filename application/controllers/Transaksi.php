@@ -3127,4 +3127,69 @@ class Transaksi extends CI_Controller
             echo json_encode(['status' => 0]);
         }
     }
+
+    /*
+    * Riwayat Stok
+    **/
+
+    // riwayat_stok page
+    public function riwayat_stok()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Transaksi',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Stock Opname',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => 'Transaksi/riwayat_stok_list/',
+            'param1'        => null,
+        ];
+
+        $this->template->load('Template/Content', 'Barang/Riwayat_stok', $parameter);
+    }
+
+    // fungsi list riwayat_stok
+    public function riwayat_stok_list($gudang = null)
+    {
+        $this->load->model("M_riwayat_stok");
+        // Retrieve data from the model
+        $list = $this->M_riwayat_stok->get_datatables($gudang);
+
+        $data = [];
+        $no = $_POST['start'] + 1;
+
+        // Loop through the list to populate the data array
+        foreach ($list as $rd) {
+            $row = [];
+            $row[] = $no++;
+            $row[] = $rd->kode_barang;
+            $row[] = $rd->nama;
+            $row[] = $rd->gudang;
+            $row[] = $rd->hpp;
+            $row[] = $rd->harga_jual;
+            $row[] = '<div class="float-right">' . number_format($rd->akhir) . '</div>';
+            $row[] = '<div class="text-center">
+                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-warning" title="Lihat" onclick="lihat(' . "'" . $rd->kode_barang . "'" . ')">
+                    <ion-icon name="eye-outline"></ion-icon>
+                </button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // Prepare the output in JSON format
+        $output = [
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $this->M_riwayat_stok->count_all($gudang),
+            "recordsFiltered" => $this->M_riwayat_stok->count_filtered($gudang),
+            "data" => $data,
+        ];
+
+        // Send the output to the view
+        echo json_encode($output);
+    }
 }
