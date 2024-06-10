@@ -188,7 +188,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
                             Swal.fire("Penyesuaian Stok", "Berhasil di hapus!", "success").then(() => {
-                                reloadTable();
+                                getUrl('Transaksi/so');
                             });
                         } else { // selain itu
 

@@ -2979,7 +2979,7 @@ class Transaksi extends CI_Controller
 
         $now = date('Y-m-d');
 
-        $cek_jadwal_so = $this->M_global->getData('jadwal_so', ['tgl_sampai >=' => $now]);
+        $cek_jadwal_so = $this->M_global->getData('jadwal_so', ['id' => 1]);
 
         $parameter = [
             $this->data,

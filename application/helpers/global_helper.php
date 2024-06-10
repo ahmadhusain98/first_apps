@@ -1080,3 +1080,29 @@ function _lock_button()
 
     return $lock;
 }
+
+function cek_so()
+{
+    $CI       = &get_instance();
+
+    $date     = date('Y-m-d');
+    $clock    = date('H:i:s');
+
+    $last_so  = $CI->db->query("SELECT * FROM jadwal_so WHERE id = 1")->row();
+
+    if ($last_so) {
+        $cek_so   = $CI->db->query("SELECT * FROM jadwal_so WHERE (tgl_sampai >= '$date' AND jam_sampai >= '$clock') AND id = '$last_so->id'")->row();
+
+        if ($cek_so) {
+            $lock = 'disabled';
+        } else {
+            $CI->db->query("UPDATE jadwal_so SET status = 0 WHERE id = 1");
+
+            $lock = '';
+        }
+    } else {
+        $lock = '';
+    }
+
+    return $lock;
+}

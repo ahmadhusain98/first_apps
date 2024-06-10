@@ -163,6 +163,8 @@
     // if ($user_sess->actived < 1) {
     //     redirect('Auth/logout');
     // }
+
+    cek_so();
     ?>
 
     <div class="wrapper">
