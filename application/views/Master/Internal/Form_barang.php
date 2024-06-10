@@ -91,6 +91,24 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label for="stok_min">Stok Minimal <span class="text-danger">**</span></label>
+                                                <input type="text" name="stok_min" id="stok_min" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->stok_min) : '0') ?>" onchange="formatRp(this.value, 'stok_min')">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label for="stok_max">Stok Maksimal <span class="text-danger">**</span></label>
+                                                <input type="text" name="stok_max" id="stok_max" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->stok_max) : '0') ?>" onchange="formatRp(this.value, 'stok_max')">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="filefoto" class="control-label">Gambar</label>

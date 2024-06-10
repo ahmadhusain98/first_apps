@@ -1188,7 +1188,7 @@ class Master extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'barang';
-        $colum            = ['id', 'kode_barang', 'nama', 'kode_satuan', 'kode_kategori', 'kode_jenis', 'hna', 'hpp', 'harga_jual', 'nilai_persediaan'];
+        $colum            = ['id', 'kode_barang', 'nama', 'kode_satuan', 'kode_kategori', 'kode_jenis', 'hna', 'hpp', 'harga_jual', 'nilai_persediaan', 'stok_min', 'stok_max'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -1229,20 +1229,18 @@ class Master extends CI_Controller
                 $jenis[] = $this->M_global->getData('m_jenis', ['kode_jenis' => $bj->kode_jenis])->keterangan;
             }
             $row[]  = $jenis;
-            $row[]  = '<div class="text-right">' . number_format($rd->hna, 2) . '</div>';
-            $row[]  = '<div class="text-right">' . number_format($rd->hpp, 2) . '</div>';
-            $row[]  = '<div class="text-right">' . number_format($rd->harga_jual, 2) . '</div>';
-            $row[]  = '<div class="text-right">' . number_format($rd->nilai_persediaan, 2) . '</div>';
+            $row[]  = '<div class="text-right">' . number_format($rd->hna) . '</div>';
+            $row[]  = '<div class="text-right">' . number_format($rd->hpp) . '</div>';
+            $row[]  = '<div class="text-right">' . number_format($rd->harga_jual) . '</div>';
+            $row[]  = '<div class="text-right">' . number_format($rd->nilai_persediaan) . '</div>';
+            $row[]  = '<div class="text-right">' . number_format($rd->stok_min) . '</div>';
+            $row[]  = '<div class="text-right">' . number_format($rd->stok_max) . '</div>';
             $row[]  = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_barang . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_barang . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </button>
-                <a style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-info" title="Barcode" target="_blank" href="' . site_url('Master/print_barcode/') . $rd->kode_barang . '">
-                    <ion-icon name="barcode-outline"></ion-icon>
-                </a>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-dark" title="Barcode" target="_blank" href="' . site_url('Master/print_barcode/') . $rd->kode_barang . '"><ion-icon name="barcode-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_barang . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_barang . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -1295,6 +1293,8 @@ class Master extends CI_Controller
         $hpp                = str_replace(",", "", $this->input->post('hpp'));
         $harga_jual         = str_replace(",", "", $this->input->post('harga_jual'));
         $nilai_persediaan   = str_replace(",", "", $this->input->post('nilai_persediaan'));
+        $stok_min           = str_replace(",", "", $this->input->post('stok_min'));
+        $stok_max           = str_replace(",", "", $this->input->post('stok_max'));
 
         if ($param == 1) { // jika parameternya 1
             // maka buat kode baru
@@ -1340,6 +1340,8 @@ class Master extends CI_Controller
             'hpp'               => $hpp,
             'harga_jual'        => $harga_jual,
             'nilai_persediaan'  => $nilai_persediaan,
+            'stok_min'          => $stok_min,
+            'stok_max'          => $stok_max,
         ];
 
         if ($param == 1) { // jika parameternya 1
