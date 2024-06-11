@@ -2,64 +2,57 @@
 $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->created;
 ?>
 
-<div class="row">
-    <div class="col-md-12">
-        <form method="post" id="form_kasir">
-            <div class="card">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-md-4 col-6">
-                            <span class="font-weight-bold h4"># Daftar Pembayaran</span>
-                        </div>
-                        <div class="col-md-8 col-6">
-                            <button type="button" class="btn btn-sm float-right ml-1 btn-primary" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
-                            <button type="button" class="btn btn-sm float-right ml-1 btn-success" onclick="getUrl('Kasir/form_kasir/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Pembayaran Penjualan</button>
-                            <button type="button" class="btn btn-sm float-right ml-1 btn-warning" onclick="getUrl('Kasir/form_kasir/0/retur')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Pembayaran Retur Penjualan</button>
-                        </div>
-                    </div>
+<form method="post" id="form_kasir">
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Daftar Pembayaran</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6 col-12">
+            <div class="row">
+                <div class="col-md-4 col-4 mb-3">
+                    <input type="date" name="dari" id="dari" class="form-control" value="<?= date('Y-m-d') ?>">
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 col-12"></div>
-                        <div class="col-md-6 col-12">
-                            <div class="row float-right">
-                                <div class="col-md-5 col-5 mb-3">
-                                    <input type="date" name="dari" id="dari" class="form-control" value="<?= date('Y-m-d') ?>">
-                                </div>
-                                <div class="col-md-5 col-5 mb-3">
-                                    <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
-                                </div>
-                                <div class="col-md-2 col-2 mb-3">
-                                    <button type="button" class="btn btn-secondary btn-sm float-right" onclick="filter('')" title="Filter" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom"><ion-icon name="filter-outline"></ion-icon></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover table-bordered" id="tablePembayaran" width="100%">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th width="5%">#</th>
-                                            <th width="13%">Tgl/Jam Pembayaran</th>
-                                            <th width="15%">Invoice</th>
-                                            <th width="10%">Invoice Penjualan</th>
-                                            <th width="10%">No. Transaksi</th>
-                                            <th width="15%">Jenis Pembayaran</th>
-                                            <th width="10%">Penerima</th>
-                                            <th width="10%">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-md-4 col-4 mb-3">
+                    <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
+                </div>
+                <div class="col-md-4 col-4 mb-3">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="filter('')" title="Filter" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom"><ion-icon name="filter-outline"></ion-icon> Filter</button>
                 </div>
             </div>
-        </form>
+        </div>
+        <div class="col-md-6 col-12">
+            <div class="btn-group btn-group-sm float-right" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
+                <button type="button" class="btn btn-warning" onclick="getUrl('Kasir/form_kasir/0/retur')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Pembayaran Retur Penjualan</button>
+                <button type="button" class="btn btn-success" onclick="getUrl('Kasir/form_kasir/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Pembayaran Penjualan</button>
+            </div>
+        </div>
     </div>
-</div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered" id="tablePembayaran" width="100%">
+                    <thead>
+                        <tr class="text-center">
+                            <th width="5%" class="bg-primary">#</th>
+                            <th width="13%" class="bg-primary">Tgl/Jam Pembayaran</th>
+                            <th width="15%" class="bg-primary">Invoice</th>
+                            <th width="10%" class="bg-primary">Invoice Penjualan</th>
+                            <th width="10%" class="bg-primary">No. Transaksi</th>
+                            <th width="15%" class="bg-primary">Jenis Pembayaran</th>
+                            <th width="10%" class="bg-primary">Penerima</th>
+                            <th width="10%" class="bg-primary">Aksi</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
 
 <script>
     var table = $('#tablePembayaran');

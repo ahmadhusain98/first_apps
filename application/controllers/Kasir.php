@@ -120,33 +120,25 @@ class Kasir extends CI_Controller
             $row[]  = $rd->no_trx;
             $row[]  = ($rd->jenis_pembayaran == 0 ? 'CASH' : (($rd->jenis_pembayaran == 1) ? 'CARD' : 'CASH & CARD'));
             $row[]  = $rd->kode_user . ' ~ ' . $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama;
+
             if ($confirmed > 0) {
                 if ($rd->approved > 0) {
-                    $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-warning" title="Batalkan" onclick="actived(' . "'" . $rd->token_pembayaran . "', 1" . ')" ' . $confirm_diss . '>
-                        <ion-icon name="ban-outline"></ion-icon>
-                    </button>';
+                    $actived_akun = '<button type="button" class="btn btn-dark" title="Batalkan" onclick="actived(' . "'" . $rd->token_pembayaran . "', 1" . ')" ' . $confirm_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
                 } else {
-                    $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-primary" title="Acc" onclick="actived(' . "'" . $rd->token_pembayaran . "', 0" . ')" ' . $confirm_diss . '>
-                        <ion-icon name="checkmark-done-circle-outline"></ion-icon>
-                    </button>';
+                    $actived_akun = '<button type="button" class="btn btn-dark" title="Acc" onclick="actived(' . "'" . $rd->token_pembayaran . "', 0" . ')" ' . $confirm_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
                 }
             } else {
-                $actived_akun = '';
+                $actived_akun = '<button type="button" class="btn btn-dark" title="Acc" disabled><ion-icon name="ban-outline"></ion-icon></button>';
             }
+
             $row[]  = '<div class="text-center">
-                ' . $actived_akun . '
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->token_pembayaran . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->token_pembayaran . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-warning" title="Cetak" onclick="cetak(' . "'" . $rd->token_pembayaran . "', 0" . ')">
-                    <ion-icon name="print-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-info" title="Kirim Email" onclick="email(' . "'" . $rd->token_pembayaran . "'" . ')">
-                    <ion-icon name="send-outline"></ion-icon>
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    ' . $actived_akun . '
+                    <button type="button" class="btn btn-dark" title="Cetak" onclick="cetak(' . "'" . $rd->token_pembayaran . "', 0" . ')"><ion-icon name="print-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Kirim Email" onclick="email(' . "'" . $rd->token_pembayaran . "'" . ')"><ion-icon name="send-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->token_pembayaran . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->token_pembayaran . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -1244,14 +1236,12 @@ class Kasir extends CI_Controller
             $row[]  = date('d/m/Y', strtotime($rd->tgl_pembayaran)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_pembayaran));
             $row[]  = $rd->kode_member . ' ~ ' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama;
             $row[]  = ($rd->jenis_pembayaran == 0 ? 'CASH' : (($rd->jenis_pembayaran == 1) ? 'CARD' : 'CASH & CARD'));
-            $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</sp>';
+            $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
             $row[]  = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }

@@ -2,39 +2,34 @@
 $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->created;
 ?>
 
-<div class="row">
-    <div class="col-md-12">
-        <form method="post" id="form_uangmuka">
-            <div class="card">
-                <div class="card-header">
-                    <span class="font-weight-bold h4"># Laporan Uang Muka</span>
-                    <button type="button" class="btn btn-sm float-right mb-1 btn-primary ml-1" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover table-bordered" id="tableUangMuka" width="100%">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th width="5%">#</th>
-                                            <th width="20%">Member</th>
-                                            <th width="20%">Tgl/Jam Terkahir</th>
-                                            <th width="15%">Invoice Terakhir</th>
-                                            <th width="15%">Masuk</th>
-                                            <th width="15%">Keluar</th>
-                                            <th width="15%">Tersedia</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
+<form method="post" id="form_uangmuka">
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Daftar Uang Muka Member</span>
+            <button type="button" class="btn btn-sm float-right btn-primary ml-1" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
+        </div>
     </div>
-</div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered" id="tableUangMuka" width="100%">
+                    <thead>
+                        <tr class="text-center">
+                            <th width="5%" class="bg-primary">#</th>
+                            <th width="20%" class="bg-primary">Member</th>
+                            <th width="20%" class="bg-primary">Tgl/Jam Terkahir</th>
+                            <th width="15%" class="bg-primary">Invoice Terakhir</th>
+                            <th width="15%" class="bg-primary">Masuk</th>
+                            <th width="15%" class="bg-primary">Keluar</th>
+                            <th width="15%" class="bg-primary">Tersedia</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
 
 <script>
     var table = $('#tableUangMuka');

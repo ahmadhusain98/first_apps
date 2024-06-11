@@ -132,13 +132,13 @@
                 <table class="table table-hover table-bordered" id="tableRiwayat">
                     <thead>
                         <tr class="text-center">
-                            <th class="bg-primary">#</th>
+                            <th class="bg-primary" width="5%">#</th>
                             <th class="bg-primary">No. Transaksi</th>
                             <th class="bg-primary">Tgl/Jam Daftar</th>
                             <th class="bg-primary">Tgl/Jam Keluar</th>
                             <th class="bg-primary">Poli</th>
                             <th class="bg-primary">Dokter</th>
-                            <th class="bg-primary">Aksi</th>
+                            <th class="bg-primary" width="10%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="bodyRiwayat">

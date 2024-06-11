@@ -1,239 +1,234 @@
 <form method="post" id="form_pembayaran">
     <div class="row">
         <div class="col-md-12">
-            <div class="card shadow">
-                <div class="card-header font-weight-bold h4"># Form Deposit</div>
-                <div class="card-body">
-                    <div class="card shadow">
-                        <div class="card-header h5"># Form</div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="">Invoice <sup class="text-danger">**</sup></label>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Invoice" placeholder="Invoice (Otomatis)" id="invoice" name="invoice" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->invoice : '') ?>" readonly>
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">
-                                                <ion-icon name="id-card-outline"></ion-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="">Tgl/Jam Pembayaran <sup class="text-danger">**</sup></label>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="input-group mb-3">
-                                                <input type="date" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Tgl Pembayaran" placeholder="Tgl Pembayaran" id="tgl_pembayaran" name="tgl_pembayaran" value="<?= (!empty($data_pembayaran) ? date('Y-m-d', strtotime($data_pembayaran->tgl_pembayaran)) : date('Y-m-d')) ?>" readonly>
-                                                <div class="input-group-append">
-                                                    <div class="input-group-text">
-                                                        <ion-icon name="calendar-number-outline"></ion-icon>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="input-group mb-3">
-                                                <input type="time" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Jam Pembayaran" placeholder="Jam Pembayaran" id="jam_pembayaran" name="jam_pembayaran" value="<?= (!empty($data_pembayaran) ? date('H:i:s', strtotime($data_pembayaran->jam_pembayaran)) : date('H:i:s')) ?>" readonly>
-                                                <div class="input-group-append">
-                                                    <div class="input-group-text">
-                                                        <ion-icon name="time-outline"></ion-icon>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="">Member<sup class="text-danger">**</sup></label>
-                                    <div class="input-group mb-3">
-                                        <select name="kode_member" id="kode_member" class="form-control select2_member" data-placeholder="~ Pilih Member">
-                                            <?php
-                                            if (!empty($data_pembayaran)) :
-                                                $member = $this->M_global->getData('member', ['kode_member' => $data_pembayaran->kode_member]);
-                                                echo '<option value="' . $data_pembayaran->kode_member . '">' . $data_pembayaran->kode_member . ' ~ Kode Member: ' . $member->kode_member . ' | Nama Member: ' . $this->M_global->getData('member', ['kode_member' => $member->kode_member])->nama . '</option>';
-                                            endif;
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="">Jenis Pembayaran <sup class="text-danger">**</sup></label>
-                                    <input type="hidden" name="jenis_pembayaran" id="jenis_pembayaran" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->jenis_pembayaran : 0) ?>">
-                                    <div class="row mb-3">
-                                        <div class="col-md-4">
-                                            <div class="row">
-                                                <div class="col-md-6 col-6">
-                                                    <input type="checkbox" id="cek_cash" name="cek_cash" class="form-control" onclick="cek_cc(0)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 0) ? 'checked' : '') : '') ?>>
-                                                </div>
-                                                <div class="col-md-6 col-6">CASH</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="row">
-                                                <div class="col-md-6 col-6">
-                                                    <input type="checkbox" id="cek_card" name="cek_card" class="form-control" onclick="cek_cc(1)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 1) ? 'checked' : '') : '') ?>>
-                                                </div>
-                                                <div class="col-md-6 col-6">CARD</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="row">
-                                                <div class="col-md-6 col-6">
-                                                    <input type="checkbox" id="cek_cash_card" name="cek_cash_card" class="form-control" onclick="cek_cc(2)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 2) ? 'checked' : '') : '') ?>>
-                                                </div>
-                                                <div class="col-md-6 col-6">CASH + CARD</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="card shadow">
-                        <div class="card-header h5"># Deposit</div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="" class="text-danger font-weight-bold">Total Deposit</label>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control text-right text-primary font-weight-bold" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Pembayaran Total" placeholder="Pembayaran Total" id="total" name="total" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->total) : '0') ?>" readonly>
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">
-                                                <ion-icon name="wallet-outline"></ion-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6" id="fortableCash">
-                                    <label for="">Cash</label>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control text-right" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Pembayaran Cash" placeholder="Pembayaran Cash" id="cash" name="cash" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->cash) : '0') ?>" onchange="hitung_bayar()">
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">
-                                                <ion-icon name="cash-outline"></ion-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row" id="fortableCard">
-                                <div class="col-md-12">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="input-group mb-3">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="table-responsive">
-                                                            <table class="table table-striped table-hover table-bordered" id="tableBayarCard" style="width: 100%;">
-                                                                <thead>
-                                                                    <tr class="text-center">
-                                                                        <th style="width: 5%;">Hapus</th>
-                                                                        <th style="width: 15%;">Bank</th>
-                                                                        <th style="width: 10%;">Tipe</th>
-                                                                        <th style="width: 20%;">No. Kartu</th>
-                                                                        <th style="width: 20%;">Approval</th>
-                                                                        <th style="width: 20%;">Pembayaran</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody id="bodyBayarCard">
-                                                                    <?php if (!empty($bayar_detail)) : ?>
-                                                                        <?php $no = 1;
-                                                                        foreach ($bayar_detail as $bd) : ?>
-                                                                            <tr id="rowCard<?= $no ?>">
-                                                                                <td>
-                                                                                    <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Hapus" onclick="hapusBaris(<?= $no ?>)"><ion-icon name="ban-outline"></ion-icon></button>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <select name="kode_bank[]" id="kode_bank<?= $no ?>" class="select2_bank" data-placeholder="~ Pilih Bank">
-                                                                                        <option value="<?= $bd->kode_bank ?>"><?= $this->M_global->getData('m_bank', ['kode_bank' => $bd->kode_bank])->keterangan; ?></option>
-                                                                                    </select>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <select name="tipe_bank[]" id="tipe_bank<?= $no ?>" class="select2_tipe_bank" data-placeholder="~ Pilih Tipe Bank">
-                                                                                        <option value="<?= $bd->kode_tipe ?>"><?= $this->M_global->getData('tipe_bank', ['kode_tipe' => $bd->kode_tipe])->keterangan; ?></option>
-                                                                                    </select>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <input type="text" name="no_card[]" id="no_card<?= $no ?>" class="form-control" maxlength="16" value="<?= $bd->no_card ?>">
-                                                                                </td>
-                                                                                <td>
-                                                                                    <input type="text" name="approval[]" id="approval<?= $no ?>" class="form-control" maxlength="6" value="<?= $bd->approval ?>">
-                                                                                </td>
-                                                                                <td>
-                                                                                    <input type="text" name="jumlah_card[]" id="jumlah_card<?= $no ?>" class="form-control text-right" value="<?= number_format($bd->jumlah) ?>" onchange="hitung_card(<?= $no ?>); formatRp(this.value, 'jumlah_card1')">
-                                                                                </td>
-                                                                            </tr>
-                                                                        <?php $no++;
-                                                                        endforeach; ?>
-                                                                    <?php else : ?>
-                                                                        <tr id="rowCard1">
-                                                                            <td>
-                                                                                <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Hapus" onclick="hapusBaris(1)"><ion-icon name="ban-outline"></ion-icon></button>
-                                                                            </td>
-                                                                            <td>
-                                                                                <select name="kode_bank[]" id="kode_bank1" class="select2_bank" data-placeholder="~ Pilih Bank"></select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <select name="tipe_bank[]" id="tipe_bank1" class="select2_tipe_bank" data-placeholder="~ Pilih Tipe Bank"></select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input type="text" name="no_card[]" id="no_card1" class="form-control" maxlength="16">
-                                                                            </td>
-                                                                            <td>
-                                                                                <input type="text" name="approval[]" id="approval1" class="form-control" maxlength="6">
-                                                                            </td>
-                                                                            <td>
-                                                                                <input type="text" name="jumlah_card[]" id="jumlah_card1" class="form-control text-right" value="0" onchange="hitung_card(1); formatRp(this.value, 'jumlah_card1')">
-                                                                            </td>
-                                                                        </tr>
-                                                                    <?php endif; ?>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <input type="hidden" class="form-control" id="jumCard" value="<?= (!empty($bayar_detail) ? count($bayar_detail) : '1') ?>">
-                                            <button type="button" class="btn btn-primary" onclick="tambah_card()"><ion-icon name="add-circle-outline"></ion-icon> Tambah Card</button>
-                                        </div>
-                                        <div class="col-md-6 text-right">
-                                            <div class="row">
-                                                <label for="" class="control-label col-md-3 my-auto">Total Card</label>
-                                                <div class="col-md-9">
-                                                    <input type="text" class="form-control text-right" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Total Card" placeholder="Total Card" id="card" name="card" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->card) : '0') ?>" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir Deposit</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="">Invoice <sup class="text-danger">**</sup></label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Invoice" placeholder="Invoice (Otomatis)" id="invoice" name="invoice" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->invoice : '') ?>" readonly>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <ion-icon name="id-card-outline"></ion-icon>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
+                <div class="col-md-6">
+                    <label for="">Tgl/Jam Pembayaran <sup class="text-danger">**</sup></label>
                     <div class="row">
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Kasir/deposit_um')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
+                            <div class="input-group mb-3">
+                                <input type="date" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Tgl Pembayaran" placeholder="Tgl Pembayaran" id="tgl_pembayaran" name="tgl_pembayaran" value="<?= (!empty($data_pembayaran) ? date('Y-m-d', strtotime($data_pembayaran->tgl_pembayaran)) : date('Y-m-d')) ?>" readonly>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <ion-icon name="calendar-number-outline"></ion-icon>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_pembayaran) ? 'Perbarui' : 'Simpan') ?></button>
-                            <?php if (!empty($data_pembayaran)) : ?>
-                                <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Kasir/form_uangmuka/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
-                            <?php else : ?>
-                                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
-                            <?php endif ?>
+                            <div class="input-group mb-3">
+                                <input type="time" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Jam Pembayaran" placeholder="Jam Pembayaran" id="jam_pembayaran" name="jam_pembayaran" value="<?= (!empty($data_pembayaran) ? date('H:i:s', strtotime($data_pembayaran->jam_pembayaran)) : date('H:i:s')) ?>" readonly>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <ion-icon name="time-outline"></ion-icon>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="">Member<sup class="text-danger">**</sup></label>
+                    <div class="input-group mb-3">
+                        <select name="kode_member" id="kode_member" class="form-control select2_member" data-placeholder="~ Pilih Member">
+                            <?php
+                            if (!empty($data_pembayaran)) :
+                                $member = $this->M_global->getData('member', ['kode_member' => $data_pembayaran->kode_member]);
+                                echo '<option value="' . $data_pembayaran->kode_member . '">' . $data_pembayaran->kode_member . ' ~ Kode Member: ' . $member->kode_member . ' | Nama Member: ' . $this->M_global->getData('member', ['kode_member' => $member->kode_member])->nama . '</option>';
+                            endif;
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="">Jenis Pembayaran <sup class="text-danger">**</sup></label>
+                    <input type="hidden" name="jenis_pembayaran" id="jenis_pembayaran" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->jenis_pembayaran : 0) ?>">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-6 col-6">
+                                    <input type="checkbox" id="cek_cash" name="cek_cash" class="form-control" onclick="cek_cc(0)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 0) ? 'checked' : '') : '') ?>>
+                                </div>
+                                <div class="col-md-6 col-6">CASH</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-6 col-6">
+                                    <input type="checkbox" id="cek_card" name="cek_card" class="form-control" onclick="cek_cc(1)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 1) ? 'checked' : '') : '') ?>>
+                                </div>
+                                <div class="col-md-6 col-6">CARD</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-6 col-6">
+                                    <input type="checkbox" id="cek_cash_card" name="cek_cash_card" class="form-control" onclick="cek_cc(2)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 2) ? 'checked' : '') : '') ?>>
+                                </div>
+                                <div class="col-md-6 col-6">CASH + CARD</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Pembayaran Deposit</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="" class="text-danger font-weight-bold">Total Deposit</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control text-right text-primary font-weight-bold" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Pembayaran Total" placeholder="Pembayaran Total" id="total" name="total" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->total) : '0') ?>" readonly>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <ion-icon name="wallet-outline"></ion-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" id="fortableCash">
+                    <label for="">Cash</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control text-right" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Pembayaran Cash" placeholder="Pembayaran Cash" id="cash" name="cash" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->cash) : '0') ?>" onchange="hitung_bayar()">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <ion-icon name="cash-outline"></ion-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="fortableCard">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered" id="tableBayarCard" style="width: 100%;">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th style="width: 5%;" class="bg-primary">Hapus</th>
+                                            <th style="width: 15%;" class="bg-primary">Bank</th>
+                                            <th style="width: 10%;" class="bg-primary">Tipe</th>
+                                            <th style="width: 20%;" class="bg-primary">No. Kartu</th>
+                                            <th style="width: 20%;" class="bg-primary">Approval</th>
+                                            <th style="width: 20%;" class="bg-primary">Pembayaran</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyBayarCard">
+                                        <?php if (!empty($bayar_detail)) : ?>
+                                            <?php $no = 1;
+                                            foreach ($bayar_detail as $bd) : ?>
+                                                <tr id="rowCard<?= $no ?>">
+                                                    <td>
+                                                        <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Hapus" onclick="hapusBaris(<?= $no ?>)"><ion-icon name="ban-outline"></ion-icon></button>
+                                                    </td>
+                                                    <td>
+                                                        <select name="kode_bank[]" id="kode_bank<?= $no ?>" class="select2_bank" data-placeholder="~ Pilih Bank">
+                                                            <option value="<?= $bd->kode_bank ?>"><?= $this->M_global->getData('m_bank', ['kode_bank' => $bd->kode_bank])->keterangan; ?></option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select name="tipe_bank[]" id="tipe_bank<?= $no ?>" class="select2_tipe_bank" data-placeholder="~ Pilih Tipe Bank">
+                                                            <option value="<?= $bd->kode_tipe ?>"><?= $this->M_global->getData('tipe_bank', ['kode_tipe' => $bd->kode_tipe])->keterangan; ?></option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="no_card[]" id="no_card<?= $no ?>" class="form-control" maxlength="16" value="<?= $bd->no_card ?>">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="approval[]" id="approval<?= $no ?>" class="form-control" maxlength="6" value="<?= $bd->approval ?>">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="jumlah_card[]" id="jumlah_card<?= $no ?>" class="form-control text-right" value="<?= number_format($bd->jumlah) ?>" onchange="hitung_card(<?= $no ?>); formatRp(this.value, 'jumlah_card1')">
+                                                    </td>
+                                                </tr>
+                                            <?php $no++;
+                                            endforeach; ?>
+                                        <?php else : ?>
+                                            <tr id="rowCard1">
+                                                <td>
+                                                    <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Hapus" onclick="hapusBaris(1)"><ion-icon name="ban-outline"></ion-icon></button>
+                                                </td>
+                                                <td>
+                                                    <select name="kode_bank[]" id="kode_bank1" class="select2_bank" data-placeholder="~ Pilih Bank"></select>
+                                                </td>
+                                                <td>
+                                                    <select name="tipe_bank[]" id="tipe_bank1" class="select2_tipe_bank" data-placeholder="~ Pilih Tipe Bank"></select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="no_card[]" id="no_card1" class="form-control" maxlength="16">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="approval[]" id="approval1" class="form-control" maxlength="6">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="jumlah_card[]" id="jumlah_card1" class="form-control text-right" value="0" onchange="hitung_card(1); formatRp(this.value, 'jumlah_card1')">
+                                                </td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="hidden" class="form-control" id="jumCard" value="<?= (!empty($bayar_detail) ? count($bayar_detail) : '1') ?>">
+                            <button type="button" class="btn btn-primary" onclick="tambah_card()"><ion-icon name="add-circle-outline"></ion-icon> Tambah Card</button>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <div class="row">
+                                <label for="" class="control-label col-md-3 my-auto">Total Card</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control text-right" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Total Card" placeholder="Total Card" id="card" name="card" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->card) : '0') ?>" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Kasir/deposit_um')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
+        </div>
+        <div class="col-md-6">
+            <button type="button" class="btn btn-success float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_pembayaran) ? 'Perbarui' : 'Simpan') ?></button>
+            <?php if (!empty($data_pembayaran)) : ?>
+                <button type="button" class="btn btn-info float-right btn-sm" onclick="getUrl('Kasir/form_uangmuka/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+            <?php else : ?>
+                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+            <?php endif ?>
         </div>
     </div>
 </form>
