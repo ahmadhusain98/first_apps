@@ -128,48 +128,35 @@ class Transaksi extends CI_Controller
             $row[]  = $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->kode_gudang])->nama;
             $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama;
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
+
             if ($rd->is_valid < 1) {
                 if ($rd->batal < 1) {
-                    $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-warning" title="Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '>
-                        <ion-icon name="ban-outline"></ion-icon>
-                    </button>';
-                    $valid = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-success" title="ACC" onclick="valided(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '>
-                        <ion-icon name="checkmark-done-circle-outline"></ion-icon>
-                    </button>
-                    <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '>
-                        <ion-icon name="create-outline"></ion-icon>
-                    </button>
-                    <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '>
-                        <ion-icon name="close-circle-outline"></ion-icon>
-                    </button>';
+                    $actived_akun = '<button type="button" class="btn btn-dark" title="Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><ion-icon name="create-outline"></ion-icon></button>';
+
+                    $valid = '<button type="button" class="btn btn-dark" title="ACC" onclick="valided(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>';
                 } else {
-                    $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-dark" title="Re-batalkan" onclick="actived(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '>
-                        <ion-icon name="ban-outline"></ion-icon>
-                    </button>';
-                    $valid = '
-                    <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-warning" title="Cetak" onclick="cetak(' . "'" . $rd->invoice . "', 0" . ')">
-                        <ion-icon name="print-outline"></ion-icon>
-                    </button>
-                    <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-info" title="Kirim Email" onclick="email(' . "'" . $rd->invoice . "', 0" . ')">
-                        <ion-icon name="send-outline"></ion-icon>
-                    </button>';
+                    $actived_akun = '<button type="button" class="btn btn-dark" title="Re-batalkan" onclick="actived(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><ion-icon name="create-outline"></ion-icon></button>';
+
+                    $valid = '<button type="button" class="btn btn-dark" title="Cetak" onclick="cetak(' . "'" . $rd->invoice . "', 0" . ')"><ion-icon name="print-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Kirim Email" onclick="email(' . "'" . $rd->invoice . "', 0" . ')"><ion-icon name="send-outline"></ion-icon></button>';
                 }
             } else {
-                $actived_akun = '';
-                $valid = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-dark" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '>
-                    <ion-icon name="checkmark-done-circle-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-warning" title="Cetak" onclick="cetak(' . "'" . $rd->invoice . "', 0" . ')">
-                    <ion-icon name="print-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-info" title="Kirim Email" onclick="email(' . "'" . $rd->invoice . "', 0" . ')">
-                    <ion-icon name="send-outline"></ion-icon>
-                </button>';
+                $actived_akun = '<button type="button" class="btn btn-dark" title="Batalkan" disabled><ion-icon name="create-outline"></ion-icon></button>';
+
+                $valid = '<button type="button" class="btn btn-dark" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>
+                <button type="button" class="btn btn-dark" title="Cetak" onclick="cetak(' . "'" . $rd->invoice . "', 0" . ')"><ion-icon name="print-outline"></ion-icon></button>
+                <button type="button" class="btn btn-dark" title="Kirim Email" onclick="email(' . "'" . $rd->invoice . "', 0" . ')"><ion-icon name="send-outline"></ion-icon></button>';
             }
+
             $row[]  = '<div class="text-center">
-                ' . $actived_akun . '
-                ' . $valid . '
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    ' . $actived_akun . '
+                    ' . $valid . '
+                </div>
             </div>';
+
             $data[] = $row;
         }
 
@@ -724,36 +711,32 @@ class Transaksi extends CI_Controller
             $row[]  = $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->kode_gudang])->nama;
             $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama;
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
+
             if ($rd->is_valid < 1) {
                 if ($rd->batal < 1) {
-                    $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-warning" title="Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '>
-                        <ion-icon name="ban-outline"></ion-icon>
-                    </button>';
-                    $valid = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-success" title="ACC" onclick="valided(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '>
-                        <ion-icon name="checkmark-done-circle-outline"></ion-icon>
-                    </button>';
+                    $actived_akun = '<button type="button" class="btn btn-dark" title="Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
+
+                    $valid = '<button type="button" class="btn btn-dark" title="ACC" onclick="valided(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>';
                 } else {
-                    $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-dark" title="Re-batalkan" onclick="actived(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '>
-                        <ion-icon name="ban-outline"></ion-icon>
-                    </button>';
-                    $valid = '';
+                    $actived_akun = '<button type="button" class="btn btn-dark" title="Re-batalkan" onclick="actived(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
+
+                    $valid = '<button type="button" class="btn btn-dark" title="ACC" disabled><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>';
                 }
             } else {
-                $actived_akun = '';
-                $valid = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-dark" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '>
-                    <ion-icon name="checkmark-done-circle-outline"></ion-icon>
-                </button>';
+                $actived_akun = '<button type="button" class="btn btn-dark" title="Batalkan" disabled><ion-icon name="ban-outline"></ion-icon></button>';
+
+                $valid = '<button type="button" class="btn btn-dark" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>';
             }
+
             $row[]  = '<div class="text-center">
-                ' . $actived_akun . '
-                ' . $valid . '
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    ' . $actived_akun . '
+                    ' . $valid . '
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
+
             $data[] = $row;
         }
 

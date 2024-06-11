@@ -1,230 +1,221 @@
 <form method="post" id="form_barang_in">
     <div class="row">
         <div class="col-md-12">
-            <div class="card shadow">
-                <div class="card-header">
-                    <div class="h4 font-weight-bold"># Form Pembelian</div>
-                </div>
-                <div class="card-body">
-                    <div class="card shadow">
-                        <div class="card-header">
-                            <div class="h4"># Form</div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Invoice (Otomatis)" id="invoice" name="invoice" value="<?= (!empty($data_barang_in) ? $data_barang_in->invoice : '') ?>" readonly>
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">
-                                                <ion-icon name="id-card-outline"></ion-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="col-md-6 col-6">
-                                            <div class="input-group mb-3">
-                                                <input type="date" title="Tgl Beli" class="form-control" placeholder="Tgl Beli" id="tgl_beli" name="tgl_beli" value="<?= (!empty($data_barang_in) ? date('Y-m-d', strtotime($data_barang_in->tgl_beli)) : date('Y-m-d')) ?>" readonly>
-                                                <div class="input-group-append">
-                                                    <div class="input-group-text">
-                                                        <ion-icon name="today-outline"></ion-icon>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-6">
-                                            <div class="input-group mb-3">
-                                                <input type="time" title="Jam Beli" class="form-control" placeholder="Jam Beli" id="jam_beli" name="jam_beli" value="<?= (!empty($data_barang_in) ? date('H:i:s', strtotime($data_barang_in->jam_beli)) : date('H:i:s')) ?>" readonly>
-                                                <div class="input-group-append">
-                                                    <div class="input-group-text">
-                                                        <ion-icon name="time-outline"></ion-icon>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="input-group mb-3">
-                                        <select name="kode_supplier" id="kode_supplier" class="form-control select2_supplier" data-placeholder="~ Pilih Pemasok">
-                                            <?php
-                                            if (!empty($data_barang_in)) :
-                                                $supplier = $this->M_global->getData('m_supplier', ['kode_supplier' => $data_barang_in->kode_supplier])->nama;
-                                                echo '<option value="' . $data_barang_in->kode_supplier . '">' . $data_barang_in->kode_supplier . ' ~ ' . $supplier . '</option>';
-                                            endif;
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group mb-3">
-                                        <select name="kode_gudang" id="kode_gudang" class="form-control select2_gudang_int" data-placeholder="~ Pilih Gudang">
-                                            <?php
-                                            if (!empty($data_barang_in)) :
-                                                $gudang = $this->M_global->getData('m_gudang', ['kode_gudang' => $data_barang_in->kode_gudang])->nama;
-                                                echo '<option value="' . $data_barang_in->kode_gudang . '">' . $data_barang_in->kode_gudang . ' ~ ' . $gudang . '</option>';
-                                            endif;
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Surat Jalan" id="surat_jalan" name="surat_jalan" value="<?= (!empty($data_barang_in) ? $data_barang_in->surat_jalan : '') ?>">
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">
-                                                <ion-icon name="barcode-outline"></ion-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="No. Faktur" id="no_faktur" name="no_faktur" value="<?= (!empty($data_barang_in) ? $data_barang_in->no_faktur : '') ?>">
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">
-                                                <ion-icon name="pricetag-outline"></ion-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="card shadow">
-                        <div class="card-header">
-                            <div class="h4"># Detail Barang</div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <div class="table-responsive">
-                                        <input type="hidden" name="jumlahBarisBarang" id="jumlahBarisBarang" value="<?= (!empty($barang_detail) ? count($barang_detail) : '0') ?>">
-                                        <table class="table table-striped table-hover table-bordered" id="tableDetailBarangIn">
-                                            <thead>
-                                                <tr class="text-center">
-                                                    <th width="5%">Hapus</th>
-                                                    <th rowspan="2">Barang</th>
-                                                    <th width="14%">Harga</th>
-                                                    <th width="14%">Qty</th>
-                                                    <th width="14%">Disc (%)</th>
-                                                    <th width="14%">Disc (Rp)</th>
-                                                    <th width="5%">Pajak</th>
-                                                    <th width="14%">Jumlah</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="bodyBarangIn">
-                                                <?php if (!empty($barang_detail)) : ?>
-                                                    <?php $no = 1;
-                                                    foreach ($barang_detail as $bd) : ?>
-                                                        <tr id="rowBarangIn<?= $no ?>">
-                                                            <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no ?>" onclick="hapusBarang('<?= $no ?>')"><ion-icon name="ban-outline"></ion-icon></button></td>
-                                                            <td>
-                                                                <input type="hidden" id="kode_barang_in<?= $no ?>" name="kode_barang_in[]" value="<?= $bd->kode_barang ?>">
-                                                                <span><?= $bd->kode_barang ?> ~ <?= $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang])->nama ?></span>
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" id="harga_in<?= $no ?>" name="harga_in[]" value="<?= number_format($bd->harga) ?>" class="form-control text-right" onchange="hitung_st('<?= $no ?>'); formatRp(this.value, 'harga_in<?= $no ?>'); cekHarga(this.value, <?= $no ?>)">
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" id="qty_in<?= $no ?>" name="qty_in[]" value="<?= number_format($bd->qty) ?>" class="form-control text-right" onchange="hitung_st('<?= $no ?>'); formatRp(this.value, 'qty_in<?= $no ?>')">
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" id="discpr_in<?= $no ?>" name="discpr_in[]" value="<?= number_format($bd->discpr) ?>" class="form-control text-right" onchange="hitung_dpr(<?= $no ?>); formatRp(this.value, 'discpr_in<?= $no ?>')">
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" id="discrp_in<?= $no ?>" name="discrp_in[]" value="<?= number_format($bd->discrp) ?>" class="form-control text-right" onchange="hitung_drp(<?= $no ?>); formatRp(this.value, 'discrp_in<?= $no ?>')">
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <input type="checkbox" id="pajak_in<?= $no ?>" name="pajak_in[]" class="form-control" onclick="hitung_st('<?= $no ?>')" <?= (((int)$bd->pajak > 0) ? 'checked' : '') ?>>
-                                                                <input type="hidden" id="pajakrp_in<?= $no ?>" name="pajakrp_in[]" value="<?= number_format($bd->pajakrp) ?>">
-                                                            </td>
-                                                            <td class="text-right">
-                                                                <input type="hidden" id="jumlah_in<?= $no ?>" name="jumlah_in[]" value="<?= number_format($bd->jumlah) ?>" class="form-control text-right" readonly>
-                                                                <span id="jumlah2_in<?= $no ?>"><?= number_format($bd->jumlah) ?></span>
-                                                            </td>
-                                                        </tr>
-                                                    <?php $no++;
-                                                    endforeach; ?>
-                                                <?php endif; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-7 col-12">
-                                    <div class="row">
-                                        <div class="col-md-8 col-6">
-                                            <div class="input-group mb-3">
-                                                <input type="text" class="form-control" placeholder="Masukan Kode/Nama Barang" id="kode_barang" name="kode_barang">
-                                                <div class="input-group-append" onclick="showBarang()">
-                                                    <div class="input-group-text">
-                                                        <ion-icon name="search-outline"></ion-icon>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-6">
-                                            <button type="button" class="btn btn-sm btn-secondary float-right" onclick="searchBarang()" id="btnCari"><ion-icon name="add-circle-outline"></ion-icon> Tambah Barang</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-5 col-12">
-                                    <div class="card">
-                                        <div class="card-footer">
-                                            <div class="row mb-1">
-                                                <label for="subtotal" class="control-label col-md-4 col-12 my-auto">Subtotal <span class="float-right">Rp</span></label>
-                                                <div class="col-md-8 col-12">
-                                                    <input type="text" name="subtotal" id="subtotal" class="form-control text-right" value="<?= ((!empty($data_barang_in)) ? number_format($data_barang_in->subtotal) : '0') ?>" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="row mb-1">
-                                                <label for="diskon" class="control-label col-md-4 col-12 my-auto">Diskon <span class="float-right">Rp</span></label>
-                                                <div class="col-md-8 col-12">
-                                                    <input type="text" name="diskon" id="diskon" class="form-control text-right" value="<?= ((!empty($data_barang_in)) ? number_format($data_barang_in->diskon) : '0') ?>" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="row mb-1">
-                                                <label for="pajak" class="control-label col-md-4 col-12 my-auto">Pajak <span class="float-right">Rp</span></label>
-                                                <div class="col-md-8 col-12">
-                                                    <input type="text" name="pajak" id="pajak" class="form-control text-right" value="<?= ((!empty($data_barang_in)) ? number_format($data_barang_in->pajak) : '0') ?>" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <label for="total" class="control-label col-md-4 col-12 my-auto">Total <span class="float-right">Rp</span></label>
-                                                <div class="col-md-8 col-12">
-                                                    <input type="text" name="total" id="total" class="form-control text-right" value="<?= ((!empty($data_barang_in)) ? number_format($data_barang_in->total) : '0') ?>" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Invoice (Otomatis)" id="invoice" name="invoice" value="<?= (!empty($data_barang_in) ? $data_barang_in->invoice : '') ?>" readonly>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <ion-icon name="id-card-outline"></ion-icon>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
+                <div class="col-md-6">
                     <div class="row">
-                        <div class="col-md-12">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Transaksi/barang_in')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
-                            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_barang_in) ? 'Perbarui' : 'Simpan') ?></button>
-                            <?php if (!empty($data_barang_in)) : ?>
-                                <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Transaksi/form_barang_in/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
-                            <?php else : ?>
-                                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
-                            <?php endif ?>
+                        <div class="col-md-6 col-6">
+                            <div class="input-group mb-3">
+                                <input type="date" title="Tgl Beli" class="form-control" placeholder="Tgl Beli" id="tgl_beli" name="tgl_beli" value="<?= (!empty($data_barang_in) ? date('Y-m-d', strtotime($data_barang_in->tgl_beli)) : date('Y-m-d')) ?>" readonly>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <ion-icon name="today-outline"></ion-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-6">
+                            <div class="input-group mb-3">
+                                <input type="time" title="Jam Beli" class="form-control" placeholder="Jam Beli" id="jam_beli" name="jam_beli" value="<?= (!empty($data_barang_in) ? date('H:i:s', strtotime($data_barang_in->jam_beli)) : date('H:i:s')) ?>" readonly>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <ion-icon name="time-outline"></ion-icon>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <select name="kode_supplier" id="kode_supplier" class="form-control select2_supplier" data-placeholder="~ Pilih Pemasok">
+                            <?php
+                            if (!empty($data_barang_in)) :
+                                $supplier = $this->M_global->getData('m_supplier', ['kode_supplier' => $data_barang_in->kode_supplier])->nama;
+                                echo '<option value="' . $data_barang_in->kode_supplier . '">' . $data_barang_in->kode_supplier . ' ~ ' . $supplier . '</option>';
+                            endif;
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <select name="kode_gudang" id="kode_gudang" class="form-control select2_gudang_int" data-placeholder="~ Pilih Gudang">
+                            <?php
+                            if (!empty($data_barang_in)) :
+                                $gudang = $this->M_global->getData('m_gudang', ['kode_gudang' => $data_barang_in->kode_gudang])->nama;
+                                echo '<option value="' . $data_barang_in->kode_gudang . '">' . $data_barang_in->kode_gudang . ' ~ ' . $gudang . '</option>';
+                            endif;
+                            ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Surat Jalan" id="surat_jalan" name="surat_jalan" value="<?= (!empty($data_barang_in) ? $data_barang_in->surat_jalan : '') ?>">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <ion-icon name="barcode-outline"></ion-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="No. Faktur" id="no_faktur" name="no_faktur" value="<?= (!empty($data_barang_in) ? $data_barang_in->no_faktur : '') ?>">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <ion-icon name="pricetag-outline"></ion-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Detail Barang</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <input type="hidden" name="jumlahBarisBarang" id="jumlahBarisBarang" value="<?= (!empty($barang_detail) ? count($barang_detail) : '0') ?>">
+                <table class="table table-hover table-bordered" id="tableDetailBarangIn">
+                    <thead>
+                        <tr class="text-center">
+                            <th width="5%" class="bg-primary">Hapus</th>
+                            <th rowspan="2" class="bg-primary">Barang</th>
+                            <th width="14%" class="bg-primary">Harga</th>
+                            <th width="14%" class="bg-primary">Qty</th>
+                            <th width="14%" class="bg-primary">Disc (%)</th>
+                            <th width="14%" class="bg-primary">Disc (Rp)</th>
+                            <th width="5%" class="bg-primary">Pajak</th>
+                            <th width="14%" class="bg-primary">Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyBarangIn">
+                        <?php if (!empty($barang_detail)) : ?>
+                            <?php $no = 1;
+                            foreach ($barang_detail as $bd) : ?>
+                                <tr id="rowBarangIn<?= $no ?>">
+                                    <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no ?>" onclick="hapusBarang('<?= $no ?>')"><ion-icon name="ban-outline"></ion-icon></button></td>
+                                    <td>
+                                        <input type="hidden" id="kode_barang_in<?= $no ?>" name="kode_barang_in[]" value="<?= $bd->kode_barang ?>">
+                                        <span><?= $bd->kode_barang ?> ~ <?= $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang])->nama ?></span>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="harga_in<?= $no ?>" name="harga_in[]" value="<?= number_format($bd->harga) ?>" class="form-control text-right" onchange="hitung_st('<?= $no ?>'); formatRp(this.value, 'harga_in<?= $no ?>'); cekHarga(this.value, <?= $no ?>)">
+                                    </td>
+                                    <td>
+                                        <input type="text" id="qty_in<?= $no ?>" name="qty_in[]" value="<?= number_format($bd->qty) ?>" class="form-control text-right" onchange="hitung_st('<?= $no ?>'); formatRp(this.value, 'qty_in<?= $no ?>')">
+                                    </td>
+                                    <td>
+                                        <input type="text" id="discpr_in<?= $no ?>" name="discpr_in[]" value="<?= number_format($bd->discpr) ?>" class="form-control text-right" onchange="hitung_dpr(<?= $no ?>); formatRp(this.value, 'discpr_in<?= $no ?>')">
+                                    </td>
+                                    <td>
+                                        <input type="text" id="discrp_in<?= $no ?>" name="discrp_in[]" value="<?= number_format($bd->discrp) ?>" class="form-control text-right" onchange="hitung_drp(<?= $no ?>); formatRp(this.value, 'discrp_in<?= $no ?>')">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" id="pajak_in<?= $no ?>" name="pajak_in[]" class="form-control" onclick="hitung_st('<?= $no ?>')" <?= (((int)$bd->pajak > 0) ? 'checked' : '') ?>>
+                                        <input type="hidden" id="pajakrp_in<?= $no ?>" name="pajakrp_in[]" value="<?= number_format($bd->pajakrp) ?>">
+                                    </td>
+                                    <td class="text-right">
+                                        <input type="hidden" id="jumlah_in<?= $no ?>" name="jumlah_in[]" value="<?= number_format($bd->jumlah) ?>" class="form-control text-right" readonly>
+                                        <span id="jumlah2_in<?= $no ?>"><?= number_format($bd->jumlah) ?></span>
+                                    </td>
+                                </tr>
+                            <?php $no++;
+                            endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-7 col-12">
+            <div class="row">
+                <div class="col-md-8 col-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Masukan Kode/Nama Barang" id="kode_barang" name="kode_barang">
+                        <div class="input-group-append" onclick="showBarang()">
+                            <div class="input-group-text">
+                                <ion-icon name="search-outline"></ion-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-6">
+                    <button type="button" class="btn btn-sm btn-secondary float-right" onclick="searchBarang()" id="btnCari"><ion-icon name="add-circle-outline"></ion-icon> Tambah Barang</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 col-12">
+            <div class="card">
+                <div class="card-footer">
+                    <div class="row mb-1">
+                        <label for="subtotal" class="control-label col-md-4 col-12 my-auto">Subtotal <span class="float-right">Rp</span></label>
+                        <div class="col-md-8 col-12">
+                            <input type="text" name="subtotal" id="subtotal" class="form-control text-right" value="<?= ((!empty($data_barang_in)) ? number_format($data_barang_in->subtotal) : '0') ?>" readonly>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <label for="diskon" class="control-label col-md-4 col-12 my-auto">Diskon <span class="float-right">Rp</span></label>
+                        <div class="col-md-8 col-12">
+                            <input type="text" name="diskon" id="diskon" class="form-control text-right" value="<?= ((!empty($data_barang_in)) ? number_format($data_barang_in->diskon) : '0') ?>" readonly>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <label for="pajak" class="control-label col-md-4 col-12 my-auto">Pajak <span class="float-right">Rp</span></label>
+                        <div class="col-md-8 col-12">
+                            <input type="text" name="pajak" id="pajak" class="form-control text-right" value="<?= ((!empty($data_barang_in)) ? number_format($data_barang_in->pajak) : '0') ?>" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="total" class="control-label col-md-4 col-12 my-auto">Total <span class="float-right">Rp</span></label>
+                        <div class="col-md-8 col-12">
+                            <input type="text" name="total" id="total" class="form-control text-right" value="<?= ((!empty($data_barang_in)) ? number_format($data_barang_in->total) : '0') ?>" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Transaksi/barang_in')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
+            <button type="button" class="btn btn-success float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_barang_in) ? 'Perbarui' : 'Simpan') ?></button>
+            <?php if (!empty($data_barang_in)) : ?>
+                <button type="button" class="btn btn-info float-right btn-sm" onclick="getUrl('Transaksi/form_barang_in/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+            <?php else : ?>
+                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+            <?php endif ?>
         </div>
     </div>
 </form>
@@ -244,12 +235,12 @@
                     <div class="col-md-12">
                         <div style="height: 400px; overflow: auto;">
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover table-bordered" id="tableSederhanaObat" style="width: 100%;">
+                                <table class="table table-hover table-bordered" id="tableSederhanaObat" style="width: 100%;">
                                     <thead>
                                         <tr class="text-center">
-                                            <th width="5%">#</th>
-                                            <th width="90%">Obat</th>
-                                            <th width="5%">Aksi</th>
+                                            <th width="5%" class="bg-primary">#</th>
+                                            <th width="90%" class="bg-primary">Obat</th>
+                                            <th width="5%" class="bg-primary">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
