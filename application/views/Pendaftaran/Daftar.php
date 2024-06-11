@@ -2,40 +2,37 @@
 $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->created;
 ?>
 
-<div class="row">
-    <div class="col-md-12">
-        <form method="post" id="form_daftar">
-            <div class="card">
-                <div class="card-header">
-                    <span class="font-weight-bold h4"># Daftar Member</span>
-                    <button type="button" class="btn btn-sm float-right mb-1 btn-success ml-1" onclick="getUrl('Health/form_daftar/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
-                    <button type="button" class="btn btn-sm float-right mb-1 btn-primary ml-1" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover table-bordered" id="tableDaftar" width="100%">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th width="5%">#</th>
-                                            <th width="15%">RM</th>
-                                            <th width="10%">NIK</th>
-                                            <th width="25%">Nama</th>
-                                            <th width="20%">Alamat</th>
-                                            <th width="15%">Trx Terakhir</th>
-                                            <th width="10%">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<form method="post" id="form_daftar">
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Daftar Member</span>
+            <div class="btn-group btn-group-sm float-right" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
+                <button type="button" class="btn btn-success" onclick="getUrl('Health/form_daftar/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered" id="tableDaftar" width="100%">
+                    <thead>
+                        <tr class="text-center">
+                            <th width="5%" class="bg-primary">#</th>
+                            <th width="15%" class="bg-primary">RM</th>
+                            <th width="10%" class="bg-primary">NIK</th>
+                            <th width="25%" class="bg-primary">Nama</th>
+                            <th width="20%" class="bg-primary">Alamat</th>
+                            <th width="15%" class="bg-primary">Trx Terakhir</th>
+                            <th width="10%" class="bg-primary">Aksi</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
 
 <!-- modal info member -->
 <div class="modal" tabindex="-1" id="modal_member">

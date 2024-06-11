@@ -2,60 +2,60 @@
 $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->created;
 ?>
 
-<div class="row">
-    <div class="col-md-12">
-        <form method="post" id="form_pendaftaran">
-            <div class="card">
-                <div class="card-header">
-                    <span class="font-weight-bold h4"># Pendaftaran Member</span>
-                    <button type="button" class="btn btn-sm float-right mb-1 btn-success ml-1" onclick="getUrl('Health/form_pendaftaran/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
-                    <button type="button" class="btn btn-sm float-right mb-1 btn-primary ml-1" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
+<form method="post" id="form_pendaftaran">
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Pendaftaran Member</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-4 col-12 mb-3">
+            <select name="kode_poli" id="kode_poli" class="select2_poli" data-placeholder="~ Pilih Poli" onchange="getPoli(this.value)"></select>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="row">
+                <div class="col-md-4 col-5 mb-3">
+                    <input type="date" name="dari" id="dari" class="form-control" value="<?= date('Y-m-d') ?>">
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 col-12 mb-3">
-                            <select name="kode_poli" id="kode_poli" class="select2_poli" data-placeholder="~ Pilih Poli" onchange="getPoli(this.value)"></select>
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <div class="row float-right">
-                                <div class="col-md-5 col-5 mb-3">
-                                    <input type="date" name="dari" id="dari" class="form-control" value="<?= date('Y-m-d') ?>">
-                                </div>
-                                <div class="col-md-5 col-5 mb-3">
-                                    <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
-                                </div>
-                                <div class="col-md-2 col-2 mb-3">
-                                    <button type="button" class="btn btn-secondary btn-sm float-right" onclick="filter($('#kode_poli').val())" title="Filter" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom"><ion-icon name="filter-outline"></ion-icon></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover table-bordered" id="tablePendaftaran" width="100%">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th width="5%">#</th>
-                                            <th width="15%">No. Trx</th>
-                                            <th width="10%">Member</th>
-                                            <th>Tgl/Jam Masuk</th>
-                                            <th>Tgl/Jam Keluar</th>
-                                            <th>Poli</th>
-                                            <th>Dokter</th>
-                                            <th>Status</th>
-                                            <th width="10%">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-md-4 col-5 mb-3">
+                    <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
+                </div>
+                <div class="col-md-4 col-2 mb-3">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="filter($('#kode_poli').val())" title="Filter" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom"><ion-icon name="filter-outline"></ion-icon> Filter</button>
                 </div>
             </div>
-        </form>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="btn-group btn-group-sm float-right" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
+                <button type="button" class="btn btn-success" onclick="getUrl('Health/form_pendaftaran/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+            </div>
+        </div>
     </div>
-</div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered" id="tablePendaftaran" width="100%">
+                    <thead>
+                        <tr class="text-center">
+                            <th width="5%" class="bg-primary">#</th>
+                            <th width="15%" class="bg-primary">No. Trx</th>
+                            <th width="10%" class="bg-primary">Member</th>
+                            <th class="bg-primary">Tgl/Jam Masuk</th>
+                            <th class="bg-primary">Tgl/Jam Keluar</th>
+                            <th class="bg-primary">Poli</th>
+                            <th class="bg-primary">Dokter</th>
+                            <th class="bg-primary">Status</th>
+                            <th width="10%" class="bg-primary">Aksi</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
 
 <script>
     // variable

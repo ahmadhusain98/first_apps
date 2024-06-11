@@ -105,31 +105,26 @@ class Health extends CI_Controller
             $row[]  = $rd->nik;
             $row[]  = $rd->nama . '<br><span class="badge badge-info">' . hitung_umur($rd->tgl_lahir) . '</span>';
             $row[]  = 'Prov. ' . $prov . ',<br>' . $kab . ',<br>Kec. ' . $kec . ',<br>Ds. ' . $rd->desa . ',<br>(POS: ' . $rd->kodepos . '), RT.' . $rd->rt . '/RW.' . $rd->rw;
-            if ($rd->actived > 0) {
-                $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-warning" title="Non-aktifkan" onclick="actived(' . "'" . $rd->kode_member . "', 0" . ')" ' . $upd_diss . '>
-                    <ion-icon name="ban-outline"></ion-icon>
-                </button>';
-            } else {
-                $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-success" title="Aktifkan" onclick="actived(' . "'" . $rd->kode_member . "', 1" . ')" ' . $upd_diss . '>
-                    <ion-icon name="checkmark-done-circle-outline"></ion-icon>
-                </button>';
-            }
             $row[]  = $rd->last_regist . (($rd->status_regist == 1) ? '<span class="badge badge-primary float-right">Buka</span>' : '<span class="badge badge-danger float-right">Tutup</span>');
+
+            if ($rd->actived > 0) {
+                $actived_akun = '<button type="button" class="btn btn-dark" title="Non-aktifkan" onclick="actived(' . "'" . $rd->kode_member . "', 0" . ')" ' . $upd_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
+            } else {
+                $actived_akun = '<button type="button" class="btn btn-dark" title="Aktifkan" onclick="actived(' . "'" . $rd->kode_member . "', 1" . ')" ' . $upd_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>';
+            }
+
             $row[]  = '<div class="text-center">
-                ' . $actived_akun . '
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_member . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_member . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-info" title="Informasi" onclick="info(' . "'" . $rd->kode_member . "'" . ')">
-                    <ion-icon name="information-circle-outline"></ion-icon>
-                </button>
-                <a target="_blank" style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-success" title="Kartu" href="' . site_url("Health/print_card/") . $rd->kode_member . '">
-                    <ion-icon name="id-card-outline"></ion-icon>
-                </a>
+                <div class="btn-group btn-group-sm mb-1" role="group" aria-label="Basic example">
+                    ' . $actived_akun . '
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_member . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_member . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-dark" title="Informasi" onclick="info(' . "'" . $rd->kode_member . "'" . ')"><ion-icon name="information-circle-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Kartu" href="' . site_url("Health/print_card/") . $rd->kode_member . '"><ion-icon name="id-card-outline"></ion-icon></button>
+                </div>
             </div>';
+
             $data[] = $row;
         }
 
@@ -223,7 +218,7 @@ class Health extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != 0) {
+        if ($param != '0') {
             $member = $this->M_global->getData('member', ['kode_member' => $param]);
         } else {
             $member = null;
@@ -501,24 +496,20 @@ class Health extends CI_Controller
             $row[]  = $this->M_global->getData('m_poli', ['kode_poli' => $rd->kode_poli])->keterangan;
             $row[]  = $this->M_global->getData('dokter', ['kode_dokter' => $rd->kode_dokter])->nama;
             $row[]  = '<div class="text-center">' . (($rd->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>')) . '</div>';
+
             if ($rd->status_trx < 1) {
-                $actived_akun = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-warning" title="Batalkan" onclick="actived(' . "'" . $rd->no_trx . "', 0" . ')" ' . $upd_diss . '>
-                    <ion-icon name="ban-outline"></ion-icon>
-                </button>';
+                $actived_akun = '<button type="button" class="btn btn-dark" title="Batalkan" onclick="actived(' . "'" . $rd->no_trx . "', 0" . ')" ' . $upd_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
             } else {
-                $actived_akun = '';
+                $actived_akun = '<button type="button" class="btn btn-dark" title="Batalkan" disabled><ion-icon name="ban-outline"></ion-icon></button>';
             }
+
             $row[]  = '<div class="text-center">
-                ' . $actived_akun . '
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->no_trx . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->no_trx . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </button>
-                <a target="_blank" style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-success" title="Kartu" href="' . site_url("Health/print_pendaftaran/") . $rd->no_trx . '">
-                    <ion-icon name="id-card-outline"></ion-icon>
-                </a>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    ' . $actived_akun . '
+                    <a type="button" class="btn btn-dark" title="Kartu" href="' . site_url("Health/print_pendaftaran/") . $rd->no_trx . '"><ion-icon name="id-card-outline"></ion-icon></a>
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->no_trx . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->no_trx . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                </div>
             </div>';
             $data[] = $row;
         }
@@ -656,7 +647,7 @@ class Health extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != 0) {
+        if ($param != '0') {
             $pendaftaran    = $this->M_global->getData('pendaftaran', ['no_trx' => $param]);
             $kode_member    = $pendaftaran->kode_member;
 

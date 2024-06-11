@@ -1,177 +1,174 @@
 <form method="post" id="form_pendaftaran">
     <div class="row">
         <div class="col-md-12">
-            <div class="card shadow">
-                <div class="card-header">
-                    <span class="font-weight-bold h4"># Form Pendaftaran</span>
-                    <span class="float-right"><button type="button" class="btn btn-sm btn-success" onclick="getUrl('Health/form_daftar/0')"><ion-icon name="person-add-outline"></ion-icon> Member Baru</button></span>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="No. Transaksi" placeholder="No. Transaksi (Otomatis)" id="no_trx" name="no_trx" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_trx : '') ?>" readonly>
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <ion-icon name="id-card-outline"></ion-icon>
-                                    </div>
-                                </div>
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="No. Transaksi" placeholder="No. Transaksi (Otomatis)" id="no_trx" name="no_trx" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_trx : '') ?>" readonly>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <ion-icon name="id-card-outline"></ion-icon>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="No. Antrian" placeholder="No. Antrian (Otomatis)" id="no_antrian" name="no_antrian" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_antrian : '') ?>" readonly>
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <ion-icon name="hand-left-outline"></ion-icon>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="input-group mb-3">
-                                <select name="kode_member" id="kode_member" class="form-control select2_member" data-placeholder="~ Cari Member" onchange="getRiwayat(this.value)">
-                                    <?php
-                                    if (!empty($data_pendaftaran)) :
-                                        $member = $this->M_global->getData('member', ['kode_member' => $data_pendaftaran->kode_member]);
-                                        echo '<option value="' . $member->kode_member . '">' . $member->kode_member . ' ~ ' . $member->nama . '</option>';
-                                    endif;
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-group mb-3">
-                                <select name="kode_poli" id="kode_poli" class="form-control select2_poli" data-placeholder="~ Pilih Poli" onchange="getDokter(this.value)">
-                                    <?php
-                                    if (!empty($data_pendaftaran)) :
-                                        $poli = $this->M_global->getData('m_poli', ['kode_poli' => $data_pendaftaran->kode_poli]);
-                                        echo '<option value="' . $poli->kode_poli . '">' . $poli->kode_poli . ' ~ ' . $poli->keterangan . '</option>';
-                                    endif;
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="input-group mb-3">
-                                        <input type="date" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Tgl Masuk" placeholder="Tgl Masuk" id="tgl_masuk" name="tgl_masuk" value="<?= (!empty($data_pendaftaran) ? date('Y-m-d', strtotime($data_pendaftaran->tgl_daftar)) : date('Y-m-d')) ?>" readonly>
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">
-                                                <ion-icon name="calendar-number-outline"></ion-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group mb-3">
-                                        <input type="time" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Jam Masuk" placeholder="Jam Masuk" id="jam_masuk" name="jam_masuk" value="<?= (!empty($data_pendaftaran) ? date('H:i:s', strtotime($data_pendaftaran->jam_daftar)) : date('H:i:s')) ?>" readonly>
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">
-                                                <ion-icon name="time-outline"></ion-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-group mb-3">
-                                <select name="kode_dokter" id="kode_dokter" class="form-control select2_dokter_poli" data-placeholder="~ Pilih Dokter">
-                                    <?php
-                                    if (!empty($data_pendaftaran)) :
-                                        $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $data_pendaftaran->kode_dokter]);
-                                        echo '<option value="' . $dokter->kode_dokter . '">' . $dokter->kode_dokter . ' ~ ' . $dokter->nama . '</option>';
-                                    endif;
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="input-group mb-3">
-                                <select name="kode_ruang" id="kode_ruang" class="form-control select2_ruang" data-placeholder="~ Pilih Ruang">
-                                    <?php
-                                    if (!empty($data_pendaftaran)) :
-                                        $ruang = $this->M_global->getData('m_ruang', ['kode_ruang' => $data_pendaftaran->kode_ruang]);
-                                        echo '<option value="' . $ruang->kode_ruang . '">' . $ruang->kode_ruang . ' ~ ' . $ruang->keterangan . '</option>';
-                                    endif;
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Health/pendaftaran')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
-                            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_pendaftaran) ? 'Perbarui' : 'Simpan') ?></button>
-                            <?php if (!empty($data_pendaftaran)) : ?>
-                                <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Health/form_pendaftaran/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
-                            <?php else : ?>
-                                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
-                            <?php endif ?>
-                            <button type="button" class="btn btn-primary float-right btn-sm mr-2" onclick="updateMember()" id="btnUMember"><ion-icon name="create-outline"></ion-icon> Update Data Member</button>
                         </div>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="No. Antrian" placeholder="No. Antrian (Otomatis)" id="no_antrian" name="no_antrian" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_antrian : '') ?>" readonly>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <ion-icon name="hand-left-outline"></ion-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <select name="kode_member" id="kode_member" class="form-control select2_member" data-placeholder="~ Cari Member" onchange="getRiwayat(this.value)">
+                            <?php
+                            if (!empty($data_pendaftaran)) :
+                                $member = $this->M_global->getData('member', ['kode_member' => $data_pendaftaran->kode_member]);
+                                echo '<option value="' . $member->kode_member . '">' . $member->kode_member . ' ~ ' . $member->nama . '</option>';
+                            endif;
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <select name="kode_poli" id="kode_poli" class="form-control select2_poli" data-placeholder="~ Pilih Poli" onchange="getDokter(this.value)">
+                            <?php
+                            if (!empty($data_pendaftaran)) :
+                                $poli = $this->M_global->getData('m_poli', ['kode_poli' => $data_pendaftaran->kode_poli]);
+                                echo '<option value="' . $poli->kode_poli . '">' . $poli->kode_poli . ' ~ ' . $poli->keterangan . '</option>';
+                            endif;
+                            ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <input type="date" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Tgl Masuk" placeholder="Tgl Masuk" id="tgl_masuk" name="tgl_masuk" value="<?= (!empty($data_pendaftaran) ? date('Y-m-d', strtotime($data_pendaftaran->tgl_daftar)) : date('Y-m-d')) ?>" readonly>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <ion-icon name="calendar-number-outline"></ion-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <input type="time" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Jam Masuk" placeholder="Jam Masuk" id="jam_masuk" name="jam_masuk" value="<?= (!empty($data_pendaftaran) ? date('H:i:s', strtotime($data_pendaftaran->jam_daftar)) : date('H:i:s')) ?>" readonly>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <ion-icon name="time-outline"></ion-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <select name="kode_dokter" id="kode_dokter" class="form-control select2_dokter_poli" data-placeholder="~ Pilih Dokter">
+                            <?php
+                            if (!empty($data_pendaftaran)) :
+                                $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $data_pendaftaran->kode_dokter]);
+                                echo '<option value="' . $dokter->kode_dokter . '">' . $dokter->kode_dokter . ' ~ ' . $dokter->nama . '</option>';
+                            endif;
+                            ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <select name="kode_ruang" id="kode_ruang" class="form-control select2_ruang" data-placeholder="~ Pilih Ruang">
+                            <?php
+                            if (!empty($data_pendaftaran)) :
+                                $ruang = $this->M_global->getData('m_ruang', ['kode_ruang' => $data_pendaftaran->kode_ruang]);
+                                echo '<option value="' . $ruang->kode_ruang . '">' . $ruang->kode_ruang . ' ~ ' . $ruang->keterangan . '</option>';
+                            endif;
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Health/pendaftaran')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
+                    <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_pendaftaran) ? 'Perbarui' : 'Simpan') ?></button>
+                    <?php if (!empty($data_pendaftaran)) : ?>
+                        <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Health/form_pendaftaran/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                    <?php else : ?>
+                        <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+                    <?php endif ?>
+                    <button type="button" class="btn btn-primary float-right btn-sm mr-2" onclick="updateMember()" id="btnUMember"><ion-icon name="create-outline"></ion-icon> Update Data Member</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Riwayat Member</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered" id="tableRiwayat">
+                    <thead>
+                        <tr class="text-center">
+                            <th class="bg-primary">#</th>
+                            <th class="bg-primary">No. Transaksi</th>
+                            <th class="bg-primary">Tgl/Jam Daftar</th>
+                            <th class="bg-primary">Tgl/Jam Keluar</th>
+                            <th class="bg-primary">Poli</th>
+                            <th class="bg-primary">Dokter</th>
+                            <th class="bg-primary">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyRiwayat">
+                        <?php if (!empty($data_pendaftaran)) : ?>
+                            <?php $no = 1;
+                            foreach ($riwayat as $r) : ?>
+                                <tr>
+                                    <td><?= $no ?></td>
+                                    <td><?= $r->no_trx ?></td>
+                                    <td><?= date('Y-m-d', strtotime($r->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($r->jam_daftar)) ?></td>
+                                    <td><?= '<span class="text-center">' . (($r->status_trx < 1) ? '-' : date('d/m/Y', strtotime($r->tgl_keluar)) . ' ~ ' . date('H:i:s', strtotime($r->jam_keluar))) . '</>' ?></td>
+                                    <td><?= $this->M_global->getData('m_poli', ['kode_poli' => $r->kode_poli])->keterangan ?></td>
+                                    <td><?= $this->M_global->getData('dokter', ['kode_dokter' => $r->kode_dokter])->nama ?></td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getDetail('<?= $r->no_trx ?>')"><ion-icon name="information-circle-outline"></ion-icon></button>
+                                    </td>
+                                </tr>
+                            <?php $no++;
+                            endforeach; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td colspan="7" class="text-center">Belum Ada Riwayat</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </form>
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="card shadow">
-            <div class="card-header">
-                <div class="h4 font-weight-bold"># Riwayat Member</div>
-            </div>
-            <div class="card-body">
-                <div class="ro">
-                    <div class="col-md-12">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover table-bordered" id="tableRiwayat">
-                                <thead>
-                                    <tr class="text-center">
-                                        <th>#</th>
-                                        <th>No. Transaksi</th>
-                                        <th>Tgl/Jam Daftar</th>
-                                        <th>Tgl/Jam Keluar</th>
-                                        <th>Poli</th>
-                                        <th>Dokter</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="bodyRiwayat">
-                                    <?php if (!empty($data_pendaftaran)) : ?>
-                                        <?php $no = 1;
-                                        foreach ($riwayat as $r) : ?>
-                                            <tr>
-                                                <td><?= $no ?></td>
-                                                <td><?= $r->no_trx ?></td>
-                                                <td><?= date('Y-m-d', strtotime($r->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($r->jam_daftar)) ?></td>
-                                                <td><?= '<span class="text-center">' . (($r->status_trx < 1) ? '-' : date('d/m/Y', strtotime($r->tgl_keluar)) . ' ~ ' . date('H:i:s', strtotime($r->jam_keluar))) . '</>' ?></td>
-                                                <td><?= $this->M_global->getData('m_poli', ['kode_poli' => $r->kode_poli])->keterangan ?></td>
-                                                <td><?= $this->M_global->getData('dokter', ['kode_dokter' => $r->kode_dokter])->nama ?></td>
-                                                <td class="text-center">
-                                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getDetail('<?= $r->no_trx ?>')"><ion-icon name="information-circle-outline"></ion-icon></button>
-                                                </td>
-                                            </tr>
-                                        <?php $no++;
-                                        endforeach; ?>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     // variable
