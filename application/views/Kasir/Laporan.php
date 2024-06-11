@@ -1,7 +1,7 @@
 <form method="post" id="form_report">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Parameter Laporan</span>
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Parameter</span>
         </div>
     </div>
     <br>
@@ -43,7 +43,6 @@
             </div>
         </div>
     </div>
-    <br>
     <div class="row">
         <div class="col-md-6 offset-3 col-12 text-center">
             <button class="btn btn-primary btn-sm" type="button" onclick="cetak(0)"><ion-icon name="desktop-outline"></ion-icon> LAYAR</button>
