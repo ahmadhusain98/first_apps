@@ -1,87 +1,83 @@
-<div class="row">
-    <div class="col-md-12">
-        <form method="post" id="form_supplier">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title"><b># Form Pemasok</b></h4>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label for="id" class="control-label">ID <span class="text-danger">**</span></label>
-                                                <input type="text" class="form-control" id="kodeSupplier" name="kodeSupplier" placeholder="Otomatis" readonly value="<?= (!empty($supplier) ? $supplier->kode_supplier : '') ?>">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label for="nama">Nama <span class="text-danger">**</span></label>
-                                                <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama" onkeyup="ubah_nama(this.value, 'nama')" value="<?= (!empty($supplier) ? $supplier->nama : '') ?>">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label for="nohp" class="control-label">No. Hp <span class="text-danger">**</span></label>
-                                                <input type="text" class="form-control" id="nohp" name="nohp" placeholder="Masukan No. Hp" value="<?= (!empty($supplier) ? $supplier->nohp : '') ?>">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label for="email">Email <span class="text-danger">**</span></label>
-                                                <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan Email" onchange="cekEmail('email')" value="<?= (!empty($supplier) ? $supplier->email : '') ?>">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label for="fax" class="control-label">Fax <span class="text-danger">**</span></label>
-                                                <input type="number" class="form-control" id="fax" name="fax" placeholder="Masukan Fax" value="<?= (!empty($supplier) ? $supplier->fax : '') ?>">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label for="alamat">Alamat <span class="text-danger">**</span></label>
-                                                <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Masukkan Alamat" onkeyup="ubah_nama(this.value, 'alamat')" value="<?= (!empty($supplier) ? $supplier->alamat : '') ?>">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+<form method="post" id="form_supplier">
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="id" class="control-label">ID <span class="text-danger">**</span></label>
+                                <input type="text" class="form-control" id="kodeSupplier" name="kodeSupplier" placeholder="Otomatis" readonly value="<?= (!empty($supplier) ? $supplier->kode_supplier : '') ?>">
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Master/supplier')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
-                            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($supplier) ? 'Perbarui' : 'Simpan') ?></button>
-                            <?php if (!empty($supplier)) : ?>
-                                <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Master/form_supplier/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
-                            <?php else : ?>
-                                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
-                            <?php endif ?>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="nama">Nama <span class="text-danger">**</span></label>
+                                <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama" onkeyup="ubah_nama(this.value, 'nama')" value="<?= (!empty($supplier) ? $supplier->nama : '') ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="nohp" class="control-label">No. Hp <span class="text-danger">**</span></label>
+                                <input type="text" class="form-control" id="nohp" name="nohp" placeholder="Masukan No. Hp" value="<?= (!empty($supplier) ? $supplier->nohp : '') ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="email">Email <span class="text-danger">**</span></label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan Email" onchange="cekEmail('email')" value="<?= (!empty($supplier) ? $supplier->email : '') ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="fax" class="control-label">Fax <span class="text-danger">**</span></label>
+                                <input type="number" class="form-control" id="fax" name="fax" placeholder="Masukan Fax" value="<?= (!empty($supplier) ? $supplier->fax : '') ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="alamat">Alamat <span class="text-danger">**</span></label>
+                                <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Masukkan Alamat" onkeyup="ubah_nama(this.value, 'alamat')" value="<?= (!empty($supplier) ? $supplier->alamat : '') ?>">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Master/supplier')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
+            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($supplier) ? 'Perbarui' : 'Simpan') ?></button>
+            <?php if (!empty($supplier)) : ?>
+                <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Master/form_supplier/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+            <?php else : ?>
+                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+            <?php endif ?>
+        </div>
+    </div>
+</form>
 
 <script>
     var table;

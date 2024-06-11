@@ -1,74 +1,70 @@
-<div class="row">
-    <div class="col-md-12">
-        <form method="post" id="form_user">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title"><b># Form User</b></h4>
+<form method="post" id="form_user">
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <input type="hidden" class="form-control" placeholder="Nama Lengkap" id="kodeUser" name="kodeUser" value="<?= ((!empty($data_user)) ? $data_user->kode_user : '') ?>">
+                    <input type="text" class="form-control" placeholder="Nama Lengkap" id="nama" name="nama" value="<?= ((!empty($data_user)) ? $data_user->nama : '') ?>" onkeyup="ubah_nama(this.value, 'nama')">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <ion-icon name="person-outline"></ion-icon>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <div class="input-group mb-3">
-                                    <input type="hidden" class="form-control" placeholder="Nama Lengkap" id="kodeUser" name="kodeUser" value="<?= ((!empty($data_user)) ? $data_user->kode_user : '') ?>">
-                                    <input type="text" class="form-control" placeholder="Nama Lengkap" id="nama" name="nama" value="<?= ((!empty($data_user)) ? $data_user->nama : '') ?>" onkeyup="ubah_nama(this.value, 'nama')">
-                                    <div class="input-group-append">
-                                        <div class="input-group-text">
-                                            <ion-icon name="person-outline"></ion-icon>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <input type="email" class="form-control" placeholder="Email" id="email" name="email" onchange="cekEmail('email')" value="<?= ((!empty($data_user)) ? $data_user->email : '') ?>">
-                                    <div class="input-group-append">
-                                        <div class="input-group-text">
-                                            <ion-icon name="mail-outline"></ion-icon>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <input type="password" class="form-control" placeholder="Sandi" id="password" name="password" value="<?= ((!empty($data_user)) ? $data_user->secondpass : '') ?>">
-                                    <div class="input-group-append" onclick="pass()">
-                                        <div class="input-group-text">
-                                            <ion-icon name="lock-closed-outline" id="lock_pass"></ion-icon>
-                                            <ion-icon name="lock-open-outline" id="open_pass"></ion-icon>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <select name="jkel" id="jkel" class="form-control select2_global" data-placeholder="~ Pilih Gender">
-                                        <option value="">~ Pilih Gender</option>
-                                        <option value="P" <?= (!empty($data_user) ? (($data_user->jkel == 'P') ? 'selected' : '') : '') ?>>Laki-laki</option>
-                                        <option value="W" <?= (!empty($data_user) ? (($data_user->jkel == 'W') ? 'selected' : '') : '') ?>>Perempuan</option>
-                                    </select>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <select name="kode_role" id="kode_role" class="form-control select2_global" data-placeholder="~ Pilih Role">
-                                        <option value="">~ Pilih Role</option>
-                                        <?php foreach ($role as $r) : ?>
-                                            <option value="<?= $r->kode_role ?>" <?= (!empty($data_user) ? (($data_user->kode_role == $r->kode_role) ? 'selected' : '') : '') ?>><?= $r->keterangan ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control" placeholder="Email" id="email" name="email" onchange="cekEmail('email')" value="<?= ((!empty($data_user)) ? $data_user->email : '') ?>">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <ion-icon name="mail-outline"></ion-icon>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Master/user')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
-                            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_user) ? 'Perbarui' : 'Simpan') ?></button>
-                            <?php if (!empty($data_user)) : ?>
-                                <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Master/form_user/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
-                            <?php else : ?>
-                                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
-                            <?php endif ?>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control" placeholder="Sandi" id="password" name="password" value="<?= ((!empty($data_user)) ? $data_user->secondpass : '') ?>">
+                    <div class="input-group-append" onclick="pass()">
+                        <div class="input-group-text">
+                            <ion-icon name="lock-closed-outline" id="lock_pass"></ion-icon>
+                            <ion-icon name="lock-open-outline" id="open_pass"></ion-icon>
                         </div>
                     </div>
+                </div>
+                <div class="input-group mb-3">
+                    <select name="jkel" id="jkel" class="form-control select2_global" data-placeholder="~ Pilih Gender">
+                        <option value="">~ Pilih Gender</option>
+                        <option value="P" <?= (!empty($data_user) ? (($data_user->jkel == 'P') ? 'selected' : '') : '') ?>>Laki-laki</option>
+                        <option value="W" <?= (!empty($data_user) ? (($data_user->jkel == 'W') ? 'selected' : '') : '') ?>>Perempuan</option>
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <select name="kode_role" id="kode_role" class="form-control select2_global" data-placeholder="~ Pilih Role">
+                        <option value="">~ Pilih Role</option>
+                        <?php foreach ($role as $r) : ?>
+                            <option value="<?= $r->kode_role ?>" <?= (!empty($data_user) ? (($data_user->kode_role == $r->kode_role) ? 'selected' : '') : '') ?>><?= $r->keterangan ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Master/user')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
+            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_user) ? 'Perbarui' : 'Simpan') ?></button>
+            <?php if (!empty($data_user)) : ?>
+                <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Master/form_user/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+            <?php else : ?>
+                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+            <?php endif ?>
+        </div>
+    </div>
+</form>
 
 <script>
     var table;

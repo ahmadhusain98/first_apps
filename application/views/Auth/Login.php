@@ -47,7 +47,7 @@
                     </select>
                 </div>
                 <div class="row">
-                    <div class="col-MD-12">
+                    <div class="col-md-12">
                         <button type="button" class="btn btn-primary btn-block" onclick="login()">Masuk</button>
                     </div>
                     <!-- <div class="col-6">

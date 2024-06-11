@@ -2,14 +2,17 @@
 $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->created;
 ?>
 
-<div class="row">
-    <div class="col-md-12">
-        <form method="post" id="form_web">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title"><b># Konfigurasi Website</b></h4>
-                </div>
-                <div class="card-body">
+<form method="post" id="form_web">
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
                     <input type="hidden" name="id_web" id="id_web" class="form-control" value="<?= $web->id ?>">
                     <div class="row">
                         <div class="col-md-6">
@@ -92,13 +95,16 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                         </div>
                     </div>
                 </div>
-                <div class="card-footer text-right">
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12 text-right">
                     <button type="button" class="btn btn-dark btn-sm" id="btnSimpan" onclick="simpan()" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="save-outline"></ion-icon> Simpan</button>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
 <script>
     var nama_web = $('#nama_web');

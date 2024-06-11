@@ -2,71 +2,64 @@
 $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->created;
 ?>
 
-<div class="row">
-    <div class="col-md-12">
-        <form method="post" id="form_jenis">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title"><b># Jenis</b></h4>
-                </div>
-                <div class="card-body">
-                    <div class="card shadow">
-                        <div class="card-header"># Form</div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label for="id" class="control-label">ID <span class="text-danger">**</span></label>
-                                                <input type="text" class="form-control" id="kodeJenis" name="kodeJenis" placeholder="Otomatis" readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label for="keterangan">Keterangan <span class="text-danger">**</span></label>
-                                                <input type="text" class="form-control" id="keterangan" name="keterangan" placeholder="Masukkan Jenis" onkeyup="ubah_nama(this.value, 'keterangan')">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+<form method="post" id="form_jenis">
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="id" class="control-label">ID <span class="text-danger">**</span></label>
+                                <input type="text" class="form-control" id="kodeJenis" name="kodeJenis" placeholder="Otomatis" readonly>
                             </div>
-                            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="save-outline"></ion-icon> Simpan</button>
-                            <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
                         </div>
                     </div>
-                    <br>
-                    <div class="card shadow">
-                        <div class="card-header">
-                            <span># Daftar</span>
-                            <button type="button" class="btn btn-sm btn-primary float-right" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-hover table-bordered" id="tableJenis" width="100%">
-                                            <thead>
-                                                <tr class="text-center">
-                                                    <th width="5%">#</th>
-                                                    <th width="20%">ID</th>
-                                                    <th width="65%">Keterangan</th>
-                                                    <th width="10%">Aksi</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
-                                </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="keterangan">Keterangan <span class="text-danger">**</span></label>
+                                <input type="text" class="form-control" id="keterangan" name="keterangan" placeholder="Masukkan Jenis" onkeyup="ubah_nama(this.value, 'keterangan')">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </form>
+            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="save-outline"></ion-icon> Simpan</button>
+            <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+        </div>
     </div>
-</div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Daftar Jenis</span>
+            <button type="button" class="btn btn-sm btn-primary float-right" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered" id="tableJenis" width="100%">
+                    <thead>
+                        <tr class="text-center">
+                            <th width="5%" class="bg-primary">#</th>
+                            <th width="20%" class="bg-primary">ID</th>
+                            <th width="65%" class="bg-primary">Keterangan</th>
+                            <th width="10%" class="bg-primary">Aksi</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
 
 <script>
     // variable

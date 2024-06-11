@@ -175,7 +175,7 @@
         </div>
 
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light shadow-sm">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -195,15 +195,15 @@
                         <span class="badge badge-info"><?= 'Shift ~ ke: ' . $this->data["shift"] ?></span>
                     </a>
                 </li>
-                <li class="nav-item dropdown">
+                <!-- <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" type="button">
                         <ion-icon name="chatbubbles-outline" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Perpesanan"></ion-icon>
                         <span class="badge badge-danger navbar-badge">3</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <a type="button" class="dropdown-item">
-                            <!-- Message Start -->
-                            <div class="media">
+                        <a type="button" class="dropdown-item"> -->
+                <!-- Message Start -->
+                <!-- <div class="media">
                                 <img src="<?= base_url() ?>assets/dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -213,13 +213,13 @@
                                     <p class="text-sm">I got your message bro</p>
                                     <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
                                 </div>
-                            </div>
-                            <!-- Message End -->
-                        </a>
+                            </div> -->
+                <!-- Message End -->
+                <!-- </a>
                         <div class="dropdown-divider"></div>
                         <a type="button" class="dropdown-item dropdown-footer">See All Messages</a>
                     </div>
-                </li>
+                </li> -->
 
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
@@ -381,23 +381,27 @@
         </aside>
 
         <!-- wrapper -->
-        <div class="content-wrapper" style="background-color: #171717;">
+        <div class="content-wrapper" style="background-color: white;">
             <div class="content-header">
                 <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6"></div>
-                        <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ol class="breadcrumb float-sm-left">
+                                <h2 class="font-weight-bold">@ <?= (!empty($page) ? $page : 'NULL') ?></h2>
+                            </ol>
+                        </div>
+                        <div class="col-sm-6 m-auto">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a type="button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Tooltip on left" title="Beranda" onclick="getUrl('Home')" class="text-light"><ion-icon name="home-outline"></ion-icon></a></li>
+                                <li class="breadcrumb-item"><a type="button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Tooltip on left" title="Beranda" onclick="getUrl('Home')" class="text-dark"><ion-icon name="home-outline"></ion-icon></a></li>
                                 <?php if ($this->uri->segment(1) != 'Home') : ?>
                                     <?php
                                     $sub_menul = $this->db->query("SELECT * FROM sub_menu sm WHERE sm.id_menu IN (SELECT id FROM m_menu WHERE url = '" . $this->data["menu"] . "')")->num_rows();
                                     if ($sub_menul > 0) :
                                     ?>
-                                        <li class="breadcrumb-item active text-white"><?= $this->data["menu"] ?></li>
-                                        <li class="breadcrumb-item active text-white"><?= $page ?></li>
+                                        <li class="breadcrumb-item active text-dark"><?= $this->data["menu"] ?></li>
+                                        <li class="breadcrumb-item active text-dark"><?= $page ?></li>
                                     <?php else : ?>
-                                        <li class="breadcrumb-item active text-white"><?= $page ?></li>
+                                        <li class="breadcrumb-item active text-dark"><?= $page ?></li>
                                     <?php endif; ?>
                                 <?php endif; ?>
                             </ol>
@@ -420,9 +424,10 @@
             <!-- body -->
             <section class="content">
                 <div class="container-fluid">
+                    <hr>
                     <?= $content ?>
-                    <br>
                 </div>
+                <br>
             </section>
         </div>
 
