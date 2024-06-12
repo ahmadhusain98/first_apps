@@ -1517,26 +1517,20 @@ class Transaksi extends CI_Controller
             $row[]  = $rd->kode_member . ' ~ ' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama;
             $row[]  = $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->kode_gudang])->nama;
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
+
             if ($rd->batal < 1) {
-                $actived_jual = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '>
-                    <ion-icon name="ban-outline"></ion-icon>
-                </button>';
+                $actived_jual = '<button type="button" class="btn btn-dark" title="Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><ion-icon name="create-outline"></ion-icon></button>';
             } else {
-                $actived_jual = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-dark" title="Re-batalkan" onclick="actived(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '>
-                    <ion-icon name="ban-outline"></ion-icon>
-                </button>';
+                $actived_jual = '<button type="button" class="btn btn-dark" title="Re-batalkan" onclick="actived(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><ion-icon name="create-outline"></ion-icon></button>';
             }
+
             $row[]  = '<div class="text-center">
-                ' . $actived_jual . '
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </button>
-                <a target="_blank" style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-success" title="Kartu" href="' . site_url("Transaksi/print_barang_out/") . $rd->invoice . '">
-                    <ion-icon name="id-card-outline"></ion-icon>
-                </a>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    ' . $actived_jual . '
+                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
+                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
+                    <a target="_blank" type="button" class="btn btn-dark" title="Kartu" href="' . site_url("Transaksi/print_barang_out/") . $rd->invoice . '"><ion-icon name="id-card-outline"></ion-icon></a>
+                </div>
             </div>';
             $data[] = $row;
         }
