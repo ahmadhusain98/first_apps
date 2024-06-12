@@ -1,150 +1,141 @@
 <form method="post" id="form_penyesuaian_stok">
     <div class="row">
         <div class="col-md-12">
-            <div class="card shadow">
-                <div class="card-header">
-                    <div class="h4 font-weight-bold"># Form Penyesuaian</div>
-                </div>
-                <div class="card-body">
-                    <div class="card shadow">
-                        <div class="card-header">
-                            <div class="h4"># Form</div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Invoice (Otomatis)" id="invoice" name="invoice" value="<?= (!empty($data_penyesuaian_stok) ? $data_penyesuaian_stok->invoice : '') ?>" readonly>
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">
-                                                <ion-icon name="id-card-outline"></ion-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="col-md-6 col-6">
-                                            <div class="input-group mb-3">
-                                                <input type="date" title="Tgl Penyesuaian" class="form-control" placeholder="Tgl Penyesuaian" id="tgl_penyesuaian" name="tgl_penyesuaian" value="<?= (!empty($data_penyesuaian_stok) ? date('Y-m-d', strtotime($data_penyesuaian_stok->tgl_penyesuaian)) : date('Y-m-d')) ?>" readonly>
-                                                <div class="input-group-append">
-                                                    <div class="input-group-text">
-                                                        <ion-icon name="today-outline"></ion-icon>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-6">
-                                            <div class="input-group mb-3">
-                                                <input type="time" title="Jam Penyesuaian" class="form-control" placeholder="Jam Penyesuaian" id="jam_penyesuaian" name="jam_penyesuaian" value="<?= (!empty($data_penyesuaian_stok) ? date('H:i:s', strtotime($data_penyesuaian_stok->jam_penyesuaian)) : date('H:i:s')) ?>" readonly>
-                                                <div class="input-group-append">
-                                                    <div class="input-group-text">
-                                                        <ion-icon name="time-outline"></ion-icon>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="input-group mb-3">
-                                        <select name="kode_gudang" id="kode_gudang" class="form-control select2_gudang_int" data-placeholder="~ Pilih Gudang">
-                                            <?php
-                                            if (!empty($data_penyesuaian_stok)) :
-                                                $gudang = $this->M_global->getData('m_gudang', ['kode_gudang' => $data_penyesuaian_stok->kode_gudang])->nama;
-                                                echo '<option value="' . $data_penyesuaian_stok->kode_gudang . '">' . $data_penyesuaian_stok->kode_gudang . ' ~ ' . $gudang . '</option>';
-                                            endif;
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group mb-3">
-                                        <input type="text" id="tipe_penyesuaianx" name="tipe_penyesuaianx" class="form-control" placeholder="Adjusment" readonly>
-                                        <input type="hidden" value="0" id="tipe_penyesuaian" name="tipe_penyesuaian">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="card shadow">
-                        <div class="card-header">
-                            <div class="h4"># Detail Barang</div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <div class="table-responsive">
-                                        <input type="hidden" name="jumlahBarisBarang" id="jumlahBarisBarang" value="<?= (!empty($barang_detail) ? count($barang_detail) : '0') ?>">
-                                        <table class="table table-striped table-hover table-bordered" id="tableDetailPenyesuaianStok">
-                                            <thead>
-                                                <tr class="text-center">
-                                                    <th width="5%">Hapus</th>
-                                                    <th width="80%">Barang</th>
-                                                    <th width="15%">Qty</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="bodyPenyesuaianStok">
-                                                <?php if (!empty($barang_detail)) : ?>
-                                                    <?php $no = 1;
-                                                    foreach ($barang_detail as $bd) : ?>
-                                                        <tr id="rowPenyesuaianStok<?= $no ?>">
-                                                            <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no ?>" onclick="hapusBarang('<?= $no ?>')"><ion-icon name="ban-outline"></ion-icon></button></td>
-                                                            <td>
-                                                                <input type="hidden" id="kode_penyesuaian_stok<?= $no ?>" name="kode_penyesuaian_stok[]" value="<?= $bd->kode_barang ?>">
-                                                                <span><?= $bd->kode_barang ?> ~ <?= $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang])->nama ?></span>
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" id="qty_ps<?= $no ?>" name="qty_ps[]" value="<?= number_format($bd->qty) ?>" class="form-control text-right" onchange="hitung_st('<?= $no ?>'); formatRp(this.value, 'qty_in<?= $no ?>')">
-                                                            </td>
-                                                        </tr>
-                                                    <?php $no++;
-                                                    endforeach; ?>
-                                                <?php endif; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-7 col-12">
-                                    <div class="row">
-                                        <div class="col-md-8 col-6">
-                                            <div class="input-group mb-3">
-                                                <input type="text" class="form-control" placeholder="Masukan Kode/Nama Barang" id="kode_barang" name="kode_barang">
-                                                <div class="input-group-append" onclick="showBarang()">
-                                                    <div class="input-group-text">
-                                                        <ion-icon name="search-outline"></ion-icon>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-6">
-                                            <button type="button" class="btn btn-sm btn-secondary float-right" onclick="searchBarang()" id="btnCari"><ion-icon name="add-circle-outline"></ion-icon> Tambah Barang</button>
-                                        </div>
-                                    </div>
-                                </div>
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Invoice (Otomatis)" id="invoice" name="invoice" value="<?= (!empty($data_penyesuaian_stok) ? $data_penyesuaian_stok->invoice : '') ?>" readonly>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <ion-icon name="id-card-outline"></ion-icon>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
+                <div class="col-md-6">
                     <div class="row">
-                        <div class="col-md-12">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Transaksi/penyesuaian_stok')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
-                            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_penyesuaian_stok) ? 'Perbarui' : 'Simpan') ?></button>
-                            <?php if (!empty($data_penyesuaian_stok)) : ?>
-                                <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Transaksi/form_penyesuaian_stok/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
-                            <?php else : ?>
-                                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
-                            <?php endif ?>
+                        <div class="col-md-6 col-6">
+                            <div class="input-group mb-3">
+                                <input type="date" title="Tgl Penyesuaian" class="form-control" placeholder="Tgl Penyesuaian" id="tgl_penyesuaian" name="tgl_penyesuaian" value="<?= (!empty($data_penyesuaian_stok) ? date('Y-m-d', strtotime($data_penyesuaian_stok->tgl_penyesuaian)) : date('Y-m-d')) ?>" readonly>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <ion-icon name="today-outline"></ion-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-6">
+                            <div class="input-group mb-3">
+                                <input type="time" title="Jam Penyesuaian" class="form-control" placeholder="Jam Penyesuaian" id="jam_penyesuaian" name="jam_penyesuaian" value="<?= (!empty($data_penyesuaian_stok) ? date('H:i:s', strtotime($data_penyesuaian_stok->jam_penyesuaian)) : date('H:i:s')) ?>" readonly>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <ion-icon name="time-outline"></ion-icon>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <select name="kode_gudang" id="kode_gudang" class="form-control select2_gudang_int" data-placeholder="~ Pilih Gudang">
+                            <?php
+                            if (!empty($data_penyesuaian_stok)) :
+                                $gudang = $this->M_global->getData('m_gudang', ['kode_gudang' => $data_penyesuaian_stok->kode_gudang])->nama;
+                                echo '<option value="' . $data_penyesuaian_stok->kode_gudang . '">' . $data_penyesuaian_stok->kode_gudang . ' ~ ' . $gudang . '</option>';
+                            endif;
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" id="tipe_penyesuaianx" name="tipe_penyesuaianx" class="form-control" placeholder="Adjusment" readonly>
+                        <input type="hidden" value="0" id="tipe_penyesuaian" name="tipe_penyesuaian">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Detail Barang</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <input type="hidden" name="jumlahBarisBarang" id="jumlahBarisBarang" value="<?= (!empty($barang_detail) ? count($barang_detail) : '0') ?>">
+                <table class="table table-striped table-hover table-bordered" id="tableDetailPenyesuaianStok">
+                    <thead>
+                        <tr class="text-center">
+                            <th width="5%">Hapus</th>
+                            <th width="80%">Barang</th>
+                            <th width="15%">Qty</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyPenyesuaianStok">
+                        <?php if (!empty($barang_detail)) : ?>
+                            <?php $no = 1;
+                            foreach ($barang_detail as $bd) : ?>
+                                <tr id="rowPenyesuaianStok<?= $no ?>">
+                                    <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no ?>" onclick="hapusBarang('<?= $no ?>')"><ion-icon name="ban-outline"></ion-icon></button></td>
+                                    <td>
+                                        <input type="hidden" id="kode_penyesuaian_stok<?= $no ?>" name="kode_penyesuaian_stok[]" value="<?= $bd->kode_barang ?>">
+                                        <span><?= $bd->kode_barang ?> ~ <?= $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang])->nama ?></span>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="qty_ps<?= $no ?>" name="qty_ps[]" value="<?= number_format($bd->qty) ?>" class="form-control text-right" onchange="hitung_st('<?= $no ?>'); formatRp(this.value, 'qty_in<?= $no ?>')">
+                                    </td>
+                                </tr>
+                            <?php $no++;
+                            endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-7 col-12">
+            <div class="row">
+                <div class="col-md-8 col-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Masukan Kode/Nama Barang" id="kode_barang" name="kode_barang">
+                        <div class="input-group-append" onclick="showBarang()">
+                            <div class="input-group-text">
+                                <ion-icon name="search-outline"></ion-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-6">
+                    <button type="button" class="btn btn-sm btn-secondary float-right" onclick="searchBarang()" id="btnCari"><ion-icon name="add-circle-outline"></ion-icon> Tambah Barang</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Transaksi/penyesuaian_stok')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
+            <button type="button" class="btn btn-success float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_penyesuaian_stok) ? 'Perbarui' : 'Simpan') ?></button>
+            <?php if (!empty($data_penyesuaian_stok)) : ?>
+                <button type="button" class="btn btn-info float-right btn-sm" onclick="getUrl('Transaksi/form_penyesuaian_stok/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+            <?php else : ?>
+                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+            <?php endif ?>
         </div>
     </div>
 </form>
