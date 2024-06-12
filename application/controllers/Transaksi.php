@@ -3145,7 +3145,7 @@ class Transaksi extends CI_Controller
             $this->data,
             'judul'         => 'Transaksi',
             'nama_apps'     => $web_setting->nama,
-            'page'          => 'Stock Opname',
+            'page'          => 'Riwayat Stok',
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
             'list_data'     => 'Transaksi/riwayat_stok_list/',
