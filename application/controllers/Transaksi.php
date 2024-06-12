@@ -2027,15 +2027,19 @@ class Transaksi extends CI_Controller
 
         // table server side tampung kedalam variable $list
         $dat              = explode("~", $param1);
+
         if ($dat[0] == 1) {
             $bulan        = date('m');
             $tahun        = date('Y');
-            $list         = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2);
+            $type         = 1;
         } else {
             $bulan        = date('Y-m-d', strtotime($dat[1]));
             $tahun        = date('Y-m-d', strtotime($dat[2]));
-            $list         = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 2, $bulan, $tahun, $param2, $kondisi_param2);
+            $type         = 2;
         }
+
+        $list             = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2);
+
         $data             = [];
         $no               = $_POST['start'] + 1;
 

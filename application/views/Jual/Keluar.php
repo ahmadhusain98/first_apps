@@ -16,13 +16,13 @@ echo _lock_so();
         </div>
         <div class="col-md-4 col-12">
             <div class="row">
-                <div class="col-md-4 col-4 mb-3">
+                <div class="col-md-4 col-4">
                     <input type="date" name="dari" id="dari" class="form-control" value="<?= date('Y-m-d') ?>">
                 </div>
-                <div class="col-md-4 col-4 mb-3">
+                <div class="col-md-4 col-4">
                     <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
                 </div>
-                <div class="col-md-4 col-4 mb-3">
+                <div class="col-md-4 col-4">
                     <button type="button" class="btn btn-secondary btn-sm" onclick="filter($('#kode_gudang').val())" title="Filter" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom"><ion-icon name="filter-outline"></ion-icon> Filter</button>
                 </div>
             </div>
