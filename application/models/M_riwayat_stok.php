@@ -5,8 +5,8 @@ class M_riwayat_stok extends CI_Model
 {
 
     var $table = 'barang';
-    var $order = ['b.id', 'b.kode_barang', 'b.image', 'b.nama', 'b.hna', 'b.hpp', 'b.harga_jual', 'b.nilai_persediaan', 'g.nama AS gudang', 'bs.akhir'];
-    var $kolom = ['b.id', 'b.kode_barang', 'b.image', 'b.nama', 'b.hna', 'b.hpp', 'b.harga_jual', 'b.nilai_persediaan', 'g.nama AS gudang', 'bs.akhir'];
+    var $order = ['b.id', 'b.kode_barang', 'b.image', 'b.nama', 'b.hna', 'b.hpp', 'b.harga_jual', 'b.nilai_persediaan', 'g.nama AS gudang', 'bs.akhir', 'b.stok_min', 'b.stok_max'];
+    var $kolom = ['b.id', 'b.kode_barang', 'b.image', 'b.nama', 'b.hna', 'b.hpp', 'b.harga_jual', 'b.nilai_persediaan', 'g.nama AS gudang', 'bs.akhir', 'b.stok_min', 'b.stok_max'];
 
     public function __construct()
     {

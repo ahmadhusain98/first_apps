@@ -3172,9 +3172,10 @@ class Transaksi extends CI_Controller
             $row[] = $rd->kode_barang;
             $row[] = $rd->nama;
             $row[] = $rd->gudang;
-            $row[] = $rd->hpp;
-            $row[] = $rd->harga_jual;
+            $row[] = '<div class="float-right">' . number_format($rd->stok_min) . '</div>';
+            $row[] = '<div class="float-right">' . number_format($rd->stok_max) . '</div>';
             $row[] = '<div class="float-right">' . number_format($rd->akhir) . '</div>';
+            $row[] = '<div class="text-center">' . (($rd->akhir < $rd->stok_min) ? '<span class="badge badge-danger">Stok Menipis</span>' : (($rd->stok_max < $rd->akhir) ? '<span class="badge badge-warning">Stok Melebihi Batas</span>' : '<span class="badge badge-success">Stok Tersedia</span>')) . '</div>';
             $row[] = '<div class="text-center">
                 <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-warning" title="Lihat" onclick="lihat(' . "'" . $rd->kode_barang . "'" . ')">
                     <ion-icon name="eye-outline"></ion-icon>

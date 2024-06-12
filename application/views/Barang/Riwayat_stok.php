@@ -24,11 +24,12 @@
                         <tr class="text-center">
                             <th width="5%" class="bg-primary">#</th>
                             <th width="10%" class="bg-primary">Kode Barang</th>
-                            <th width="30%" class="bg-primary">Nama Barang</th>
+                            <th width="20%" class="bg-primary">Nama Barang</th>
                             <th width="15%" class="bg-primary">Gudang</th>
                             <th width="10%" class="bg-primary">Minimal Stok</th>
                             <th width="10%" class="bg-primary">Maksimal Stok</th>
                             <th width="10%" class="bg-primary">Stok Akhir</th>
+                            <th width="10%" class="bg-primary">Status</th>
                             <th width="10%" class="bg-primary">Aksi</th>
                         </tr>
                     </thead>
