@@ -11,114 +11,83 @@ class M_datatables2 extends CI_Model
         date_default_timezone_set('Asia/Jakarta');
     }
 
-    private function _get_datatables_query($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $jns, $bulan, $tahun, $param2, $kondisi_param2)
+    private function _get_datatables_query($table, $columns, $order_arr, $order, $order2, $condition_param1, $type, $month, $year, $param2, $condition_param2)
     {
-        if ($this->uri->segment(1) == 'Marketing') {
-            $add_kondisi = ' <= ';
-        } else {
-            $add_kondisi = '';
-        }
-        $this->db->select($colum);
+        $this->db->query("SET SESSION sql_mode = REPLACE(
+            REPLACE(
+                REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY,', ''),
+            ',ONLY_FULL_GROUP_BY', ''),
+        'ONLY_FULL_GROUP_BY', '')");
+
+        $add_condition = $this->uri->segment(1) == 'Marketing' ? ' <= ' : '';
+
+        $this->db->select($columns);
         $this->db->from($table);
 
-        if (!empty($param2)) {
-
-            if ($jns == 1) {
-                $tanggal = date('Y-m-d');
-                $this->db->where([$kondisi_param1 . $add_kondisi  => $tanggal]);
-
-                if ($param2 != 'semua') {
-                    $this->db->where([$kondisi_param2 => $param2]);
-                }
-            } else {
-                if ($param2 != 'semua') {
-                    $this->db->where([$kondisi_param2 => $param2]);
-                }
-
-                $this->db->where([$kondisi_param1 . ' >=' => $bulan, $kondisi_param1 . ' <= ' => $tahun]);
-            }
+        if ($type == 1) {
+            $date = date('Y-m-d');
+            $this->db->where([$condition_param1 . $add_condition => $date]);
         } else {
-            if ($jns == 1) {
-                $tanggal = date('Y-m-d');
-                $this->db->where([$kondisi_param1 . $add_kondisi => $tanggal]);
-            } else {
-                $this->db->where([$kondisi_param1 . ' >=' => $bulan, $kondisi_param1 . ' <= ' => $tahun]);
-            }
+            $this->db->where([$condition_param1 . ' >=' => $month, $condition_param1 . ' <= ' => $year]);
         }
 
-        $i = 0;
+        if (!empty($param2)) {
+            $this->db->where([$condition_param2 => $param2]);
+        }
 
-        foreach ($colum as $item) {
-            if ($_POST['search']['value']) {
-                if ($i === 0) {
+        foreach ($columns as $index => $item) {
+            if (!empty($_POST['search']['value'])) {
+                if ($index === 0) {
                     $this->db->group_start();
                     $this->db->like($item, $_POST['search']['value']);
                 } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
 
-                if (count($colum) - 1 == $i)
+                if ($index == count($columns) - 1)
                     $this->db->group_end();
             }
-            $i++;
         }
 
         if (isset($_POST['order'])) {
-            $this->db->order_by($colum[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+            $this->db->order_by($columns[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else if (isset($order_arr)) {
-            $orderan = $order_arr;
-            $this->db->order_by(key($orderan), $orderan[key($orderan)]);
+            $this->db->order_by(key($order_arr), $order_arr[key($order_arr)]);
         }
     }
 
-    public function get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $jns, $bulan, $tahun, $param2, $kondisi_param2)
+    public function get_datatables($table, $columns, $order_arr, $order, $order2, $condition_param1, $type, $month, $year, $param2, $condition_param2)
     {
-        $this->_get_datatables_query($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $jns, $bulan, $tahun, $param2, $kondisi_param2);
+        $this->_get_datatables_query($table, $columns, $order_arr, $order, $order2, $condition_param1, $type, $month, $year, $param2, $condition_param2);
         if ($_POST['length'] != -1)
-            $this->db->limit($_POST['length'], $this->input->post('start'));
+            $this->db->limit($_POST['length'], $_POST['start']);
         $query = $this->db->get();
         return $query->result();
     }
 
-    public function count_filtered($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $jns, $bulan, $tahun, $param2, $kondisi_param2)
+    public function count_filtered($table, $columns, $order_arr, $order, $order2, $condition_param1, $type, $month, $year, $param2, $condition_param2)
     {
-        $this->_get_datatables_query($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $jns, $bulan, $tahun, $param2, $kondisi_param2);
+        $this->_get_datatables_query($table, $columns, $order_arr, $order, $order2, $condition_param1, $type, $month, $year, $param2, $condition_param2);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $jns, $bulan, $tahun, $param2, $kondisi_param2)
+    public function count_all($table, $columns, $order_arr, $order, $order2, $condition_param1, $type, $month, $year, $param2, $condition_param2)
     {
-        if ($this->uri->segment(1) == 'Marketing') {
-            $add_kondisi = ' <= ';
-        } else {
-            $add_kondisi = '';
-        }
-
-        $this->db->select($colum);
+        $this->db->select($columns);
         $this->db->from($table);
 
-        if (!empty($param2)) {
-            if ($jns == 1) {
-                $tanggal = date('Y-m-d');
-                $this->db->where([$kondisi_param1 . $add_kondisi => $tanggal]);
+        $add_condition = $this->uri->segment(1) == 'Marketing' ? ' <= ' : '';
 
-                if ($param2 != 'semua') {
-                    $this->db->where([$kondisi_param2 => $param2]);
-                }
-            } else {
-                if ($param2 != 'semua') {
-                    $this->db->where([$kondisi_param2 => $param2]);
-                }
-                $this->db->where([$kondisi_param1 . ' >=' => $bulan, $kondisi_param1 . ' <= ' => $tahun]);
-            }
+        if ($type == 1) {
+            $date = date('Y-m-d');
+            $this->db->where([$condition_param1 . $add_condition => $date]);
         } else {
-            if ($jns == 1) {
-                $tanggal = date('Y-m-d');
-                $this->db->where([$kondisi_param1 . $add_kondisi => $tanggal]);
-            } else {
-                $this->db->where([$kondisi_param1 . ' >=' => $bulan, $kondisi_param1 . ' <= ' => $tahun]);
-            }
+            $this->db->where([$condition_param1 . ' >=' => $month, $condition_param1 . ' <= ' => $year]);
+        }
+
+        if (!empty($param2)) {
+            $this->db->where([$condition_param2 => $param2]);
         }
 
         return $this->db->count_all_results();

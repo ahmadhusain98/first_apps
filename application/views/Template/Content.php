@@ -65,7 +65,6 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
 
-
     <!-- responsive -->
     <style>
         /* select2 */
@@ -782,44 +781,46 @@
                 "serverSide": true,
                 "order": [],
                 "ajax": {
-                    "url": siteUrl + '<?= $list_data . "/" . $param1 ?>',
+                    "url": `${siteUrl}${'<?= $list_data ?>/' + '<?= $param1 ?>'}`,
                     "type": "POST",
                 },
                 "scrollCollapse": false,
                 "paging": true,
-                "oLanguage": {
-                    "sEmptyTable": "<div class='text-center'>Data Kosong</div>",
-                    "sInfoEmpty": "",
-                    "sInfoFiltered": "",
-                    "sSearch": "",
-                    "sSearchPlaceholder": "Cari data...",
-                    "sInfo": " Jumlah _TOTAL_ Data (_START_ - _END_)",
-                    "sLengthMenu": "_MENU_ Baris",
-                    "sZeroRecords": "<div class='text-center'>Data Kosong</div>",
-                    "oPaginate": {
-                        "sPrevious": "Sebelumnya",
-                        "sNext": "Berikutnya"
+                "language": {
+                    "emptyTable": "<div class='text-center'>Data Kosong</div>",
+                    "infoEmpty": "",
+                    "infoFiltered": "",
+                    "search": "",
+                    "searchPlaceholder": "Cari data...",
+                    "info": " Jumlah _TOTAL_ Data (_START_ - _END_)",
+                    "lengthMenu": "_MENU_ Baris",
+                    "zeroRecords": "<div class='text-center'>Data Kosong</div>",
+                    "paginate": {
+                        "previous": "Sebelumnya",
+                        "next": "Berikutnya"
                     }
                 },
-                "aLengthMenu": [
+                "lengthMenu": [
                     [5, 15, 20, -1],
                     [5, 15, 20, "Semua"]
                 ],
                 "columnDefs": [{
                     "targets": [-1],
                     "orderable": false,
-                }, ],
+                }],
             });
 
             // fungsi filter tanggal dan parameter jika ada (jika tidak ada di kosongkan)
             function filter(x = '') {
                 var dari = $('#dari').val();
                 var sampai = $('#sampai').val();
+
                 if (x == '' || x == null) {
                     var parameterString = `2~${dari}~${sampai}`;
                 } else {
                     var parameterString = `2~${dari}~${sampai}/${x}`;
                 }
+
                 table.DataTable().ajax.url(siteUrl + '<?= $list_data ?>' + parameterString).load();
             }
         <?php endif; ?>
