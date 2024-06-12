@@ -72,15 +72,19 @@ class Kasir extends CI_Controller
 
         // table server side tampung kedalam variable $list
         $dat    = explode("~", $param1);
+
         if ($dat[0] == 1) {
-            $bulan   = date('m');
-            $tahun   = date('Y');
-            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2);
+            $bulan        = date('m');
+            $tahun        = date('Y');
+            $type         = 1;
         } else {
-            $bulan   = date('Y-m-d', strtotime($dat[1]));
-            $tahun   = date('Y-m-d', strtotime($dat[2]));
-            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 2, $bulan, $tahun, $param2, $kondisi_param2);
+            $bulan        = date('Y-m-d', strtotime($dat[1]));
+            $tahun        = date('Y-m-d', strtotime($dat[2]));
+            $type         = 2;
         }
+
+        $list             = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2);
+
         $data             = [];
         $no               = $_POST['start'] + 1;
 
@@ -146,8 +150,8 @@ class Kasir extends CI_Controller
         // hasil server side
         $output = [
             "draw"            => $_POST['draw'],
-            "recordsTotal"    => $this->M_datatables2->count_all($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2),
-            "recordsFiltered" => $this->M_datatables2->count_filtered($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2),
+            "recordsTotal"    => $this->M_datatables2->count_all($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2),
+            "recordsFiltered" => $this->M_datatables2->count_filtered($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2),
             "data"            => $data,
         ];
 
@@ -347,7 +351,7 @@ class Kasir extends CI_Controller
 
         $body .= '</table>';
 
-        cetak_pdf_small($judul, $body, 1, $position, $filename, $web_setting, $yes);
+        cetak_pdf_small($judul, $body, $type, $position, $filename, $web_setting, $yes);
     }
 
     // fungsi aktif/non-aktif pembayaran
@@ -1204,15 +1208,19 @@ class Kasir extends CI_Controller
 
         // table server side tampung kedalam variable $list
         $dat    = explode("~", $param1);
+
         if ($dat[0] == 1) {
-            $bulan   = date('m');
-            $tahun   = date('Y');
-            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2);
+            $bulan        = date('m');
+            $tahun        = date('Y');
+            $type         = 1;
         } else {
-            $bulan   = date('Y-m-d', strtotime($dat[1]));
-            $tahun   = date('Y-m-d', strtotime($dat[2]));
-            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 2, $bulan, $tahun, $param2, $kondisi_param2);
+            $bulan        = date('Y-m-d', strtotime($dat[1]));
+            $tahun        = date('Y-m-d', strtotime($dat[2]));
+            $type         = 2;
         }
+
+        $list             = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2);
+
         $data             = [];
         $no               = $_POST['start'] + 1;
 
@@ -1249,8 +1257,8 @@ class Kasir extends CI_Controller
         // hasil server side
         $output = [
             "draw"            => $_POST['draw'],
-            "recordsTotal"    => $this->M_datatables2->count_all($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2),
-            "recordsFiltered" => $this->M_datatables2->count_filtered($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2),
+            "recordsTotal"    => $this->M_datatables2->count_all($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2),
+            "recordsFiltered" => $this->M_datatables2->count_filtered($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2),
             "data"            => $data,
         ];
 
