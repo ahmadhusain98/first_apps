@@ -346,6 +346,24 @@ function _kodeTrx($kode_poli)
     return $kode_user;
 }
 
+function _invoicePO($cabang)
+{
+    $CI           = &get_instance();
+
+    $now          = date('Y-m-d');
+
+    $lastNumber   = $CI->db->query('SELECT * FROM barang_po_in_header WHERE tgl_po = "' . $now . '" AND kode_cabang = "' . $cabang . '" ORDER BY id DESC LIMIT 1')->row();
+    $number       = 1;
+    if ($lastNumber) {
+        $number   = $CI->db->query('SELECT * FROM barang_po_in_header WHERE tgl_po = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
+        $invoice  = 'INV~' . $CI->session->userdata('init_cabang') . date('dmY') . sprintf("%05d", $number);
+    } else {
+        $number   = 0;
+        $invoice  = 'INV~' . $CI->session->userdata('init_cabang') . date('dmY') . "00001";
+    }
+    return $invoice;
+}
+
 function _invoice($cabang)
 {
     $CI           = &get_instance();
@@ -482,7 +500,7 @@ function hitungStokBrgIn($detail, $kode_gudang, $invoice)
 
         if ($cek < 1) {
             $isi_stok = [
-                'kode_cabang'   => $d->kode_cabang,
+                'kode_cabang'   => $kode_cabang,
                 'kode_barang'   => $d->kode_barang,
                 'kode_gudang'   => $kode_gudang,
                 'masuk'         => $d->qty_konversi,
