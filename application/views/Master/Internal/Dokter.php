@@ -5,11 +5,20 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 <form method="post" id="form_dokter">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Daftar Dokter</span>
-            <div class="btn-group btn-group-sm float-right" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-warning" onclick="print('dokter')"><ion-icon name="print-outline"></ion-icon> Cetak</button>
-                <button type="button" class="btn btn-primary" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
-                <button type="button" class="btn btn-success" onclick="getUrl('Master/form_dokter/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Dokter</span>
+            <div class="float-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" onclick="preview('dokter')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="print('dokter')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="excel('dokter')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                <button type="button" class="btn btn-success" onclick="getUrl('Master/form_dokter/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
             </div>
         </div>
     </div>
@@ -17,18 +26,18 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tableDokter" width="100%">
+                <table class="table table-hover table-bordered" id="tableDokter" width="100%" style="border-radius: 10px;">
                     <thead>
                         <tr class="text-center">
-                            <th width="5%" class="bg-primary">#</th>
-                            <th class="bg-primary">ID</th>
-                            <th class="bg-primary">Nama</th>
-                            <th class="bg-primary">No. Hp</th>
-                            <th class="bg-primary">Alamat</th>
-                            <th class="bg-primary">Tgl Kerja</th>
-                            <th class="bg-primary">Poli</th>
-                            <th class="bg-primary">Status</th>
-                            <th width="10%" class="bg-primary">Aksi</th>
+                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                            <th>ID</th>
+                            <th>Nama</th>
+                            <th>No. Hp</th>
+                            <th>Alamat</th>
+                            <th>Tgl Kerja</th>
+                            <th>Poli</th>
+                            <th>Status</th>
+                            <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                         </tr>
                     </thead>
                 </table>

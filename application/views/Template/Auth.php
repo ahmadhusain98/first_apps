@@ -8,26 +8,31 @@
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/fontawesome/css/all.min.css">
-    <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="<?= base_url() ?>assets/dist/css/adminlte.min.css">
+
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Scripts -->
+    <script src="<?= base_url() ?>assets/plugins/jquery/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-    <!-- Or for RTL support -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
-
-    <!-- Select2 js -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+    <!-- Theme style -->
+    <link rel="stylesheet" href="<?= base_url() ?>assets/dist/css/adminlte.min.css">
 
     <!-- sweetalert -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -35,6 +40,25 @@
     <!-- animate -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Select2 js -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+
+    <!-- Bootstrap 4 -->
+    <script src="<?= base_url() ?>assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables  & Plugins -->
+    <script src="<?= base_url() ?>assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/jszip/jszip.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="<?= base_url() ?>assets/plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="<?= base_url() ?>assets/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <link rel="icon" href="<?= base_url('assets/img/web/') . $web->logo ?>" type="image/ico">
 </head>
@@ -152,6 +176,7 @@
 
     <!-- myscript -->
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
     <script>
         // variable
         const siteUrl = '<?= site_url() ?>';
@@ -167,6 +192,56 @@
         $(".select2_global").select2({
             placeholder: $(this).data('placeholder'),
         });
+
+        // fungsi select2 global
+        // inisial
+        initailizeSelect2_cabang(param = '');
+
+        function select2_default(param) {
+            $("." + param).select2({
+                placeholder: $(this).data('placeholder'),
+                width: '100%',
+            });
+        }
+
+        function initailizeSelect2_cabang(param) {
+            if (param == '' || param == null || param == 'null') { // jika parameter kosong/ null
+                // jalankan fungsi select2_default
+                select2_default('select2_cabang');
+            } else { // selain itu
+                // jalan fungsi select2 asli
+                $(".select2_cabang").select2({
+                    allowClear: true,
+                    multiple: false,
+                    placeholder: '~ Pilih Cabang',
+                    dropdownAutoWidth: true,
+                    width: '100%',
+                    language: {
+                        inputTooShort: function() {
+                            return 'Ketikan Nomor minimal 1 huruf';
+                        }
+                    },
+                    ajax: {
+                        url: siteUrl + 'Select2_master/dataCabang/?email=' + param,
+                        type: 'POST',
+                        dataType: 'JSON',
+                        delay: 100,
+                        data: function(result) {
+                            return {
+                                searchTerm: result.term
+                            };
+                        },
+
+                        processResults: function(result) {
+                            return {
+                                results: result
+                            };
+                        },
+                        cache: true
+                    }
+                });
+            }
+        }
 
         // cek email berdsasarkan email
         function cekEmailLog(mail) {
@@ -285,12 +360,12 @@
             return;
         }
     </script>
-    <!-- jQuery -->
-    <script src="<?= base_url() ?>assets/plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="<?= base_url() ?>assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
     <!-- AdminLTE App -->
     <script src="<?= base_url() ?>assets/dist/js/adminlte.min.js"></script>
+
+    <!-- AdminLTE for demo purposes -->
+    <script src="<?= base_url() ?>assets/dist/js/demo.js"></script>
 </body>
 
 </html>

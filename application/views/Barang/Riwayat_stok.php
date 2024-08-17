@@ -3,34 +3,35 @@
 <form method="post" id="form_riwayat_stok">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Daftar Riwayat Stok Barang</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Riwayat Stok Barang</span>
         </div>
     </div>
     <br>
     <div class="row">
-        <div class="col-md-6 col-12">
+        <div class="col-md-6 col-6">
             <select name="kode_gudang" id="kode_gudang" class="select2_gudang_int" data-placeholder="~ Pilih Gudang" onchange="getGudang(this.value)"></select>
         </div>
-        <div class="col-md-6 col-12">
-            <button type="button" class="btn btn-sm float-right mb-1 btn-primary ml-1" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
+        <div class="col-md-6 col-6">
+            <div class="float-right">
+                <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+            </div>
         </div>
     </div>
     <br>
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tableRiwayatStok" width="100%">
+                <table class="table table-hover table-bordered" id="tableRiwayatStok" width="100%" style="border-radius: 10px;">
                     <thead>
                         <tr class="text-center">
-                            <th width="5%" class="bg-primary">#</th>
-                            <th width="10%" class="bg-primary">Kode Barang</th>
-                            <th width="20%" class="bg-primary">Nama Barang</th>
-                            <th width="15%" class="bg-primary">Gudang</th>
-                            <th width="10%" class="bg-primary">Minimal Stok</th>
-                            <th width="10%" class="bg-primary">Maksimal Stok</th>
-                            <th width="10%" class="bg-primary">Stok Akhir</th>
-                            <th width="10%" class="bg-primary">Status</th>
-                            <th width="10%" class="bg-primary">Aksi</th>
+                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                            <th width="20%">Barang</th>
+                            <th width="15%">Gudang</th>
+                            <th width="12%">Min Stok</th>
+                            <th width="12%">Max Stok</th>
+                            <th width="10%">Stok</th>
+                            <th width="10%">Status</th>
+                            <th width="10%" style="border-radius: 0px 10px 0px 0px;">Histori</th>
                         </tr>
                     </thead>
                 </table>
@@ -52,5 +53,11 @@
         }
 
         table.DataTable().ajax.url(siteUrl + '<?= $list_data ?>' + parameterString).load();
+    }
+
+    // fungsi lihat histori barang
+    function lihat(kode_barang, kode_gudang) {
+        var param = `?kode_barang=${kode_barang}&kode_gudang=${kode_gudang}`
+        window.open(`${siteUrl}Report/riwayat_stok/1${param}`, '_blank');
     }
 </script>

@@ -77,7 +77,11 @@ class Health extends CI_Controller
         foreach ($list as $rd) {
             if ($updated > 0) {
                 if ($rd->on_off < 1) {
-                    $upd_diss = '';
+                    if ($rd->kode_member == 'U00001') {
+                        $upd_diss = 'disabled';
+                    } else {
+                        $upd_diss = '';
+                    }
                 } else {
                     $upd_diss = 'disabled';
                 }
@@ -87,7 +91,11 @@ class Health extends CI_Controller
 
             if ($deleted > 0) {
                 if ($rd->on_off < 1) {
-                    $del_diss = '';
+                    if ($rd->kode_member == 'U00001') {
+                        $del_diss = 'disabled';
+                    } else {
+                        $del_diss = '';
+                    }
                 } else {
                     $del_diss = 'disabled';
                 }
@@ -108,21 +116,18 @@ class Health extends CI_Controller
             $row[]  = $rd->last_regist . (($rd->status_regist == 1) ? '<span class="badge badge-primary float-right">Buka</span>' : '<span class="badge badge-danger float-right">Tutup</span>');
 
             if ($rd->actived > 0) {
-                $actived_akun = '<button type="button" class="btn btn-dark" title="Non-aktifkan" onclick="actived(' . "'" . $rd->kode_member . "', 0" . ')" ' . $upd_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
+                $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="actived(' . "'" . $rd->kode_member . "', 0" . ')" ' . $upd_diss . '><i class="fa-solid fa-user-xmark"></i></button>';
             } else {
-                $actived_akun = '<button type="button" class="btn btn-dark" title="Aktifkan" onclick="actived(' . "'" . $rd->kode_member . "', 1" . ')" ' . $upd_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>';
+                $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="actived(' . "'" . $rd->kode_member . "', 1" . ')" ' . $upd_diss . '><i class="fa-solid fa-user-check"></i></button>';
             }
 
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm mb-1" role="group" aria-label="Basic example">
-                    ' . $actived_akun . '
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_member . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_member . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-dark" title="Informasi" onclick="info(' . "'" . $rd->kode_member . "'" . ')"><ion-icon name="information-circle-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Kartu" href="' . site_url("Health/print_card/") . $rd->kode_member . '"><ion-icon name="id-card-outline"></ion-icon></button>
-                </div>
+                ' . $actived_akun . '
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_member . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_member . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <br>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-primary" onclick="info(' . "'" . $rd->kode_member . "'" . ')"><i class="fa-solid fa-circle-info"></i></button>
+                <a type="button" style="margin-bottom: 5px;" target="_blank" class="btn btn-dark" href="' . site_url("Health/print_card/") . $rd->kode_member . '"><i class="fa-solid fa-id-badge"></i></a>
             </div>';
 
             $data[] = $row;
@@ -388,6 +393,7 @@ class Health extends CI_Controller
     public function getInfoMember($kode_member)
     {
         $data = $this->db->query("SELECT m.*, p.keterangan AS pendidikan, pk.keterangan AS pekerjaan, a.keterangan AS agama FROM member m JOIN m_pendidikan p ON m.pendidikan = p.kode_pendidikan JOIN m_pekerjaan pk ON m.pekerjaan = pk.kode_pekerjaan JOIN m_agama a ON m.agama = a.kode_agama WHERE m.kode_member =  '$kode_member'")->row();
+
         echo json_encode($data);
     }
 
@@ -498,18 +504,18 @@ class Health extends CI_Controller
             $row[]  = '<div class="text-center">' . (($rd->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>')) . '</div>';
 
             if ($rd->status_trx < 1) {
-                $actived_akun = '<button type="button" class="btn btn-dark" title="Batalkan" onclick="actived(' . "'" . $rd->no_trx . "', 0" . ')" ' . $upd_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
+                $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="actived(' . "'" . $rd->no_trx . "', 0" . ')" ' . $upd_diss . '><i class="fa-solid fa-user-xmark"></i></button>';
             } else {
-                $actived_akun = '<button type="button" class="btn btn-dark" title="Batalkan" disabled><ion-icon name="ban-outline"></ion-icon></button>';
+                $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" disabled><i class="fa-solid fa-user-check"></i></button>';
             }
 
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    ' . $actived_akun . '
-                    <a type="button" class="btn btn-dark" title="Kartu" href="' . site_url("Health/print_pendaftaran/") . $rd->no_trx . '"><ion-icon name="id-card-outline"></ion-icon></a>
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->no_trx . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->no_trx . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                ' . $actived_akun . '
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-warning" onclick="ubah(' . "'" . $rd->no_trx . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" onclick="hapus(' . "'" . $rd->no_trx . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <br>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="email(' . "'" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-envelope-open-text"></i></button>
+                <a type="button" target="_blank" style="margin-bottom: 5px;" class="btn btn-dark" href="' . site_url("Health/print_pendaftaran/") . $rd->no_trx . '"><i class="fa-solid fa-id-badge"></i></a>
             </div>';
             $data[] = $row;
         }
@@ -524,6 +530,58 @@ class Health extends CI_Controller
 
         // kirimkan ke view
         echo json_encode($output);
+    }
+
+    // fungsi kirim email barang in
+    public function email($no_trx)
+    {
+        $email = $this->input->get('email');
+
+        $header = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+
+        $judul = 'Pendaftaran ' . $header->no_trx;
+
+        // $attched_file    = base_url() . 'assets/file/pdf/' . $judul . '.pdf';ahmad.ummgl@gmail.com
+        $attched_file    = $_SERVER["DOCUMENT_ROOT"] . '/first_apps/assets/file/pdf/' . $judul . '.pdf';
+
+        $ready_message   = "";
+        $ready_message   .= "<table border=0>
+            <tr>
+                <td style='width: 30%;'>Invoice</td>
+                <td style='width: 10%;'> : </td>
+                <td style='width: 60%;'> $header->no_trx </td>
+            </tr>
+            <tr>
+                <td style='width: 30%;'>Tgl/Jam</td>
+                <td style='width: 10%;'> : </td>
+                <td style='width: 60%;'>" . date('d-m-Y', strtotime($header->tgl_daftar)) . " / " . date('H:i:s', strtotime($header->jam_daftar)) . "</td>
+            </tr>
+            <tr>
+                <td style='width: 30%;'>Pembeli</td>
+                <td style='width: 10%;'> : </td>
+                <td style='width: 60%;'>" . $this->M_global->getData('member', ['kode_member' => $header->kode_member])->nama . "</td>
+            </tr>
+            <tr>
+                <td style='width: 30%;'>Poli</td>
+                <td style='width: 10%;'> : </td>
+                <td style='width: 60%;'>" . $this->M_global->getData('m_poli', ['kode_poli' => $header->kode_poli])->keterangan . "</td>
+            </tr>
+            <tr>
+                <td style='width: 30%;'>Status</td>
+                <td style='width: 10%;'> : </td>
+                <td style='width: 60%;'>" . (($header->status_trx == 0) ? 'Proses' : 'Sudah Pulang') . " </td>
+            </tr>
+        </table>";
+
+        $server_subject = $judul;
+
+        if ($this->email->send_my_email($email, $server_subject, $ready_message, $attched_file)) {
+            echo json_encode(["status" => 1, 'result' => $attched_file]);
+        } else {
+            echo json_encode(["status" => 0]);
+        }
+
+        // echo json_encode($attched_file);
     }
 
     // fungsi cetak pendaftaran member
@@ -693,6 +751,7 @@ class Health extends CI_Controller
         // variable
         $kode_user    = $this->session->userdata('kode_user');
         $shift        = $this->session->userdata('shift');
+        $kode_cabang  = $this->session->userdata('cabang');
 
         $kode_poli    = $this->input->post('kode_poli');
 
@@ -718,6 +777,7 @@ class Health extends CI_Controller
 
         // masukan kedalam variable $isi
         $isi = [
+            'kode_cabang'   => $kode_cabang,
             'no_trx'        => $no_trx,
             'tgl_daftar'    => $tgl_daftar,
             'jam_daftar'    => $jam_daftar,

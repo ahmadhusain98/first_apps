@@ -3,7 +3,7 @@
 <div class="register-box" data-aos="fade-down">
     <div class="card card-outline card-primary">
         <div class="card-header text-center">
-            <a type="button" class="h1"><b><?= $nama_apps ?></b> <?= $web_version ?></a>
+            <a type="button" class="h1"><b><?= $nama_apps ?></b></a>
         </div>
         <div class="card-body">
             <p class="login-box-msg">Form Atur Ulang Sandi</p>

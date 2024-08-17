@@ -1,7 +1,7 @@
 <form method="post" id="form_barang_in">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
         </div>
     </div>
     <br>
@@ -9,8 +9,9 @@
         <div class="col-md-12">
             <div class="row">
                 <div class="col-md-6">
+                    <label for="invoice" class="control-label">Invoice</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Invoice (Otomatis)" id="invoice" name="invoice" value="<?= (!empty($data_barang_in) ? $data_barang_in->invoice : '') ?>" readonly>
+                        <input type="text" class="form-control" placeholder="Otomatis" id="invoice" name="invoice" value="<?= (!empty($data_barang_in) ? $data_barang_in->invoice : '') ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <ion-icon name="id-card-outline"></ion-icon>
@@ -21,6 +22,7 @@
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-md-6 col-6">
+                            <label for="tgl_beli" class="control-label">Tgl Beli</label>
                             <div class="input-group mb-3">
                                 <input type="date" title="Tgl Beli" class="form-control" placeholder="Tgl Beli" id="tgl_beli" name="tgl_beli" value="<?= (!empty($data_barang_in) ? date('Y-m-d', strtotime($data_barang_in->tgl_beli)) : date('Y-m-d')) ?>" readonly>
                                 <div class="input-group-append">
@@ -31,6 +33,7 @@
                             </div>
                         </div>
                         <div class="col-md-6 col-6">
+                            <label for="jam_beli" class="control-label">Jam Beli</label>
                             <div class="input-group mb-3">
                                 <input type="time" title="Jam Beli" class="form-control" placeholder="Jam Beli" id="jam_beli" name="jam_beli" value="<?= (!empty($data_barang_in) ? date('H:i:s', strtotime($data_barang_in->jam_beli)) : date('H:i:s')) ?>" readonly>
                                 <div class="input-group-append">
@@ -45,24 +48,28 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
+                    <label for="kode_supplier" class="control-label">Pemasok <sup class="text-danger">**</sup></label>
                     <div class="input-group mb-3">
                         <select name="kode_supplier" id="kode_supplier" class="form-control select2_supplier" data-placeholder="~ Pilih Pemasok">
                             <?php
                             if (!empty($data_barang_in)) :
                                 $supplier = $this->M_global->getData('m_supplier', ['kode_supplier' => $data_barang_in->kode_supplier])->nama;
-                                echo '<option value="' . $data_barang_in->kode_supplier . '">' . $data_barang_in->kode_supplier . ' ~ ' . $supplier . '</option>';
+                                echo '<option value="' . $data_barang_in->kode_supplier . '">' . $supplier . '</option>';
                             endif;
                             ?>
                         </select>
                     </div>
                 </div>
                 <div class="col-md-6">
+                    <label for="kode_gudang" class="control-label">Gudang <sup class="text-danger">**</sup></label>
                     <div class="input-group mb-3">
                         <select name="kode_gudang" id="kode_gudang" class="form-control select2_gudang_int" data-placeholder="~ Pilih Gudang">
                             <?php
                             if (!empty($data_barang_in)) :
                                 $gudang = $this->M_global->getData('m_gudang', ['kode_gudang' => $data_barang_in->kode_gudang])->nama;
-                                echo '<option value="' . $data_barang_in->kode_gudang . '">' . $data_barang_in->kode_gudang . ' ~ ' . $gudang . '</option>';
+                                echo '<option value="' . $data_barang_in->kode_gudang . '">' . $gudang . '</option>';
+                            else :
+                                echo '<option value="GUD0000001" selected>Farmasi Tunai</option>';
                             endif;
                             ?>
                         </select>
@@ -71,8 +78,9 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
+                    <label for="surat_jalan" class="control-label">Surat Jalan</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Surat Jalan" id="surat_jalan" name="surat_jalan" value="<?= (!empty($data_barang_in) ? $data_barang_in->surat_jalan : '') ?>">
+                        <input type="text" class="form-control" placeholder="Otomatis" id="surat_jalan" name="surat_jalan" value="<?= (!empty($data_barang_in) ? $data_barang_in->surat_jalan : '') ?>">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <ion-icon name="barcode-outline"></ion-icon>
@@ -81,8 +89,9 @@
                     </div>
                 </div>
                 <div class="col-md-6">
+                    <label for="no_faktur" class="control-label">No. Faktur</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="No. Faktur" id="no_faktur" name="no_faktur" value="<?= (!empty($data_barang_in) ? $data_barang_in->no_faktur : '') ?>">
+                        <input type="text" class="form-control" placeholder="Otomatis" id="no_faktur" name="no_faktur" value="<?= (!empty($data_barang_in) ? $data_barang_in->no_faktur : '') ?>">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <ion-icon name="pricetag-outline"></ion-icon>
@@ -96,7 +105,7 @@
     <hr>
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Detail Barang</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Detail Barang</span>
         </div>
     </div>
     <br>
@@ -104,28 +113,39 @@
         <div class="col-md-12">
             <div class="table-responsive">
                 <input type="hidden" name="jumlahBarisBarang" id="jumlahBarisBarang" value="<?= (!empty($barang_detail) ? count($barang_detail) : '0') ?>">
-                <table class="table table-hover table-bordered" id="tableDetailBarangIn">
+                <table class="table table-hover table-bordered" id="tableDetailBarangIn" width="100%" style="border-radius: 10px;">
                     <thead>
                         <tr class="text-center">
-                            <th width="5%" class="bg-primary">Hapus</th>
-                            <th rowspan="2" class="bg-primary">Barang</th>
-                            <th width="14%" class="bg-primary">Harga</th>
-                            <th width="14%" class="bg-primary">Qty</th>
-                            <th width="14%" class="bg-primary">Disc (%)</th>
-                            <th width="14%" class="bg-primary">Disc (Rp)</th>
-                            <th width="5%" class="bg-primary">Pajak</th>
-                            <th width="14%" class="bg-primary">Jumlah</th>
+                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">Hapus</th>
+                            <th rowspan="2">Barang</th>
+                            <th width="12%">Satuan</th>
+                            <th width="14%">Harga</th>
+                            <th width="10%">Qty</th>
+                            <th width="10%">Disc (%)</th>
+                            <th width="14%">Disc (Rp)</th>
+                            <th width="5%">Pajak</th>
+                            <th width="10%" style="border-radius: 0px 10px 0px 0px;">Jumlah</th>
                         </tr>
                     </thead>
                     <tbody id="bodyBarangIn">
                         <?php if (!empty($barang_detail)) : ?>
                             <?php $no = 1;
-                            foreach ($barang_detail as $bd) : ?>
+                            foreach ($barang_detail as $bd) :
+                                $satuan = $this->db->query("SELECT bs.kode_satuan AS id, ms.keterangan AS text FROM barang_satuan bs JOIN m_satuan ms USING(kode_satuan) WHERE bs.kode_barang = '$bd->kode_barang'")->result();
+                            ?>
                                 <tr id="rowBarangIn<?= $no ?>">
-                                    <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no ?>" onclick="hapusBarang('<?= $no ?>')"><ion-icon name="ban-outline"></ion-icon></button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no ?>" onclick="hapusBarang('<?= $no ?>')"><i class="fa-solid fa-delete-left"></i></button></td>
                                     <td>
                                         <input type="hidden" id="kode_barang_in<?= $no ?>" name="kode_barang_in[]" value="<?= $bd->kode_barang ?>">
                                         <span><?= $bd->kode_barang ?> ~ <?= $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang])->nama ?></span>
+                                    </td>
+                                    <td>
+                                        <select name="kode_satuan[]" id="kode_satuan<?= $no ?>" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, <?= $no ?>)">
+                                            <option value="">~ Pilih Satuan</option>
+                                            <?php foreach ($satuan as $s) : ?>
+                                                <option value="<?= $s->id ?>" <?= (($bd->kode_satuan == $s->id) ? 'selected' : '') ?>><?= $s->text ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </td>
                                     <td>
                                         <input type="text" id="harga_in<?= $no ?>" name="harga_in[]" value="<?= number_format($bd->harga) ?>" class="form-control text-right" onchange="hitung_st('<?= $no ?>'); formatRp(this.value, 'harga_in<?= $no ?>'); cekHarga(this.value, <?= $no ?>)">
@@ -165,13 +185,13 @@
                         <input type="text" class="form-control" placeholder="Masukan Kode/Nama Barang" id="kode_barang" name="kode_barang">
                         <div class="input-group-append" onclick="showBarang()">
                             <div class="input-group-text">
-                                <ion-icon name="search-outline"></ion-icon>
+                                <i class="fa-solid fa-magnifying-glass-plus"></i>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 col-6">
-                    <button type="button" class="btn btn-sm btn-secondary float-right" onclick="searchBarang()" id="btnCari"><ion-icon name="add-circle-outline"></ion-icon> Tambah Barang</button>
+                    <button type="button" class="btn btn-secondary" onclick="searchBarang()" id="btnCari"><i class="fa-solid fa-circle-plus"></i> Tambah Barang</button>
                 </div>
             </div>
         </div>
@@ -209,12 +229,12 @@
     <br>
     <div class="row">
         <div class="col-md-12">
-            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Transaksi/barang_in')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
-            <button type="button" class="btn btn-success float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_barang_in) ? 'Perbarui' : 'Simpan') ?></button>
+            <button type="button" class="btn btn-danger" onclick="getUrl('Transaksi/barang_in')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
             <?php if (!empty($data_barang_in)) : ?>
-                <button type="button" class="btn btn-info float-right btn-sm" onclick="getUrl('Transaksi/form_barang_in/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                <button type="button" class="btn btn-info float-right" onclick="getUrl('Transaksi/form_barang_in/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
             <?php else : ?>
-                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+                <button type="button" class="btn btn-info float-right" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
             <?php endif ?>
         </div>
     </div>
@@ -235,12 +255,12 @@
                     <div class="col-md-12">
                         <div style="height: 400px; overflow: auto;">
                             <div class="table-responsive">
-                                <table class="table table-hover table-bordered" id="tableSederhanaObat" style="width: 100%;">
+                                <table class="table table-hover table-bordered" id="tableSederhanaObat" style="width: 100%; border-radius: 10px;">
                                     <thead>
                                         <tr class="text-center">
-                                            <th width="5%" class="bg-primary">#</th>
-                                            <th width="90%" class="bg-primary">Obat</th>
-                                            <th width="5%" class="bg-primary">Aksi</th>
+                                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                                            <th width="90%">Obat</th>
+                                            <th width="5%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -255,7 +275,6 @@
                                                 <td width="5%" class="text-center">
                                                     <input type="hidden" class="form-control" name="select_barang[]" id="select_barang<?= $nolb ?>" value="0">
                                                     <input type="checkbox" class="form-control" name="select_barangx[]" id="select_barangx<?= $nolb ?>" onclick="selbar('<?= $nolb ?>')">
-                                                    <!-- <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Pilih" onclick="selectBarang('<?= $lb->kode_barang ?>')"><ion-icon name="checkmark-circle-outline"></ion-icon></button> -->
                                                 </td>
                                             </tr>
                                         <?php $nolb++;
@@ -268,7 +287,7 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-12">
-                        <button type="button" class="btn btn-primary float-right" onclick="selbarfunc()"><ion-icon name="file-tray-full-outline"></ion-icon> Pilih Obat</button>
+                        <button type="button" class="btn btn-primary float-right" onclick="selbarfunc()"><i class="fa-regular fa-circle-check"></i> Pilih Obat</button>
                     </div>
                 </div>
             </div>
@@ -292,6 +311,7 @@
     var no_faktur = $('#no_faktur');
 
     // detail
+    var kode_satuan = $('#kode_satuan');
     var tableBarangIn = $('#tableDetailBarangIn');
     var bodyBarangIn = $('#bodyBarangIn');
     var rowBarangIn = $('#rowBarangIn');
@@ -369,7 +389,6 @@
         var tableBarangIn = document.getElementById('tableDetailBarangIn'); // ambil id table detail
         var no = tableBarangIn.rows.length; // hitung jumlah rownya
 
-        // var no = 0;
         // lakukan loop
         for (var i = 1; i <= rowCount; i++) {
             if ($('#select_barang' + i).val() == 1) {
@@ -400,17 +419,22 @@
                     return Swal.fire("Barang", "Tidak ditemukan!", "info");
                 } else { // selain itu
                     // tambahkan jumlah row
-                    var x = i;
+                    var tableBarangIn = document.getElementById('tableDetailBarangIn'); // ambil id table detail
+                    var jum = tableBarangIn.rows.length; // hitung jumlah rownya
+                    var x = Number(jum) + 1;
 
                     // masukan ke body table barang in detail
                     bodyBarangIn.append(`<tr id="rowBarangIn${x}">
-                        <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><ion-icon name="ban-outline"></ion-icon></button></td>
+                        <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button></td>
                         <td>
-                            <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${result.kode_barang}">
-                            <span>${result.kode_barang} ~ ${result.nama}</span>
+                            <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${result[0].kode_barang}">
+                            <span>${result[0].kode_barang} ~ ${result[0].nama}</span>
                         </td>
                         <td>
-                            <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(result.nilai_persediaan)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
+                            <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
+                        </td>
+                        <td>
+                            <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
                         </td>
                         <td>
                             <input type="text" id="qty_in${x}" name="qty_in[]" value="1" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_in${x}')">
@@ -426,10 +450,23 @@
                             <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="0">
                         </td>
                         <td class="text-right">
-                            <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(result.nilai_persediaan)}" class="form-control text-right" readonly>
-                            <span id="jumlah2_in${x}">${formatRpNoId(result.nilai_persediaan)}</span>
+                            <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" readonly>
+                            <span id="jumlah2_in${x}">${formatRpNoId(result[0].nilai_persediaan)}</span>
                         </td>
                     </tr>`);
+
+                    // each satuan
+                    $.each(result[1], function(index, value) {
+                        $('#kode_satuan' + x).append(`<option value="${value.kode_satuan}">${value.keterangan}</option>`)
+                    });
+
+                    jumlahBarisBarang.val(x);
+
+                    $(".select2_global").select2({
+                        placeholder: $(this).data('placeholder'),
+                        width: '100%',
+                        allowClear: true,
+                    });
 
                     // jalankan fungsi
                     hitung_st(x);
@@ -492,13 +529,16 @@
 
                     // masukan ke body table barang in detail
                     bodyBarangIn.append(`<tr id="rowBarangIn${x}">
-                            <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><ion-icon name="ban-outline"></ion-icon></button></td>
+                            <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button></td>
                             <td>
-                                <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${result.kode_barang}">
-                                <span>${result.kode_barang} ~ ${result.nama}</span>
+                                <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${result[0].kode_barang}">
+                                <span>${result[0].kode_barang} ~ ${result[0].nama}</span>
                             </td>
                             <td>
-                                <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(result.nilai_persediaan)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
+                                <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
+                            </td>
+                            <td>
+                                <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
                             </td>
                             <td>
                                 <input type="text" id="qty_in${x}" name="qty_in[]" value="1" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_in${x}')">
@@ -514,10 +554,21 @@
                                 <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="0">
                             </td>
                             <td class="text-right">
-                                <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(result.nilai_persediaan)}" class="form-control text-right" readonly>
-                                <span id="jumlah2_in${x}">${formatRpNoId(result.nilai_persediaan)}</span>
+                                <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" readonly>
+                                <span id="jumlah2_in${x}">${formatRpNoId(result[0].nilai_persediaan)}</span>
                             </td>
                         </tr>`);
+
+                    // each satuan
+                    $.each(result[1], function(index, value) {
+                        $('#kode_satuan' + x).append(`<option value="${value.kode_satuan}">${value.keterangan}</option>`)
+                    });
+
+                    $(".select2_global").select2({
+                        placeholder: $(this).data('placeholder'),
+                        width: '100%',
+                        allowClear: true,
+                    });
 
                     // jalankan fungsi
                     hitung_st(x);
@@ -531,15 +582,53 @@
         });
     }
 
+    // fungsi ubah satuan untuk ubah harga
+    function ubahSatuan(param, id) {
+        var kode_barang_in = $('#kode_barang_in' + id).val();
+        var kode_satuan = $('#kode_satuan' + id).val();
+
+        // console.log(kode_barang_in + ' - ' + id + ' - ' + kode_satuan);
+
+        if (!param || param === null) {
+            error_proccess();
+            return; // Add return to stop further execution
+        }
+
+        $.ajax({
+            url: siteUrl + 'Transaksi/getSatuan/' + param + '/' + kode_barang_in,
+            type: "POST",
+            data: form.serialize(),
+            dataType: "JSON",
+            success: function(result) {
+                var qty_satuan = Number(result.qty_satuan);
+                var hna_master = Number(result.hna);
+                var qty = Number($('#qty_in' + id).val().replaceAll(',', ''));
+
+                if (isNaN(qty)) qty = 0; // Ensure qty is valid
+
+                var newHarga = hna_master * qty_satuan;
+                $('#harga_in' + id).val(formatRpNoId(newHarga));
+
+                var discpr = Number($('#discpr_in' + id).val().replaceAll(',', ''));
+                var newDiskon = (discpr > 0) ? (newHarga * qty) * (discpr / 100) : ($('#discrp_in' + id).val()).replaceAll(',', '');
+
+                $('#discrp_in' + id).val(formatRpNoId(newDiskon));
+                hitung_st(id);
+            },
+            error: function(result) {
+                error_proccess();
+            }
+        });
+    }
+
     // fungsi hapus baris barang detail
     function hapusBarang(x) {
         var awal = Number(jumlahBarisBarang.val());
-        jumlahBarisBarang.val(awal - 1);
-
-        // hapus baris barang detail dengan id tr table
-        $('#rowBarangIn' + x).remove();
-        // jalankan fungsi
-        hitung_t();
+        if (awal > 0) { // Ensure there are rows to delete
+            jumlahBarisBarang.val(awal - 1);
+            $('#rowBarangIn' + x).remove();
+            hitung_t();
+        }
 
     }
 
@@ -631,11 +720,11 @@
             var row = tableBarang.rows[i];
 
             // ambil data berdasarkan loop
-            var harga1 = Number((row.cells[2].children[0].value).replace(/[^0-9\.]+/g, ""));
-            var qty1 = Number((row.cells[3].children[0].value).replace(/[^0-9\.]+/g, ""));
-            var discrp1 = Number((row.cells[5].children[0].value).replace(/[^0-9\.]+/g, ""));
-            var pajak1 = Number((row.cells[6].children[1].value).replace(/[^0-9\.]+/g, ""));
-            var jumlah1 = Number((row.cells[7].children[0].value).replace(/[^0-9\.]+/g, ""));
+            var harga1 = Number((row.cells[3].children[0].value).replace(/[^0-9\.]+/g, ""));
+            var qty1 = Number((row.cells[4].children[0].value).replace(/[^0-9\.]+/g, ""));
+            var discrp1 = Number((row.cells[6].children[0].value).replace(/[^0-9\.]+/g, ""));
+            var pajak1 = Number((row.cells[7].children[1].value).replace(/[^0-9\.]+/g, ""));
+            var jumlah1 = Number((row.cells[8].children[0].value).replace(/[^0-9\.]+/g, ""));
 
             // lakukan rumus sum
             tjumlah += jumlah1 + discrp1;
@@ -716,53 +805,31 @@
 
         if (rowCount < 1) { // jika jumlah baris detail kurang dari 1
             btnSimpan.attr('disabled', false);
-
             return Swal.fire("Detail Barang Pembelian", "Form sudah diisi?", "question");
         }
 
-        if (tgl_beli.val() == '' || tgl_beli.val() == null) { // jika tgl_beli null/ kosong
+        // Validate all required fields
+        if (!tgl_beli.val()) {
             btnSimpan.attr('disabled', false);
-
             return Swal.fire("Tgl Beli", "Form sudah diisi?", "question");
         }
 
-        if (jam_beli.val() == '' || jam_beli.val() == null) { // jika jam_beli null/ kosong
+        if (!jam_beli.val()) {
             btnSimpan.attr('disabled', false);
-
             return Swal.fire("Jam Beli", "Form sudah diisi?", "question");
         }
 
-        if (kode_supplier.val() == '' || kode_supplier.val() == null) { // jika kode_supplier null/ kosong
+        if (!kode_supplier.val()) {
             btnSimpan.attr('disabled', false);
-
             return Swal.fire("Pemasok", "Form sudah dipilih?", "question");
         }
 
-        if (kode_gudang.val() == '' || kode_gudang.val() == null) { // jika kode_gudang null/ kosong
+        if (!kode_gudang.val()) {
             btnSimpan.attr('disabled', false);
-
             return Swal.fire("Gudang", "Form sudah dipilih?", "question");
         }
 
-        if (surat_jalan.val() == '' || surat_jalan.val() == null) { // jika surat_jalan null/ kosong
-            btnSimpan.attr('disabled', false);
-
-            return Swal.fire("Surat Jalan", "Form sudah diisi?", "question");
-        }
-
-        if (no_faktur.val() == '' || no_faktur.val() == null) { // jika no_faktur null/ kosong
-            btnSimpan.attr('disabled', false);
-
-            return Swal.fire("No. Faktur", "Form sudah diisi?", "question");
-        }
-
-        if (invoice.val() == '' || invoice.val() == null) { // jika invoice null/ kosong
-            // isi param = 1
-            var param = 1;
-        } else { // selain itu
-            // isi param = 2
-            var param = 2;
-        }
+        var param = invoice.val() ? 2 : 1; // Set param based on invoice value
 
         // jalankan proses cek barang
         proses(param);

@@ -1,7 +1,7 @@
 <form method="post" id="form_pendaftaran">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
         </div>
     </div>
     <br>
@@ -107,14 +107,14 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Health/pendaftaran')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
-                    <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_pendaftaran) ? 'Perbarui' : 'Simpan') ?></button>
+                    <button type="button" class="btn btn-danger" onclick="getUrl('Health/pendaftaran')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+                    <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
                     <?php if (!empty($data_pendaftaran)) : ?>
-                        <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Health/form_pendaftaran/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                        <button type="button" class="btn btn-success float-right" onclick="getUrl('Health/form_pendaftaran/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
                     <?php else : ?>
-                        <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+                        <button type="button" class="btn btn-info float-right" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
                     <?php endif ?>
-                    <button type="button" class="btn btn-primary float-right btn-sm mr-2" onclick="updateMember()" id="btnUMember"><ion-icon name="create-outline"></ion-icon> Update Data Member</button>
+                    <button type="button" class="btn btn-primary float-right mr-2" onclick="updateMember()" id="btnUMember"><i class="fa-regular fa-pen-to-square"></i>&nbsp;&nbsp;Update Data Member</button>
                 </div>
             </div>
         </div>
@@ -122,23 +122,23 @@
     <hr>
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Riwayat Member</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Riwayat Member</span>
         </div>
     </div>
     <br>
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tableRiwayat">
+                <table class="table table-hover table-bordered" id="tableRiwayat" width="100%" style="border-radius: 10px;">
                     <thead>
                         <tr class="text-center">
-                            <th class="bg-primary" width="5%">#</th>
-                            <th class="bg-primary">No. Transaksi</th>
-                            <th class="bg-primary">Tgl/Jam Daftar</th>
-                            <th class="bg-primary">Tgl/Jam Keluar</th>
-                            <th class="bg-primary">Poli</th>
-                            <th class="bg-primary">Dokter</th>
-                            <th class="bg-primary" width="10%">Aksi</th>
+                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                            <th>No. Transaksi</th>
+                            <th>Tgl/Jam Daftar</th>
+                            <th>Tgl/Jam Keluar</th>
+                            <th>Poli</th>
+                            <th>Dokter</th>
+                            <th width="10%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="bodyRiwayat">
@@ -153,14 +153,14 @@
                                     <td><?= $this->M_global->getData('m_poli', ['kode_poli' => $r->kode_poli])->keterangan ?></td>
                                     <td><?= $this->M_global->getData('dokter', ['kode_dokter' => $r->kode_dokter])->nama ?></td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getDetail('<?= $r->no_trx ?>')"><ion-icon name="information-circle-outline"></ion-icon></button>
+                                        <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getDetail('<?= $r->no_trx ?>')"><ion-icon name="information-circle-outline"></ion-icon></button>
                                     </td>
                                 </tr>
                             <?php $no++;
                             endforeach; ?>
                         <?php else : ?>
                             <tr>
-                                <td colspan="7" class="text-center">Belum Ada Riwayat</td>
+                                <td style="border-radius: 0px 0px 10px 10px;" colspan="7" class="text-center">Belum Ada Riwayat</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
@@ -357,7 +357,7 @@
                         <td>${value.nama_poli}</td>
                         <td>${value.nama_dokter}</td>
                         <td class="text-center">
-                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getDetail('${value.no_trx}')"><ion-icon name="information-circle-outline"></ion-icon></button>
+                            <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getDetail('${value.no_trx}')"><ion-icon name="information-circle-outline"></ion-icon></button>
                         </td>
                     </tr>`);
                     no++;

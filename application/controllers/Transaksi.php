@@ -135,30 +135,40 @@ class Transaksi extends CI_Controller
 
             if ($rd->is_valid < 1) {
                 if ($rd->batal < 1) {
-                    $actived_akun = '<button type="button" class="btn btn-dark" title="Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><ion-icon name="create-outline"></ion-icon></button>';
+                    $batal = '<button type="button" style="margin-bottom: 5px;" class="btn btn-secondary" title="Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><i class="fa-solid fa-ban"></i></button>';
 
-                    $valid = '<button type="button" class="btn btn-dark" title="ACC" onclick="valided(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>';
+                    $ubah = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>';
+
+                    $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="ACC" onclick="valided(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><i class="fa-regular fa-circle-check"></i></button>';
+
+                    $email = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Kirim Email" disabled><i class="fa-solid fa-envelope-open-text"></i></button>';
                 } else {
-                    $actived_akun = '<button type="button" class="btn btn-dark" title="Re-batalkan" onclick="actived(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><ion-icon name="create-outline"></ion-icon></button>';
+                    $batal = '<button type="button" style="margin-bottom: 5px;" class="btn btn-light" title="Re-Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><i class="fa-solid fa-arrow-rotate-left"></i></button>';
 
-                    $valid = '<button type="button" class="btn btn-dark" title="Cetak" onclick="cetak(' . "'" . $rd->invoice . "', 0" . ')"><ion-icon name="print-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Kirim Email" onclick="email(' . "'" . $rd->invoice . "', 0" . ')"><ion-icon name="send-outline"></ion-icon></button>';
+                    $ubah = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" disabled><i class="fa-regular fa-pen-to-square"></i></button>';
+
+                    $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="ACC" disabled><i class="fa-regular fa-circle-check"></i></button>';
+
+                    $email = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Kirim Email" disabled><i class="fa-solid fa-envelope-open-text"></i></button>';
                 }
             } else {
-                $actived_akun = '<button type="button" class="btn btn-dark" title="Batalkan" disabled><ion-icon name="create-outline"></ion-icon></button>';
+                $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><i class="fa-solid fa-check-to-slot"></i></button>';
 
-                $valid = '<button type="button" class="btn btn-dark" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>
-                <button type="button" class="btn btn-dark" title="Cetak" onclick="cetak(' . "'" . $rd->invoice . "', 0" . ')"><ion-icon name="print-outline"></ion-icon></button>
-                <button type="button" class="btn btn-dark" title="Kirim Email" onclick="email(' . "'" . $rd->invoice . "', 0" . ')"><ion-icon name="send-outline"></ion-icon></button>';
+                $ubah = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" disabled><i class="fa-regular fa-pen-to-square"></i></button>';
+
+                $batal = '<button type="button" style="margin-bottom: 5px;" class="btn btn-secondary" title="Batalkan" disabled><i class="fa-solid fa-ban"></i></button>';
+
+                $email = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Kirim Email" onclick="email(' . "'" . $rd->invoice . "', 0" . ')"><i class="fa-solid fa-envelope-open-text"></i></button>';
             }
 
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    ' . $actived_akun . '
-                    ' . $valid . '
-                </div>
+                ' . $accept . '
+                ' . $ubah . '
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <br>
+                ' . $batal . '
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-dark" title="Cetak" onclick="cetak(' . "'" . $rd->invoice . "', 0" . ')"><i class="fa-solid fa-print"></i></button>
+                ' . $email . '
             </div>';
 
             $data[] = $row;
@@ -434,28 +444,59 @@ class Transaksi extends CI_Controller
     {
         $barang = $this->M_global->getDataLike('barang', 'nama', 'kode_barang', $kode_barang);
 
+        $satuan = $this->db->query("SELECT bs.kode_satuan, bs.qty_satuan, ms.keterangan FROM barang_satuan bs JOIN m_satuan ms ON bs.kode_satuan = ms.kode_satuan WHERE bs.kode_barang = '$barang->kode_barang' ORDER BY bs.id ASC")->result();
+
         if ($barang) {
-            echo json_encode($barang);
+            echo json_encode([$barang, $satuan]);
         } else {
             echo json_encode(['status' => 0]);
         }
     }
 
+    // fungsi ambil data satuan
+    public function getSatuan($kode_satuan, $kode_barang)
+    {
+        $barang = $this->M_global->getData('barang', ['kode_barang' => $kode_barang]);
+
+        $satuan = $this->M_global->getData('barang_satuan', ['kode_barang' => $kode_barang, 'kode_satuan' => $kode_satuan]);
+
+        $harga_result = (int)$barang->hna;
+
+        $qty_result = $satuan->qty_satuan;
+
+        echo json_encode(['qty_satuan' => $qty_result, "hna" => $harga_result]);
+    }
+
     // fungsi insert/update proses barang_in
     public function barang_in_proses($param)
     {
+        $kode_cabang      = $this->session->userdata('cabang');
+
         // header
         if ($param == 1) { // jika param = 1
-            $invoice = _invoice();
+            $invoice = _invoice($kode_cabang);
         } else {
             $invoice = $this->input->post('invoice');
         }
+
         $tgl_beli         = $this->input->post('tgl_beli');
         $jam_beli         = $this->input->post('jam_beli');
         $kode_supplier    = $this->input->post('kode_supplier');
         $kode_gudang      = $this->input->post('kode_gudang');
         $surat_jalan      = $this->input->post('surat_jalan');
         $no_faktur        = $this->input->post('no_faktur');
+
+        if (!$surat_jalan || $surat_jalan == null) {
+            $sj = _surat_jalan($kode_cabang);
+        } else {
+            $sj = $surat_jalan;
+        }
+
+        if (!$no_faktur || $no_faktur == null) {
+            $nf = _no_faktur($kode_cabang);
+        } else {
+            $nf = $no_faktur;
+        }
 
         $subtotal         = str_replace(',', '', $this->input->post('subtotal'));
         $diskon           = str_replace(',', '', $this->input->post('diskon'));
@@ -464,6 +505,7 @@ class Transaksi extends CI_Controller
 
         // detail
         $kode_barang_in   = $this->input->post('kode_barang_in');
+        $kode_satuan_in   = $this->input->post('kode_satuan');
         $harga_in         = $this->input->post('harga_in');
         $qty_in           = $this->input->post('qty_in');
         $discpr_in        = $this->input->post('discpr_in');
@@ -476,13 +518,14 @@ class Transaksi extends CI_Controller
 
         // tampung isi header
         $isi_header = [
+            'kode_cabang'   => $kode_cabang,
             'invoice'       => $invoice,
             'tgl_beli'      => $tgl_beli,
             'jam_beli'      => $jam_beli,
             'kode_supplier' => $kode_supplier,
             'kode_gudang'   => $kode_gudang,
-            'surat_jalan'   => $surat_jalan,
-            'no_faktur'     => $no_faktur,
+            'surat_jalan'   => $sj,
+            'no_faktur'     => $nf,
             'pajak'         => $pajak,
             'diskon'        => $diskon,
             'subtotal'      => $subtotal,
@@ -507,6 +550,7 @@ class Transaksi extends CI_Controller
             // lakukan loop
             for ($x = 0; $x <= ($jum - 1); $x++) {
                 $kode_barang    = $kode_barang_in[$x];
+                $kode_satuan    = $kode_satuan_in[$x];
                 $harga          = str_replace(',', '', $harga_in[$x]);
                 $qty            = str_replace(',', '', $qty_in[$x]);
                 $discpr         = str_replace(',', '', $discpr_in[$x]);
@@ -514,11 +558,17 @@ class Transaksi extends CI_Controller
                 $pajakrp        = str_replace(',', '', $pajakrp_in[$x]);
                 $jumlah         = str_replace(',', '', $jumlah_in[$x]);
 
+                $satuan         = $this->M_global->getData('barang_satuan', ['kode_barang' => $kode_barang, 'kode_satuan' => $kode_satuan]);
+
+                $qty_konversi   = $qty * $satuan->qty_satuan;
+
                 // tamping isi detail
                 $isi_detail = [
                     'invoice'       => $invoice,
                     'kode_barang'   => $kode_barang,
+                    'kode_satuan'   => $kode_satuan,
                     'harga'         => $harga,
+                    'qty_konversi'  => $qty_konversi,
                     'qty'           => $qty,
                     'discpr'        => $discpr,
                     'discrp'        => $discrp,
@@ -799,7 +849,9 @@ class Transaksi extends CI_Controller
     // fungsi get Barang In 
     public function getBarangIn($invoice)
     {
-        $header = $this->db->query('SELECT b.*, (s.nama) AS nama_supplier, (g.nama) AS nama_gudang FROM barang_in_header b JOIN m_supplier s USING (kode_supplier) JOIN m_gudang g USING(kode_gudang) WHERE b.invoice = "' . $invoice . '"')->row();
+        $kode_cabang = $this->session->userdata('cabang');
+
+        $header = $this->db->query('SELECT b.*, (s.nama) AS nama_supplier, (g.nama) AS nama_gudang FROM barang_in_header b JOIN m_supplier s USING (kode_supplier) JOIN m_gudang g USING(kode_gudang) WHERE b.invoice = "' . $invoice . '" AND b.kode_cabang = "' . $kode_cabang . '"')->row();
         $detail = $this->db->query('SELECT b.*, (brg.nama) AS nama_barang FROM barang_in_detail b JOIN barang brg USING(kode_barang) WHERE b.invoice = "' . $invoice . '"')->result();
 
         if ($header) {
@@ -3167,18 +3219,19 @@ class Transaksi extends CI_Controller
 
         // Loop through the list to populate the data array
         foreach ($list as $rd) {
+            $s_akhir = (int)$rd->akhir;
+
             $row = [];
             $row[] = $no++;
-            $row[] = $rd->kode_barang;
-            $row[] = $rd->nama;
-            $row[] = $rd->gudang;
-            $row[] = '<div class="float-right">' . number_format($rd->stok_min) . '</div>';
-            $row[] = '<div class="float-right">' . number_format($rd->stok_max) . '</div>';
-            $row[] = '<div class="float-right">' . number_format($rd->akhir) . '</div>';
-            $row[] = '<div class="text-center">' . (($rd->akhir < $rd->stok_min) ? '<span class="badge badge-danger">Stok Menipis</span>' : (($rd->stok_max < $rd->akhir) ? '<span class="badge badge-warning">Stok Melebihi Batas</span>' : '<span class="badge badge-success">Stok Tersedia</span>')) . '</div>';
+            $row[] = $rd->kode_barang . ' ~ ' . $rd->nama;
+            $row[] = $rd->nama_gudang;
+            $row[] = '<div class="float-right">' . konversi_show_satuan($rd->stok_min, $rd->kode_barang) . '</div>';
+            $row[] = '<div class="float-right">' . konversi_show_satuan($rd->stok_max, $rd->kode_barang) . '</div>';
+            $row[] = konversi_show_satuan($s_akhir, $rd->kode_barang);
+            $row[] = '<div class="text-center">' . ((($s_akhir < $rd->stok_min) && ($s_akhir > 0)) ? '<span class="badge badge-danger">Stok Menipis</span>' : (($s_akhir > $rd->stok_max) ? '<span class="badge badge-warning">Stok Melebihi Batas</span>' : (($s_akhir < 1) ? '<span class="badge badge-dark">Stok Kosong</span>' : '<span class="badge badge-success">Stok Tersedia</span>'))) . '</div>';
             $row[] = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-warning" title="Lihat" onclick="lihat(' . "'" . $rd->kode_barang . "'" . ')">
-                    <ion-icon name="eye-outline"></ion-icon>
+                <button style="margin-bottom: 5px;" type="button" class="btn btn-info" onclick="lihat(' . "'" . $rd->kode_barang . "', '" . $rd->kode_gudang . "'" . ')">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
                 </button>
             </div>';
             $data[] = $row;

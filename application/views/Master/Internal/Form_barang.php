@@ -1,7 +1,7 @@
 <form method="post" id="form_barang">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
         </div>
     </div>
     <br>
@@ -12,16 +12,28 @@
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-12">
-                                <label for="id" class="control-label">ID <span class="text-danger">**</span></label>
-                                <input type="text" class="form-control" id="kodeBarang" name="kodeBarang" placeholder="Otomatis" readonly value="<?= (!empty($barang) ? $barang->kode_barang : '') ?>">
+                                <label for="id" class="control-label">Barcode</label>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="kodeBarang" name="kodeBarang" placeholder="Otomatis, Bila sudah ada isikan barcode" value="<?= (!empty($barang) ? $barang->kode_barang : '') ?>" <?= (!empty($barang) ? 'readonly' : '') ?>>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" <?= ((!empty($barang) ? '' : 'disabled')) ?>>
+                                            <i class="fa-regular fa-hourglass-half"></i>&nbsp;&nbsp;<?= ((!empty($barang) ? 'Stok Barang Gudang' : 'Stok Barang Baru Tidak Tersedia')) ?>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-12">
-                                <label for="nama">Nama <span class="text-danger">**</span></label>
-                                <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama" onkeyup="ubah_nama(this.value, 'nama')" value="<?= (!empty($barang) ? $barang->nama : '') ?>">
+                                <label for="kode_satuan" class="control-label">Satuan Kecil <span class="text-danger">**</span></label>
+                                <select name="kode_satuan" id="kode_satuan" class="form-control select2_global" data-placeholder="~ Pilih Satuan">
+                                    <option value="">~ Pilih Satuan</option>
+                                    <?php foreach ($m_satuan as $s) : ?>
+                                        <option value="<?= $s->kode_satuan ?>" <?= (!empty($barang) ? (($s->kode_satuan == $barang->kode_satuan) ? 'selected' : '') : '') ?>><?= $s->keterangan ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -30,16 +42,30 @@
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-12">
-                                <label for="kode_satuan" class="control-label">Satuan <span class="text-danger">**</span></label>
-                                <select name="kode_satuan" id="kode_satuan" class="form-control select2_global" data-placeholder="~ Pilih">
-                                    <option value="">~ Pilih</option>
-                                    <?php foreach ($satuan as $s) : ?>
-                                        <option value="<?= $s->kode_satuan ?>" <?= (!empty($barang) ? (($s->kode_satuan == $barang->kode_satuan) ? 'selected' : '') : '') ?>><?= $s->keterangan ?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                                <label for="nama">Nama <span class="text-danger">**</span></label>
+                                <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama" onkeyup="ubah_nama(this.value, 'nama')" value="<?= (!empty($barang) ? $barang->nama : '') ?>">
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="kode_satuan2" class="control-label">Satuan Sedang</label>
+                                <select name="kode_satuan2" id="kode_satuan2" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="qty_satuan(this.value, 2)">
+                                    <option value="">~ Pilih Satuan</option>
+                                    <?php foreach ($m_satuan as $s) : ?>
+                                        <option value="<?= $s->kode_satuan ?>" <?= (!empty($barang) ? (($s->kode_satuan == $barang->kode_satuan2) ? 'selected' : '') : '') ?>><?= $s->keterangan ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="qty_satuan2">Qty Satuan Sedang</label>
+                                <input type="text" name="qty_satuan2" id="qty_satuan2" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->qty_satuan2) : 0) ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-12">
@@ -50,6 +76,23 @@
                                         <option value="<?= $k->kode_kategori ?>" <?= (!empty($barang) ? (($k->kode_kategori == $barang->kode_kategori) ? 'selected' : '') : '') ?>><?= $k->keterangan ?></option>
                                     <?php endforeach; ?>
                                 </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="kode_satuan3" class="control-label">Satuan Besar</label>
+                                <select name="kode_satuan3" id="kode_satuan3" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="qty_satuan(this.value, 3)">
+                                    <option value="">~ Pilih Satuan</option>
+                                    <?php foreach ($m_satuan as $s) : ?>
+                                        <option value="<?= $s->kode_satuan ?>" <?= (!empty($barang) ? (($s->kode_satuan == $barang->kode_satuan3) ? 'selected' : '') : '') ?>><?= $s->keterangan ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="qty_satuan3">Qty Satuan Besar</label>
+                                <input type="text" name="qty_satuan3" id="qty_satuan3" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->qty_satuan3) : 0) ?>">
                             </div>
                         </div>
                     </div>
@@ -67,7 +110,24 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="hpp">HPP <span class="text-danger">**</span></label>
-                                <input type="text" name="hpp" id="hpp" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->hpp) : '0') ?>" onchange="formatRp(this.value, 'hpp'); cekHna(this.value, 'hpp')">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <select name="opsi_hpp" id="opsi_hpp" class="form-control select2_global" onchange="cek_opsi_hpp(this.value)">
+                                            <option value="1" <?= (!empty($barang) ? (($barang->opsi_hpp == 1) ? 'selected' : '') : '') ?>>Manual</option>
+                                            <option value="2" <?= (!empty($barang) ? (($barang->opsi_hpp == 2) ? 'selected' : '') : '') ?>>Persentase</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <input type="text" name="persentase_hpp" id="persentase_hpp" class="form-control text-right" placeholder="%" value="<?= (!empty($barang) ? number_format($barang->persentase_hpp) : '') ?>" onchange="get_hpp(this.value)">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input type="text" name="hpp" id="hpp" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->hpp) : '0') ?>" onchange="formatRp(this.value, 'hpp'); cekHna(this.value, 'hpp')">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -108,7 +168,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="filefoto" class="control-label">Gambar</label>
                         <div class="row">
@@ -131,8 +191,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="kode_jenis" class="control-label">Jenis Obat <span class="text-danger">**</span></label>
-                                <select name="kode_jenis[]" id="kode_jenis" class="form-control select2_global" data-placeholder="~ Pilih" multiple="multiple">
-                                    <option value="">~ Pilih</option>
+                                <select name="kode_jenis[]" id="kode_jenis" class="form-control select2_global" data-placeholder="~ Pilih Jenis Obat" multiple="multiple">
+                                    <option value="">~ Pilih Jenis Obat</option>
                                     <?php if (!empty($barang)) :
                                         $bj_arr = [];
                                         foreach ($barang_jenis as $bj) :
@@ -148,19 +208,72 @@
                         </div>
                     </div>
                 </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="kode_cabang" class="control-label">Cabang <span class="text-danger">**</span></label>
+                        <select name="kode_cabang[]" id="kode_cabang" class="form-control select2_global" data-placeholder="~ Pilih Cabang" multiple="multiple">
+                            <option value="">~ Pilih Cabang</option>
+                            <?php if (!empty($barang)) :
+                                $cabang_arr = [];
+                                foreach ($barang_cabang as $bc) :
+                                    $cabang_arr[] = $bc->kode_cabang;
+                            ?>
+                            <?php endforeach;
+                            endif; ?>
+                            <?php foreach ($cabang_all as $ca) : ?>
+                                <option value="<?= $ca->kode_cabang ?>" <?= (!empty($barang) ? (in_array($ca->kode_cabang, $cabang_arr) ? 'selected' : '') : '') ?>><?= $ca->cabang ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <br>
     <div class="row">
         <div class="col-md-12">
-            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Master/barang')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
-            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($barang) ? 'Perbarui' : 'Simpan') ?></button>
+            <button type="button" class="btn btn-danger" onclick="getUrl('Master/barang')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
             <?php if (!empty($barang)) : ?>
-                <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Master/form_barang/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                <button type="button" class="btn btn-info float-right" onclick="getUrl('Master/form_barang/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
             <?php else : ?>
-                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+                <button type="button" class="btn btn-info float-right" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
             <?php endif ?>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Stok Barang Gudang</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered" width="100%" style="border-radius: 10px;">
+                            <thead>
+                                <tr class="text-center">
+                                    <th width="70%" style="border-radius: 10px 0px 0px 0px;">Gudang</th>
+                                    <th width="30%" style="border-radius: 0px 10px 0px 0px;">Stok</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($barang)) : ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="2" class="text-center">
+                                            <span>Data Tidak Tersedia</span>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </form>
@@ -172,6 +285,12 @@
     var kodeBarang = $('#kodeBarang');
     var nama = $('#nama');
     var kode_satuan = $('#kode_satuan');
+    var kode_satuan2 = $('#kode_satuan2');
+    var kode_satuan3 = $('#kode_satuan3');
+    var qty_satuan2 = $('#qty_satuan2');
+    var qty_satuan3 = $('#qty_satuan3');
+    var opsi_hpp = $('#opsi_hpp');
+    var persentase_hpp = $('#persentase_hpp');
     var kode_kategori = $('#kode_kategori');
     var hna = $('#hna');
     var hpp = $('#hpp');
@@ -180,17 +299,71 @@
 
     btnSimpan.attr('disabled', false);
 
-    // fungsi hitung hpp
-    function getHpp(param) {
-        if (param < 1) {
-            hna.val(formatNonRp(param));
-            Swal.fire("Nama", "Sudah ada!, silahkan isi nama lain ", "info");
-            return;
+    <?php if (!empty($barang)) : ?>
+        <?php if ($barang->opsi_hpp == 1) : ?>
+            persentase_hpp.attr('readonly', true);
+            hpp.attr('readonly', false);
+        <?php else : ?>
+            persentase_hpp.attr('readonly', false);
+            hpp.attr('readonly', true);
+        <?php endif; ?>
+    <?php else : ?>
+        persentase_hpp.attr('readonly', true);
+        hpp.attr('readonly', false);
+    <?php endif; ?>
+
+    // opsi hpp
+    function cek_opsi_hpp(param) {
+        var harga_awal = hna.val();
+        if (param == 1) {
+            persentase_hpp.attr('readonly', true);
+            hpp.attr('readonly', false);
+            formatRp(harga_awal, 'hpp');
+            persentase_hpp.val('');
+        } else {
+            persentase_hpp.attr('readonly', false);
+            hpp.attr('readonly', true);
+            formatRp(0, 'hpp');
+            persentase_hpp.val(persentase_hpp.val());
+        }
+    }
+
+    // get hpp
+    function get_hpp(persentase) {
+        if (persentase > 100) {
+            var harga_awal = Number(parseInt(hna.val().replaceAll(',', '')));
+            var harga_tambahan = harga_awal * 1;
+            var harga_hpp = harga_awal + harga_tambahan;
+
+            formatRp(100, 'persentase_hpp');
+            formatRp(harga_hpp, 'hpp');
+            return Swal.fire("Persentase", "Maksimal adalah 100%", "info");
         }
 
+        var harga_awal = Number(parseInt(hna.val().replaceAll(',', '')));
+        var harga_tambahan = harga_awal * (Number(persentase) / 100);
+        var harga_hpp = harga_awal + harga_tambahan;
+        formatRp(persentase, 'persentase_hpp');
+        formatRp(harga_hpp, 'hpp');
+    }
+
+    // fungsi hitung hpp
+    function getHpp(param) {
+
         var a = parseInt(param.replaceAll(',', ''));
-        var result = a + (a * (<?= $pajak ?> / 100));
+        var result = a;
         formatRp(result, 'hpp');
+    }
+
+    // qty_satuan required
+    function qty_satuan(param, ke) {
+        if ($('#kode_satuan' + ke).val() == '' || $('#kode_satuan' + ke).val() == null) {
+            $('#qty_satuan' + ke).val(0);
+        } else {
+            if ($('#qty_satuan' + ke).val() < 1) {
+                $('#qty_satuan' + ke).val(1);
+            }
+        }
     }
 
     // fungsi cek HNA

@@ -99,7 +99,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
             <br>
             <div class="row">
                 <div class="col-md-12 text-right">
-                    <button type="button" class="btn btn-dark btn-sm" id="btnSimpan" onclick="simpan()" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="save-outline"></ion-icon> Simpan</button>
+                    <button type="button" class="btn btn-success" id="btnSimpan" onclick="simpan()" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
                 </div>
             </div>
         </div>

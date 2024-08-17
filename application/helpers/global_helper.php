@@ -82,138 +82,140 @@ function _codeUser($nama)
     return $kode_user;
 }
 
-function _kodeSatuan($keterangan)
+function _kodeSatuan()
 {
     $CI         = &get_instance();
 
-    $inisial    = strtoupper(substr($keterangan, 0, 1));
-    $lastNumber = $CI->db->query('SELECT * FROM m_satuan WHERE kode_satuan LIKE "' . $inisial . '%" ORDER BY kode_satuan DESC LIMIT 1')->row();
+    $inisial    = "SAT";
+    $lastNumber = $CI->db->query('SELECT * FROM m_satuan ORDER BY kode_satuan DESC LIMIT 1')->row();
     $number     = 1;
     if ($lastNumber) {
-        $number       = count($CI->db->query('SELECT * FROM m_satuan WHERE kode_satuan LIKE "' . $inisial . '%"')->result()) + 1;
-        $kode_user    = $inisial . sprintf("%05d", $number);
+        $number       = count($CI->db->query('SELECT * FROM m_satuan')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%07d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $inisial . "00001";
+        $kode_user    = $inisial . "0000001";
     }
     return $kode_user;
 }
 
-function _kodeKategori($keterangan)
+function _kodeKategori()
 {
     $CI         = &get_instance();
 
-    $inisial    = strtoupper(substr($keterangan, 0, 1));
-    $lastNumber = $CI->db->query('SELECT * FROM m_kategori WHERE kode_kategori LIKE "' . $inisial . '%" ORDER BY kode_kategori DESC LIMIT 1')->row();
+    $inisial    = "KAT";
+    $lastNumber = $CI->db->query('SELECT * FROM m_kategori ORDER BY kode_kategori DESC LIMIT 1')->row();
     $number     = 1;
     if ($lastNumber) {
-        $number       = count($CI->db->query('SELECT * FROM m_kategori WHERE kode_kategori LIKE "' . $inisial . '%"')->result()) + 1;
-        $kode_user    = $inisial . sprintf("%05d", $number);
+        $number       = count($CI->db->query('SELECT * FROM m_kategori')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%07d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $inisial . "00001";
+        $kode_user    = $inisial . "0000001";
     }
     return $kode_user;
 }
 
-function _kodePoli($keterangan)
+function _kodePoli()
 {
     $CI               = &get_instance();
 
-    $inisial          = strtoupper(substr($keterangan, 0, 1));
-    $lastNumber       = $CI->db->query('SELECT * FROM m_poli WHERE kode_poli LIKE "' . $inisial . '%" ORDER BY kode_poli DESC LIMIT 1')->row();
+    $inisial          = "POL";
+    $lastNumber       = $CI->db->query('SELECT * FROM m_poli ORDER BY kode_poli DESC LIMIT 1')->row();
     $number           = 1;
     if ($lastNumber) {
-        $number       = count($CI->db->query('SELECT * FROM m_poli WHERE kode_poli LIKE "' . $inisial . '%"')->result()) + 1;
-        $kode_user    = $inisial . sprintf("%05d", $number);
+        $number       = count($CI->db->query('SELECT * FROM m_poli')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%07d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $inisial . "00001";
+        $kode_user    = $inisial . "0000001";
     }
     return $kode_user;
 }
 
-function _kodeSupplier($keterangan)
+function _kodeSupplier()
 {
     $CI         = &get_instance();
 
-    $inisial    = strtoupper(substr($keterangan, 0, 1));
-    $lastNumber = $CI->db->query('SELECT * FROM m_supplier WHERE kode_supplier LIKE "' . $inisial . '%" ORDER BY kode_supplier DESC LIMIT 1')->row();
+    $inisial    = "SUP";
+    $lastNumber = $CI->db->query('SELECT * FROM m_supplier ORDER BY kode_supplier DESC LIMIT 1')->row();
     $number     = 1;
     if ($lastNumber) {
-        $number       = count($CI->db->query('SELECT * FROM m_supplier WHERE kode_supplier LIKE "' . $inisial . '%"')->result()) + 1;
-        $kode_user    = $inisial . sprintf("%05d", $number);
+        $number       = count($CI->db->query('SELECT * FROM m_supplier')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%07d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $inisial . "00001";
+        $kode_user    = $inisial . "0000001";
     }
     return $kode_user;
 }
 
-function _kodeGudang($keterangan)
+function _kodeGudang()
 {
     $CI         = &get_instance();
 
-    $inisial    = strtoupper(substr($keterangan, 0, 1));
-    $lastNumber = $CI->db->query('SELECT * FROM m_gudang WHERE kode_gudang LIKE "' . $inisial . '%" ORDER BY kode_gudang DESC LIMIT 1')->row();
+    $inisial    = "GUD";
+    $lastNumber = $CI->db->query('SELECT * FROM m_gudang ORDER BY kode_gudang DESC LIMIT 1')->row();
     $number     = 1;
     if ($lastNumber) {
-        $number       = count($CI->db->query('SELECT * FROM m_gudang WHERE kode_gudang LIKE "' . $inisial . '%"')->result()) + 1;
-        $kode_user    = $inisial . sprintf("%05d", $number);
+        $number       = count($CI->db->query('SELECT * FROM m_gudang')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%07d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $inisial . "00001";
+        $kode_user    = $inisial . "0000001";
     }
     return $kode_user;
 }
 
-function _kodeBank($keterangan)
+function _kodeBank()
 {
     $CI         = &get_instance();
 
-    $inisial    = strtoupper(substr($keterangan, 0, 1));
-    $lastNumber = $CI->db->query('SELECT * FROM m_bank WHERE kode_bank LIKE "' . $inisial . '%" ORDER BY kode_bank DESC LIMIT 1')->row();
+    $inisial    = "B";
+    $lastNumber = $CI->db->query('SELECT * FROM m_bank ORDER BY kode_bank DESC LIMIT 1')->row();
     $number     = 1;
     if ($lastNumber) {
-        $number       = count($CI->db->query('SELECT * FROM m_bank WHERE kode_bank LIKE "' . $inisial . '%"')->result()) + 1;
-        $kode_user    = $inisial . sprintf("%05d", $number);
+        $number       = count($CI->db->query('SELECT * FROM m_bank')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%09d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $inisial . "00001";
+        $kode_user    = $inisial . "000000001";
     }
     return $kode_user;
 }
 
-function _kodePekerjaan($keterangan)
+function _kodePekerjaan()
 {
     $CI         = &get_instance();
 
-    $inisial    = strtoupper(substr($keterangan, 0, 1));
+    $inisial    = "PEK";
     $lastNumber = $CI->db->query('SELECT * FROM m_pekerjaan WHERE kode_pekerjaan LIKE "' . $inisial . '%" ORDER BY kode_pekerjaan DESC LIMIT 1')->row();
     $number     = 1;
     if ($lastNumber) {
         $number       = count($CI->db->query('SELECT * FROM m_pekerjaan WHERE kode_pekerjaan LIKE "' . $inisial . '%"')->result()) + 1;
-        $kode_user    = $inisial . sprintf("%05d", $number);
+        $kode_user    = $inisial . sprintf("%07d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $inisial . "00001";
+        $kode_user    = $inisial . "0000001";
     }
     return $kode_user;
 }
 
 function _kodeBarang($keterangan)
 {
-    $CI         = &get_instance();
+    $CI             = &get_instance();
 
-    $inisial    = strtoupper(substr($keterangan, 0, 1));
-    $lastNumber = $CI->db->query('SELECT * FROM barang WHERE kode_barang LIKE "' . $inisial . '%" ORDER BY kode_barang DESC LIMIT 1')->row();
-    $number     = 1;
+    $kode_cabang    = $CI->session->userdata('init_cabang');
+
+    $inisial        = strtoupper(substr($keterangan, 0, 1));
+    $lastNumber     = $CI->db->query('SELECT * FROM barang WHERE kode_barang LIKE "' . $kode_cabang . $inisial . '%" ORDER BY kode_barang DESC LIMIT 1')->row();
+    $number         = 1;
     if ($lastNumber) {
-        $number       = count($CI->db->query('SELECT * FROM barang WHERE kode_barang LIKE "' . $inisial . '%"')->result()) + 1;
-        $kode_user    = $inisial . sprintf("%05d", $number);
+        $number       = count($CI->db->query('SELECT * FROM barang WHERE kode_barang LIKE "' . $kode_cabang . $inisial . '%"')->result()) + 1;
+        $kode_user    = $kode_cabang . '~' . $inisial . sprintf("%05d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $inisial . "00001";
+        $kode_user    = $kode_cabang . '~' . $inisial . "00001";
     }
     return $kode_user;
 }
@@ -222,49 +224,51 @@ function _kodeLogistik($keterangan)
 {
     $CI         = &get_instance();
 
+    $kode_cabang    = $CI->session->userdata('init_cabang');
+
     $inisial    = strtoupper(substr($keterangan, 0, 1));
-    $lastNumber = $CI->db->query('SELECT * FROM logistik WHERE kode_logistik LIKE "' . $inisial . '%" ORDER BY kode_logistik DESC LIMIT 1')->row();
+    $lastNumber = $CI->db->query('SELECT * FROM logistik WHERE kode_logistik LIKE "' . $kode_cabang . $inisial . '%" ORDER BY kode_logistik DESC LIMIT 1')->row();
     $number     = 1;
     if ($lastNumber) {
-        $number       = count($CI->db->query('SELECT * FROM logistik WHERE kode_logistik LIKE "' . $inisial . '%"')->result()) + 1;
-        $kode_user    = $inisial . sprintf("%05d", $number);
+        $number       = count($CI->db->query('SELECT * FROM logistik WHERE kode_logistik LIKE "' . $kode_cabang . $inisial . '%"')->result()) + 1;
+        $kode_user    = $kode_cabang . '~' . $inisial . sprintf("%05d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $inisial . "00001";
+        $kode_user    = $kode_cabang . '~' . $inisial . "00001";
     }
     return $kode_user;
 }
 
-function _kodeAgama($keterangan)
+function _kodeAgama()
 {
     $CI         = &get_instance();
 
-    $inisial    = strtoupper(substr($keterangan, 0, 1));
-    $lastNumber = $CI->db->query('SELECT * FROM m_agama WHERE kode_agama LIKE "' . $inisial . '%" ORDER BY kode_agama DESC LIMIT 1')->row();
+    $inisial    = "AGM";
+    $lastNumber = $CI->db->query('SELECT * FROM m_agama ORDER BY kode_agama DESC LIMIT 1')->row();
     $number     = 1;
     if ($lastNumber) {
-        $number       = count($CI->db->query('SELECT * FROM m_agama WHERE kode_agama LIKE "' . $inisial . '%"')->result()) + 1;
-        $kode_user    = $inisial . sprintf("%05d", $number);
+        $number       = count($CI->db->query('SELECT * FROM m_agama')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%07d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $inisial . "00001";
+        $kode_user    = $inisial . "0000001";
     }
     return $kode_user;
 }
 
-function _kodePendidikan($keterangan)
+function _kodePendidikan()
 {
     $CI         = &get_instance();
 
-    $inisial    = strtoupper(substr($keterangan, 0, 1));
-    $lastNumber = $CI->db->query('SELECT * FROM m_pendidikan WHERE kode_pendidikan LIKE "' . $inisial . '%" ORDER BY kode_pendidikan DESC LIMIT 1')->row();
+    $inisial    = "PEN";
+    $lastNumber = $CI->db->query('SELECT * FROM m_pendidikan ORDER BY kode_pendidikan DESC LIMIT 1')->row();
     $number     = 1;
     if ($lastNumber) {
-        $number       = count($CI->db->query('SELECT * FROM m_pendidikan WHERE kode_pendidikan LIKE "' . $inisial . '%"')->result()) + 1;
-        $kode_user    = $inisial . sprintf("%05d", $number);
+        $number       = count($CI->db->query('SELECT * FROM m_pendidikan')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%07d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $inisial . "00001";
+        $kode_user    = $inisial . "0000001";
     }
     return $kode_user;
 }
@@ -342,40 +346,125 @@ function _kodeTrx($kode_poli)
     return $kode_user;
 }
 
-function _invoice()
+function _invoice($cabang)
 {
     $CI           = &get_instance();
 
     $now          = date('Y-m-d');
 
-    $lastNumber   = $CI->db->query('SELECT * FROM barang_in_header WHERE tgl_beli = "' . $now . '" ORDER BY id DESC LIMIT 1')->row();
+    $lastNumber   = $CI->db->query('SELECT * FROM barang_in_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '" ORDER BY id DESC LIMIT 1')->row();
     $number       = 1;
     if ($lastNumber) {
-        $number   = $CI->db->query('SELECT * FROM barang_in_header WHERE tgl_beli = "' . $now . '"')->num_rows() + 1;
-        $invoice  = 'INV~' . date('dmY') . sprintf("%05d", $number);
+        $number   = $CI->db->query('SELECT * FROM barang_in_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
+        $invoice  = 'INV~' . $cabang . date('dmY') . sprintf("%05d", $number);
     } else {
         $number   = 0;
-        $invoice  = 'INV~' . date('dmY') . "00001";
+        $invoice  = 'INV~' . $cabang . date('dmY') . "00001";
     }
     return $invoice;
 }
 
-function _invoice_retur()
+function _surat_jalan($cabang)
 {
     $CI           = &get_instance();
 
     $now          = date('Y-m-d');
 
-    $lastNumber   = $CI->db->query('SELECT * FROM barang_in_retur_header WHERE tgl_beli = "' . $now . '" ORDER BY id DESC LIMIT 1')->row();
+    $lastNumber   = $CI->db->query('SELECT * FROM barang_in_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '" ORDER BY id DESC LIMIT 1')->row();
     $number       = 1;
     if ($lastNumber) {
-        $number   = $CI->db->query('SELECT * FROM barang_in_retur_header WHERE tgl_beli = "' . $now . '"')->num_rows() + 1;
-        $invoice  = 'REINV~' . date('dmY') . sprintf("%05d", $number);
+        $number   = $CI->db->query('SELECT * FROM barang_in_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
+        $invoice  = 'NSJ~' . $cabang . date('dmY') . sprintf("%05d", $number);
     } else {
         $number   = 0;
-        $invoice  = 'REINV~' . date('dmY') . "00001";
+        $invoice  = 'NSJ~' . $cabang . date('dmY') . "00001";
     }
     return $invoice;
+}
+
+function _no_faktur($cabang)
+{
+    $CI           = &get_instance();
+
+    $now          = date('Y-m-d');
+
+    $lastNumber   = $CI->db->query('SELECT * FROM barang_in_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '" ORDER BY id DESC LIMIT 1')->row();
+    $number       = 1;
+    if ($lastNumber) {
+        $number   = $CI->db->query('SELECT * FROM barang_in_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
+        $invoice  = 'NSF~' . $cabang . date('dmY') . sprintf("%05d", $number);
+    } else {
+        $number   = 0;
+        $invoice  = 'NSF~' . $cabang . date('dmY') . "00001";
+    }
+    return $invoice;
+}
+
+function _invoice_retur($cabang)
+{
+    $CI           = &get_instance();
+
+    $now          = date('Y-m-d');
+
+    $lastNumber   = $CI->db->query('SELECT * FROM barang_in_retur_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '" ORDER BY id DESC LIMIT 1')->row();
+    $number       = 1;
+    if ($lastNumber) {
+        $number   = $CI->db->query('SELECT * FROM barang_in_retur_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
+        $invoice  = 'REINV~' . $cabang . date('dmY') . sprintf("%05d", $number);
+    } else {
+        $number   = 0;
+        $invoice  = 'REINV~' . $cabang . date('dmY') . "00001";
+    }
+    return $invoice;
+}
+
+function konversi_show_satuan($s_akhir, $kode_barang)
+{
+    $CI   = &get_instance();
+
+    $kode_cabang = $CI->session->userdata("cabang");
+
+    $satuan1 = $CI->M_global->getData('barang_satuan', ['kode_barang' => $kode_barang, 'kode_cabang' => $kode_cabang, 'ke' => 1]);
+    $satuan3 = $CI->M_global->getData('barang_satuan', ['kode_barang' => $kode_barang, 'kode_cabang' => $kode_cabang, 'ke' => 3]);
+
+    if ($satuan3) {
+        $stok3 = floor($s_akhir / $satuan3->qty_satuan);
+        $qty_sat_3 = $stok3 * $satuan3->qty_satuan;
+
+        $cek_sisa3 = $s_akhir - $qty_sat_3;
+        if ($stok3 > 0) {
+            $satuan2 = $CI->M_global->getData('barang_satuan', ['kode_barang' => $kode_barang, 'kode_cabang' => $kode_cabang, 'ke' => 2]);
+            $stok2 = floor($cek_sisa3 / $satuan2->qty_satuan);
+            $qty_sat_2 = $stok2 * $satuan2->qty_satuan;
+
+            $cek_sisa2 = $cek_sisa3 - $qty_sat_2;
+            if ($stok2 > 0) {
+                $sat = number_format($stok3) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan3->kode_satuan])->keterangan . (($stok2 > 0) ? '<br>' . number_format($stok2) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan2->kode_satuan])->keterangan : '') . (($cek_sisa2 > 0) ? '<br>' . number_format($cek_sisa2) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan1->kode_satuan])->keterangan : '');
+            } else {
+                $sat = number_format($stok3) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan3->kode_satuan])->keterangan . (($stok2 > 0) ? '<br>' . number_format($stok2) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan2->kode_satuan])->keterangan : '');
+            }
+        } else {
+            $sat = number_format($stok3) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan3->kode_satuan])->keterangan;
+        }
+    } else {
+        $satuan2 = $CI->M_global->getData('barang_satuan', ['kode_barang' => $kode_barang, 'kode_cabang' => $kode_cabang, 'ke' => 2]);
+
+        if ($satuan2) {
+            $stok2 = floor($s_akhir / $satuan2->qty_satuan);
+            $qty_sat_2 = $stok2 * $satuan2->qty_satuan;
+
+            $cek_sisa2 = $s_akhir - $qty_sat_2;
+            if ($stok2 > 0) {
+                $sat = number_format($stok2) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan2->kode_satuan])->keterangan . (($cek_sisa2 > 0) ? '<br>' . number_format($cek_sisa2) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan1->kode_satuan])->keterangan : '');
+            } else {
+                $sat = number_format($cek_sisa2) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan1->kode_satuan])->keterangan;
+            }
+        } else {
+            $sat = '';
+        }
+    }
+
+    return $sat;
 }
 
 function hitungStokBrgIn($detail, $kode_gudang, $invoice)
@@ -386,15 +475,18 @@ function hitungStokBrgIn($detail, $kode_gudang, $invoice)
     $time = date('H:i:s');
     $user = $CI->session->userdata('kode_user');
 
+    $kode_cabang = $CI->session->userdata("cabang");
+
     foreach ($detail as $d) {
-        $cek = $CI->M_global->jumDataRow('barang_stok', ['kode_gudang' => $kode_gudang, 'kode_barang' => $d->kode_barang]);
+        $cek = $CI->M_global->jumDataRow('barang_stok', ['kode_gudang' => $kode_gudang, 'kode_barang' => $d->kode_barang, 'kode_cabang' => $kode_cabang]);
 
         if ($cek < 1) {
             $isi_stok = [
+                'kode_cabang'   => $d->kode_cabang,
                 'kode_barang'   => $d->kode_barang,
                 'kode_gudang'   => $kode_gudang,
-                'masuk'         => $d->qty,
-                'akhir'         => $d->qty,
+                'masuk'         => $d->qty_konversi,
+                'akhir'         => $d->qty_konversi,
                 'last_tgl_trx'  => $date,
                 'last_jam_trx'  => $time,
                 'last_no_trx'   => $invoice,
@@ -404,13 +496,13 @@ function hitungStokBrgIn($detail, $kode_gudang, $invoice)
             $CI->M_global->insertData('barang_stok', $isi_stok);
         } else {
             $CI->db->query("UPDATE barang_stok SET 
-            masuk = masuk + $d->qty, 
-            akhir = akhir + $d->qty, 
+            masuk = masuk + $d->qty_konversi, 
+            akhir = akhir + $d->qty_konversi, 
             last_tgl_trx = '$date', 
             last_jam_trx = '$time',
             last_no_trx = '$invoice',
             last_user = '$user' 
-            WHERE kode_barang = '$d->kode_barang' AND kode_gudang = '$kode_gudang'");
+            WHERE kode_barang = '$d->kode_barang' AND kode_gudang = '$kode_gudang' AND kode_cabang = '$kode_cabang'");
         }
     }
 }
@@ -423,11 +515,14 @@ function hitungStokBrgOut($detail, $kode_gudang, $invoice)
     $time = date('H:i:s');
     $user = $CI->session->userdata('kode_user');
 
+    $kode_cabang = $CI->session->userdata("cabang");
+
     foreach ($detail as $d) {
-        $cek = $CI->M_global->jumDataRow('barang_stok', ['kode_gudang' => $kode_gudang, 'kode_barang' => $d->kode_barang]);
+        $cek = $CI->M_global->jumDataRow('barang_stok', ['kode_gudang' => $kode_gudang, 'kode_barang' => $d->kode_barang, 'kode_cabang' => $kode_cabang]);
 
         if ($cek < 1) {
             $isi_stok = [
+                'kode_cabang'   => $d->kode_cabang,
                 'kode_barang'   => $d->kode_barang,
                 'kode_gudang'   => $kode_gudang,
                 'masuk'         => 0 - $d->qty,
@@ -447,7 +542,7 @@ function hitungStokBrgOut($detail, $kode_gudang, $invoice)
             last_jam_trx = '$time',
             last_no_trx = '$invoice',
             last_user = '$user' 
-            WHERE kode_barang = '$d->kode_barang' AND kode_gudang = '$kode_gudang'");
+            WHERE kode_barang = '$d->kode_barang' AND kode_gudang = '$kode_gudang' AND kode_cabang = '$kode_cabang'");
         }
     }
 }
@@ -793,10 +888,10 @@ function _kodeJenis()
     $number       = 1;
     if ($lastNumber) {
         $number       = count($CI->db->query('SELECT * FROM m_jenis')->result()) + 1;
-        $kode_jenis   = 'JO' . sprintf("%05d", $number);
+        $kode_jenis   = 'JO' . sprintf("%08d", $number);
     } else {
         $number       = 0;
-        $kode_jenis   = 'JO' . "00001";
+        $kode_jenis   = 'JO' . "00000001";
     }
     return $kode_jenis;
 }
@@ -915,7 +1010,7 @@ function barcode($kode_barang)
     $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
     file_put_contents('barcode.png', $generator->getBarcode($kode_barang, $generator::TYPE_CODE_128, 3, 50, $redColor));
 
-    echo '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($kode_barang, $generator::TYPE_CODE_128)) . '">';
+    echo '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($kode_barang, $generator::TYPE_CODE_128)) . '"><br>' . $kode_barang;
 }
 
 function _code_promo()
@@ -1105,4 +1200,21 @@ function cek_so()
     }
 
     return $lock;
+}
+
+function _kodeKas_bank()
+{
+    $CI         = &get_instance();
+
+    $inisial    = "KB";
+    $lastNumber = $CI->db->query('SELECT * FROM kas_bank ORDER BY kode_kas_bank DESC LIMIT 1')->row();
+    $number     = 1;
+    if ($lastNumber) {
+        $number       = count($CI->db->query('SELECT * FROM kas_bank')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%08d", $number);
+    } else {
+        $number       = 0;
+        $kode_user    = $inisial . "00000001";
+    }
+    return $kode_user;
 }

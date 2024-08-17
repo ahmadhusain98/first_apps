@@ -118,31 +118,29 @@ class Kasir extends CI_Controller
 
             $row    = [];
             $row[]  = $no++;
-            $row[]  = date('d/m/Y', strtotime($rd->tgl_pembayaran)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_pembayaran)) . (($rd->approved > 0) ? '<span class="badge badge-primary float-right">Acc</span>' : '<span class="badge badge-danger float-right">Belum diAcc</span>');
+            $row[]  = date('d/m/Y', strtotime($rd->tgl_pembayaran)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_pembayaran)) . '<br>' . (($rd->approved > 0) ? '<span class="badge badge-primary">Acc</span>' : '<span class="badge badge-danger">Belum diAcc</span>');
             $row[]  = $rd->invoice;
-            $row[]  = $rd->inv_jual;
             $row[]  = $rd->no_trx;
             $row[]  = ($rd->jenis_pembayaran == 0 ? 'CASH' : (($rd->jenis_pembayaran == 1) ? 'CARD' : 'CASH & CARD'));
             $row[]  = $rd->kode_user . ' ~ ' . $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama;
 
             if ($confirmed > 0) {
                 if ($rd->approved > 0) {
-                    $actived_akun = '<button type="button" class="btn btn-dark" title="Batalkan" onclick="actived(' . "'" . $rd->token_pembayaran . "', 1" . ')" ' . $confirm_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
+                    $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-dark" onclick="actived(' . "'" . $rd->token_pembayaran . "', 1" . ')" ' . $confirm_diss . '><i class="fa-solid fa-circle-xmark"></i></button>';
                 } else {
-                    $actived_akun = '<button type="button" class="btn btn-dark" title="Acc" onclick="actived(' . "'" . $rd->token_pembayaran . "', 0" . ')" ' . $confirm_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
+                    $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-primary" onclick="actived(' . "'" . $rd->token_pembayaran . "', 0" . ')" ' . $confirm_diss . '><i class="fa-solid fa-circle-check"></i></button>';
                 }
             } else {
-                $actived_akun = '<button type="button" class="btn btn-dark" title="Acc" disabled><ion-icon name="ban-outline"></ion-icon></button>';
+                $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-primary" disabled><i class="fa-solid fa-circle-check"></i></button>';
             }
 
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    ' . $actived_akun . '
-                    <button type="button" class="btn btn-dark" title="Cetak" onclick="cetak(' . "'" . $rd->token_pembayaran . "', 0" . ')"><ion-icon name="print-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Kirim Email" onclick="email(' . "'" . $rd->token_pembayaran . "'" . ')"><ion-icon name="send-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->token_pembayaran . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->token_pembayaran . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                ' . $actived_akun . '
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-secondary" onclick="cetak(' . "'" . $rd->token_pembayaran . "', 0" . ')"><i class="fa-solid fa-file-pdf"></i></button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="email(' . "'" . $rd->token_pembayaran . "'" . ')"><i class="fa-solid fa-envelope-open-text"></i></button>
+                <br>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-warning" onclick="ubah(' . "'" . $rd->token_pembayaran . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" onclick="hapus(' . "'" . $rd->token_pembayaran . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -351,7 +349,7 @@ class Kasir extends CI_Controller
 
         $body .= '</table>';
 
-        cetak_pdf_small($judul, $body, $type, $position, $filename, $web_setting, $yes);
+        cetak_pdf_small($judul, $body, 1, $position, $filename, $web_setting, $yes);
     }
 
     // fungsi aktif/non-aktif pembayaran
@@ -422,7 +420,7 @@ class Kasir extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param == 0) {
+        if ($param == '0') {
             $pembayaran     = null;
             $riwayat        = null;
             $bayar_detail   = null;

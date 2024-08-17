@@ -55,11 +55,20 @@ class M_global extends CI_Model
         return $this->db->query('SELECT * FROM ' . $table . ' WHERE (' . $field1 . ' LIKE "%' . $kondisi . '%" OR ' . $field2 . ' LIKE "%' . $kondisi . '%")')->row();
     }
 
+    // fungsi ambil data 1 baris berdasarkan lemparan tertentu
+    function getWhereIn($table, $kondisi, $array)
+    {
+        return $this->db->where_in($kondisi, $array)->get($table)->result();
+    }
+
     // fungsi track record stok pembelian
     function getReportPembelian($dari, $sampai, $kode_gudang)
     {
+        $cabang = $this->session->userdata('cabang');
+
         $sintax = $this->db->query("SELECT * FROM (
             SELECT h.invoice AS no_trx,
+            h.kode_cabang AS cabang,
             CONCAT('Pembelian ~ ', s.nama) AS keterangan,
             CONCAT(d.kode_barang, ' ~ ', b.nama) AS barang,
             d.qty AS masuk,
@@ -77,6 +86,7 @@ class M_global extends CI_Model
             UNION ALL
 
             SELECT h.invoice AS no_trx,
+            h.kode_cabang AS cabang,
             CONCAT('Retur Pembelian ~ ', s.nama) AS keterangan,
             CONCAT(d.kode_barang, ' ~ ', b.nama) AS barang,
             '0' AS masuk,
@@ -91,7 +101,7 @@ class M_global extends CI_Model
             JOIN barang b ON d.kode_barang = b.kode_barang
             JOIN m_supplier s ON h.kode_supplier = s.kode_supplier
         ) AS m_pembelian
-        WHERE kode_gudang = '$kode_gudang' AND tgl_beli >= '$dari' AND tgl_beli <= '$sampai' ORDER BY tgl_beli, jam_beli ASC")->result();
+        WHERE kode_gudang = '$kode_gudang' AND cabang = '$cabang' AND tgl_beli >= '$dari' AND tgl_beli <= '$sampai' ORDER BY tgl_beli, jam_beli ASC")->result();
 
         return $sintax;
     }

@@ -24,6 +24,8 @@ class M_datatables2 extends CI_Model
         $this->db->select($columns);
         $this->db->from($table);
 
+        $this->db->where(['kode_cabang' => $this->session->userdata('cabang')]);
+
         if ($type == 1) {
             $date = date('Y-m-d');
             $this->db->where([$condition_param1 . $add_condition => $date]);

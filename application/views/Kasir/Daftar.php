@@ -5,7 +5,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 <form method="post" id="form_kasir">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Daftar Pembayaran</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Pembayaran</span>
         </div>
     </div>
     <br>
@@ -19,15 +19,31 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                     <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
                 </div>
                 <div class="col-md-4 col-4 mb-3">
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="filter('')" title="Filter" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom"><ion-icon name="filter-outline"></ion-icon> Filter</button>
+                    <button type="button" class="btn btn-light" onclick="filter('')"><i class="fa-solid fa-sort"></i>&nbsp;&nbsp;Filter</button>
                 </div>
             </div>
         </div>
         <div class="col-md-6 col-12">
-            <div class="btn-group btn-group-sm float-right" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-primary" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
-                <button type="button" class="btn btn-warning" onclick="getUrl('Kasir/form_kasir/0/retur')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Pembayaran Retur Penjualan</button>
-                <button type="button" class="btn btn-success" onclick="getUrl('Kasir/form_kasir/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Pembayaran Penjualan</button>
+            <div class="float-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" onclick="print('kasir')"><i class="fa-regular fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fa-regular fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-money-bill"></i>&nbsp;&nbsp;Pembayaran
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" type="button" onclick="getUrl('Kasir/form_kasir/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-receipt"></i>&nbsp;&nbsp;Penjualan</a></li>
+                        <li><a class="dropdown-item" type="button" onclick="getUrl('Kasir/form_kasir/0/retur')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-file-invoice-dollar"></i>&nbsp;&nbsp;Retur Penjualan</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -35,17 +51,16 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tablePembayaran" width="100%">
+                <table class="table table-hover table-bordered" id="tablePembayaran" width="100%" style="border-radius: 10px;">
                     <thead>
                         <tr class="text-center">
-                            <th width="5%" class="bg-primary">#</th>
-                            <th width="13%" class="bg-primary">Tgl/Jam Pembayaran</th>
-                            <th width="15%" class="bg-primary">Invoice</th>
-                            <th width="10%" class="bg-primary">Invoice Penjualan</th>
-                            <th width="10%" class="bg-primary">No. Transaksi</th>
-                            <th width="15%" class="bg-primary">Jenis Pembayaran</th>
-                            <th width="10%" class="bg-primary">Penerima</th>
-                            <th width="10%" class="bg-primary">Aksi</th>
+                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                            <th width="15%">Tgl/Jam Pembayaran</th>
+                            <th width="20%">Invoice</th>
+                            <th width="15%">No. Transaksi</th>
+                            <th width="15%">Jenis Pembayaran</th>
+                            <th width="10%">Penerima</th>
+                            <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                         </tr>
                     </thead>
                 </table>

@@ -5,7 +5,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 <form method="post" id="form_bank">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
         </div>
     </div>
     <br>
@@ -31,28 +31,40 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="save-outline"></ion-icon> Simpan</button>
-            <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+            <button type="button" class="btn btn-info float-right" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
         </div>
     </div>
     <hr>
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Daftar Bank EDC</span>
-            <button type="button" class="btn btn-sm btn-primary float-right" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Bank EDC</span>
+            <div class="float-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" onclick="preview('bank')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="print('bank')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="excel('bank')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+            </div>
         </div>
     </div>
     <br>
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tableBank" width="100%">
+                <table class="table table-hover table-bordered" id="tableBank" width="100%" style="border-radius: 10px;">
                     <thead>
                         <tr class="text-center">
-                            <th width="5%" class="bg-primary">#</th>
-                            <th width="20%" class="bg-primary">ID</th>
-                            <th width="65%" class="bg-primary">Keterangan</th>
-                            <th width="10%" class="bg-primary">Aksi</th>
+                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                            <th width="20%">ID</th>
+                            <th width="60%">Keterangan</th>
+                            <th width="15%" style="border-radius: 1px 10px 0px 0px;">Aksi</th>
                         </tr>
                     </thead>
                 </table>

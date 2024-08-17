@@ -17,13 +17,18 @@ class Auth extends CI_Controller
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
         $parameter = [
-            'judul'         => 'Selamat Datang',
-            'nama_apps'     => $web_setting->nama,
-            'web_version'   => $web_version->version,
-            'web'           => $web_setting,
+            'judul'             => 'Selamat Datang',
+            'nama_apps'         => $web_setting->nama,
+            'web_version'       => $web_version->version,
+            'web_version_all'   => $web_version,
+            'web'               => $web_setting,
         ];
 
-        $this->template->load('Template/Auth', 'Auth/Login', $parameter);
+        if (!empty($this->session->userdata('email'))) {
+            redirect('Home');
+        } else {
+            $this->template->load('Template/Auth', 'Auth/Login', $parameter);
+        }
     }
 
     // regist page
@@ -223,18 +228,19 @@ class Auth extends CI_Controller
         $email        = htmlspecialchars($this->input->post("email"));
         $password     = htmlspecialchars($this->input->post("password"));
         $shift        = htmlspecialchars($this->input->post("shift"));
+        $cabang       = htmlspecialchars($this->input->post("cabang"));
 
         $cek          = $this->M_auth->getRow('user', ['email' => $email]);
 
         if (empty($cek)) {
-            $this->login_member($email, $password, $shift);
+            $this->login_member($email, $password, $shift, $cabang);
         } else {
-            $this->login_user($email, $password, $shift);
+            $this->login_user($email, $password, $shift, $cabang);
         }
     }
 
     // login member
-    public function login_member($email, $password, $shift)
+    public function login_member($email, $password, $shift, $cabang)
     {
         // cek email di table member
         $cek_member = $this->M_auth->jumRow("member", ["email" => $email]);
@@ -252,6 +258,9 @@ class Auth extends CI_Controller
                     // update status on_off
                     $this->M_global->updateData('member', ['on_off' => 1], ['email' => $email]);
 
+                    // cabang
+                    $init_cabang = $this->M_global->getData('cabang', ['kode_cabang' => $cabang])->inisial_cabang;
+
                     // tampung value ke variable
                     $isi_session = [
                         'kode_member'   => $member->kode_member,
@@ -259,6 +268,8 @@ class Auth extends CI_Controller
                         'email'         => $member->email,
                         'kode_role'     => $member->kode_role,
                         'shift'         => $shift,
+                        'cabang'        => $cabang,
+                        'init_cabang'   => $init_cabang,
                     ];
 
                     // buatkan session baru untuk masuk ke sistem
@@ -278,7 +289,7 @@ class Auth extends CI_Controller
     }
 
     // login user
-    public function login_user($email, $password, $shift)
+    public function login_user($email, $password, $shift, $cabang)
     {
         // cek email di table user
         $cek_user = $this->M_auth->jumRow("user", ["email" => $email]);
@@ -296,13 +307,18 @@ class Auth extends CI_Controller
                     // update status on_off
                     $this->M_global->updateData('user', ['on_off' => 1], ['email' => $email]);
 
+                    // cabang
+                    $init_cabang = $this->M_global->getData('cabang', ['kode_cabang' => $cabang])->inisial_cabang;
+
                     // tampung value ke variable
                     $isi_session = [
-                        'kode_user' => $user->kode_user,
-                        'nama'      => $user->nama,
-                        'email'     => $user->email,
-                        'kode_role' => $user->kode_role,
-                        'shift'     => $shift,
+                        'kode_user'     => $user->kode_user,
+                        'nama'          => $user->nama,
+                        'email'         => $user->email,
+                        'kode_role'     => $user->kode_role,
+                        'shift'         => $shift,
+                        'cabang'        => $cabang,
+                        'init_cabang'   => $init_cabang,
                     ];
 
                     // buatkan session baru untuk masuk ke sistem

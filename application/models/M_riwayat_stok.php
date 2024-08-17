@@ -3,10 +3,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class M_riwayat_stok extends CI_Model
 {
-
-    var $table = 'barang';
-    var $order = ['b.id', 'b.kode_barang', 'b.image', 'b.nama', 'b.hna', 'b.hpp', 'b.harga_jual', 'b.nilai_persediaan', 'g.nama AS gudang', 'bs.akhir', 'b.stok_min', 'b.stok_max'];
-    var $kolom = ['b.id', 'b.kode_barang', 'b.image', 'b.nama', 'b.hna', 'b.hpp', 'b.harga_jual', 'b.nilai_persediaan', 'g.nama AS gudang', 'bs.akhir', 'b.stok_min', 'b.stok_max'];
+    private $table = 'barang';
+    private $order = ['bs.id', 'b.kode_barang', 'b.image', 'b.nama', 'b.hna', 'b.hpp', 'b.harga_jual', 'b.nilai_persediaan', 'bs.kode_gudang', 'g.nama AS nama_gudang', 'bs.akhir', 'b.stok_min', 'b.stok_max'];
+    private $kolom = ['bs.id', 'b.kode_barang', 'b.image', 'b.nama', 'b.hna', 'b.hpp', 'b.harga_jual', 'b.nilai_persediaan', 'bs.kode_gudang', 'g.nama AS nama_gudang', 'bs.akhir', 'b.stok_min', 'b.stok_max'];
+    private $search = ['bs.id', 'b.kode_barang', 'b.image', 'b.nama', 'b.hna', 'b.hpp', 'b.harga_jual', 'b.nilai_persediaan', 'bs.kode_gudang', 'g.nama', 'bs.akhir', 'b.stok_min', 'b.stok_max'];
 
     public function __construct()
     {
@@ -15,14 +15,9 @@ class M_riwayat_stok extends CI_Model
         date_default_timezone_set('Asia/Jakarta');
     }
 
-
     private function _get_datatables_query($gudang)
     {
-        $this->db->query("SET SESSION sql_mode = REPLACE(
-            REPLACE(
-                REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY,', ''),
-            ',ONLY_FULL_GROUP_BY', ''),
-        'ONLY_FULL_GROUP_BY', '')");
+        $this->db->query("SET SESSION sql_mode = (SELECT REPLACE(REPLACE(REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY,', ''), ',ONLY_FULL_GROUP_BY', ''), 'ONLY_FULL_GROUP_BY', ''))");
 
         $this->db->select($this->kolom);
         $this->db->from($this->table . ' AS b');
@@ -35,13 +30,15 @@ class M_riwayat_stok extends CI_Model
         $this->db->order_by('bs.kode_gudang, b.nama', 'ASC');
         $this->db->group_by('bs.kode_barang, bs.kode_gudang');
 
+        $this->db->where("bs.kode_cabang", $this->session->userdata("cabang"));
+
         if (!empty($gudang)) {
             $this->db->where('bs.kode_gudang', $gudang);
         }
 
         $i = 0;
 
-        foreach ($this->kolom as $item) {
+        foreach ($this->search as $item) {
             if (!empty($_POST['search']['value'])) {
                 if ($i === 0) {
                     $this->db->group_start();
@@ -50,7 +47,7 @@ class M_riwayat_stok extends CI_Model
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
 
-                if (count($this->kolom) - 1 == $i)
+                if (count($this->search) - 1 == $i)
                     $this->db->group_end();
             }
             $i++;
@@ -82,11 +79,7 @@ class M_riwayat_stok extends CI_Model
 
     public function count_all($gudang)
     {
-        $this->db->query("SET SESSION sql_mode = REPLACE(
-            REPLACE(
-                REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY,', ''),
-            ',ONLY_FULL_GROUP_BY', ''),
-        'ONLY_FULL_GROUP_BY', '')");
+        $this->db->query("SET SESSION sql_mode = (SELECT REPLACE(REPLACE(REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY,', ''), ',ONLY_FULL_GROUP_BY', ''), 'ONLY_FULL_GROUP_BY', ''))");
 
         $this->db->select($this->kolom);
         $this->db->from($this->table . ' AS b');

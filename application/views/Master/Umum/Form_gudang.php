@@ -1,7 +1,7 @@
 <form method="post" id="form_gudang">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
         </div>
     </div>
     <br>
@@ -42,11 +42,13 @@
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-12">
-                                <label for="vat">Pajak (11%) <span class="text-danger">**</span></label>
-                                <select name="vat" id="vat" class="form-control select2_global" data-placeholder="~ Pilih">
-                                    <option value="">~ Pilih</option>
-                                    <option value="1" <?= (!empty($gudang) ? ($gudang->vat == '1') ? 'selected' : '' : '') ?>>Ya</option>
-                                    <option value="0" <?= (!empty($gudang) ? ($gudang->vat == '0') ? 'selected' : '' : '') ?>>Tidak</option>
+                                <label for="pajak">Pajak <span class="text-danger">**</span></label>
+                                <select name="pajak" id="pajak" class="form-control select2_pajak" data-placeholder="~ Pilih">
+                                    <?php if (!empty($gudang)) : ?>
+                                        <option value="<?= $gudang->pajak ?>"><?= $this->M_global->getData('m_pajak', ['kode_pajak' => $gudang->pajak])->nama; ?></option>
+                                    <?php else: ?>
+                                        <option value="">~ Pilih</option>
+                                    <?php endif; ?>
                                 </select>
                             </div>
                         </div>
@@ -68,12 +70,12 @@
     <br>
     <div class="row">
         <div class="col-md-12">
-            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Master/gudang')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
-            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($gudang) ? 'Perbarui' : 'Simpan') ?></button>
+            <button type="button" class="btn btn-danger" onclick="getUrl('Master/gudang')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
             <?php if (!empty($gudang)) : ?>
-                <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Master/form_gudang/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                <button type="button" class="btn btn-info float-right" onclick="getUrl('Master/form_gudang/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
             <?php else : ?>
-                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+                <button type="button" class="btn btn-info float-right" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
             <?php endif ?>
         </div>
     </div>
@@ -86,7 +88,7 @@
     var kodeGudang = $('#kodeGudang');
     var nama = $('#nama');
     var bagian = $('#bagian');
-    var vat = $('#vat');
+    var pajak = $('#pajak');
     var keterangan = $('#keterangan');
 
     btnSimpan.attr('disabled', false);
@@ -107,10 +109,10 @@
             return Swal.fire("No. Hp", "Form sudah diisi?", "question");
         }
 
-        if (vat.val() == '' || vat.val() == null) { // jika vat null/ kosong
+        if (pajak.val() == '' || pajak.val() == null) { // jika pajak null/ kosong
             btnSimpan.attr('disabled', false);
 
-            return Swal.fire("Email", "Form sudah diisi?", "question");
+            return Swal.fire("Pajak", "Form sudah diisi?", "question");
         }
 
         if (keterangan.val() == '' || keterangan.val() == null) { // jika keterangan null/ kosong
@@ -199,8 +201,8 @@
         }
 
         nama.val('');
-        vat.val('');
-        bagian.val('');
+        pajak.val(null).trigger('change');
+        bagian.val(null).trigger('change');
         keterangan.val('');
     }
 </script>

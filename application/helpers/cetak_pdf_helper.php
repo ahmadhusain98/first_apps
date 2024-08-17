@@ -11,10 +11,16 @@ function cetak_pdf($judul, $body, $cek_param, $position, $filename, $web, $yes =
     // buat html for kop surat
     $kop = '';
 
+    if ($position == 'P') {
+        $max_width = '8';
+    } else {
+        $max_width = '5';
+    }
+
     $kop .= '<table style="width: 100%; font-size: 12px; border-bottom: 3px solid #000;">
         <tbody>
             <tr>
-                <td style="width: 8%;">
+                <td style="width: ' . $max_width . '%;">
                     <img src="./assets/img/web/' . $web->logo . '" style="width: 40px;"/>
                 </td>
                 <td>

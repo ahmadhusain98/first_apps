@@ -5,25 +5,33 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 <form method="post" id="form_barang">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Daftar Barang</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Barang</span>
         </div>
     </div>
     <br>
     <div class="row">
-        <div class="col-md-4 col-12">
+        <div class="col-md-4 col-12 mb-2">
             <select name="kode_kategori" id="kode_kategori" onchange="getKat(this.value)" data-placeholder="~ Pilih Kategori" class="form-control select2_global">
                 <option value="">~ Pilih Kategori</option>
-                <option value="semua"># Semua</option>
                 <?php foreach ($kategori as $k) : ?>
                     <option value="<?= $k->kode_kategori ?>"><?= $k->keterangan ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
-        <div class="col-md-8 col-12">
-            <div class="btn-group btn-group-sm float-right" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-warning" onclick="print('barang')"><ion-icon name="print-outline"></ion-icon> Cetak</button>
-                <button type="button" class="btn btn-primary" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
-                <button type="button" class="btn btn-success" onclick="getUrl('Master/form_barang/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+        <div class="col-md-8 col-12 mb-2">
+            <div class="float-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" onclick="preview('barang')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="print('barang')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="excel('barang')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="refreshTableBarang()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                <button type="button" class="btn btn-success" onclick="getUrl('Master/form_barang/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
             </div>
         </div>
     </div>
@@ -31,26 +39,22 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tableBarang" width="100%">
+                <table class="table table-hover table-bordered" id="tableBarang" width="100%" style="border-radius: 10px;">
                     <thead>
                         <tr class="text-center">
-                            <th rowspan="2" width="5%" class="bg-primary">#</th>
-                            <th rowspan="2" class="bg-primary">ID</th>
-                            <th rowspan="2" class="bg-primary">Nama</th>
-                            <th rowspan="2" class="bg-primary">Satuan</th>
-                            <th rowspan="2" class="bg-primary">Kategori</th>
-                            <th rowspan="2" class="bg-primary">Jenis</th>
-                            <th colspan="4" class="bg-primary">Harga</th>
-                            <th colspan="2" class="bg-primary">Stok</th>
-                            <th rowspan="2" width="10%" class="bg-primary">Aksi</th>
+                            <th rowspan="2" width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                            <th rowspan="2">Barcode</th>
+                            <th rowspan="2">Nama</th>
+                            <th rowspan="2">Satuan</th>
+                            <th rowspan="2">Kategori</th>
+                            <th colspan="4">Harga</th>
+                            <th rowspan="2" width="10%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                         </tr>
                         <tr>
-                            <th class="bg-primary">HNA</th>
-                            <th class="bg-primary">HPP</th>
-                            <th class="bg-primary">Jual</th>
-                            <th class="bg-primary">Persediaan</th>
-                            <th class="bg-primary">Min</th>
-                            <th class="bg-primary">Max</th>
+                            <th>HNA</th>
+                            <th>HPP</th>
+                            <th>Jual</th>
+                            <th>Persediaan</th>
                         </tr>
                     </thead>
                 </table>
@@ -61,11 +65,51 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 
 <script>
     // variable
-    var table = $('#tableBarang');
+    var tableBarang = $('#tableBarang');
+
+    tableBarang.DataTable({
+        "destroy": true,
+        "processing": true,
+        "responsive": true,
+        "serverSide": true,
+        "order": [],
+        "ajax": {
+            "url": `<?= site_url() ?>Master/barang_list/`,
+            "type": "POST",
+        },
+        "scrollCollapse": false,
+        "paging": true,
+        "language": {
+            "emptyTable": "<div class='text-center'>Data Kosong</div>",
+            "infoEmpty": "",
+            "infoFiltered": "",
+            "search": "",
+            "searchPlaceholder": "Cari data...",
+            "info": " Jumlah _TOTAL_ Data (_START_ - _END_)",
+            "lengthMenu": "_MENU_ Baris",
+            "zeroRecords": "<div class='text-center'>Data Kosong</div>",
+            "paginate": {
+                "previous": "Sebelumnya",
+                "next": "Berikutnya"
+            }
+        },
+        "lengthMenu": [
+            [5, 15, 20, -1],
+            [5, 15, 20, "Semua"]
+        ],
+        "columnDefs": [{
+            "targets": [-1],
+            "orderable": false,
+        }],
+    });
+
+    function refreshTableBarang() {
+        tableBarang.DataTable().ajax.reload(null, false);
+    }
 
     // fungsi ubah bagian
     function getKat(bagian) {
-        table.DataTable().ajax.url(siteUrl + 'Master/barang_list/' + bagian).load();
+        tableBarang.DataTable().ajax.url(siteUrl + 'Master/barang_list/' + bagian).load();
     }
 
     //fungsi ubah berdasarkan lemparan kode
@@ -91,15 +135,18 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 
                 // jalankan fungsi
                 $.ajax({
-                    url: siteUrl + 'Master/delGud/' + kode_barang,
+                    url: siteUrl + 'Master/delBar/' + kode_barang,
                     type: 'POST',
                     dataType: 'JSON',
                     success: function(result) { // jika fungsi berjalan dengan baik
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
                             Swal.fire("Barang", "Berhasil di hapus!", "success").then(() => {
-                                reloadTable();
+                                refreshTableBarang();
                             });
+                        } else if (result.status == 2) {
+
+                            Swal.fire("Barang", "Masih digunakan dicabang lain!", "info");
                         } else { // selain itu
 
                             Swal.fire("Barang", "Gagal di hapus!, silahkan dicoba kembali", "info");

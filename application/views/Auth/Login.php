@@ -1,27 +1,13 @@
 <div class="login-box" data-aos="fade-down">
     <div class="card card-outline card-primary">
         <div class="card-header text-center">
-            <div class="row">
-                <div class="col-md-6 my-auto text-right">
-                    <img src="<?= base_url('assets/img/web/') . $web->logo; ?>" style="width: 80px;">
-                </div>
-                <div class="col-md-6 my-auto">
-                    <div class="row text-left">
-                        <div class="col-md-12">
-                            <a type="button" class="h5"><b><?= $nama_apps ?></b> <?= $web_version ?></a>
-                        </div>
-                        <div class="col-md-12">
-                            <span class="text-primary font-weight-bold">DOWN TO UP</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <a type="button" class="h1"><b><?= $nama_apps ?></b></a>
         </div>
         <div class="card-body">
             <p class="login-box-msg">Form Masuk</p>
             <form id="form_login" method="post">
                 <div class="input-group mb-3">
-                    <input type="email" class="form-control" placeholder="Email" id="email" name="email" onchange="cekEmailLog(this.value); cekUserRole(this.value)">
+                    <input type="email" class="form-control" placeholder="Email" id="email" name="email" onchange="cekEmailLog(this.value); cekUserRole(this.value); cekUserCabang(this.value)">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <ion-icon name="mail-outline"></ion-icon>
@@ -44,6 +30,11 @@
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
+                    </select>
+                </div>
+                <div class="input-group mb-3" id="forcabang">
+                    <select name="cabang" id="cabang" class="form-control select2_cabang" data-placeholder="~ Pilih Cabang">
+                        <option value="">~ Pilih Cabang</option>
                     </select>
                 </div>
                 <div class="row">
@@ -73,6 +64,7 @@
     var shift = $("#shift");
     var forshift = $("#forshift");
     var kode_role = $("#kode_role");
+    var cabang = $("#cabang");
 
     forshift.show();
 
@@ -109,6 +101,19 @@
         });
     }
 
+    // fungsi cek cabang
+    function cekUserCabang(x) {
+        if (x == '' || x == null) {
+
+
+            Swal.fire("Email", "Form sudah diisi?", "question");
+            return;
+        }
+
+        // jalankan select2 berdasarkan x
+        initailizeSelect2_cabang(x);
+    }
+
     function login() {
 
         if (email.val() == "" || email.val() == null) {
@@ -139,6 +144,13 @@
                 Swal.fire("Shift", "Sudah dipilih?", "question");
                 return;
             }
+        }
+
+        if (cabang.val() == "" || cabang.val() == null) {
+
+
+            Swal.fire("Cabang", "Form sudah diisi?", "question");
+            return;
         }
 
         $.ajax({

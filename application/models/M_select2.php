@@ -1,6 +1,26 @@
 <?php
 class M_select2 extends CI_Model
 {
+    // fungsi Cabang
+    function getCabang($key, $email)
+    {
+        $limit = ' LIMIT 50';
+
+        if ($email == null || $email == "" || $email == "null") {
+            $sintak = $this->db->query('SELECT 0 AS id, "Pilih Cabang Dahulu" AS text FROM cabang_user LIMIT 1')->result();
+        } else {
+            if (!empty($key)) {
+                $add_sintak = ' AND (cu.kode_cabang LIKE "%' . $key . '%" OR c.cabang LIKE "%' . $key . '%") ORDER BY c.cabang ASC';
+            } else {
+                $add_sintak = ' ORDER BY c.cabang ASC';
+            }
+
+            $sintak = $this->db->query('SELECT cu.kode_cabang AS id, c.cabang AS text FROM cabang_user cu JOIN cabang c USING (kode_cabang) WHERE cu.email = "' . $email . '" ' . $add_sintak . $limit)->result();
+        }
+
+        return $sintak;
+    }
+
     // fungsi kategori
     function getKategori($key)
     {
@@ -13,6 +33,22 @@ class M_select2 extends CI_Model
         }
 
         $sintak = $this->db->query('SELECT kode_kategori AS id, keterangan AS text FROM m_kategori ' . $add_sintak . $limit)->result();
+
+        return $sintak;
+    }
+
+    // fungsi pajak
+    function getPajak($key)
+    {
+        $limit = ' LIMIT 50';
+
+        if (!empty($key)) {
+            $add_sintak = ' WHERE (kode_pajak LIKE "%' . $key . '%" OR pajak LIKE "%' . $key . '%") ORDER BY nama ASC';
+        } else {
+            $add_sintak = ' ORDER BY nama ASC';
+        }
+
+        $sintak = $this->db->query('SELECT kode_pajak AS id, nama AS text FROM m_pajak ' . $add_sintak . $limit)->result();
 
         return $sintak;
     }
@@ -116,7 +152,7 @@ class M_select2 extends CI_Model
             $add_sintak = ' ORDER BY keterangan ASC';
         }
 
-        $sintak = $this->db->query('SELECT kode_poli AS id, CONCAT(kode_poli, " ~ " , keterangan) AS text FROM m_poli ' . $add_sintak . $limit)->result();
+        $sintak = $this->db->query('SELECT kode_poli AS id, keterangan AS text FROM m_poli ' . $add_sintak . $limit)->result();
 
         return $sintak;
     }
@@ -152,7 +188,7 @@ class M_select2 extends CI_Model
             $add_sintak = ' ORDER BY keterangan ASC';
         }
 
-        $sintak = $this->db->query('SELECT kode_ruang AS id, CONCAT(kode_ruang, " ~ " , keterangan) AS text FROM m_ruang ' . $add_sintak . $limit)->result();
+        $sintak = $this->db->query('SELECT kode_ruang AS id, keterangan AS text FROM m_ruang ' . $add_sintak . $limit)->result();
 
         return $sintak;
     }
@@ -168,7 +204,7 @@ class M_select2 extends CI_Model
             $add_sintak = ' ORDER BY nama ASC';
         }
 
-        $sintak = $this->db->query('SELECT kode_supplier AS id, CONCAT(kode_supplier, " ~ " , nama) AS text FROM m_supplier ' . $add_sintak . $limit)->result();
+        $sintak = $this->db->query('SELECT kode_supplier AS id, nama AS text FROM m_supplier ' . $add_sintak . $limit)->result();
 
         return $sintak;
     }
@@ -190,7 +226,7 @@ class M_select2 extends CI_Model
             $add_sintak = ' ORDER BY nama ASC';
         }
 
-        $sintak = $this->db->query('SELECT kode_gudang AS id, CONCAT(kode_gudang, " ~ " , nama) AS text FROM m_gudang WHERE ' . $keygud . $add_sintak . $limit)->result();
+        $sintak = $this->db->query('SELECT kode_gudang AS id, nama AS text FROM m_gudang WHERE ' . $keygud . $add_sintak . $limit)->result();
 
         return $sintak;
     }
@@ -206,7 +242,7 @@ class M_select2 extends CI_Model
             $add_sintak = ' ORDER BY keterangan ASC';
         }
 
-        $sintak = $this->db->query('SELECT kode_pekerjaan AS id, CONCAT(kode_pekerjaan, " ~ " , keterangan) AS text FROM m_pekerjaan ' . $add_sintak . $limit)->result();
+        $sintak = $this->db->query('SELECT kode_pekerjaan AS id, keterangan AS text FROM m_pekerjaan ' . $add_sintak . $limit)->result();
 
         return $sintak;
     }
@@ -222,7 +258,7 @@ class M_select2 extends CI_Model
             $add_sintak = ' ORDER BY keterangan ASC';
         }
 
-        $sintak = $this->db->query('SELECT kode_agama AS id, CONCAT(kode_agama, " ~ " , keterangan) AS text FROM m_agama ' . $add_sintak . $limit)->result();
+        $sintak = $this->db->query('SELECT kode_agama AS id, keterangan AS text FROM m_agama ' . $add_sintak . $limit)->result();
 
         return $sintak;
     }
@@ -238,7 +274,7 @@ class M_select2 extends CI_Model
             $add_sintak = ' ORDER BY keterangan ASC';
         }
 
-        $sintak = $this->db->query('SELECT kode_pendidikan AS id, CONCAT(kode_pendidikan, " ~ " , keterangan) AS text FROM m_pendidikan ' . $add_sintak . $limit)->result();
+        $sintak = $this->db->query('SELECT kode_pendidikan AS id, keterangan AS text FROM m_pendidikan ' . $add_sintak . $limit)->result();
 
         return $sintak;
     }
@@ -302,7 +338,7 @@ class M_select2 extends CI_Model
             $add_sintak = ' ORDER BY keterangan ASC';
         }
 
-        $sintak = $this->db->query('SELECT kode_bank AS id, CONCAT(keterangan) AS text FROM m_bank ' . $add_sintak . $limit)->result();
+        $sintak = $this->db->query('SELECT kode_bank AS id, keterangan AS text FROM m_bank ' . $add_sintak . $limit)->result();
 
         return $sintak;
     }
@@ -318,7 +354,7 @@ class M_select2 extends CI_Model
             $add_sintak = ' ORDER BY keterangan ASC';
         }
 
-        $sintak = $this->db->query('SELECT kode_tipe AS id, CONCAT(keterangan) AS text FROM tipe_bank ' . $add_sintak . $limit)->result();
+        $sintak = $this->db->query('SELECT kode_tipe AS id, keterangan AS text FROM tipe_bank ' . $add_sintak . $limit)->result();
 
         return $sintak;
     }

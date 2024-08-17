@@ -1,7 +1,7 @@
 <form method="post" id="form_report">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Parameter</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Parameter</span>
         </div>
     </div>
     <br>
@@ -12,10 +12,15 @@
                 <div class="col-md-9">
                     <select name="laporan" id="laporan" class="form-control select2_global" data-placeholder="~ Pilih Laporan">
                         <option value="">~ Pilih Laporan</option>
-                        <optgroup label="Jenis Laporan">
+                        <optgroup label="Laporan Basic">
                             <option value="1">1) Penjualan</option>
                             <option value="2">2) Retur Penjualan</option>
                             <option value="3">3) Laporan Penjualan Poli</option>
+                        </optgroup>
+                        <optgroup label="Laporan Pro">
+                            <option value="4">4) Laporan Harian</option>
+                            <option value="5">5) Retur Penjualan</option>
+                            <option value="6">6) Laporan Penjualan Poli</option>
                         </optgroup>
                     </select>
                 </div>

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 19, 2024 at 04:39 PM
+-- Generation Time: Aug 06, 2024 at 12:49 PM
 -- Server version: 8.0.30
--- PHP Version: 8.1.10
+-- PHP Version: 7.4.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -38,25 +38,27 @@ CREATE TABLE `barang` (
   `hna` decimal(20,2) NOT NULL DEFAULT '0.00',
   `hpp` decimal(20,2) NOT NULL DEFAULT '0.00',
   `harga_jual` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `nilai_persediaan` decimal(20,2) NOT NULL DEFAULT '0.00'
+  `nilai_persediaan` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `stok_min` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `stok_max` decimal(20,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `barang`
 --
 
-INSERT INTO `barang` (`id`, `kode_barang`, `image`, `nama`, `kode_satuan`, `kode_kategori`, `kode_jenis`, `hna`, `hpp`, `harga_jual`, `nilai_persediaan`) VALUES
-(1, 'P00001', 'paramex.png', 'Paramex', 'B00001', 'B00001', 'JO00002', 4500.00, 5000.00, 5500.00, 4500.00),
-(2, 'B00001', 'bodrex.jpg', 'Bodrex', 'S00001', 'B00001', 'JO00001', 1539.00, 2000.00, 2500.00, 1539.00),
-(3, 'S00001', 'sangobion.jpeg', 'Sangobion', 'S00001', 'M00001', 'JO00004', 14580.00, 22200.00, 25000.00, 14580.00),
-(4, 'A00001', 'amlodipine.jpeg', 'Amodiplin', 'S00001', 'B00001', 'JO00003', 1798.20, 2220.00, 3000.00, 1798.20),
-(5, 'P00002', 'Puyer.jpg', 'Puyer', 'S00001', 'B00001', 'JO00002', 1800.00, 2000.00, 2500.00, 1800.00),
-(6, 'C00001', 'cal95.jpeg', 'Cal 95', 'S00001', 'M00001', 'JO00005', 7290.00, 9000.00, 10000.00, 7290.00),
-(7, 'A00002', 'adem_sari.jpeg', 'Adem Sari', 'S00001', 'B00001', 'JO00006', 4950.00, 5500.00, 7000.00, 4950.00),
-(8, 'T00001', 'tolak_angin.jpeg', 'Tolak Angin', 'S00001', 'B00001', 'JO00007', 2250.00, 2220.00, 3000.00, 2250.00),
-(9, 'P00003', 'panadol.jpeg', 'Panadol Paracetamol', 'B00001', 'B00001', 'JO00002', 10559.93, 16095.00, 17000.00, 10559.93),
-(11, 'P00004', 'Screenshot_2024-05-02_164625.png', 'Polysilane Suspensi 100 Ml', 'B00002', 'B00001', 'JO00001', 26100.00, 27750.00, 31000.00, 26100.00),
-(12, 'A00003', 'default.jpg', 'Aspirin', 'B00002', 'M00001', '', 15000.00, 16650.00, 17000.00, 17000.00);
+INSERT INTO `barang` (`id`, `kode_barang`, `image`, `nama`, `kode_satuan`, `kode_kategori`, `kode_jenis`, `hna`, `hpp`, `harga_jual`, `nilai_persediaan`, `stok_min`, `stok_max`) VALUES
+(1, 'P00001', 'paramex.png', 'Paramex', 'B00001', 'B00001', 'JO00002', 4275.00, 5000.00, 5500.00, 4275.00, 10.00, 100.00),
+(2, 'B00001', 'bodrex.jpg', 'Bodrex', 'S00001', 'B00001', 'JO00001', 1539.00, 2000.00, 2500.00, 1539.00, 10.00, 100.00),
+(3, 'S00001', 'sangobion.jpeg', 'Sangobion', 'S00001', 'M00001', 'JO00004', 14580.00, 22200.00, 25000.00, 14580.00, 10.00, 100.00),
+(4, 'A00001', 'amlodipine.jpeg', 'Amodiplin', 'S00001', 'B00001', 'JO00003', 1798.00, 2220.00, 3000.00, 1798.00, 10.00, 100.00),
+(5, 'P00002', 'Puyer.jpg', 'Puyer', 'S00001', 'B00001', 'JO00002', 1800.00, 2000.00, 2500.00, 1800.00, 10.00, 100.00),
+(6, 'C00001', 'cal95.jpeg', 'Cal 95', 'S00001', 'M00001', 'JO00005', 7290.00, 9000.00, 10000.00, 7290.00, 0.00, 0.00),
+(7, 'A00002', 'adem_sari.jpeg', 'Adem Sari', 'S00001', 'B00001', 'JO00006', 4950.00, 5500.00, 7000.00, 4950.00, 0.00, 0.00),
+(8, 'T00001', 'tolak_angin.jpeg', 'Tolak Angin', 'S00001', 'B00001', 'JO00007', 2250.00, 2220.00, 3000.00, 2250.00, 0.00, 0.00),
+(9, 'P00003', 'panadol.jpeg', 'Panadol Paracetamol', 'B00001', 'B00001', 'JO00002', 10559.93, 16095.00, 17000.00, 10559.93, 0.00, 0.00),
+(11, 'P00004', 'Screenshot_2024-05-02_164625.png', 'Polysilane Suspensi 100 Ml', 'B00002', 'B00001', 'JO00001', 26100.00, 27750.00, 31000.00, 26100.00, 0.00, 0.00),
+(12, 'A00003', 'default.jpg', 'Aspirin', 'B00002', 'M00001', '', 15000.00, 16650.00, 17000.00, 17000.00, 0.00, 0.00);
 
 -- --------------------------------------------------------
 
@@ -82,34 +84,7 @@ CREATE TABLE `barang_in_detail` (
 --
 
 INSERT INTO `barang_in_detail` (`id`, `invoice`, `kode_barang`, `harga`, `qty`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES
-(45, 'INV~1105202400001', 'P00001', 4500.00, 100.00, 0.00, 0.00, 0.00, 0.00, 450000.00),
-(46, 'INV~1105202400001', 'S00001', 14580.00, 100.00, 0.00, 0.00, 0.00, 0.00, 1458000.00),
-(47, 'INV~1105202400001', 'A00001', 1798.20, 100.00, 0.00, 0.00, 0.00, 0.00, 179820.00),
-(48, 'INV~1105202400001', 'B00001', 1539.00, 100.00, 0.00, 0.00, 0.00, 0.00, 153900.00),
-(49, 'INV~1105202400001', 'P00002', 1800.00, 100.00, 0.00, 0.00, 0.00, 0.00, 180000.00),
-(50, 'INV~1105202400001', 'A00002', 4950.00, 100.00, 0.00, 0.00, 0.00, 0.00, 495000.00),
-(51, 'INV~1105202400001', 'C00001', 7290.00, 100.00, 0.00, 0.00, 0.00, 0.00, 729000.00),
-(52, 'INV~1105202400001', 'T00001', 2250.00, 100.00, 0.00, 0.00, 0.00, 0.00, 225000.00),
-(53, 'INV~1105202400001', 'P00003', 10559.93, 100.00, 0.00, 0.00, 0.00, 0.00, 1055993.00),
-(54, 'INV~1105202400001', 'P00004', 26100.00, 100.00, 0.00, 0.00, 0.00, 0.00, 2610000.00),
-(58, 'INV~1705202400001', 'P00001', 4500.00, 1.00, 0.00, 0.00, 0.00, 0.00, 4500.00),
-(59, 'INV~1705202400001', 'B00001', 1539.00, 1.00, 0.00, 0.00, 0.00, 0.00, 1539.00),
-(60, 'INV~1705202400001', 'S00001', 14580.00, 1.00, 0.00, 0.00, 0.00, 0.00, 14580.00),
-(61, 'INV~1705202400002', 'S00001', 14580.00, 55.00, 0.00, 0.00, 0.00, 0.00, 801900.00),
-(62, 'INV~1705202400002', 'A00001', 1798.20, 1.00, 0.00, 0.00, 0.00, 0.00, 1798.20),
-(63, 'INV~1705202400002', 'P00003', 10559.93, 12.00, 0.00, 0.00, 0.00, 0.00, 126719.16),
-(64, 'INV~1705202400002', 'P00002', 1800.00, 11.00, 0.00, 0.00, 0.00, 0.00, 19800.00),
-(65, 'INV~1705202400002', 'P00004', 26100.00, 1.00, 0.00, 0.00, 0.00, 0.00, 26100.00),
-(66, 'INV~1705202400003', 'A00001', 1798.20, 7.00, 0.00, 0.00, 0.00, 0.00, 12587.40),
-(67, 'INV~1705202400003', 'S00001', 14580.00, 1.00, 0.00, 0.00, 0.00, 0.00, 14580.00),
-(68, 'INV~1705202400003', 'P00001', 4500.00, 8.00, 0.00, 0.00, 0.00, 0.00, 36000.00),
-(69, 'INV~1705202400003', 'B00001', 1539.00, 1.00, 0.00, 0.00, 0.00, 0.00, 1539.00),
-(70, 'INV~1705202400003', 'P00002', 1800.00, 5.00, 0.00, 0.00, 0.00, 0.00, 9000.00),
-(71, 'INV~1705202400004', 'B00001', 1539.00, 1.00, 0.00, 0.00, 0.00, 0.00, 1539.00),
-(72, 'INV~1705202400004', 'P00001', 4500.00, 1.00, 0.00, 0.00, 0.00, 0.00, 4500.00),
-(76, 'INV~1805202400001', 'P00001', 4500.00, 200.00, 5.00, 22500.00, 1.00, 96525.00, 877500.00),
-(77, 'INV~1805202400001', 'B00001', 1539.00, 200.00, 5.00, 7695.00, 1.00, 33012.00, 300105.00),
-(78, 'INV~1805202400001', 'S00001', 14580.00, 200.00, 5.00, 72900.00, 1.00, 312741.00, 2843100.00);
+(1, 'INV~0508202400001', 'P00001', 4500.00, 100.00, 5.00, 22500.00, 1.00, 47025.00, 427500.00);
 
 -- --------------------------------------------------------
 
@@ -145,12 +120,7 @@ CREATE TABLE `barang_in_header` (
 --
 
 INSERT INTO `barang_in_header` (`id`, `invoice`, `tgl_beli`, `jam_beli`, `kode_supplier`, `kode_gudang`, `surat_jalan`, `no_faktur`, `pajak`, `diskon`, `subtotal`, `total`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `is_valid`, `tgl_valid`, `jam_valid`) VALUES
-(2, 'INV~1105202400001', '2024-05-11', '01:31:38', 'N00001', 'F00003', '123', '321', 0.00, 0.00, 7536713.00, 7536713.00, 'A00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-05-11', '01:46:44'),
-(3, 'INV~1705202400001', '2024-05-17', '14:44:20', 'A00001', 'F00003', '1345', '2345', 0.00, 0.00, 20619.00, 20619.00, 'S00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-05-17', '14:55:39'),
-(4, 'INV~1705202400002', '2024-05-17', '14:54:29', 'N00001', 'F00003', '13455555', '2345', 0.00, 0.00, 976317.36, 976317.36, 'S00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-05-17', '14:55:48'),
-(5, 'INV~1705202400003', '2024-05-17', '15:08:58', 'A00001', 'F00003', '1345', '2345', 0.00, 0.00, 73706.40, 73706.40, 'S00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-05-17', '15:10:04'),
-(6, 'INV~1705202400004', '2024-05-17', '15:22:19', 'N00001', 'F00003', '13455555', '2345', 0.00, 0.00, 6039.00, 6039.00, 'S00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-05-17', '15:23:05'),
-(7, 'INV~1805202400001', '2024-05-18', '13:50:19', 'N00001', 'F00001', '123', '321', 442278.00, 103095.00, 4123800.00, 4566078.00, 'A00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-05-18', '13:57:22');
+(1, 'INV~0508202400001', '2024-08-05', '21:45:58', 'N00001', 'F00001', 'SJ0001', 'NF0001', 47025.00, 22500.00, 450000.00, 497025.00, 'A00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-08-05', '21:48:50');
 
 -- --------------------------------------------------------
 
@@ -170,21 +140,6 @@ CREATE TABLE `barang_in_retur_detail` (
   `pajakrp` decimal(20,2) NOT NULL DEFAULT '0.00',
   `jumlah` decimal(20,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `barang_in_retur_detail`
---
-
-INSERT INTO `barang_in_retur_detail` (`id`, `invoice`, `kode_barang`, `harga`, `qty`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES
-(6, 'REINV~1105202400001', 'P00001', 4500.00, 2.00, 0.00, 0.00, 0.00, 0.00, 9000.00),
-(7, 'REINV~1105202400001', 'S00001', 14580.00, 2.00, 0.00, 0.00, 0.00, 0.00, 29160.00),
-(8, 'REINV~1105202400001', 'B00001', 1539.00, 2.00, 0.00, 0.00, 0.00, 0.00, 3078.00),
-(9, 'REINV~1105202400001', 'P00002', 1800.00, 2.00, 0.00, 0.00, 0.00, 0.00, 3600.00),
-(10, 'REINV~1105202400001', 'A00001', 1798.20, 2.00, 0.00, 0.00, 0.00, 0.00, 3596.40),
-(11, 'REINV~1105202400001', 'P00004', 26100.00, 2.00, 0.00, 0.00, 0.00, 0.00, 52200.00),
-(12, 'REINV~1805202400001', 'P00001', 4500.00, 2.00, 5.00, 450.00, 1.00, 941.00, 8550.00),
-(13, 'REINV~1805202400001', 'B00001', 1539.00, 2.00, 5.00, 154.00, 1.00, 322.00, 2924.00),
-(14, 'REINV~1805202400001', 'S00001', 14580.00, 2.00, 5.00, 1458.00, 1.00, 3048.00, 27702.00);
 
 -- --------------------------------------------------------
 
@@ -217,14 +172,6 @@ CREATE TABLE `barang_in_retur_header` (
   `jam_valid` time DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `barang_in_retur_header`
---
-
-INSERT INTO `barang_in_retur_header` (`id`, `invoice`, `invoice_in`, `tgl_beli`, `jam_beli`, `kode_supplier`, `kode_gudang`, `surat_jalan`, `no_faktur`, `pajak`, `diskon`, `subtotal`, `total`, `alasan`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `is_valid`, `tgl_valid`, `jam_valid`) VALUES
-(1, 'REINV~1105202400001', NULL, '2024-05-11', '01:50:19', 'N00001', 'F00003', '123', '321', 0.00, 0.00, 100634.40, 100634.40, '', 'A00001', 0, NULL, NULL, '', 1, '2024-05-11', '01:53:13'),
-(2, 'REINV~1805202400001', 'INV~1805202400001', '2024-05-18', '14:06:00', 'N00001', 'F00001', '123', '321', 4311.00, 2062.00, 41238.00, 45549.00, '', 'A00001', 0, NULL, NULL, '', 0, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -244,7 +191,14 @@ CREATE TABLE `barang_jenis` (
 INSERT INTO `barang_jenis` (`id`, `kode_barang`, `kode_jenis`) VALUES
 (9, 'A00003', 'JO00001'),
 (10, 'A00003', 'JO00002'),
-(11, 'A00003', 'JO00004');
+(11, 'A00003', 'JO00004'),
+(23, 'S00001', 'JO00004'),
+(24, 'P00002', 'JO00003'),
+(25, 'A00001', 'JO00005'),
+(26, 'B00001', 'JO00002'),
+(27, 'P00001', 'JO00001'),
+(28, 'P00001', 'JO00002'),
+(29, 'P00001', 'JO00007');
 
 -- --------------------------------------------------------
 
@@ -270,31 +224,7 @@ CREATE TABLE `barang_out_detail` (
 --
 
 INSERT INTO `barang_out_detail` (`id`, `invoice`, `kode_barang`, `harga`, `qty`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES
-(1, 'INV~KU1105202400001', 'P00001', 5500.00, 2.00, 0.00, 0.00, 0.00, 0.00, 11000.00),
-(2, 'INV~KU1105202400001', 'B00001', 2500.00, 3.00, 0.00, 0.00, 0.00, 0.00, 7500.00),
-(3, 'INV~KU1105202400002', 'B00001', 2500.00, 5.00, 0.00, 0.00, 0.00, 0.00, 12500.00),
-(4, 'INV~KU1105202400002', 'S00001', 25000.00, 5.00, 0.00, 0.00, 0.00, 0.00, 125000.00),
-(5, 'INV~MS1105202400001', 'P00001', 5500.00, 3.00, 2.00, 330.00, 1.00, 1778.70, 16170.00),
-(6, 'INV~MS1105202400001', 'A00001', 3000.00, 3.00, 2.00, 180.00, 1.00, 970.20, 8820.00),
-(7, 'INV~MS1105202400002', 'P00003', 17000.00, 7.00, 10.00, 11900.00, 1.00, 11781.00, 107100.00),
-(8, 'INV~MS1105202400002', 'P00004', 31000.00, 7.00, 0.00, 0.00, 1.00, 23870.00, 217000.00),
-(9, 'INV~MS1205202400001', 'A00001', 3000.00, 1.00, 0.00, 0.00, 0.00, 0.00, 3000.00),
-(10, 'INV~UM1205202400002', 'S00001', 25000.00, 1.00, 0.00, 0.00, 0.00, 0.00, 25000.00),
-(11, 'INV~UM1205202400002', 'A00001', 3000.00, 1.00, 0.00, 0.00, 0.00, 0.00, 3000.00),
-(12, 'INV~GI1205202400001', 'P00003', 17000.00, 5.00, 0.00, 0.00, 0.00, 0.00, 85000.00),
-(13, 'INV~UM1205202400003', 'P00004', 31000.00, 1.00, 0.00, 0.00, 0.00, 0.00, 31000.00),
-(14, 'INV~UM1205202400003', 'P00002', 2500.00, 3.00, 0.00, 0.00, 0.00, 0.00, 7500.00),
-(15, 'INV~UM1205202400003', 'A00001', 3000.00, 4.00, 0.00, 0.00, 0.00, 0.00, 12000.00),
-(16, 'INV~UM1405202400001', 'C00001', 10000.00, 10.00, 0.00, 0.00, 0.00, 0.00, 100000.00),
-(22, 'INV~UM1405202400002', 'S00001', 25000.00, 4.00, 0.00, 0.00, 0.00, 0.00, 100000.00),
-(23, 'INV~UM1705202400001', 'P00001', 5500.00, 3.00, 0.00, 0.00, 0.00, 0.00, 16500.00),
-(24, 'INV~UM1705202400001', 'S00001', 25000.00, 1.00, 0.00, 0.00, 0.00, 0.00, 25000.00),
-(25, 'INV~UM1705202400001', 'A00001', 3000.00, 7.00, 0.00, 0.00, 0.00, 0.00, 21000.00),
-(26, 'INV~UM1705202400001', 'P00002', 2500.00, 1.00, 0.00, 0.00, 0.00, 0.00, 2500.00),
-(27, 'INV~UM1705202400001', 'P00004', 31000.00, 10.00, 0.00, 0.00, 0.00, 0.00, 310000.00),
-(28, 'INV~UM1805202400001', 'P00001', 5500.00, 10.00, 0.00, 0.00, 1.00, 6050.00, 55000.00),
-(29, 'INV~UM1805202400001', 'B00001', 2500.00, 2.00, 0.00, 0.00, 1.00, 550.00, 5000.00),
-(30, 'INV~KU1905202400001', 'P00001', 5500.00, 10.00, 0.00, 0.00, 1.00, 6050.00, 55000.00);
+(1, 'INV~UM0508202400001', 'P00001', 5500.00, 2.00, 0.00, 0.00, 0.00, 0.00, 11000.00);
 
 -- --------------------------------------------------------
 
@@ -330,19 +260,7 @@ CREATE TABLE `barang_out_header` (
 --
 
 INSERT INTO `barang_out_header` (`id`, `invoice`, `no_trx`, `kode_member`, `alamat`, `kode_dokter`, `kode_poli`, `tgl_jual`, `jam_jual`, `status_jual`, `kode_gudang`, `pajak`, `diskon`, `subtotal`, `total`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`) VALUES
-(1, 'INV~KU1105202400001', 'KU~1005202400001', 'S00001', 'Prov.Jawa Barat, Kab.KAB. BOGOR, Kec.Sukamakmur, Ds.Sukamakmur, (POS: 56812), RT.3/RW.3', 'S00001', 'K00001', '2024-05-11', '16:45:20', 1, 'F00003', 0.00, 0.00, 18500.00, 18500.00, 'A00001', 0, NULL, NULL, ''),
-(2, 'INV~KU1105202400002', 'KU~1105202400001', 'A00001', 'Prov.Jawa Barat, Kab.KAB. BOGOR, Kec.Sukamakmur, Ds.sukamakur, (POS: 56812), RT.3/RW.3', 'A00001', 'K00001', '2024-05-11', '23:39:18', 1, 'F00003', 0.00, 0.00, 137500.00, 137500.00, 'A00001', 0, NULL, NULL, ''),
-(3, 'INV~MS1105202400001', NULL, 'A00001', 'Prov.Jawa Barat, Kab.KAB. BOGOR, Kec.Sukamakmur, Ds.sukamakur, (POS: 56812), RT.3/RW.3', NULL, 'U00001', '2024-05-11', '23:46:57', 1, 'F00003', 2748.90, 510.00, 25500.00, 28248.90, 'A00001', 0, NULL, NULL, ''),
-(4, 'INV~MS1105202400002', NULL, 'S00001', 'Prov.Jawa Barat, Kab.KAB. BOGOR, Kec.Sukamakmur, Ds.Sukamakmur, (POS: 56812), RT.3/RW.3', NULL, 'U00001', '2024-05-11', '23:51:29', 1, 'F00003', 35651.00, 11900.00, 336000.00, 371651.00, 'A00001', 0, NULL, NULL, ''),
-(5, 'INV~MS1205202400001', NULL, 'U00001', '', NULL, 'U00001', '2024-05-12', '00:55:29', 1, 'F00003', 0.00, 0.00, 3000.00, 3000.00, 'A00001', 0, NULL, NULL, ''),
-(6, 'INV~UM1205202400002', NULL, 'U00001', '', NULL, 'U00001', '2024-05-12', '11:20:01', 1, 'F00003', 0.00, 0.00, 28000.00, 28000.00, 'A00001', 0, NULL, NULL, ''),
-(7, 'INV~GI1205202400001', 'GI~1205202400001', 'T00001', 'Prov.Jawa Barat, Kab.KAB. SUKABUMI, Kec.Jampang Tengah, Ds.Jampang, (POS: 51233), RT.4/RW.4', 'P00001', 'G00001', '2024-05-12', '11:36:27', 1, 'F00003', 0.00, 0.00, 85000.00, 85000.00, 'A00001', 0, NULL, NULL, ''),
-(8, 'INV~UM1205202400003', NULL, 'U00001', '', NULL, 'U00001', '2024-05-12', '21:36:40', 1, 'F00003', 0.00, 0.00, 50500.00, 50500.00, 'A00001', 0, NULL, NULL, ''),
-(9, 'INV~UM1405202400001', NULL, 'T00001', 'Prov.Jawa Barat, Kab.KAB. SUKABUMI, Kec.Jampang Tengah, Ds.Jampang, (POS: 51233), RT.4/RW.4', NULL, 'U00001', '2024-05-14', '00:54:45', 1, 'F00003', 0.00, 0.00, 100000.00, 100000.00, 'A00001', 0, NULL, NULL, ''),
-(10, 'INV~UM1405202400002', 'UM~1405202400001', 'A00001', 'Prov.Jawa Barat, Kab.KAB. BOGOR, Kec.Sukamakmur, Ds.sukamakur, (POS: 56812), RT.3/RW.3', 'S00001', 'U00001', '2024-05-14', '08:57:10', 1, 'F00003', 0.00, 0.00, 100000.00, 100000.00, 'A00001', 0, NULL, NULL, ''),
-(11, 'INV~UM1705202400001', NULL, 'U00001', '', NULL, 'U00001', '2024-05-17', '14:04:24', 1, 'F00003', 0.00, 0.00, 375000.00, 375000.00, 'S00001', 0, NULL, NULL, ''),
-(12, 'INV~UM1805202400001', NULL, 'U00001', '', NULL, 'U00001', '2024-05-18', '21:19:38', 1, 'F00001', 6600.00, 0.00, 60000.00, 66600.00, 'A00001', 0, NULL, NULL, ''),
-(13, 'INV~KU1905202400001', 'KU~1905202400001', 'S00001', 'Prov.Jawa Barat, Kab.KAB. BOGOR, Kec.Sukamakmur, Ds.Sukamakmur, (POS: 56812), RT.3/RW.3', 'A00001', 'K00001', '2024-05-19', '00:26:26', 1, 'F00001', 6050.00, 0.00, 55000.00, 61050.00, 'A00001', 0, NULL, NULL, '');
+(1, 'INV~UM0508202400001', NULL, 'U00001', '', NULL, 'U00001', '2024-08-05', '21:48:56', 1, 'F00001', 0.00, 0.00, 11000.00, 11000.00, 'A00001', 0, NULL, NULL, '');
 
 -- --------------------------------------------------------
 
@@ -401,6 +319,8 @@ CREATE TABLE `barang_stok` (
   `kode_gudang` varchar(10) NOT NULL,
   `masuk` decimal(20,2) NOT NULL DEFAULT '0.00',
   `keluar` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `so` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `penyesuaian` decimal(20,2) NOT NULL DEFAULT '0.00',
   `akhir` decimal(20,2) NOT NULL DEFAULT '0.00',
   `last_tgl_trx` date NOT NULL,
   `last_jam_trx` time NOT NULL,
@@ -412,20 +332,8 @@ CREATE TABLE `barang_stok` (
 -- Dumping data for table `barang_stok`
 --
 
-INSERT INTO `barang_stok` (`id`, `kode_barang`, `kode_gudang`, `masuk`, `keluar`, `akhir`, `last_tgl_trx`, `last_jam_trx`, `last_no_trx`, `last_user`) VALUES
-(1, 'P00001', 'F00003', 110.00, 41.00, 69.00, '2024-05-17', '15:23:05', 'INV~1705202400004', 'S00001'),
-(2, 'B00001', 'F00003', 103.00, 21.00, 82.00, '2024-05-17', '15:23:05', 'INV~1705202400004', 'S00001'),
-(3, 'S00001', 'F00003', 157.00, 17.00, 140.00, '2024-05-17', '15:10:04', 'INV~1705202400003', 'S00001'),
-(4, 'A00001', 'F00003', 108.00, 32.00, 76.00, '2024-05-17', '15:10:04', 'INV~1705202400003', 'S00001'),
-(5, 'P00002', 'F00003', 116.00, 10.00, 106.00, '2024-05-17', '15:10:04', 'INV~1705202400003', 'S00001'),
-(6, 'A00002', 'F00003', 100.00, 0.00, 100.00, '2024-05-11', '01:46:45', 'INV~1105202400001', 'A00001'),
-(7, 'C00001', 'F00003', 100.00, 10.00, 90.00, '2024-05-14', '00:55:10', 'INV~UM1405202400001', 'A00001'),
-(8, 'T00001', 'F00003', 100.00, 0.00, 100.00, '2024-05-11', '01:46:45', 'INV~1105202400001', 'A00001'),
-(9, 'P00003', 'F00003', 112.00, 19.00, 93.00, '2024-05-17', '14:55:48', 'INV~1705202400002', 'S00001'),
-(10, 'P00004', 'F00003', 101.00, 22.00, 79.00, '2024-05-17', '14:55:48', 'INV~1705202400002', 'S00001'),
-(11, 'P00001', 'F00001', 200.00, 30.00, 170.00, '2024-05-19', '00:26:53', 'INV~KU1905202400001', 'A00001'),
-(12, 'B00001', 'F00001', 200.00, 2.00, 198.00, '2024-05-18', '21:20:02', 'INV~UM1805202400001', 'A00001'),
-(13, 'S00001', 'F00001', 200.00, 0.00, 200.00, '2024-05-18', '13:57:23', 'INV~1805202400001', 'A00001');
+INSERT INTO `barang_stok` (`id`, `kode_barang`, `kode_gudang`, `masuk`, `keluar`, `so`, `penyesuaian`, `akhir`, `last_tgl_trx`, `last_jam_trx`, `last_no_trx`, `last_user`) VALUES
+(1, 'P00001', 'F00001', 100.00, 2.00, 0.00, 0.00, 98.00, '2024-08-05', '21:49:11', 'INV~UM0508202400001', 'A00001');
 
 -- --------------------------------------------------------
 
@@ -448,8 +356,7 @@ CREATE TABLE `bayar_card_detail` (
 --
 
 INSERT INTO `bayar_card_detail` (`id`, `token_pembayaran`, `kode_bank`, `kode_tipe`, `no_card`, `approval`, `jumlah`) VALUES
-(2, 'Gtzx5wkO2LFGNYKFrN06aWLMynTOSZ', 'B00003', 'T0002', '1111111111111111', '111111', 300000.00),
-(4, 'IAwDyCjzkrrITufg8OmR8iPjQ3VB4q', 'B00002', 'T0001', '1111111111111111', '111111', 135000.00);
+(1, 'iij0rmKWS34WPvat063miKEMgZtaSw', 'B00001', 'T0001', '123', '456', 11000.00);
 
 -- --------------------------------------------------------
 
@@ -466,6 +373,58 @@ CREATE TABLE `bayar_um_card_detail` (
   `approval` varchar(6) NOT NULL,
   `jumlah` decimal(20,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cabang`
+--
+
+CREATE TABLE `cabang` (
+  `id` int NOT NULL,
+  `kode_cabang` varchar(10) NOT NULL,
+  `cabang` varchar(200) NOT NULL,
+  `email` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `kontak` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `owner` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `provinsi` int DEFAULT NULL,
+  `kabupaten` int DEFAULT NULL,
+  `kecamatan` int DEFAULT NULL,
+  `desa` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `kode_pos` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `rt` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `rw` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `aktif_dari` date DEFAULT NULL,
+  `aktif_sampai` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `cabang`
+--
+
+INSERT INTO `cabang` (`id`, `kode_cabang`, `cabang`, `email`, `kontak`, `owner`, `provinsi`, `kabupaten`, `kecamatan`, `desa`, `kode_pos`, `rt`, `rw`, `aktif_dari`, `aktif_sampai`) VALUES
+(1, 'CAB0000001', 'Magelang', 'magelang@dtu.com', NULL, 'Ahmad Husain', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-08-01', '2030-08-01'),
+(2, 'CAB0000002', 'Yogyakarta', 'yogyakarta@dtu.com', NULL, 'Ahmad Husain', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-08-01', '2030-08-01');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cabang_user`
+--
+
+CREATE TABLE `cabang_user` (
+  `id` int NOT NULL,
+  `kode_cabang` varchar(10) NOT NULL,
+  `email` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `cabang_user`
+--
+
+INSERT INTO `cabang_user` (`id`, `kode_cabang`, `email`) VALUES
+(1, 'CAB0000001', 'ahmad.ummgl@gmail.com'),
+(2, 'CAB0000002', 'ahmad.ummgl@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -577,6 +536,29 @@ INSERT INTO `dokter_poli` (`id`, `kode_dokter`, `kode_poli`) VALUES
 (32, 'A00001', 'S00001'),
 (33, 'A00001', 'G00001'),
 (34, 'A00001', 'T00001');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jadwal_so`
+--
+
+CREATE TABLE `jadwal_so` (
+  `id` int NOT NULL,
+  `tgl_dari` date NOT NULL,
+  `jam_dari` time NOT NULL,
+  `tgl_sampai` date NOT NULL,
+  `jam_sampai` time NOT NULL,
+  `status` int NOT NULL DEFAULT '0',
+  `kode_user` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+--
+-- Dumping data for table `jadwal_so`
+--
+
+INSERT INTO `jadwal_so` (`id`, `tgl_dari`, `jam_dari`, `tgl_sampai`, `jam_sampai`, `status`, `kode_user`) VALUES
+(1, '2024-06-10', '23:59:59', '2024-06-11', '23:59:59', 0, 'A00001');
 
 -- --------------------------------------------------------
 
@@ -1110,6 +1092,20 @@ INSERT INTO `kabupaten` (`id`, `kode_kabupaten`, `kabupaten`, `kode_provinsi`) V
 (512, 9211, 'KAB. MANOKWARI SELATAN', 92),
 (513, 9212, 'KAB. PEGUNUNGAN ARFAK', 92),
 (514, 9271, 'KOTA SORONG', 92);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `kas_bank`
+--
+
+CREATE TABLE `kas_bank` (
+  `id` int NOT NULL,
+  `kode_kas_bank` varchar(10) NOT NULL,
+  `nama` varchar(200) NOT NULL,
+  `tipe` int NOT NULL,
+  `akun` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -8298,7 +8294,7 @@ CREATE TABLE `member` (
 INSERT INTO `member` (`id`, `kode_member`, `nama`, `email`, `password`, `secondpass`, `nohp`, `pendidikan`, `pekerjaan`, `agama`, `provinsi`, `kabupaten`, `kecamatan`, `desa`, `kodepos`, `rt`, `rw`, `nik`, `jkel`, `foto`, `tmp_lahir`, `tgl_lahir`, `kode_role`, `joined`, `on_off`, `last_regist`, `status_regist`, `actived`) VALUES
 (1, 'U00001', 'UMUM', 'umum@gmail.com', 'adfab9c56b8b16d6c067f8d3cff8818e', 'umum', '123', 'S00004', 'K00001', 'I00001', 32, 3201, 320109, '-', '000000', 1, 1, '0000000000000000', 'P', 'pria.png', '-', '1990-01-01', 'R0005', '2024-05-07 17:12:15', 0, '', 0, 1),
 (2, 'S00001', 'Shali', 'shalil@gmail.com', '5e8607e54e817635b727ca3400561f90', 'shali', '0895363260971', 'S00004', 'K00001', 'I00001', 32, 3201, 320109, 'Sukamakmur', '56812', 3, 3, '3201090205980007', 'W', 'wanit.png', 'Temanggung', '1998-07-04', 'R0005', '2024-05-10 15:40:00', 0, 'KU~1905202400001', 0, 1),
-(3, 'A00001', 'Ahmad Husain', 'ahmad.husain.ardiansyah11@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '1234', '0895363260970', 'S00004', 'K00001', 'I00001', 32, 3201, 320109, 'sukamakur', '56812', 3, 3, '3201090205980006', 'P', 'pria.png', 'Jakarta', '1998-05-02', 'R0005', '2024-05-07 17:12:15', 0, 'UM~1405202400001', 0, 1),
+(3, 'A00001', 'Ahmad Husain', 'ahmad.husain.ardiansyah11@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '1234', '0895363260970', 'S00004', 'K00001', 'I00001', 32, 3201, 320109, 'sukamakur', '56812', 3, 3, '3201090205980006', 'P', 'pria.png', 'Jakarta', '1998-05-02', 'R0005', '2024-05-07 17:12:15', 0, 'KU~2107202400001', 1, 1),
 (5, 'T00001', 'Tukiyem', 'tukiyem@gmail.com', 'c2a35f9df794a446bcd7c6e8aa704a71', 'tukiyem', '1234', 'S00003', 'M00001', 'I00001', 32, 3202, 320208, 'Jampang', '51233', 4, 4, '3202080101990005', 'W', 'wanit.png', 'Sukabumi', '1980-01-01', 'R0005', '2024-05-12 11:35:25', 0, '', 0, 1);
 
 -- --------------------------------------------------------
@@ -8455,13 +8451,14 @@ CREATE TABLE `m_menu` (
 --
 
 INSERT INTO `m_menu` (`id`, `url`, `icon`, `nama`) VALUES
-(1, 'Home', '<ion-icon name=\"home-outline\"></ion-icon>', 'Beranda'),
-(2, 'Setting_apps', '<ion-icon name=\"settings-outline\"></ion-icon>', 'Pengaturan Web'),
-(3, 'Master', '<ion-icon name=\"globe-outline\"></ion-icon>', 'Master'),
-(4, 'Health', '<ion-icon name=\"heart-outline\"></ion-icon>', 'Health Management'),
-(5, 'Kasir', '<ion-icon name=\"wallet-outline\"></ion-icon>', 'Pembayaran'),
-(6, 'Transaksi', '<ion-icon name=\"trail-sign-outline\"></ion-icon>', 'Transaksi'),
-(7, 'Marketing', '<ion-icon name=\"stats-chart-outline\"></ion-icon>', 'Marketing');
+(1, 'Home', '<i class=\"fa-solid fa-fw fa-gauge-high\"></i>&nbsp;&nbsp;', 'Beranda'),
+(2, 'Setting_apps', '<i class=\"fa-solid fa-fw fa-gears\"></i>&nbsp;&nbsp;', 'Pengaturan Web'),
+(3, 'Master', '<i class=\"fa-solid fa-fw fa-globe\"></i>&nbsp;&nbsp;', 'Master'),
+(4, 'Health', '<i class=\"fa-solid fa-fw fa-address-card\"></i>&nbsp;&nbsp;', 'Health Management'),
+(5, 'Kasir', '<i class=\"fa-solid fa-fw fa-wallet\"></i>&nbsp;&nbsp;', 'Pembayaran'),
+(6, 'Transaksi', '<i class=\"fa-solid fa-fw fa-arrow-right-arrow-left\"></i>&nbsp;&nbsp;', 'Transaksi'),
+(7, 'Marketing', '<i class=\"fa-solid fa-fw fa-square-poll-vertical\"></i>&nbsp;&nbsp;', 'Marketing'),
+(8, 'Backdoor', '<i class=\"fa-solid fa-fw fa-screwdriver-wrench\"></i>&nbsp;&nbsp;', 'Backdoor');
 
 -- --------------------------------------------------------
 
@@ -8768,19 +8765,7 @@ CREATE TABLE `pembayaran` (
 --
 
 INSERT INTO `pembayaran` (`id`, `token_pembayaran`, `approved`, `invoice`, `inv_jual`, `no_trx`, `tgl_pembayaran`, `jam_pembayaran`, `total`, `kembalian`, `kode_user`, `jenis_pembayaran`, `cash`, `card`, `kode_promo`, `discpr_promo`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `cek_um`, `um_masuk`, `um_keluar`) VALUES
-(2, 'OazSkUPPwF4gf8PZAU5GV763ON0EH5', 1, 'KWITANSI~1105202400001', 'INV~KU1105202400001', 'KU~1005202400001', '2024-05-11', '18:58:53', 100000.00, 81500.00, 'A00001', 0, 100000.00, 0.00, NULL, 0.00, 0, NULL, NULL, '', 1, 81500.00, 0.00),
-(3, 'rWMaNKvpnlfY1bOJOl228slyV4VAgL', 1, 'KWITANSI~1105202400002', 'INV~KU1105202400002', 'KU~1105202400001', '2024-05-11', '23:43:29', 150000.00, 12500.00, 'A00001', 0, 50000.00, 0.00, NULL, 0.00, 0, NULL, NULL, '', 0, 12500.00, 100000.00),
-(4, '7Oe15iYapgWFh3WLEwhXLyncOWv5UK', 1, 'KWITANSI~1105202400003', 'INV~MS1105202400001', NULL, '2024-05-11', '23:52:13', 50000.00, 21751.10, 'A00001', 0, 50000.00, 0.00, NULL, 0.00, 0, NULL, NULL, '', 1, 21751.10, 0.00),
-(5, 'Gtzx5wkO2LFGNYKFrN06aWLMynTOSZ', 1, 'KWITANSI~1105202400004', 'INV~MS1105202400002', NULL, '2024-05-11', '23:54:51', 381500.00, 9849.00, 'A00001', 1, 0.00, 300000.00, NULL, 0.00, 0, NULL, NULL, '', 0, 9849.00, 81500.00),
-(6, '3KEuWwbHShclpWXQohPKJCQ5buOusT', 1, 'KWITANSI~1205202400001', 'INV~MS1205202400001', NULL, '2024-05-12', '00:55:52', 5000.00, 2000.00, 'A00001', 0, 5000.00, 0.00, NULL, 0.00, 0, NULL, NULL, '', 0, 2000.00, 0.00),
-(7, 'caPn8zhJ3sUqKU0CPUgpCJiP1T7oWh', 1, 'KWITANSI~1205202400002', 'INV~UM1205202400002', NULL, '2024-05-12', '11:20:37', 30000.00, 2000.00, 'A00001', 0, 30000.00, 0.00, NULL, 0.00, 0, NULL, NULL, '', 0, 2000.00, 0.00),
-(8, 'IAwDyCjzkrrITufg8OmR8iPjQ3VB4q', 1, 'KWITANSI~1205202400003', 'INV~GI1205202400001', 'GI~1205202400001', '2024-05-12', '11:37:09', 135000.00, 50000.00, 'A00001', 1, 0.00, 135000.00, '', 0.00, 1, '2024-05-12', '13:00:20', 'A00001', 1, 50000.00, 0.00),
-(9, 'LK70Tbax5GBAfwcQxmApajXdyq7yIg', 1, 'KWITANSI~1205202400004', 'INV~UM1205202400003', NULL, '2024-05-12', '21:37:09', 60000.00, 9500.00, 'A00001', 0, 60000.00, 0.00, NULL, 0.00, 0, NULL, NULL, '', 0, 9500.00, 0.00),
-(10, 'k7C3frlho1SuRfbDQQPNKh9Q4WYfnO', 1, 'KWITANSI~1405202400001', 'INV~UM1405202400001', NULL, '2024-05-14', '00:57:04', 100000.00, 10000.00, 'A00001', 0, 100000.00, 0.00, 'P0001', 10.00, 0, NULL, NULL, '', 0, 10000.00, 0.00),
-(12, 'SpcSyBB9MEj46vZYLjUaP7lw10LqMA', 1, 'KWITANSI~1705202400001', 'INV~UM1405202400002', 'UM~1405202400001', '2024-05-17', '01:00:55', 100000.00, 0.00, 'A00001', 0, 100000.00, 0.00, NULL, 0.00, 0, NULL, NULL, '', 0, 0.00, 0.00),
-(14, 'O2dNrjO5oRcdZLcsp3uEhuMCNLpxM0', 1, 'KWITANSI~1705202400002', 'INV~UM1705202400001', NULL, '2024-05-17', '14:37:39', 375000.00, 0.00, 'S00001', 0, 375000.00, 0.00, '', 0.00, 1, '2024-05-17', '14:39:21', 'S00001', 0, 0.00, 0.00),
-(15, 'PDq3alaAS3PnoNiOb0Bt3wODXTzR3d', 1, 'KWITANSI~1805202400001', 'INV~UM1805202400001', NULL, '2024-05-18', '21:22:17', 70000.00, 3400.00, 'A00001', 0, 70000.00, 0.00, NULL, 0.00, 0, NULL, NULL, '', 0, 3400.00, 0.00),
-(19, 'o3JIi1O9QZfwgSURvLhsKeOvNEiVLW', 1, 'KWITANSI~1905202400001', 'INV~KU1905202400001', 'KU~1905202400001', '2024-05-19', '00:43:27', 100000.00, 38950.00, 'A00001', 0, 100000.00, 0.00, NULL, 0.00, 0, NULL, NULL, '', 0, 38950.00, 0.00);
+(1, 'iij0rmKWS34WPvat063miKEMgZtaSw', 1, 'KWITANSI~0508202400001', 'INV~UM0508202400001', NULL, '2024-08-05', '21:51:38', 11000.00, 0.00, 'A00001', 1, 0.00, 11000.00, '', 0.00, 1, '2024-08-05', '22:02:21', 'A00001', 0, 0.00, 0.00);
 
 -- --------------------------------------------------------
 
@@ -8800,13 +8785,6 @@ CREATE TABLE `pembayaran_uangmuka` (
   `total` decimal(20,2) NOT NULL DEFAULT '0.00',
   `kode_user` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `pembayaran_uangmuka`
---
-
-INSERT INTO `pembayaran_uangmuka` (`id`, `invoice`, `tgl_pembayaran`, `jam_pembayaran`, `kode_member`, `jenis_pembayaran`, `cash`, `card`, `total`, `kode_user`) VALUES
-(1, 'DEPOUM~1105202400001', '2024-05-11', '23:39:52', 'A00001', 0, 100000.00, 0.00, 100000.00, 'A00001');
 
 -- --------------------------------------------------------
 
@@ -8831,16 +8809,54 @@ CREATE TABLE `pendaftaran` (
   `shift` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `pendaftaran`
+-- Table structure for table `penyesuaian_detail`
 --
 
-INSERT INTO `pendaftaran` (`id`, `no_trx`, `tgl_daftar`, `jam_daftar`, `kode_member`, `kode_poli`, `kode_dokter`, `no_antrian`, `tgl_keluar`, `jam_keluar`, `status_trx`, `kode_ruang`, `kode_user`, `shift`) VALUES
-(1, 'KU~1005202400001', '2024-05-10', '22:24:02', 'S00001', 'K00001', 'S00001', 1, '2024-05-11', '18:58:53', 1, 'R0001', 'A00001', 2),
-(2, 'KU~1105202400001', '2024-05-11', '23:38:37', 'A00001', 'K00001', 'A00001', 1, '2024-05-11', '23:43:29', 1, 'R0001', 'A00001', 1),
-(3, 'GI~1205202400001', '2024-05-12', '11:36:15', 'T00001', 'G00001', 'P00001', 1, '2024-05-12', '11:37:09', 1, 'R0001', 'A00001', 1),
-(4, 'UM~1405202400001', '2024-05-14', '17:32:38', 'A00001', 'U00001', 'S00001', 2, '2024-05-17', '01:00:55', 1, 'R0001', 'A00001', 1),
-(5, 'KU~1905202400001', '2024-05-19', '00:02:57', 'S00001', 'K00001', 'A00001', 1, '2024-05-19', '00:43:27', 1, 'R0002', 'A00001', 1);
+CREATE TABLE `penyesuaian_detail` (
+  `id` int NOT NULL,
+  `invoice` varchar(30) DEFAULT NULL,
+  `kode_barang` varchar(10) DEFAULT NULL,
+  `qty` decimal(20,2) DEFAULT '0.00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+--
+-- Dumping data for table `penyesuaian_detail`
+--
+
+INSERT INTO `penyesuaian_detail` (`id`, `invoice`, `kode_barang`, `qty`) VALUES
+(21, 'PS~0506202400001', 'B00001', 50.00),
+(22, 'PS~0506202400001', 'P00001', 50.00),
+(23, 'PS~0506202400001', 'S00001', 50.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `penyesuaian_header`
+--
+
+CREATE TABLE `penyesuaian_header` (
+  `id` int NOT NULL,
+  `invoice` varchar(30) DEFAULT NULL,
+  `tgl_penyesuaian` date DEFAULT NULL,
+  `jam_penyesuaian` time DEFAULT NULL,
+  `kode_gudang` varchar(10) DEFAULT NULL,
+  `tipe_penyesuaian` int DEFAULT NULL,
+  `kode_user` varchar(10) DEFAULT NULL,
+  `acc` int DEFAULT '0',
+  `user_acc` varchar(10) DEFAULT NULL,
+  `tgl_acc` date DEFAULT NULL,
+  `jam_acc` time DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+--
+-- Dumping data for table `penyesuaian_header`
+--
+
+INSERT INTO `penyesuaian_header` (`id`, `invoice`, `tgl_penyesuaian`, `jam_penyesuaian`, `kode_gudang`, `tipe_penyesuaian`, `kode_user`, `acc`, `user_acc`, `tgl_acc`, `jam_acc`) VALUES
+(3, 'PS~0506202400001', '2024-06-05', '10:18:05', 'F00003', 0, 'A00001', 1, NULL, '2024-06-19', '12:09:47');
 
 -- --------------------------------------------------------
 
@@ -8932,7 +8948,8 @@ INSERT INTO `sub_menu` (`id`, `id_menu`, `url_submenu`, `icon`, `submenu`) VALUE
 (12, 5, 'report', '<ion-icon name=\"caret-forward-outline\"></ion-icon>', 'Laporan Kasir'),
 (13, 7, 'promo', '<ion-icon name=\"caret-forward-outline\"></ion-icon>', 'Promo'),
 (14, 5, 'deposit_um', '<ion-icon name=\"caret-forward-outline\"></ion-icon>', 'Uang Muka'),
-(15, 5, 'report_um', '<ion-icon name=\"caret-forward-outline\"></ion-icon>', 'Laporan Uang Muka');
+(15, 5, 'report_um', '<ion-icon name=\"caret-forward-outline\"></ion-icon>', 'Laporan Uang Muka'),
+(16, 6, NULL, '<ion-icon name=\"caret-forward-outline\"></ion-icon>', 'Stok Barang');
 
 -- --------------------------------------------------------
 
@@ -8970,7 +8987,12 @@ INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VAL
 (15, 8, 'barang_in_report', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Laporan Pembelian'),
 (16, 9, 'barang_out', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Penjualan'),
 (17, 9, 'barang_out_retur', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Retur Penjualan'),
-(18, 9, 'barang_out_report', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Laporan Penjualan');
+(18, 9, 'barang_out_report', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Laporan Penjualan'),
+(19, 16, 'penyesuaian_stok', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Penyesuaian Stok'),
+(20, 16, 'so', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Stock Opname'),
+(21, 16, 'riwayat_stok', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Riwayat Stok'),
+(23, 16, 'laporan_stok', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Laporan Stok'),
+(24, 1, 'kas_bank', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Kas & Bank');
 
 -- --------------------------------------------------------
 
@@ -9016,10 +9038,7 @@ CREATE TABLE `uang_muka` (
 --
 
 INSERT INTO `uang_muka` (`id`, `last_tgl`, `last_jam`, `last_invoice`, `kode_member`, `uang_masuk`, `uang_keluar`, `uang_sisa`) VALUES
-(1, '2024-05-19', '00:43:27', 'KWITANSI~1905202400001', 'S00001', 81500.00, 81500.00, 0.00),
-(2, '2024-05-17', '01:00:55', 'KWITANSI~1705202400001', 'A00001', 121751.10, 100000.00, 21751.10),
-(3, '2024-05-14', '00:57:04', 'KWITANSI~1405202400001', 'T00001', 50000.00, 0.00, 50000.00),
-(4, '2024-05-18', '21:22:17', 'KWITANSI~1805202400001', 'U00001', 0.00, 0.00, 0.00);
+(1, '2024-08-05', '21:51:38', 'KWITANSI~0508202400001', 'U00001', 0.00, 0.00, 0.00);
 
 -- --------------------------------------------------------
 
@@ -9048,8 +9067,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `kode_user`, `nama`, `email`, `password`, `secondpass`, `jkel`, `foto`, `kode_role`, `on_off`, `nohp`, `actived`, `joined`) VALUES
-(2, 'A00001', 'admin', 'ahmad.ummgl@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '1234', 'P', 'pria1.png', 'R0001', 1, '', 1, '2024-03-26 06:04:15'),
-(7, 'S00001', 'Shali', 'Shali@gmail.com', '5e8607e54e817635b727ca3400561f90', 'shali', 'W', 'wanita.png', 'R0001', 1, '', 1, '2024-05-17 13:54:32');
+(2, 'A00001', 'admin', 'ahmad.ummgl@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '1234', 'P', 'profile-img.jpg', 'R0001', 1, '', 1, '2024-03-26 06:04:15'),
+(7, 'S00001', 'Shali', 'Shali@gmail.com', '5e8607e54e817635b727ca3400561f90', 'shali', 'W', 'wanita.png', 'R0002', 0, '', 1, '2024-08-05 19:47:57');
 
 -- --------------------------------------------------------
 
@@ -9094,7 +9113,7 @@ CREATE TABLE `web_setting` (
 --
 
 INSERT INTO `web_setting` (`id`, `nama`, `alamat`, `nohp`, `email`, `logo`, `bg_theme`, `watermark`) VALUES
-(1, 'Apotek', 'Jl. Magelang - Yogyakarta No 11', '0895363260970', 'myhers11@gmail.com', 'Profile.png', 'sidebar12.jpeg', 'My Logo 4_2.png');
+(1, 'Down to Up', 'Jl. Magelang - Yogyakarta No 11', '0895363260970', 'myhers11@gmail.com', 'Untitled-1.png', 'sidebar12.jpeg', 'My Logo 4_2.png');
 
 -- --------------------------------------------------------
 
@@ -9198,6 +9217,18 @@ ALTER TABLE `bayar_um_card_detail`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `cabang`
+--
+ALTER TABLE `cabang`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cabang_user`
+--
+ALTER TABLE `cabang_user`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `cart_detail`
 --
 ALTER TABLE `cart_detail`
@@ -9228,9 +9259,21 @@ ALTER TABLE `dokter_poli`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `jadwal_so`
+--
+ALTER TABLE `jadwal_so`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `kabupaten`
 --
 ALTER TABLE `kabupaten`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `kas_bank`
+--
+ALTER TABLE `kas_bank`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -9372,6 +9415,18 @@ ALTER TABLE `pendaftaran`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `penyesuaian_detail`
+--
+ALTER TABLE `penyesuaian_detail`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `penyesuaian_header`
+--
+ALTER TABLE `penyesuaian_header`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `perawat`
 --
 ALTER TABLE `perawat`
@@ -9445,43 +9500,43 @@ ALTER TABLE `barang`
 -- AUTO_INCREMENT for table `barang_in_detail`
 --
 ALTER TABLE `barang_in_detail`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `barang_in_header`
 --
 ALTER TABLE `barang_in_header`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `barang_in_retur_detail`
 --
 ALTER TABLE `barang_in_retur_detail`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `barang_in_retur_header`
 --
 ALTER TABLE `barang_in_retur_header`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `barang_jenis`
 --
 ALTER TABLE `barang_jenis`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `barang_out_detail`
 --
 ALTER TABLE `barang_out_detail`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `barang_out_header`
 --
 ALTER TABLE `barang_out_header`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `barang_out_retur_detail`
@@ -9499,19 +9554,31 @@ ALTER TABLE `barang_out_retur_header`
 -- AUTO_INCREMENT for table `barang_stok`
 --
 ALTER TABLE `barang_stok`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `bayar_card_detail`
 --
 ALTER TABLE `bayar_card_detail`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `bayar_um_card_detail`
 --
 ALTER TABLE `bayar_um_card_detail`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `cabang`
+--
+ALTER TABLE `cabang`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `cabang_user`
+--
+ALTER TABLE `cabang_user`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cart_detail`
@@ -9544,10 +9611,22 @@ ALTER TABLE `dokter_poli`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
+-- AUTO_INCREMENT for table `jadwal_so`
+--
+ALTER TABLE `jadwal_so`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `kabupaten`
 --
 ALTER TABLE `kabupaten`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=515;
+
+--
+-- AUTO_INCREMENT for table `kas_bank`
+--
+ALTER TABLE `kas_bank`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `kecamatan`
@@ -9607,7 +9686,7 @@ ALTER TABLE `m_kategori`
 -- AUTO_INCREMENT for table `m_menu`
 --
 ALTER TABLE `m_menu`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT for table `m_pajak`
@@ -9673,19 +9752,31 @@ ALTER TABLE `m_supplier`
 -- AUTO_INCREMENT for table `pembayaran`
 --
 ALTER TABLE `pembayaran`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `pembayaran_uangmuka`
 --
 ALTER TABLE `pembayaran_uangmuka`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `pendaftaran`
 --
 ALTER TABLE `pendaftaran`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `penyesuaian_detail`
+--
+ALTER TABLE `penyesuaian_detail`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
+-- AUTO_INCREMENT for table `penyesuaian_header`
+--
+ALTER TABLE `penyesuaian_header`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `perawat`
@@ -9703,13 +9794,13 @@ ALTER TABLE `perawat_poli`
 -- AUTO_INCREMENT for table `sub_menu`
 --
 ALTER TABLE `sub_menu`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `sub_menu2`
 --
 ALTER TABLE `sub_menu2`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `tipe_bank`
@@ -9721,7 +9812,7 @@ ALTER TABLE `tipe_bank`
 -- AUTO_INCREMENT for table `uang_muka`
 --
 ALTER TABLE `uang_muka`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user`

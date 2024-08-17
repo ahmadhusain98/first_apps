@@ -5,15 +5,15 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 <form method="post" id="form_pendaftaran">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Pendaftaran Member</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Pendaftaran Member</span>
         </div>
     </div>
     <br>
     <div class="row">
-        <div class="col-md-4 col-12 mb-3">
+        <div class="col-md-2 col-12 mb-3">
             <select name="kode_poli" id="kode_poli" class="select2_poli" data-placeholder="~ Pilih Poli" onchange="getPoli(this.value)"></select>
         </div>
-        <div class="col-md-4 col-12">
+        <div class="col-md-6 col-12">
             <div class="row">
                 <div class="col-md-4 col-5 mb-3">
                     <input type="date" name="dari" id="dari" class="form-control" value="<?= date('Y-m-d') ?>">
@@ -22,14 +22,24 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                     <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
                 </div>
                 <div class="col-md-4 col-2 mb-3">
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="filter($('#kode_poli').val())" title="Filter" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom"><ion-icon name="filter-outline"></ion-icon> Filter</button>
+                    <button type="button" class="btn btn-light" onclick="filter($('#kode_poli').val())"><i class="fa-solid fa-sort"></i>&nbsp;&nbsp;Filter</button>
                 </div>
             </div>
         </div>
         <div class="col-md-4 col-12">
-            <div class="btn-group btn-group-sm float-right" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-primary" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
-                <button type="button" class="btn btn-success" onclick="getUrl('Health/form_pendaftaran/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+            <div class="float-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" onclick="preview('pendaftaran')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="print('pendaftaran')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="excel('pendaftaran')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                <button type="button" class="btn btn-success" onclick="getUrl('Health/form_pendaftaran/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
             </div>
         </div>
     </div>
@@ -37,18 +47,18 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tablePendaftaran" width="100%">
+                <table class="table table-hover table-bordered" id="tablePendaftaran" width="100%" style="border-radius: 10px;">
                     <thead>
                         <tr class="text-center">
-                            <th width="5%" class="bg-primary">#</th>
-                            <th width="15%" class="bg-primary">No. Trx</th>
-                            <th width="10%" class="bg-primary">Member</th>
-                            <th class="bg-primary">Tgl/Jam Masuk</th>
-                            <th class="bg-primary">Tgl/Jam Keluar</th>
-                            <th class="bg-primary">Poli</th>
-                            <th class="bg-primary">Dokter</th>
-                            <th class="bg-primary">Status</th>
-                            <th width="10%" class="bg-primary">Aksi</th>
+                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                            <th width="15%">No. Trx</th>
+                            <th width="10%">Member</th>
+                            <th>Tgl/Jam Masuk</th>
+                            <th>Tgl/Jam Keluar</th>
+                            <th>Poli</th>
+                            <th>Dokter</th>
+                            <th>Status</th>
+                            <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                         </tr>
                     </thead>
                 </table>
@@ -150,6 +160,42 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                         error_proccess();
                     }
                 });
+            }
+        });
+    }
+
+    // fungsi kirim email
+    function email(x) {
+        Swal.fire({
+            title: "Masukan Email",
+            input: "text",
+            inputAttributes: {
+                autocapitalize: "off"
+            },
+            showCancelButton: true,
+            confirmButtonText: "Kirim",
+            cancelButtonText: "Tutup",
+            showLoaderOnConfirm: true,
+            preConfirm: async (email) => {
+                try {
+                    const githubUrl = `${siteUrl}Health/email/${x}?email=${email}`;
+                    const response = await fetch(githubUrl);
+                    if (!response.ok) {
+                        return Swal.showValidationMessage(`${JSON.stringify(await response.json())}`);
+                    }
+                    return response.json();
+                } catch (error) {
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (result.value.status == 1) {
+                    Swal.fire("Kwitansi", "Berhasil dikirim via Email!, silahkan cek email", "success");
+                } else {
+                    Swal.fire("Kwitansi", "Gagal dikirim via Email!, silahkan cek email", "info");
+                }
             }
         });
     }

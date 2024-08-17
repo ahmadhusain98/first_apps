@@ -26,6 +26,8 @@ class Master extends CI_Controller
                 'shift'     => $this->session->userdata('shift'),
                 'menu'      => 'Master',
             ];
+
+            $this->load->model('M_barang');
         } else { // selain itu
             // kirimkan kembali ke Auth
             redirect('Auth');
@@ -98,10 +100,8 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_satuan;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_satuan . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_satuan . "'" . ')" ' . $upd_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_satuan . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_satuan . "'" . ')" ' . $del_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -144,7 +144,7 @@ class Master extends CI_Controller
 
         if ($param == 1) { // jika parameternya 1
             // maka buat kode baru
-            $kodeSatuan = _kodeSatuan($keterangan);
+            $kodeSatuan = _kodeSatuan();
         } else { // selain itu
             // ambil kode dari inputan
             $kodeSatuan = $this->input->post('kodeSatuan');
@@ -265,10 +265,8 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_kategori;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_kategori . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_kategori . "'" . ')" ' . $del_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_kategori . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_kategori . "'" . ')" ' . $del_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -311,7 +309,7 @@ class Master extends CI_Controller
 
         if ($param == 1) { // jika parameternya 1
             // maka buat kode baru
-            $kodeKategori = _kodeKategori($keterangan);
+            $kodeKategori = _kodeKategori();
         } else { // selain itu
             // ambil kode dari inputan
             $kodeKategori = $this->input->post('kodeKategori');
@@ -399,7 +397,7 @@ class Master extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != 0) {
+        if ($param != '0') {
             $supplier = $this->M_global->getData('m_supplier', ['kode_supplier' => $param]);
         } else {
             $supplier = null;
@@ -474,10 +472,8 @@ class Master extends CI_Controller
             $row[]  = $rd->fax;
             $row[]  = $rd->alamat;
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_supplier . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_supplier . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_supplier . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_supplier . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -524,7 +520,7 @@ class Master extends CI_Controller
 
         if ($param == 1) { // jika parameternya 1
             // maka buat kode baru
-            $kodeSupplier = _kodeSupplier($nama);
+            $kodeSupplier = _kodeSupplier();
         } else { // selain itu
             // ambil kode dari inputan
             $kodeSupplier = $this->input->post('kodeSupplier');
@@ -607,7 +603,7 @@ class Master extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != 0) {
+        if ($param != '0') {
             $gudang = $this->M_global->getData('m_gudang', ['kode_gudang' => $param]);
         } else {
             $gudang = null;
@@ -674,18 +670,17 @@ class Master extends CI_Controller
             }
 
             $pajak  = $this->M_global->getData('m_pajak', ['kode_pajak' => $rd->vat]);
+
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->kode_gudang;
             $row[]  = $rd->nama;
             $row[]  = $rd->bagian;
-            $row[]  = '<div class="text-right">' . ((!empty($pajak)) ? $pajak->persentase : '-') . '</div>';
+            $row[]  = '<div class="text-right">' . ((!empty($pajak)) ? $pajak->persentase . '%' : '-') . '</div>';
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_gudang . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_gudang . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                    <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_gudang . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                    <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_gudang . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -726,7 +721,8 @@ class Master extends CI_Controller
         // variable
         $nama         = $this->input->post('nama');
         $bagian       = $this->input->post('bagian');
-        $vat          = $this->input->post('vat');
+        $pajak        = $this->input->post('pajak');
+        $vat          = ($pajak) ? 1 : 0;
         $keterangan   = $this->input->post('keterangan');
 
         if ($param == 1) { // jika parameternya 1
@@ -743,6 +739,7 @@ class Master extends CI_Controller
             'nama'        => $nama,
             'bagian'      => $bagian,
             'vat'         => $vat,
+            'pajak'       => $pajak,
             'keterangan'  => $keterangan,
         ];
 
@@ -845,10 +842,8 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_bank;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_bank . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_bank . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_bank . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_bank . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -891,7 +886,7 @@ class Master extends CI_Controller
 
         if ($param == 1) { // jika parameternya 1
             // maka buat kode baru
-            $kodeBank = _kodeBank($keterangan);
+            $kodeBank = _kodeBank();
         } else { // selain itu
             // ambil kode dari inputan
             $kodeBank = $this->input->post('kodeBank');
@@ -1011,10 +1006,8 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_pekerjaan;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_pekerjaan . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_pekerjaan . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_pekerjaan . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_pekerjaan . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -1057,7 +1050,7 @@ class Master extends CI_Controller
 
         if ($param == 1) { // jika parameternya 1
             // maka buat kode baru
-            $kodePekerjaan = _kodePekerjaan($keterangan);
+            $kodePekerjaan = _kodePekerjaan();
         } else { // selain itu
             // ambil kode dari inputan
             $kodePekerjaan = $this->input->post('kodePekerjaan');
@@ -1146,6 +1139,8 @@ class Master extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
+        $kode_cabang = $this->session->userdata('cabang');
+
         if ($param == '0') {
             $barang = null;
         } else {
@@ -1161,10 +1156,15 @@ class Master extends CI_Controller
             'web_version'   => $web_version->version,
             'list_data'     => '',
             'barang'        => $barang,
-            'satuan'        => $this->M_global->getResult('m_satuan'),
+            'satuan1'       => $this->M_global->getData('barang_satuan', ['kode_barang' => $param, 'ke' => 1]),
+            'satuan2'       => $this->M_global->getData('barang_satuan', ['kode_barang' => $param, 'ke' => 2]),
+            'satuan3'       => $this->M_global->getData('barang_satuan', ['kode_barang' => $param, 'ke' => 3]),
             'kategori'      => $this->M_global->getResult('m_kategori'),
+            'm_satuan'      => $this->M_global->getResult('m_satuan'),
             'jenis'         => $this->M_global->getResult('m_jenis'),
             'barang_jenis'  => $this->M_global->getDataResult('barang_jenis', ['kode_barang' => $param]),
+            'cabang_all'    => $this->M_global->getResult('cabang'),
+            'barang_cabang' => $this->M_global->getDataResult('barang_cabang', ['kode_barang' => $param]),
             'pajak'         => $this->M_global->getData('m_pajak', ['id' => 1])->persentase,
         ];
 
@@ -1172,16 +1172,8 @@ class Master extends CI_Controller
     }
 
     // fungsi list barang
-    public function barang_list($param1 = '')
+    public function barang_list($param = '')
     {
-        // parameter untuk list table
-        $table            = 'barang';
-        $colum            = ['id', 'kode_barang', 'nama', 'kode_satuan', 'kode_kategori', 'kode_jenis', 'hna', 'hpp', 'harga_jual', 'nilai_persediaan', 'stok_min', 'stok_max'];
-        $order            = 'id';
-        $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
-        $kondisi_param1   = 'kode_kategori';
-
         // kondisi role
         $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
         $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
@@ -1199,36 +1191,28 @@ class Master extends CI_Controller
         }
 
         // table server side tampung kedalam variable $list
-        $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $list         = $this->M_barang->get_datatables($param);
         $data         = [];
         $no           = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
+            $satuan1 = $this->M_global->getData('m_satuan', ['kode_satuan' => $rd->kode_satuan]);
+            $satuan2 = $this->M_global->getData('m_satuan', ['kode_satuan' => $rd->kode_satuan2]);
+            $satuan3 = $this->M_global->getData('m_satuan', ['kode_satuan' => $rd->kode_satuan3]);
             $row    = [];
             $row[]  = $no++;
-            $row[]  = $rd->kode_barang;
+            $row[]  = $rd->kode_barang . '<br><a type="button" style="margin-bottom: 5px;" class="btn btn-dark" target="_blank" href="' . site_url('Master/print_barcode/') . $rd->kode_barang . '"><i class="fa-solid fa-barcode"></i> Barcode</a>';
             $row[]  = $rd->nama;
-            $row[]  = $this->M_global->getData('m_satuan', ['kode_satuan' => $rd->kode_satuan])->keterangan;
+            $row[]  = $satuan1->keterangan . ((!empty($satuan2) ? '<br>' . $satuan2->keterangan . ' ~ ' . number_format($rd->qty_satuan2) . ' ' . $satuan1->keterangan : '')) . ((!empty($satuan3) ? '<br>' . $satuan3->keterangan . ' ~ ' . number_format($rd->qty_satuan3) . ' ' . $satuan1->keterangan : ''));
             $row[]  = $this->M_global->getData('m_kategori', ['kode_kategori' => $rd->kode_kategori])->keterangan;
-            $barang_jenis = $this->M_global->getDataResult('barang_jenis', ['kode_barang' => $rd->kode_barang]);
-            $jenis = [];
-            foreach ($barang_jenis  as $bj) {
-                $jenis[] = $this->M_global->getData('m_jenis', ['kode_jenis' => $bj->kode_jenis])->keterangan;
-            }
-            $row[]  = $jenis;
             $row[]  = '<div class="text-right">' . number_format($rd->hna) . '</div>';
             $row[]  = '<div class="text-right">' . number_format($rd->hpp) . '</div>';
             $row[]  = '<div class="text-right">' . number_format($rd->harga_jual) . '</div>';
             $row[]  = '<div class="text-right">' . number_format($rd->nilai_persediaan) . '</div>';
-            $row[]  = '<div class="text-right">' . number_format($rd->stok_min) . '</div>';
-            $row[]  = '<div class="text-right">' . number_format($rd->stok_max) . '</div>';
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-dark" title="Barcode" target="_blank" href="' . site_url('Master/print_barcode/') . $rd->kode_barang . '"><ion-icon name="barcode-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_barang . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_barang . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_barang . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_barang . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -1236,8 +1220,8 @@ class Master extends CI_Controller
         // hasil server side
         $output = [
             "draw"            => $_POST['draw'],
-            "recordsTotal"    => $this->M_datatables->count_all($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
-            "recordsFiltered" => $this->M_datatables->count_filtered($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "recordsTotal"    => $this->M_barang->count_all($param),
+            "recordsFiltered" => $this->M_barang->count_filtered($param),
             "data"            => $data,
         ];
 
@@ -1273,8 +1257,15 @@ class Master extends CI_Controller
     public function barang_proses($param)
     {
         // variable
+        $input_kode         = $this->input->post('kodeBarang');
         $nama               = $this->input->post('nama');
         $kode_satuan        = $this->input->post('kode_satuan');
+        $kode_satuan2       = $this->input->post('kode_satuan2');
+        $kode_satuan3       = $this->input->post('kode_satuan3');
+        $qty_satuan2        = $this->input->post('qty_satuan2');
+        $qty_satuan3        = $this->input->post('qty_satuan3');
+        $opsi_hpp           = $this->input->post('opsi_hpp');
+        $persentase_hpp     = str_replace(",", "", $this->input->post('persentase_hpp'));
         $kode_kategori      = $this->input->post('kode_kategori');
         $kode_jenis         = $this->input->post('kode_jenis');
         $hna                = str_replace(",", "", $this->input->post('hna'));
@@ -1283,13 +1274,18 @@ class Master extends CI_Controller
         $nilai_persediaan   = str_replace(",", "", $this->input->post('nilai_persediaan'));
         $stok_min           = str_replace(",", "", $this->input->post('stok_min'));
         $stok_max           = str_replace(",", "", $this->input->post('stok_max'));
+        $kode_cabang        = $this->session->userdata('cabang');
 
         if ($param == 1) { // jika parameternya 1
             // maka buat kode baru
-            $kodeBarang = _kodeBarang($nama);
+            if ($input_kode == "") {
+                $kodeBarang = _kodeBarang($nama);
+            } else {
+                $kodeBarang = $input_kode;
+            }
         } else { // selain itu
             // ambil kode dari inputan
-            $kodeBarang = $this->input->post('kodeBarang');
+            $kodeBarang = $input_kode;
         }
 
         // configurasi upload file
@@ -1315,13 +1311,18 @@ class Master extends CI_Controller
             }
         }
 
-        dell_field('barang', 'kode_jenis');
+        // dell_field('barang', 'kode_jenis');
 
-        // tampung variable kedalam $isi
         $isi = [
             'kode_barang'       => $kodeBarang,
             'nama'              => $nama,
             'kode_satuan'       => $kode_satuan,
+            'kode_satuan2'      => $kode_satuan2,
+            'kode_satuan3'      => $kode_satuan3,
+            'qty_satuan2'       => $qty_satuan2,
+            'qty_satuan3'       => $qty_satuan3,
+            'opsi_hpp'          => $opsi_hpp,
+            'persentase_hpp'    => $persentase_hpp,
             'kode_kategori'     => $kode_kategori,
             'image'             => $image,
             'hna'               => $hna,
@@ -1334,13 +1335,28 @@ class Master extends CI_Controller
 
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
-            $cek = $this->M_global->insertData('barang', $isi);
+            $cek = [
+                $this->M_global->insertData('barang', $isi),
+            ];
         } else { // selain itu
             // jalankan fungsi update
             $cek = [
                 $this->M_global->updateData('barang', $isi, ['kode_barang' => $kodeBarang]),
-                $this->M_global->delData('barang_jenis', ['kode_barang' => $kodeBarang])
+                $this->M_global->delData('barang_jenis', ['kode_barang' => $kodeBarang]),
+                $this->M_global->delData('barang_cabang', ['kode_barang' => $kodeBarang]),
             ];
+        }
+
+        // barang cabang
+        $kode_cabang = $this->input->post('kode_cabang');
+        foreach ($kode_cabang as $kc) {
+            $_cabang        = $kc;
+            $data_cabang    = [
+                'kode_cabang' => $_cabang,
+                'kode_barang' => $kodeBarang,
+            ];
+
+            $this->M_global->insertData('barang_cabang', $data_cabang);
         }
 
         foreach ($kode_jenis as $kj) {
@@ -1366,14 +1382,24 @@ class Master extends CI_Controller
     public function delBar($kode_barang)
     {
         // jalankan fungsi hapus barang berdasarkan kode_barang
-        $cek = $this->M_global->delData('barang', ['kode_barang' => $kode_barang]);
+        $barang_cabang = count($this->M_global->getDataResult('barang_cabang', ['kode_barang' => $kode_barang, 'kode_cabang <> ' => $this->session->userdata('cabang')]));
 
-        if ($cek) { // jika fungsi berjalan
-            // kirimkan status 1 ke view
-            echo json_encode(['status' => 1]);
-        } else { // selain itu
-            // kirimkan status 0 ke view
-            echo json_encode(['status' => 0]);
+        if ($barang_cabang > 0) {
+            echo json_encode(['status' => 2]);
+        } else {
+            $cek = [
+                $this->M_global->delData('barang', ['kode_barang' => $kode_barang]),
+                $this->M_global->delData('barang_cabang', ['kode_barang' => $kode_barang]),
+                $this->M_global->delData('barang_jenis', ['kode_barang' => $kode_barang]),
+            ];
+
+            if ($cek) { // jika fungsi berjalan
+                // kirimkan status 1 ke view
+                echo json_encode(['status' => 1]);
+            } else { // selain itu
+                // kirimkan status 0 ke view
+                echo json_encode(['status' => 0]);
+            }
         }
     }
 
@@ -1413,7 +1439,7 @@ class Master extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != 0) {
+        if ($param != '0') {
             $logistik = $this->M_global->getData('logistik', ['kode_logistik' => $param]);
         } else {
             $logistik = null;
@@ -1430,6 +1456,8 @@ class Master extends CI_Controller
             'logistik'      => $logistik,
             'satuan'        => $this->M_global->getResult('m_satuan'),
             'kategori'      => $this->M_global->getResult('m_kategori'),
+            'cabang_all'    => $this->M_global->getResult('cabang'),
+            'barang_cabang' => $this->M_global->getDataResult('logistik_cabang', ['kode_barang' => $param]),
             'pajak'         => $this->M_global->getData('m_pajak', ['id' => 1])->persentase,
         ];
 
@@ -1472,7 +1500,7 @@ class Master extends CI_Controller
         foreach ($list as $rd) {
             $row    = [];
             $row[]  = $no++;
-            $row[]  = $rd->kode_logistik;
+            $row[]  = $rd->kode_logistik . '<br><a type="button" class="btn btn-dark" target="_blank" href="' . site_url('Master/print_barcode/') . $rd->kode_logistik . '"><i class="fa-solid fa-barcode"></i> Barcode</a>';
             $row[]  = $rd->nama;
             $row[]  = $this->M_global->getData('m_satuan', ['kode_satuan' => $rd->kode_satuan])->keterangan;
             $row[]  = $this->M_global->getData('m_kategori', ['kode_kategori' => $rd->kode_kategori])->keterangan;
@@ -1481,10 +1509,8 @@ class Master extends CI_Controller
             $row[]  = '<div class="text-right">' . number_format($rd->harga_jual) . '</div>';
             $row[]  = '<div class="text-right">' . number_format($rd->nilai_persediaan) . '</div>';
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-dark" title="Ubah" title="Ubah" onclick="ubah(' . "'" . $rd->kode_logistik . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_logistik . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_logistik . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_logistik . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -1523,17 +1549,28 @@ class Master extends CI_Controller
     public function logistik_proses($param)
     {
         // variable
+        $input_kode         = $this->input->post('kodeBarang');
         $nama               = $this->input->post('nama');
         $kode_satuan        = $this->input->post('kode_satuan');
+        $kode_satuan2       = $this->input->post('kode_satuan2');
+        $kode_satuan3       = $this->input->post('kode_satuan3');
         $kode_kategori      = $this->input->post('kode_kategori');
+        $qty_satuan2        = str_replace(",", "", $this->input->post('qty_satuan2'));
+        $qty_satuan3        = str_replace(",", "", $this->input->post('qty_satuan3'));
         $hna                = str_replace(",", "", $this->input->post('hna'));
         $hpp                = str_replace(",", "", $this->input->post('hpp'));
+        $opsi_hpp           = str_replace(",", "", $this->input->post('opsi_hpp'));
+        $persentase_hpp     = str_replace(",", "", $this->input->post('persentase_hpp'));
         $harga_jual         = str_replace(",", "", $this->input->post('harga_jual'));
         $nilai_persediaan   = str_replace(",", "", $this->input->post('nilai_persediaan'));
 
         if ($param == 1) { // jika parameternya 1
             // maka buat kode baru
-            $kodeLogistik = _kodeLogistik($nama);
+            if ($input_kode == "") {
+                $kodeLogistik = _kodeLogistik($nama);
+            } else {
+                $kodeLogistik = $input_kode;
+            }
         } else { // selain itu
             // ambil kode dari inputan
             $kodeLogistik = $this->input->post('kodeLogistik');
@@ -1544,9 +1581,15 @@ class Master extends CI_Controller
             'kode_logistik'     => $kodeLogistik,
             'nama'              => $nama,
             'kode_satuan'       => $kode_satuan,
+            'kode_satuan2'      => $kode_satuan2,
+            'kode_satuan3'      => $kode_satuan3,
+            'qty_satuan2'       => $qty_satuan2,
+            'qty_satuan3'       => $qty_satuan3,
             'kode_kategori'     => $kode_kategori,
             'hna'               => $hna,
             'hpp'               => $hpp,
+            'opsi_hpp'          => $opsi_hpp,
+            'persentase_hpp'    => $persentase_hpp,
             'harga_jual'        => $harga_jual,
             'nilai_persediaan'  => $nilai_persediaan,
         ];
@@ -1556,7 +1599,22 @@ class Master extends CI_Controller
             $cek = $this->M_global->insertData('logistik', $isi);
         } else { // selain itu
             // jalankan fungsi update
-            $cek = $this->M_global->updateData('logistik', $isi, ['kode_logistik' => $kodeLogistik]);
+            $cek = [
+                $this->M_global->updateData('logistik', $isi, ['kode_logistik' => $kodeLogistik]),
+                $this->M_global->delData('logistik_cabang', ['kode_barang' => $kodeLogistik]),
+            ];
+        }
+
+        // barang cabang
+        $kode_cabang = $this->input->post('kode_cabang');
+        foreach ($kode_cabang as $kc) {
+            $_cabang        = $kc;
+            $data_cabang    = [
+                'kode_cabang' => $_cabang,
+                'kode_barang' => $kodeLogistik,
+            ];
+
+            $this->M_global->insertData('logistik_cabang', $data_cabang);
         }
 
         if ($cek) { // jika fungsi berjalan
@@ -1572,14 +1630,23 @@ class Master extends CI_Controller
     public function delLog($kode_logistik)
     {
         // jalankan fungsi hapus logistik berdasarkan kode_logistik
-        $cek = $this->M_global->delData('logistik', ['kode_logistik' => $kode_logistik]);
+        $barang_cabang = count($this->M_global->getDataResult('logistik_cabang', ['kode_barang' => $kode_logistik, 'kode_cabang <> ' => $this->session->userdata('cabang')]));
 
-        if ($cek) { // jika fungsi berjalan
-            // kirimkan status 1 ke view
-            echo json_encode(['status' => 1]);
-        } else { // selain itu
-            // kirimkan status 0 ke view
-            echo json_encode(['status' => 0]);
+        if ($barang_cabang > 0) {
+            echo json_encode(['status' => 2]);
+        } else {
+            $cek = [
+                $this->M_global->delData('logistik', ['kode_logistik' => $kode_logistik]),
+                $this->M_global->delData('logistik_cabang', ['kode_barang' => $kode_logistik]),
+            ];
+
+            if ($cek) { // jika fungsi berjalan
+                // kirimkan status 1 ke view
+                echo json_encode(['status' => 1]);
+            } else { // selain itu
+                // kirimkan status 0 ke view
+                echo json_encode(['status' => 0]);
+            }
         }
     }
 
@@ -1659,20 +1726,19 @@ class Master extends CI_Controller
             $row[]  = $rd->nama;
             $row[]  = $rd->email;
             $row[]  = (($rd->jkel == 'P') ? 'Laki-laki' : 'Perempuan');
+            $row[]  = $this->M_global->getData("m_role", ["kode_role" => $rd->kode_role])->keterangan;
             $row[]  = '<div class="text-center">' . (($rd->actived == 1) ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-dark">Non-aktif</span>') . '</div>';
 
             if ($rd->actived > 0) {
-                $actived_akun = '<button type="button" class="btn btn-dark" title="Non-aktifkan" onclick="actived(' . "'" . $rd->kode_user . "', 0" . ')" ' . $upd_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
+                $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="actived(' . "'" . $rd->kode_user . "', 0" . ')" ' . $upd_diss . '><i class="fa-solid fa-user-xmark"></i></button>';
             } else {
-                $actived_akun = '<button type="button" class="btn btn-dark" title="Aktifkan" onclick="actived(' . "'" . $rd->kode_user . "', 1" . ')" ' . $upd_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>';
+                $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="actived(' . "'" . $rd->kode_user . "', 1" . ')" ' . $upd_diss . '><i class="fa-solid fa-user-check"></i></button>';
             }
 
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    ' . $actived_akun . '
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_user . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_user . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                ' . $actived_akun . '
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_user . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_user . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -1725,7 +1791,7 @@ class Master extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != 0) {
+        if ($param != '0') {
             $user = $this->M_global->getData('user', ['kode_user' => $param]);
         } else {
             $user = null;
@@ -1897,10 +1963,8 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_agama;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_agama . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_agama . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_agama . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_agama . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -1943,7 +2007,7 @@ class Master extends CI_Controller
 
         if ($param == 1) { // jika parameternya 1
             // maka buat kode baru
-            $kodeAgama = _kodeAgama($keterangan);
+            $kodeAgama = _kodeAgama();
         } else { // selain itu
             // ambil kode dari inputan
             $kodeAgama = $this->input->post('kodeAgama');
@@ -2063,10 +2127,8 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_pendidikan;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_pendidikan . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_pendidikan . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_pendidikan . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_pendidikan . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -2109,7 +2171,7 @@ class Master extends CI_Controller
 
         if ($param == 1) { // jika parameternya 1
             // maka buat kode baru
-            $kodePendidikan = _kodePendidikan($keterangan);
+            $kodePendidikan = _kodePendidikan();
         } else { // selain itu
             // ambil kode dari inputan
             $kodePendidikan = $this->input->post('kodePendidikan');
@@ -2117,8 +2179,8 @@ class Master extends CI_Controller
 
         // tampung variable kedalam $isi
         $isi = [
-            'kode_pendidikan' => $kodePendidikan,
-            'keterangan'    => $keterangan,
+            'kode_pendidikan'   => $kodePendidikan,
+            'keterangan'        => $keterangan,
         ];
 
         if ($param == 1) { // jika parameternya 1
@@ -2240,10 +2302,8 @@ class Master extends CI_Controller
             }
 
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_poli . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_poli . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_poli . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_poli . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -2286,7 +2346,7 @@ class Master extends CI_Controller
 
         if ($param == 1) { // jika parameternya 1
             // maka buat kode baru
-            $kodePoli = _kodePoli($keterangan);
+            $kodePoli = _kodePoli();
         } else { // selain itu
             // ambil kode dari inputan
             $kodePoli = $this->input->post('kodePoli');
@@ -2423,17 +2483,15 @@ class Master extends CI_Controller
             $row[]  = '<div class="text-center">' . (($rd->status == 1) ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-dark">Non-aktif</span>') . '</div>';
 
             if ($rd->status > 0) {
-                $actived_akun = '<button type="button" class="btn btn-dark" title="Non-aktifkan" onclick="actived(' . "'" . $rd->kode_dokter . "', 0" . ')" ' . $upd_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
+                $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="actived(' . "'" . $rd->kode_dokter . "', 0" . ')" ' . $upd_diss . '><i class="fa-solid fa-user-xmark"></i></button>';
             } else {
-                $actived_akun = '<button type="button" class="btn btn-dark" title="Aktifkan" onclick="actived(' . "'" . $rd->kode_dokter . "', 1" . ')" ' . $upd_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>';
+                $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="actived(' . "'" . $rd->kode_dokter . "', 1" . ')" ' . $upd_diss . '><i class="fa-solid fa-user-check"></i></button>';
             }
 
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    ' . $actived_akun . '
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_dokter . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_dokter . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                ' . $actived_akun . '
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_dokter . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_dokter . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
 
             $data[] = $row;
@@ -2487,7 +2545,7 @@ class Master extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != 0) {
+        if ($param != '0') {
             $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $param]);
             $dokter_poli = $this->M_global->getDataResult('dokter_poli', ['kode_dokter' => $param]);
         } else {
@@ -2702,17 +2760,15 @@ class Master extends CI_Controller
             $row[]  = '<div class="text-center">' . (($rd->status == 1) ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-dark">Non-aktif</span>') . '</div>';
 
             if ($rd->status > 0) {
-                $actived_akun = '<button type="button" class="btn btn-dark" title="Non-aktifkan" onclick="actived(' . "'" . $rd->kode_perawat . "', 0" . ')" ' . $upd_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
+                $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="actived(' . "'" . $rd->kode_perawat . "', 0" . ')" ' . $upd_diss . '><i class="fa-solid fa-user-xmark"></i></button>';
             } else {
-                $actived_akun = '<button type="button" class="btn btn-dark" title="Aktifkan" onclick="actived(' . "'" . $rd->kode_perawat . "', 1" . ')" ' . $upd_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>';
+                $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="actived(' . "'" . $rd->kode_perawat . "', 1" . ')" ' . $upd_diss . '><i class="fa-solid fa-user-check"></i></button>';
             }
 
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    ' . $actived_akun . '
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_perawat . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_perawat . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                ' . $actived_akun . '
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_perawat . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_perawat . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -2765,7 +2821,7 @@ class Master extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != 0) {
+        if ($param != '0') {
             $perawat = $this->M_global->getData('perawat', ['kode_perawat' => $param]);
             $perawat_poli = $this->M_global->getDataResult('perawat_poli', ['kode_perawat' => $param]);
         } else {
@@ -2947,16 +3003,15 @@ class Master extends CI_Controller
 
         // loop $list
         foreach ($list as $rd) {
-            $cekIsset = $this->M_global->jumDataRow('barang', ['kode_jenis' => $rd->kode_jenis]);
+            $cekIsset = $this->M_global->jumDataRow('barang_jenis', ['kode_jenis' => $rd->kode_jenis]);
+
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->kode_jenis;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->kode_jenis . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->kode_jenis . "'" . ')" ' . $del_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_jenis . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_jenis . "'" . ')" ' . $del_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -3042,6 +3097,373 @@ class Master extends CI_Controller
     {
         // jalankan fungsi hapus jenis berdasarkan kode_jenis
         $cek = $this->M_global->delData('m_jenis', ['kode_jenis' => $kode_jenis]);
+
+        if ($cek) { // jika fungsi berjalan
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // ############################################################################################################################################################################
+
+    /**
+     * Master Kas_bank
+     * untuk menampilkan, menambahkan, dan mengubah poli dalam sistem
+     */
+
+    // kas_bank page
+    public function kas_bank()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Master',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Kas & Bank',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => 'Master/kas_bank_list',
+            'param1'        => '',
+        ];
+
+        $this->template->load('Template/Content', 'Master/Umum/Kas_bank', $parameter);
+    }
+
+    // fungsi list kas_bank
+    public function kas_bank_list($param1 = '')
+    {
+        // parameter untuk list table
+        $table            = 'kas_bank';
+        $colum            = ['id', 'kode_kas_bank', 'nama', 'tipe', 'akun'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['id' => 'asc'];
+        $kondisi_param1   = '';
+
+        // kondisi role
+        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+
+        if ($updated > 0) {
+            $upd_diss = '';
+        } else {
+            $upd_diss = 'disabled';
+        }
+
+        if ($deleted > 0) {
+            $del_diss = '';
+        } else {
+            $del_diss = 'disabled';
+        }
+
+        // table server side tampung kedalam variable $list
+        $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data         = [];
+        $no           = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($rd->tipe == 1) {
+                $tipe = "Cash";
+            } else {
+                $tipe = "Bank";
+            }
+
+            if ($rd->akun == 1) {
+                $akun = "Kas Besar";
+            } else {
+                $akun = "Kas Kecil";
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->kode_kas_bank;
+            $row[]  = $rd->nama;
+            $row[]  = $tipe;
+            $row[]  = $akun;
+
+            $row[]  = '<div class="text-center">
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_kas_bank . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_kas_bank . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables->count_all($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "recordsFiltered" => $this->M_datatables->count_filtered($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    // form kas_bank page
+    public function form_kas_bank($param)
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        if ($param != '0') {
+            $kas_bank = $this->M_global->getData('kas_bank', ['kode_kas_bank' => $param]);
+        } else {
+            $kas_bank = null;
+        }
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Master',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Kas & Bank',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => '',
+            'data_kas_bank' => $kas_bank,
+        ];
+
+        $this->template->load('Template/Content', 'Master/Internal/Form_kas_bank', $parameter);
+    }
+
+    // fungsi cek kas_bank
+    public function cekKas_bank()
+    {
+        $nama = $this->input->post('nama');
+
+        $cek = $this->M_global->jumDataRow('kas_bank', ['nama' => $nama]);
+
+        if ($cek < 1) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi kas_bank proses
+    public function kas_bank_proses($param)
+    {
+        // variable
+        $nama         = $this->input->post('nama');
+
+        if ($param == 1) { // jika parameternya 1
+            // maka buat kode baru
+            $kodeKas_bank = _kodeKas_bank();
+        } else { // selain itu
+            // ambil kode dari inputan
+            $kodeKas_bank = $this->input->post('kode_kas_bank');
+        }
+        $nama         = $this->input->post('nama');
+        $tipe         = $this->input->post('tipe');
+        $akun         = $this->input->post('akun');
+
+        // tampung variable kedalam $isi
+        $isi = [
+            'kode_kas_bank' => $kodeKas_bank,
+            'nama'          => $nama,
+            'tipe'          => $tipe,
+            'akun'          => $akun,
+        ];
+
+        if ($param == 1) { // jika parameternya 1
+            // jalankan fungsi simpan
+            $cek = $this->M_global->insertData('kas_bank', $isi);
+        } else { // selain itu
+            // jalankan fungsi update
+            $cek = $this->M_global->updateData('kas_bank', $isi, ['kode_kas_bank' => $kodeKas_bank]);
+        }
+
+        if ($cek) { // jika fungsi berjalan
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi hapus kas_bank berdasarkan kode_kas_bank
+    public function delKas_bank($kode_kas_bank)
+    {
+        // jalankan fungsi hapus kas_bank berdasarkan kode_kas_bank
+        $cek = $this->M_global->delData('kas_bank', ['kode_kas_bank' => $kode_kas_bank]);
+
+        if ($cek) { // jika fungsi berjalan
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    /**
+     * Master Pajak
+     * untuk menampilkan, menambahkan, dan mengubah pajak dalam sistem
+     */
+
+    // pajak page
+    public function pajak()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Master',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Pajak',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => 'Master/pajak_list',
+            'param1'        => '',
+        ];
+
+        $this->template->load('Template/Content', 'Master/Umum/Pajak', $parameter);
+    }
+
+    // fungsi list pajak
+    public function pajak_list($param1 = '')
+    {
+        // parameter untuk list table
+        $table            = 'm_pajak';
+        $colum            = ['id', 'kode_pajak', 'nama', 'persentase'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['id' => 'asc'];
+        $kondisi_param1   = '';
+
+        // kondisi role
+        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+
+        if ($updated > 0) {
+            $upd_diss = '';
+        } else {
+            $upd_diss = 'disabled';
+        }
+
+        // table server side tampung kedalam variable $list
+        $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data         = [];
+        $no           = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($deleted > 0) {
+                $cek_diss = $this->M_global->jumDataRow('m_gudang', ['pajak' => $rd->kode_pajak]);
+                if ($cek_diss > 0) {
+                    $del_diss = 'disabled';
+                } else {
+                    $del_diss = '';
+                }
+            } else {
+                $del_diss = 'disabled';
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->nama;
+            $row[]  = '<span class="float-right">' . $rd->persentase . '%</span>';
+            $row[]  = '<div class="text-center">
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_pajak . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_pajak . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables->count_all($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "recordsFiltered" => $this->M_datatables->count_filtered($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    // fungsi cek pajak berdasarkan keterangan pajak
+    public function cekPajak()
+    {
+        // ambil nama inputan
+        $nama = $this->input->post('nama');
+
+        // cek nama pada table m_pajak
+        $cek = $this->M_global->jumDataRow('m_pajak', ['nama' => $nama]);
+
+        if ($cek < 1) { // jika tidak ada/ kurang dari 1
+            // kirimkan status 1
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi proses simpan/update pajak
+    public function pajak_proses($param)
+    {
+        // variable
+        $nama = $this->input->post('nama');
+        $persentase = $this->input->post('persentase');
+
+        if ($param == 1) { // jika parameternya 1
+            // maka buat kode baru
+            $kodePajak = $this->db->query("SELECT kode_pajak FROM m_pajak ORDER BY kode_pajak DESC LIMIT 1")->row()->kode_pajak + 1;
+        } else { // selain itu
+            // ambil kode dari inputan
+            $kodePajak = $this->input->post('kodePajak');
+        }
+
+        // tampung variable kedalam $isi
+        $isi = [
+            'kode_pajak'    => $kodePajak,
+            'nama'          => $nama,
+            'persentase'    => $persentase,
+        ];
+
+        if ($param == 1) { // jika parameternya 1
+            // jalankan fungsi simpan
+            $cek = $this->M_global->insertData('m_pajak', $isi);
+        } else { // selain itu
+            // jalankan fungsi update
+            $cek = $this->M_global->updateData('m_pajak', $isi, ['kode_pajak' => $kodePajak]);
+        }
+
+        if ($cek) { // jika fungsi berjalan
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi ambil informasi pajak berdasarkan kode pajak
+    public function getInfoPajak($kode_pajak)
+    {
+        // ambil data pajak berdasarkan kode_pajak
+        $data = $this->M_global->getData('m_pajak', ['kode_pajak' => $kode_pajak]);
+        // lempar ke view
+        echo json_encode($data);
+    }
+
+    // fungsi hapus pajak berdasarkan kode_pajak
+    public function delPajak($kode_pajak)
+    {
+        // jalankan fungsi hapus pajak berdasarkan kode_pajak
+        $cek = $this->M_global->delData('m_pajak', ['kode_pajak' => $kode_pajak]);
 
         if ($cek) { // jika fungsi berjalan
             // kirimkan status 1 ke view

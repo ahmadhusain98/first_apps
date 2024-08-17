@@ -69,15 +69,15 @@
     <style>
         /* select2 */
         .select2-selection__rendered {
-            line-height: 31px !important;
+            line-height: 27px !important;
         }
 
         .select2-container .select2-selection--single {
-            height: 37px !important;
+            height: 39px !important;
         }
 
         .select2-selection__arrow {
-            height: 37px !important;
+            height: 39px !important;
         }
 
         .border-primary {
@@ -163,6 +163,15 @@
     //     redirect('Auth/logout');
     // }
 
+    $master_cabang = $this->M_global->getData('cabang', ["kode_cabang" => $this->session->userdata('cabang')]);
+
+    $tgl1 = strtotime($master_cabang->aktif_dari);
+    $tgl2 = strtotime($master_cabang->aktif_sampai);
+
+    $jarak = $tgl2 - $tgl1;
+
+    $aktif_cabang = $jarak / 60 / 60 / 24;
+
     cek_so();
     ?>
 
@@ -174,14 +183,14 @@
         </div>
 
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light shadow-sm">
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light shadow-sm fixed-top">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" type="button" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <span type="button" class="nav-link" id="time"></span>
+                    <span type="button" class="nav-link">Cabang: <?= $master_cabang->cabang ?></span>
                 </li>
             </ul>
 
@@ -224,7 +233,7 @@
                 <li class="nav-item dropdown">
                     <?php $sintak = $this->db->query("SELECT * FROM barang_out_header WHERE status_jual = 0 ORDER BY id DESC LIMIT 10")->result(); ?>
                     <a class="nav-link" data-toggle="dropdown" type="button">
-                        <ion-icon name="notifications-outline" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Notifikasi"></ion-icon>
+                        <i class="fa-regular fa-bell"></i>&nbsp;&nbsp;Notifikasi&nbsp;&nbsp;
                         <?php if (count($sintak) > 0) : ?>
                             <span class="badge badge-warning navbar-badge"><?= number_format(count($sintak)) ?></span>
                         <?php endif ?>
@@ -237,13 +246,13 @@
                             if (count($sintak) > 0) :
                                 foreach ($sintak as $s) :
                             ?>
-                                    <a type="button" href="<?= site_url('Kasir/form_kasir/0') ?>" class="pl-3" style="text-decoration: none; font-size: 12px;">
+                                    <a type="button" href="<?= site_url('Kasir/form_kasir/0') ?>" class="pl-3" style="text-decoration: none; color: skyblue;">
                                         <i class="fas fa-envelope"></i> <?= $s->invoice ?>
                                     </a>
                                 <?php
                                 endforeach;
                             else : ?>
-                                <span style="font-size: 12px; color: grey;">Tidak Ada Transaksi</span>
+                                <span style="color: grey;">Tidak Ada Transaksi</span>
                             <?php endif;
                             ?>
                         </a>
@@ -252,14 +261,15 @@
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" class="btn text-danger" style="background-color: transparent;" onclick="exit()" title="Keluar"><ion-icon name="power-outline"></ion-icon></button>
+                    <button type="button" class="btn text-danger" style="background-color: transparent;" onclick="exit()"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;Keluar</button>
                 </li>
             </ul>
         </nav>
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-image: url(<?= base_url() ?>assets/img/web/<?= $web->bg_theme ?>); background-position: center; background-size: cover;">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-position: center; background-size: cover;">
+            <!-- <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-image: url(<?= base_url() ?>assets/img/web/<?= $web->bg_theme ?>); background-position: center; background-size: cover;"> -->
             <!-- Brand Logo -->
             <a type="button" href="<?= site_url('Home') ?>" class="brand-link" style="backdrop-filter: blur(10px);">
                 <img src="<?= base_url('assets/img/web/') . $web->logo ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
@@ -269,26 +279,21 @@
             <!-- Sidebar -->
             <div class="sidebar" style="backdrop-filter: blur(10px);">
                 <!-- Sidebar user panel -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex ms-auto">
                     <div class="image">
                         <img src="<?= base_url('assets/user/') . $this->data["foto"] ?>" class="img-circle elevation-2" alt="User Image">
                     </div>
-                    <div class="info">
+                    <div class="info ms-auto">
                         <a type="button" href="<?= site_url('Profile') ?>" class="d-block"><?= $this->data["nama"] ?></a>
                     </div>
                 </div>
 
                 <!-- SidebarSearch Form -->
-                <!-- <div class="form-inline">
+                <div class="form-inline">
                     <div class="input-group" data-widget="sidebar-search">
-                        <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-                        <div class="input-group-append">
-                            <button class="btn btn-sidebar">
-                                <i class="fas fa-search fa-fw"></i>
-                            </button>
-                        </div>
+                        <input class="form-control form-control-sidebar" type="search" placeholder="Cari Menu..." aria-label="Search">
                     </div>
-                </div> -->
+                </div>
 
                 <!-- Sidebar -->
                 <nav class="mt-2">
@@ -380,13 +385,13 @@
         </aside>
 
         <!-- wrapper -->
-        <div class="content-wrapper" style="background-color: white;">
-            <div class="content-header">
+        <div class="content-wrapper" style="background-color: white; margin-top: 55px;">
+            <!-- <div class="content-header">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-6">
                             <ol class="breadcrumb float-sm-left">
-                                <h2 class="font-weight-bold">@ <?= (!empty($page) ? $page : 'NULL') ?></h2>
+                                <h2 class="font-weight-bold"><?= (!empty($page) ? $page : 'NULL') ?></h2>
                             </ol>
                         </div>
                         <div class="col-sm-6 m-auto">
@@ -407,7 +412,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- modal loading proses -->
             <div class="modal fade" id="loading">
@@ -423,19 +428,28 @@
             <!-- body -->
             <section class="content">
                 <div class="container-fluid">
-                    <hr>
+                    <br>
                     <?= $content ?>
                 </div>
-                <br>
             </section>
         </div>
 
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
         <!-- footer -->
-        <footer class="main-footer">
-            <strong>Copyright &copy; downtoup.dev</strong>
+        <footer class="main-footer fixed-bottom shadow-lg">
+            <!-- <strong>Copyright &copy; downtoup.dev</strong>
             2024
             <div class="float-right d-none d-sm-inline-block">
                 <b>Version</b> <?= $web_version ?> <button type="button" class="btn btn-danger btn-xs" onclick="clean_db()">Kosongkan Transaksi</button>
+            </div> -->
+            <strong>Masa Aktif Cabang: <span class="text-danger"><?= number_format($aktif_cabang) ?></span> Hari</strong>
+            <div class="float-right d-none d-sm-inline-block">
+                <span type="button" class="nav-link" id="time"></span>
             </div>
         </footer>
     </div>
@@ -511,7 +525,7 @@
         function display_ct() {
             var x = new Date()
             var x1 = x.getMonth() + 1 + "/" + x.getDate() + "/" + x.getFullYear();
-            x1 = x1 + " - " + x.getHours() + ":" + x.getMinutes() + ":" + x.getSeconds();
+            x1 = x1 + " - " + x.getHours() + ":" + x.getMinutes();
             document.getElementById('time').innerHTML = x1;
             display_c();
         }
@@ -732,9 +746,52 @@
             return (((sign) ? '' : '-') + '' + num);
         }
 
+        // fungsi preview
+        function preview(url) {
+            if (url == 'pendaftaran') {
+                var poli_pendaftaran = $('#kode_poli').val()
+                var tgl_dari_pendaftaran = $('#dari').val()
+                var tgl_sampai_pendaftaran = $('#sampai').val()
+            } else {
+                var poli_pendaftaran = ''
+                var tgl_dari_pendaftaran = ''
+                var tgl_sampai_pendaftaran = ''
+            }
+
+            var param = `?poli=${poli_pendaftaran}&dari=${tgl_dari_pendaftaran}&sampai=${tgl_sampai_pendaftaran}`
+            window.open(`${siteUrl}Report/${url}/0${param}`, '_blank');
+        }
+
         // fungsi print
         function print(url) {
-            window.open(`${siteUrl}Report/${url}/1`, '_blank');
+            if (url == 'pendaftaran') {
+                var poli_pendaftaran = $('#kode_poli').val()
+                var tgl_dari_pendaftaran = $('#dari').val()
+                var tgl_sampai_pendaftaran = $('#sampai').val()
+            } else {
+                var poli_pendaftaran = ''
+                var tgl_dari_pendaftaran = ''
+                var tgl_sampai_pendaftaran = ''
+            }
+
+            var param = `?poli=${poli_pendaftaran}&dari=${tgl_dari_pendaftaran}&sampai=${tgl_sampai_pendaftaran}`
+            window.open(`${siteUrl}Report/${url}/1${param}`, '_blank');
+        }
+
+        // fungsi export excel
+        function excel(url) {
+            if (url == 'pendaftaran') {
+                var poli_pendaftaran = $('#kode_poli').val()
+                var tgl_dari_pendaftaran = $('#dari').val()
+                var tgl_sampai_pendaftaran = $('#sampai').val()
+            } else {
+                var poli_pendaftaran = ''
+                var tgl_dari_pendaftaran = ''
+                var tgl_sampai_pendaftaran = ''
+            }
+
+            var param = `?poli=${poli_pendaftaran}&dari=${tgl_dari_pendaftaran}&sampai=${tgl_sampai_pendaftaran}`
+            window.open(`${siteUrl}Report/${url}/2${param}`, '_blank');
         }
 
         function printsingle(url) {
@@ -833,6 +890,7 @@
 
         // fungsi select2 global
         // inisial
+        initailizeSelect2_pajak();
         initailizeSelect2_provinsi();
         initailizeSelect2_kabupaten(param = '');
         initailizeSelect2_kecamatan(param = '');
@@ -856,6 +914,40 @@
         initailizeSelect2_promo(min_buy = '0');
 
         // fungsi
+        function initailizeSelect2_pajak() {
+            $(".select2_pajak").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Pajak',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataPajak',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
         function initailizeSelect2_provinsi() {
             $(".select2_provinsi").select2({
                 allowClear: true,

@@ -32,11 +32,26 @@ class Select2_master extends CI_Controller
         // }
     }
 
+    // master cabang
+    function dataCabang()
+    {
+        $email = $this->input->get('email');
+        $key = $this->input->post('searchTerm');
+        echo json_encode($this->M_select2->getCabang($key, $email));
+    }
+
     // master kategori
     function dataKategori()
     {
         $key = $this->input->post('searchTerm');
         echo json_encode($this->M_select2->getKategori($key));
+    }
+
+    // master pajak
+    function dataPajak()
+    {
+        $key = $this->input->post('searchTerm');
+        echo json_encode($this->M_select2->getPajak($key));
     }
 
     // master prosinsi

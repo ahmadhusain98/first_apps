@@ -1,7 +1,7 @@
 <form method="post" id="form_barang_in">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
         </div>
     </div>
     <br>
@@ -29,7 +29,7 @@
                 <div class="col-md-6">
                     <label for="">Invoice <sup class="text-danger">**</sup></label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Invoice (Otomatis)" id="invoice" name="invoice" value="<?= (!empty($data_barang_in_retur) ? $data_barang_in_retur->invoice : '') ?>" readonly>
+                        <input type="text" class="form-control" placeholder="Otomatis" id="invoice" name="invoice" value="<?= (!empty($data_barang_in_retur) ? $data_barang_in_retur->invoice : '') ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <ion-icon name="id-card-outline"></ion-icon>
@@ -133,7 +133,7 @@
     <hr>
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Detail Barang</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Detail Barang</span>
         </div>
     </div>
     <br>
@@ -141,34 +141,45 @@
         <div class="col-md-12">
             <div class="table-responsive">
                 <input type="hidden" name="jumlahBarisBarang" id="jumlahBarisBarang" value="<?= (!empty($barang_detail) ? count($barang_detail) : '0') ?>">
-                <table class="table table-hover table-bordered" id="tableDetailBarangIn">
+                <table class="table table-hover table-bordered" id="tableDetailBarangIn" width="100%" style="border-radius: 10px;">
                     <thead>
                         <tr class="text-center">
-                            <th width="5%" class="bg-primary">Hapus</th>
-                            <th rowspan="2" class="bg-primary">Barang</th>
-                            <th width="14%" class="bg-primary">Harga</th>
-                            <th width="14%" class="bg-primary">Qty</th>
-                            <th width="14%" class="bg-primary">Disc (%)</th>
-                            <th width="14%" class="bg-primary">Disc (Rp)</th>
-                            <th width="5%" class="bg-primary">Pajak</th>
-                            <th width="14%" class="bg-primary">Jumlah</th>
+                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">Hapus</th>
+                            <th rowspan="2">Barang</th>
+                            <th width="12%">Satuan</th>
+                            <th width="14%">Harga</th>
+                            <th width="10%">Qty</th>
+                            <th width="10%">Disc (%)</th>
+                            <th width="14%">Disc (Rp)</th>
+                            <th width="5%">Pajak</th>
+                            <th width="10%" style="border-radius: 0px 10px 0px 0px;">Jumlah</th>
                         </tr>
                     </thead>
                     <tbody id="bodyBarangIn">
                         <?php if (!empty($barang_detail)) : ?>
                             <?php $no = 1;
-                            foreach ($barang_detail as $bd) : ?>
+                            foreach ($barang_detail as $bd) :
+                                $satuan = $this->db->query("SELECT bs.kode_satuan AS id, ms.keterangan AS text FROM barang_satuan bs JOIN m_satuan ms USING(kode_satuan) WHERE bs.kode_barang = '$bd->kode_barang'")->result();
+                            ?>
                                 <tr id="rowBarangIn<?= $no ?>">
-                                    <td class="text-center"><button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Hapus" type="button" id="btnHapus<?= $no ?>" onclick="hapusBarang('<?= $no ?>')"><ion-icon name="ban-outline"></ion-icon></button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no ?>" onclick="hapusBarang('<?= $no ?>')"><i class="fa-solid fa-delete-left"></i></button></td>
                                     <td>
                                         <input type="hidden" id="kode_barang_in<?= $no ?>" name="kode_barang_in[]" value="<?= $bd->kode_barang ?>">
                                         <span><?= $bd->kode_barang ?> ~ <?= $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang])->nama ?></span>
                                     </td>
                                     <td>
-                                        <input type="text" id="harga_in<?= $no ?>" name="harga_in[]" value="<?= number_format($bd->harga) ?>" class="form-control text-right" onchange="hitung_st('<?= $no ?>'); formatRp(this.value, 'harga_in<?= $no ?>'); cekHarga(this.value, <?= $no ?>)" readonly>
+                                        <select name="kode_satuan[]" id="kode_satuan<?= $no ?>" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, <?= $no ?>)">
+                                            <option value="">~ Pilih Satuan</option>
+                                            <?php foreach ($satuan as $s) : ?>
+                                                <option value="<?= $s->id ?>" <?= (($bd->kode_satuan == $s->id) ? 'selected' : '') ?>><?= $s->text ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </td>
                                     <td>
-                                        <input type="text" id="qty_in<?= $no ?>" name="qty_in[]" value="<?= number_format($bd->qty) ?>" class="form-control text-right" onchange="hitung_qty('<?= $no ?>'); formatRp(this.value, 'qty_in<?= $no ?>')">
+                                        <input type="text" id="harga_in<?= $no ?>" name="harga_in[]" value="<?= number_format($bd->harga) ?>" class="form-control text-right" onchange="hitung_st('<?= $no ?>'); formatRp(this.value, 'harga_in<?= $no ?>'); cekHarga(this.value, <?= $no ?>)">
+                                    </td>
+                                    <td>
+                                        <input type="text" id="qty_in<?= $no ?>" name="qty_in[]" value="<?= number_format($bd->qty) ?>" class="form-control text-right" onchange="hitung_st('<?= $no ?>'); formatRp(this.value, 'qty_in<?= $no ?>')">
                                     </td>
                                     <td>
                                         <input type="text" id="discpr_in<?= $no ?>" name="discpr_in[]" value="<?= number_format($bd->discpr) ?>" class="form-control text-right" onchange="hitung_dpr(<?= $no ?>); formatRp(this.value, 'discpr_in<?= $no ?>')">
@@ -246,12 +257,12 @@
     <br>
     <div class="row">
         <div class="col-md-12">
-            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Transaksi/barang_in_retur')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
-            <button type="button" class="btn btn-success float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_barang_in_retur) ? 'Perbarui' : 'Simpan') ?></button>
+            <button type="button" class="btn btn-danger" onclick="getUrl('Transaksi/barang_in_retur')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
             <?php if (!empty($data_barang_in_retur)) : ?>
-                <button type="button" class="btn btn-info float-right btn-sm" onclick="getUrl('Transaksi/form_barang_in_retur/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                <button type="button" class="btn btn-info float-right" onclick="getUrl('Transaksi/form_barang_in_retur/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
             <?php else : ?>
-                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+                <button type="button" class="btn btn-info float-right" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
             <?php endif ?>
         </div>
     </div>
@@ -272,12 +283,12 @@
                     <div class="col-md-12">
                         <div style="height: 400px; overflow: auto;">
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover table-bordered" id="tableSederhanaObat" style="width: 100%;">
+                                <table class="table table-hover table-bordered" id="tableSederhanaObat" style="width: 100%; border-radius: 10px;">
                                     <thead>
                                         <tr class="text-center">
-                                            <th width="5%">#</th>
+                                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
                                             <th width="90%">Obat</th>
-                                            <th width="5%">Aksi</th>
+                                            <th width="5%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -292,7 +303,6 @@
                                                 <td width="5%" class="text-center">
                                                     <input type="hidden" class="form-control" name="select_barang[]" id="select_barang<?= $nolb ?>" value="0">
                                                     <input type="checkbox" class="form-control" name="select_barangx[]" id="select_barangx<?= $nolb ?>" onclick="selbar('<?= $nolb ?>')">
-                                                    <!-- <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Pilih" onclick="selectBarang('<?= $lb->kode_barang ?>')"><ion-icon name="checkmark-circle-outline"></ion-icon></button> -->
                                                 </td>
                                             </tr>
                                         <?php $nolb++;
@@ -449,36 +459,54 @@
                     return Swal.fire("Barang", "Tidak ditemukan!", "info");
                 } else { // selain itu
                     // tambahkan jumlah row
-                    var x = i;
+                    var tableBarangIn = document.getElementById('tableDetailBarangIn'); // ambil id table detail
+                    var jum = tableBarangIn.rows.length; // hitung jumlah rownya
+                    var x = Number(jum) + 1;
 
                     // masukan ke body table barang in detail
                     bodyBarangIn.append(`<tr id="rowBarangIn${x}">
-                        <td class="text-center"><button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Hapus" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><ion-icon name="ban-outline"></ion-icon></button></td>
-                        <td>
-                            <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${result.kode_barang}">
-                            <span>${result.kode_barang} ~ ${result.nama}</span>
-                        </td>
-                        <td>
-                            <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(result.nilai_persediaan)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})" readonly>
-                        </td>
-                        <td>
-                            <input type="text" id="qty_in${x}" name="qty_in[]" value="1" class="form-control text-right" onchange="hitung_qty('${x}'); formatRp(this.value, 'qty_in${x}')">
-                        </td>
-                        <td>
-                            <input type="text" id="discpr_in${x}" name="discpr_in[]" value="0" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">
-                        </td>
-                        <td>
-                            <input type="text" id="discrp_in${x}" name="discrp_in[]" value="0" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_in${x}')">
-                        </td>
-                        <td class="text-center">
-                            <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')">
-                            <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="0">
-                        </td>
-                        <td class="text-right">
-                            <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(result.nilai_persediaan)}" class="form-control text-right" readonly>
-                            <span id="jumlah2_in${x}">${formatRpNoId(result.nilai_persediaan)}</span>
-                        </td>
-                    </tr>`);
+                    <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button></td>
+                    <td>
+                        <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${result[0].kode_barang}">
+                        <span>${result[0].kode_barang} ~ ${result[0].nama}</span>
+                    </td>
+                    <td>
+                        <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
+                    </td>
+                    <td>
+                        <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
+                    </td>
+                    <td>
+                        <input type="text" id="qty_in${x}" name="qty_in[]" value="1" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_in${x}')">
+                    </td>
+                    <td>
+                        <input type="text" id="discpr_in${x}" name="discpr_in[]" value="0" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">
+                    </td>
+                    <td>
+                        <input type="text" id="discrp_in${x}" name="discrp_in[]" value="0" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_in${x}')">
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')">
+                        <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="0">
+                    </td>
+                    <td class="text-right">
+                        <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" readonly>
+                        <span id="jumlah2_in${x}">${formatRpNoId(result[0].nilai_persediaan)}</span>
+                    </td>
+                </tr>`);
+
+                    // each satuan
+                    $.each(result[1], function(index, value) {
+                        $('#kode_satuan' + x).append(`<option value="${value.kode_satuan}">${value.keterangan}</option>`)
+                    });
+
+                    jumlahBarisBarang.val(x);
+
+                    $(".select2_global").select2({
+                        placeholder: $(this).data('placeholder'),
+                        width: '100%',
+                        allowClear: true,
+                    });
 
                     // jalankan fungsi
                     hitung_st(x);
@@ -541,32 +569,46 @@
 
                     // masukan ke body table barang in detail
                     bodyBarangIn.append(`<tr id="rowBarangIn${x}">
-                            <td class="text-center"><button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Hapus" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><ion-icon name="ban-outline"></ion-icon></button></td>
-                            <td>
-                                <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${result.kode_barang}">
-                                <span>${result.kode_barang} ~ ${result.nama}</span>
-                            </td>
-                            <td>
-                                <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(result.nilai_persediaan)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})" readonly>
-                            </td>
-                            <td>
-                                <input type="text" id="qty_in${x}" name="qty_in[]" value="1" class="form-control text-right" onchange="hitung_qty('${x}'); formatRp(this.value, 'qty_in${x}')">
-                            </td>
-                            <td>
-                                <input type="text" id="discpr_in${x}" name="discpr_in[]" value="0" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">
-                            </td>
-                            <td>
-                                <input type="text" id="discrp_in${x}" name="discrp_in[]" value="0" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_in${x}')">
-                            </td>
-                            <td class="text-center">
-                                <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')">
-                                <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="0">
-                            </td>
-                            <td class="text-right">
-                                <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(result.nilai_persediaan)}" class="form-control text-right" readonly>
-                                <span id="jumlah2_in${x}">${formatRpNoId(result.nilai_persediaan)}</span>
-                            </td>
-                        </tr>`);
+                        <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button></td>
+                        <td>
+                            <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${result[0].kode_barang}">
+                            <span>${result[0].kode_barang} ~ ${result[0].nama}</span>
+                        </td>
+                        <td>
+                            <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
+                        </td>
+                        <td>
+                            <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
+                        </td>
+                        <td>
+                            <input type="text" id="qty_in${x}" name="qty_in[]" value="1" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_in${x}')">
+                        </td>
+                        <td>
+                            <input type="text" id="discpr_in${x}" name="discpr_in[]" value="0" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">
+                        </td>
+                        <td>
+                            <input type="text" id="discrp_in${x}" name="discrp_in[]" value="0" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_in${x}')">
+                        </td>
+                        <td class="text-center">
+                            <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')">
+                            <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="0">
+                        </td>
+                        <td class="text-right">
+                            <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" readonly>
+                            <span id="jumlah2_in${x}">${formatRpNoId(result[0].nilai_persediaan)}</span>
+                        </td>
+                    </tr>`);
+
+                    // each satuan
+                    $.each(result[1], function(index, value) {
+                        $('#kode_satuan' + x).append(`<option value="${value.kode_satuan}">${value.keterangan}</option>`)
+                    });
+
+                    $(".select2_global").select2({
+                        placeholder: $(this).data('placeholder'),
+                        width: '100%',
+                        allowClear: true,
+                    });
 
                     // jalankan fungsi
                     hitung_st(x);
@@ -580,12 +622,53 @@
         });
     }
 
+    // fungsi ubah satuan untuk ubah harga
+    function ubahSatuan(param, id) {
+        var kode_barang_in = $('#kode_barang_in' + id).val();
+        var kode_satuan = $('#kode_satuan' + id).val();
+
+        // console.log(kode_barang_in + ' - ' + id + ' - ' + kode_satuan);
+
+        if (!param || param === null) {
+            error_proccess();
+            return; // Add return to stop further execution
+        }
+
+        $.ajax({
+            url: siteUrl + 'Transaksi/getSatuan/' + param + '/' + kode_barang_in,
+            type: "POST",
+            data: form.serialize(),
+            dataType: "JSON",
+            success: function(result) {
+                var qty_satuan = Number(result.qty_satuan);
+                var hna_master = Number(result.hna);
+                var qty = Number($('#qty_in' + id).val().replaceAll(',', ''));
+
+                if (isNaN(qty)) qty = 0; // Ensure qty is valid
+
+                var newHarga = hna_master * qty_satuan;
+                $('#harga_in' + id).val(formatRpNoId(newHarga));
+
+                var discpr = Number($('#discpr_in' + id).val().replaceAll(',', ''));
+                var newDiskon = (discpr > 0) ? (newHarga * qty) * (discpr / 100) : ($('#discrp_in' + id).val()).replaceAll(',', '');
+
+                $('#discrp_in' + id).val(formatRpNoId(newDiskon));
+                hitung_st(id);
+            },
+            error: function(result) {
+                error_proccess();
+            }
+        });
+    }
+
     // fungsi hapus baris barang detail
     function hapusBarang(x) {
-        // hapus baris barang detail dengan id tr table
-        $('#rowBarangIn' + x).remove();
-        // jalankan fungsi
-        hitung_t();
+        var awal = Number(jumlahBarisBarang.val());
+        if (awal > 0) { // Ensure there are rows to delete
+            jumlahBarisBarang.val(awal - 1);
+            $('#rowBarangIn' + x).remove();
+            hitung_t();
+        }
 
     }
 
@@ -927,17 +1010,21 @@
                                 var cekpajak = '';
                             }
 
+                            // masukan ke body table barang in detail
                             bodyBarangIn.append(`<tr id="rowBarangIn${x}">
-                                <td class="text-center"><button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Hapus" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><ion-icon name="ban-outline"></ion-icon></button></td>
+                                <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button></td>
                                 <td>
                                     <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${value.kode_barang}">
-                                    <span>${value.kode_barang} ~ ${value.nama_barang}</span>
+                                    <span>${value.kode_barang} ~ ${value.nama}</span>
                                 </td>
                                 <td>
-                                    <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(value.harga)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})" readonly>
+                                    <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
                                 </td>
                                 <td>
-                                    <input type="text" id="qty_in${x}" name="qty_in[]" value="${formatRpNoId(value.qty)}" class="form-control text-right" onchange="hitung_qty('${x}'); formatRp(this.value, 'qty_in${x}')">
+                                    <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(value.harga)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
+                                </td>
+                                <td>
+                                    <input type="text" id="qty_in${x}" name="qty_in[]" value="${formatRpNoId(valur.qty)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_in${x}')">
                                 </td>
                                 <td>
                                     <input type="text" id="discpr_in${x}" name="discpr_in[]" value="${formatRpNoId(value.discpr)}" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">
@@ -954,6 +1041,17 @@
                                     <span id="jumlah2_in${x}">${formatRpNoId(value.jumlah)}</span>
                                 </td>
                             </tr>`);
+
+                            // each satuan
+                            $.each(result[1], function(index, value) {
+                                $('#kode_satuan' + x).append(`<option value="${value.kode_satuan}">${value.keterangan}</option>`)
+                            });
+
+                            $(".select2_global").select2({
+                                placeholder: $(this).data('placeholder'),
+                                width: '100%',
+                                allowClear: true,
+                            });
 
                             x++;
                         });
