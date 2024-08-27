@@ -356,10 +356,10 @@ function _invoicePO($cabang)
     $number       = 1;
     if ($lastNumber) {
         $number   = $CI->db->query('SELECT * FROM barang_po_in_header WHERE tgl_po = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
-        $invoice  = 'INV~' . $CI->session->userdata('init_cabang') . date('dmY') . sprintf("%05d", $number);
+        $invoice  = $CI->session->userdata('init_cabang') . 'TPO-' . date('Ymd') . sprintf("%05d", $number);
     } else {
         $number   = 0;
-        $invoice  = 'INV~' . $CI->session->userdata('init_cabang') . date('dmY') . "00001";
+        $invoice  = $CI->session->userdata('init_cabang') . 'TPO-' . date('Ymd') . "00001";
     }
     return $invoice;
 }
@@ -374,10 +374,10 @@ function _invoice($cabang)
     $number       = 1;
     if ($lastNumber) {
         $number   = $CI->db->query('SELECT * FROM barang_in_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
-        $invoice  = 'INV~' . $cabang . date('dmY') . sprintf("%05d", $number);
+        $invoice  = $CI->session->userdata('init_cabang') . 'TPB-' . date('Ymd') . sprintf("%05d", $number);
     } else {
         $number   = 0;
-        $invoice  = 'INV~' . $cabang . date('dmY') . "00001";
+        $invoice  = $CI->session->userdata('init_cabang') . 'TPB-' . date('Ymd') . "00001";
     }
     return $invoice;
 }
@@ -392,10 +392,10 @@ function _surat_jalan($cabang)
     $number       = 1;
     if ($lastNumber) {
         $number   = $CI->db->query('SELECT * FROM barang_in_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
-        $invoice  = 'NSJ~' . $cabang . date('dmY') . sprintf("%05d", $number);
+        $invoice  = 'NSJ~' . $CI->session->userdata('init_cabang') . date('dmY') . sprintf("%05d", $number);
     } else {
         $number   = 0;
-        $invoice  = 'NSJ~' . $cabang . date('dmY') . "00001";
+        $invoice  = 'NSJ~' . $CI->session->userdata('init_cabang') . date('dmY') . "00001";
     }
     return $invoice;
 }
@@ -410,10 +410,10 @@ function _no_faktur($cabang)
     $number       = 1;
     if ($lastNumber) {
         $number   = $CI->db->query('SELECT * FROM barang_in_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
-        $invoice  = 'NSF~' . $cabang . date('dmY') . sprintf("%05d", $number);
+        $invoice  = 'NSF~' . $CI->session->userdata('init_cabang') . date('dmY') . sprintf("%05d", $number);
     } else {
         $number   = 0;
-        $invoice  = 'NSF~' . $cabang . date('dmY') . "00001";
+        $invoice  = 'NSF~' . $CI->session->userdata('init_cabang') . date('dmY') . "00001";
     }
     return $invoice;
 }
@@ -428,10 +428,10 @@ function _invoice_retur($cabang)
     $number       = 1;
     if ($lastNumber) {
         $number   = $CI->db->query('SELECT * FROM barang_in_retur_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
-        $invoice  = 'REINV~' . $cabang . date('dmY') . sprintf("%05d", $number);
+        $invoice  = 'RTB~' . $CI->session->userdata('init_cabang') . date('dmY') . sprintf("%05d", $number);
     } else {
         $number   = 0;
-        $invoice  = 'REINV~' . $cabang . date('dmY') . "00001";
+        $invoice  = 'RTB~' . $CI->session->userdata('init_cabang') . date('dmY') . "00001";
     }
     return $invoice;
 }
@@ -657,10 +657,10 @@ function _invoiceJual($kopoli)
     $number       = 1;
     if ($lastNumber) {
         $number   = $CI->db->query('SELECT * FROM barang_out_header WHERE kode_poli = "' . $kopoli . '" AND tgl_jual = "' . $now . '"')->num_rows() + 1;
-        $invoice  = 'INV~' . $awal . date('dmY') . sprintf("%05d", $number);
+        $invoice  = 'TJ~' . $awal . date('dmY') . sprintf("%05d", $number);
     } else {
         $number   = 0;
-        $invoice  = 'INV~' . $awal . date('dmY') . "00001";
+        $invoice  = 'TJ~' . $awal . date('dmY') . "00001";
     }
     return $invoice;
 }
@@ -816,10 +816,10 @@ function _invoiceRetur()
     $number       = 1;
     if ($lastNumber) {
         $number   = $CI->db->query('SELECT * FROM barang_out_retur_header WHERE tgl_retur = "' . $now . '"')->num_rows() + 1;
-        $invoice  = 'RE-INV~' . date('dmY') . sprintf("%05d", $number);
+        $invoice  = 'RTJ~' . date('dmY') . sprintf("%05d", $number);
     } else {
         $number   = 0;
-        $invoice  = 'RE-INV~' . date('dmY') . "00001";
+        $invoice  = 'RTJ~' . date('dmY') . "00001";
     }
     return $invoice;
 }

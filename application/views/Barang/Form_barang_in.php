@@ -9,12 +9,38 @@
         <div class="col-md-12">
             <div class="row">
                 <div class="col-md-6">
-                    <label for="invoice" class="control-label">Invoice</label>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Otomatis" id="invoice" name="invoice" value="<?= (!empty($data_barang_in) ? $data_barang_in->invoice : '') ?>" readonly>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <ion-icon name="id-card-outline"></ion-icon>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="invoice" class="control-label">Invoice</label>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Otomatis" id="invoice" name="invoice" value="<?= (!empty($data_barang_in) ? $data_barang_in->invoice : '') ?>" readonly>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <ion-icon name="id-card-outline"></ion-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="invoice" class="control-label">Pengajuan Pembelian</label>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <input type="checkbox" class="form-control" id="cek_po" name="cek_po" onclick="cekPo('cek_po')" <?= (!empty($data_barang_in) ? (($data_barang_in->invoice_po == '') ? '' : 'checked') : '') ?>>
+                                </div>
+                                <div class="col-md-10">
+                                    <select name="invoice_po" id="invoice_po" class="form-control select2_global" data-placeholder="~ Pilih No Pengajuan" <?= (!empty($data_barang_in) ? (($data_barang_in->invoice_po == '') ? 'disabled' : '') : 'disabled') ?> onchange="getPo(this.value)">
+                                        <option value="">~ Pilih No Pengajuan</option>
+                                        <?php if (!empty($data_barang_in)) : ?>
+                                            <?php foreach ($barang_po_in_x as $bpox) : ?>
+                                                <option value="<?= $bpox->invoice ?>" <?= ($bpox->invoice == $data_barang_in->invoice_po) ? 'selected' : '' ?>><?= $bpox->invoice . ' | Tgl/jam: ' . date('D, m-Y', strtotime($bpox->tgl_po)) . '/' . date('H:i:s', strtotime($bpox->jam_po)) ?></option>
+                                            <?php endforeach; ?>
+                                        <?php else : ?>
+                                            <?php foreach ($barang_po_in as $bpo) : ?>
+                                                <option value="<?= $bpo->invoice ?>"><?= $bpo->invoice . ' | Tgl/jam: ' . date('D, m-Y', strtotime($bpo->tgl_po)) . '/' . date('H:i:s', strtotime($bpo->jam_po)) ?></option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -131,10 +157,25 @@
                         <?php if (!empty($barang_detail)) : ?>
                             <?php $no = 1;
                             foreach ($barang_detail as $bd) :
-                                $satuan = $this->db->query("SELECT bs.kode_satuan AS id, ms.keterangan AS text FROM barang_satuan bs JOIN m_satuan ms USING(kode_satuan) WHERE bs.kode_barang = '$bd->kode_barang'")->result();
+                                $barang = $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang]);
+
+                                $satuan = [];
+                                foreach ([$barang->kode_satuan, $barang->kode_satuan2, $barang->kode_satuan3] as $satuanCode) {
+                                    $satuanDetail = $this->M_global->getData('m_satuan', ['kode_satuan' => $satuanCode]);
+                                    if ($satuanDetail) {
+                                        $satuan[] = [
+                                            'kode_satuan' => $satuanCode,
+                                            'keterangan' => $satuanDetail->keterangan,
+                                        ];
+                                    } else {
+                                        $satuan[] = '';
+                                    }
+                                }
                             ?>
                                 <tr id="rowBarangIn<?= $no ?>">
-                                    <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no ?>" onclick="hapusBarang('<?= $no ?>')"><i class="fa-solid fa-delete-left"></i></button></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no ?>" onclick="hapusBarang('<?= $no ?>')"><i class="fa-solid fa-delete-left"></i></button>
+                                    </td>
                                     <td>
                                         <input type="hidden" id="kode_barang_in<?= $no ?>" name="kode_barang_in[]" value="<?= $bd->kode_barang ?>">
                                         <span><?= $bd->kode_barang ?> ~ <?= $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang])->nama ?></span>
@@ -143,7 +184,7 @@
                                         <select name="kode_satuan[]" id="kode_satuan<?= $no ?>" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, <?= $no ?>)">
                                             <option value="">~ Pilih Satuan</option>
                                             <?php foreach ($satuan as $s) : ?>
-                                                <option value="<?= $s->id ?>" <?= (($bd->kode_satuan == $s->id) ? 'selected' : '') ?>><?= $s->text ?></option>
+                                                <option value="<?= $s['kode_satuan'] ?>" <?= (($bd->kode_satuan == $s['kode_satuan']) ? 'selected' : '') ?>><?= $s['keterangan'] ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </td>
@@ -179,21 +220,41 @@
     <br>
     <div class="row">
         <div class="col-md-7 col-12">
-            <div class="row">
-                <div class="col-md-8 col-6">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Masukan Kode/Nama Barang" id="kode_barang" name="kode_barang">
-                        <div class="input-group-append" onclick="showBarang()">
-                            <div class="input-group-text">
-                                <i class="fa-solid fa-magnifying-glass-plus"></i>
+            <?php if (!empty($data_barang_in)) : ?>
+                <?php if ($data_barang_in->invoice_po == '') : ?>
+                    <div class="row search_barang">
+                        <div class="col-md-8 col-6">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Masukan Kode/Nama Barang" id="kode_barang" name="kode_barang">
+                                <div class="input-group-append" onclick="showBarang()">
+                                    <div class="input-group-text">
+                                        <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-6">
+                            <button type="button" class="btn btn-primary" onclick="searchBarang()" id="btnCari"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah Barang</button>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            <?php else : ?>
+                <div class="row search_barang">
+                    <div class="col-md-8 col-6">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Masukan Kode/Nama Barang" id="kode_barang" name="kode_barang">
+                            <div class="input-group-append" onclick="showBarang()">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-4 col-6">
+                        <button type="button" class="btn btn-primary" onclick="searchBarang()" id="btnCari"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah Barang</button>
+                    </div>
                 </div>
-                <div class="col-md-4 col-6">
-                    <button type="button" class="btn btn-secondary" onclick="searchBarang()" id="btnCari"><i class="fa-solid fa-circle-plus"></i> Tambah Barang</button>
-                </div>
-            </div>
+            <?php endif; ?>
         </div>
         <div class="col-md-5 col-12">
             <div class="card">
@@ -232,9 +293,9 @@
             <button type="button" class="btn btn-danger" onclick="getUrl('Transaksi/barang_in')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
             <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
             <?php if (!empty($data_barang_in)) : ?>
-                <button type="button" class="btn btn-info float-right" onclick="getUrl('Transaksi/form_barang_in/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                <button type="button" class="btn btn-info float-right" onclick="getUrl('Transaksi/form_barang_in/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Baru</button>
             <?php else : ?>
-                <button type="button" class="btn btn-info float-right" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
+                <button type="button" class="btn btn-info float-right" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
             <?php endif ?>
         </div>
     </div>
@@ -303,6 +364,7 @@
 
     // header
     var invoice = $('#invoice');
+    var invoice_po = $('#invoice_po');
     var tgl_beli = $('#tgl_beli');
     var jam_beli = $('#jam_beli');
     var kode_supplier = $('#kode_supplier');
@@ -425,7 +487,9 @@
 
                     // masukan ke body table barang in detail
                     bodyBarangIn.append(`<tr id="rowBarangIn${x}">
-                        <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button>
+                        </td>
                         <td>
                             <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${result[0].kode_barang}">
                             <span>${result[0].kode_barang} ~ ${result[0].nama}</span>
@@ -434,7 +498,7 @@
                             <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
                         </td>
                         <td>
-                            <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
+                            <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(result[0].hna)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
                         </td>
                         <td>
                             <input type="text" id="qty_in${x}" name="qty_in[]" value="1" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_in${x}')">
@@ -450,8 +514,8 @@
                             <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="0">
                         </td>
                         <td class="text-right">
-                            <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" readonly>
-                            <span id="jumlah2_in${x}">${formatRpNoId(result[0].nilai_persediaan)}</span>
+                            <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(result[0].hna)}" class="form-control text-right" readonly>
+                            <span id="jumlah2_in${x}">${formatRpNoId(result[0].hna)}</span>
                         </td>
                     </tr>`);
 
@@ -529,7 +593,9 @@
 
                     // masukan ke body table barang in detail
                     bodyBarangIn.append(`<tr id="rowBarangIn${x}">
-                            <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button></td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button>
+                            </td>
                             <td>
                                 <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${result[0].kode_barang}">
                                 <span>${result[0].kode_barang} ~ ${result[0].nama}</span>
@@ -538,7 +604,7 @@
                                 <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
                             </td>
                             <td>
-                                <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
+                                <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(result[0].hna)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
                             </td>
                             <td>
                                 <input type="text" id="qty_in${x}" name="qty_in[]" value="1" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_in${x}')">
@@ -554,8 +620,8 @@
                                 <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="0">
                             </td>
                             <td class="text-right">
-                                <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" readonly>
-                                <span id="jumlah2_in${x}">${formatRpNoId(result[0].nilai_persediaan)}</span>
+                                <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(result[0].hna)}" class="form-control text-right" readonly>
+                                <span id="jumlah2_in${x}">${formatRpNoId(result[0].hna)}</span>
                             </td>
                         </tr>`);
 
@@ -582,12 +648,124 @@
         });
     }
 
+    //fungsi untuk pengecekan menggunakan po atau tidak
+    function cekPo(param) {
+        $('#jumlahBarisBarang').val(1);
+
+        // kosongkan body table barang in detail
+        $('#bodyBarangIn').empty();
+
+        $('#kode_supplier').val('').change();
+        $('#kode_gudang').val('GUD0000001').change();
+
+        if (document.getElementById(`${param}`).checked == true) {
+            invoice_po.attr('disabled', false);
+            $('.search_barang').fadeOut(500);
+        } else {
+            // kosongkan isi nomor po
+            invoice_po.val('').change();
+
+            invoice_po.attr('disabled', true);
+            $('.search_barang').fadeIn(500);
+        }
+
+        hitung_t();
+    }
+
+    // fungsi untuk ambil data po berdasarkan nomor po
+    function getPo(param) {
+        if (param) {
+            $.ajax({
+                url: siteUrl + 'Transaksi/getPengajuan/' + param,
+                type: "POST",
+                data: form.serialize(),
+                dataType: "JSON",
+                success: function(result) {
+                    if (result[0].status == 1) {
+                        $('#kode_supplier').html(`<option value="${result[0]['header'].kode_supplier}">${result[0]['header'].nama_supplier}</option>`);
+
+                        $('#kode_gudang').html(`<option value="${result[0]['header'].kode_gudang}">${result[0]['header'].nama_gudang}</option>`);
+
+                        jumlahBarisBarang.val(result[1].length);
+
+                        var x = 1;
+                        $.each(result[1], function(index, value) {
+                            if (value.pajak > 0) {
+                                var cek_pajak = 'checked';
+                            } else {
+                                var cek_pajak = '';
+                            }
+
+                            bodyBarangIn.append(`<tr id="rowBarangIn${x}">
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')">
+                                        <i class="fa-solid fa-delete-left"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${value.kode_barang}">
+                                    <span>${value.kode_barang} ~ ${value.nama}</span>
+                                </td>
+                                <td>
+                                    <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
+                                </td>
+                                <td>
+                                    <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(value.harga)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
+                                </td>
+                                <td>
+                                    <input type="text" id="qty_in${x}" name="qty_in[]" value="${formatRpNoId(value.qty)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_in${x}')">
+                                </td>
+                                <td>
+                                    <input type="text" id="discpr_in${x}" name="discpr_in[]" value="${formatRpNoId(value.discpr)}" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">
+                                </td>
+                                <td>
+                                    <input type="text" id="discrp_in${x}" name="discrp_in[]" value="${formatRpNoId(value.discrp)}" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_in${x}')">
+                                </td>
+                                <td class="text-center">
+                                    <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')" ${cek_pajak}>
+                                    <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="${formatRpNoId(value.pajakrp)}">
+                                </td>
+                                <td class="text-right">
+                                    <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(value.jumlah)}" class="form-control text-right" readonly>
+                                    <span id="jumlah2_in${x}">${formatRpNoId(value.jumlah)}</span>
+                                </td>
+                            </tr>`);
+
+                            $.each(result[2], function(index, satuan) {
+                                var slc_sat = satuan.kode_satuan === value.satuan_default ? 'selected' : '';
+                                $('#kode_satuan' + x).append(`<option value="${satuan.kode_satuan}" ${slc_sat}>${satuan.keterangan}</option>`)
+                            });
+
+                            $(".select2_global").select2({
+                                placeholder: $(this).data('placeholder'),
+                                width: '100%',
+                                allowClear: true,
+                            });
+
+                            // jalankan fungsi
+                            hitung_st(x);
+
+                            x++;
+                        });
+                    } else {
+                        $('#bodyBarangIn').html('');
+
+                        $('#jumlahBarisBarang').val(1);
+
+                        hitung_t();
+                    }
+                },
+                error: function(result) {
+                    error_proccess();
+                }
+            });
+        }
+    }
+
     // fungsi ubah satuan untuk ubah harga
     function ubahSatuan(param, id) {
         var kode_barang_in = $('#kode_barang_in' + id).val();
         var kode_satuan = $('#kode_satuan' + id).val();
-
-        // console.log(kode_barang_in + ' - ' + id + ' - ' + kode_satuan);
 
         if (!param || param === null) {
             error_proccess();
@@ -869,5 +1047,30 @@
                 error_proccess();
             }
         });
+    }
+
+    // fungsi reset
+    function reseting() {
+        $('#jumlahBarisBarang').val(1);
+
+        // Clear the body of the barang in detail table
+        $('#bodyBarangIn').empty();
+
+        // Clear and set default values for supplier and warehouse codes
+        $('#kode_supplier').val('').change();
+        $('#kode_gudang').val('GUD0000001').change();
+
+        // Uncheck the PO checkbox
+        document.getElementById('cek_po').checked = false;
+
+        // Clear the PO number input
+        invoice_po.val('').change();
+
+        // Disable the PO number input and show the search barang button
+        invoice_po.attr('disabled', true);
+        $('.search_barang').fadeIn(500);
+
+        // Recalculate total
+        hitung_t();
     }
 </script>

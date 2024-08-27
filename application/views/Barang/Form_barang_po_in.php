@@ -589,7 +589,6 @@
             data: form.serialize(),
             dataType: "JSON",
             success: function(result) {
-                console.log(result);
                 var qty_satuan = Number(result.qty_satuan);
                 var hna_master = Number(result.hna);
                 var qty = Number($('#qty_in' + id).val().replaceAll(',', ''));
