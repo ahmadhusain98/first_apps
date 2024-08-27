@@ -73,7 +73,7 @@
         }
 
         .select2-container .select2-selection--single {
-            height: 39px !important;
+            height: 35px !important;
         }
 
         .select2-selection__arrow {

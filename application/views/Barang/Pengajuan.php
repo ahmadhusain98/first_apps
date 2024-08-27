@@ -6,7 +6,7 @@ echo _lock_so();
 <form method="post" id="form_barang_po_in">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Pengajuan Pembelian</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Pre Order (PO)</span>
         </div>
     </div>
     <br>

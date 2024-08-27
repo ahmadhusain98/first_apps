@@ -22,14 +22,14 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label for="invoice" class="control-label">Pengajuan Pembelian</label>
+                            <label for="invoice" class="control-label">Pre Order (PO)</label>
                             <div class="row">
                                 <div class="col-md-2">
                                     <input type="checkbox" class="form-control" id="cek_po" name="cek_po" onclick="cekPo('cek_po')" <?= (!empty($data_barang_in) ? (($data_barang_in->invoice_po == '') ? '' : 'checked') : '') ?>>
                                 </div>
                                 <div class="col-md-10">
-                                    <select name="invoice_po" id="invoice_po" class="form-control select2_global" data-placeholder="~ Pilih No Pengajuan" <?= (!empty($data_barang_in) ? (($data_barang_in->invoice_po == '') ? 'disabled' : '') : 'disabled') ?> onchange="getPo(this.value)">
-                                        <option value="">~ Pilih No Pengajuan</option>
+                                    <select name="invoice_po" id="invoice_po" class="form-control select2_global" data-placeholder="~ Pilih No PO" <?= (!empty($data_barang_in) ? (($data_barang_in->invoice_po == '') ? 'disabled' : '') : 'disabled') ?> onchange="getPo(this.value)">
+                                        <option value="">~ Pilih No PO</option>
                                         <?php if (!empty($data_barang_in)) : ?>
                                             <?php foreach ($barang_po_in_x as $bpox) : ?>
                                                 <option value="<?= $bpox->invoice ?>" <?= ($bpox->invoice == $data_barang_in->invoice_po) ? 'selected' : '' ?>><?= $bpox->invoice . ' | Tgl/jam: ' . date('D, m-Y', strtotime($bpox->tgl_po)) . '/' . date('H:i:s', strtotime($bpox->jam_po)) ?></option>
@@ -135,6 +135,25 @@
         </div>
     </div>
     <br>
+    <div class="row mb-3 alert-po">
+        <div class="col-md-12">
+            <div class="alert alert-primary" role="alert" style="font-size: 11px;">
+                <div class="row">
+                    <div class="col-md-2 my-auto text-center">
+                        <i class="fa-solid fa-2x fa-triangle-exclamation"></i>
+                    </div>
+                    <div class="col-md-8 text-center">
+                        <span class="font-weight-bold"><u>PERINGATAN</u></span>
+                        <br>
+                        Jika menggunakan PO, jangan ubah satuannnya, cukup ubah qty atau hapus barangnya
+                    </div>
+                    <div class="col-md-2 my-auto text-center">
+                        <i class="fa-solid fa-2x fa-triangle-exclamation"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
@@ -361,6 +380,7 @@
     const form = $('#form_barang_in');
     const btnCari = $('#btnCari');
     const btnSimpan = $('#btnSimpan');
+    const alert_po = $('.alert-po');
 
     // header
     var invoice = $('#invoice');
@@ -378,6 +398,8 @@
     var bodyBarangIn = $('#bodyBarangIn');
     var rowBarangIn = $('#rowBarangIn');
     var jumlahBarisBarang = $('#jumlahBarisBarang');
+
+    alert_po.hide();
 
     $('#tableSederhanaObat').DataTable({
         "destroy": true,
@@ -660,12 +682,14 @@
 
         if (document.getElementById(`${param}`).checked == true) {
             invoice_po.attr('disabled', false);
+            alert_po.fadeIn(500);
             $('.search_barang').fadeOut(500);
         } else {
             // kosongkan isi nomor po
             invoice_po.val('').change();
 
             invoice_po.attr('disabled', true);
+            alert_po.fadeOut(500);
             $('.search_barang').fadeIn(500);
         }
 
