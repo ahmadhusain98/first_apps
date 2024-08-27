@@ -997,7 +997,7 @@ class Transaksi extends CI_Controller
             'data_barang_in'    => $barang_in,
             'barang_detail'     => $barang_detail,
             'barang_po_in_x'    => $this->db->query('SELECT bpo.* FROM barang_po_in_header bpo WHERE bpo.is_valid = 1 AND bpo.kode_cabang = "' . $kode_cabang . '"')->result(),
-            'barang_po_in'      => $this->db->query('SELECT bpo.* FROM barang_po_in_header bpo WHERE bpo.is_valid = 1 AND bpo.kode_cabang = "' . $kode_cabang . '" AND bpo.invoice NOT IN (SELECT invoice_po FROM barang_in_header WHERE kode_cabang = "' . $kode_cabang . '")')->result(),
+            'barang_po_in'      => $this->db->query('SELECT dpo.invoice, hpo.tgl_po, hpo.jam_po FROM barang_po_in_detail dpo JOIN barang_po_in_header hpo USING(invoice) WHERE hpo.kode_cabang = "' . $kode_cabang . '" AND (hpo.invoice NOT IN (SELECT ht.invoice_po FROM barang_in_header ht WHERE ht.kode_cabang = "' . $kode_cabang . '") OR dpo.qty > (SELECT dt.qty FROM barang_in_detail dt JOIN barang_in_header ht USING(invoice) WHERE ht.invoice_po = hpo.invoice AND dt.kode_barang = dpo.kode_barang AND ht.kode_cabang = "' . $kode_cabang . '"))')->result(),
             'role'              => $this->M_global->getResult('m_role'),
             'pajak'             => $this->M_global->getData('m_pajak', ['id' => 1])->persentase,
             'list_barang'       => $this->M_global->getResult('barang'),

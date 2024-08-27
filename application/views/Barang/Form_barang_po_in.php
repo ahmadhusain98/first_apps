@@ -50,7 +50,21 @@
                 <div class="col-md-6">
                     <label for="kode_supplier" class="control-label">Pemasok <sup class="text-danger">**</sup></label>
                     <div class="input-group mb-3">
-                        <input type="hidden" name="cek_pajak" id="cek_pajak" value="0">
+                        <input type="hidden" name="cek_pajak" id="cek_pajak" value="<?php
+                                                                                    if (!empty($data_barang_po_in)) {
+                                                                                        $pajak_supplier = $this->M_global->getData('m_supplier', ['kode_supplier' => $data_barang_po_in->kode_supplier]);
+
+                                                                                        $pajak = $this->M_global->getData('m_pajak', ['kode_pajak' => $pajak_supplier->pajak]);
+
+                                                                                        if ($pajak) {
+                                                                                            echo $pajak->persentase;
+                                                                                        } else {
+                                                                                            echo 0;
+                                                                                        }
+                                                                                    } else {
+                                                                                        echo 0;
+                                                                                    }
+                                                                                    ?>">
                         <select name="kode_supplier" id="kode_supplier" class="form-control select2_supplier" data-placeholder="~ Pilih Pemasok" onchange="getPajak(this.value)">
                             <?php
                             if (!empty($data_barang_po_in)) :
