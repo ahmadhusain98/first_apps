@@ -997,7 +997,7 @@ class Transaksi extends CI_Controller
             'data_barang_in'    => $barang_in,
             'barang_detail'     => $barang_detail,
             'barang_po_in_x'    => $this->db->query('SELECT bpo.* FROM barang_po_in_header bpo WHERE bpo.is_valid = 1 AND bpo.kode_cabang = "' . $kode_cabang . '"')->result(),
-            'barang_po_in'      => $this->db->query('SELECT dpo.invoice, hpo.tgl_po, hpo.jam_po FROM barang_po_in_detail dpo JOIN barang_po_in_header hpo USING(invoice) WHERE hpo.kode_cabang = "' . $kode_cabang . '" AND (hpo.invoice NOT IN (SELECT ht.invoice_po FROM barang_in_header ht WHERE ht.kode_cabang = "' . $kode_cabang . '") OR dpo.qty > (SELECT dt.qty FROM barang_in_detail dt JOIN barang_in_header ht USING(invoice) WHERE ht.invoice_po = hpo.invoice AND dt.kode_barang = dpo.kode_barang AND ht.kode_cabang = "' . $kode_cabang . '"))')->result(),
+            'barang_po_in'      => $this->db->query('SELECT dpo.invoice, hpo.tgl_po, hpo.jam_po FROM barang_po_in_detail dpo JOIN barang_po_in_header hpo ON dpo.invoice = hpo.invoice WHERE hpo.kode_cabang = "' . $kode_cabang . '" AND (hpo.invoice NOT IN (SELECT ht.invoice_po FROM barang_in_header ht WHERE ht.kode_cabang = "' . $kode_cabang . '") OR dpo.qty != (SELECT COALESCE(SUM(dt.qty), 0) FROM barang_in_detail dt JOIN barang_in_header ht ON dt.invoice = ht.invoice WHERE ht.invoice_po = hpo.invoice AND dt.kode_barang = dpo.kode_barang AND ht.kode_cabang = "' . $kode_cabang . '"))GROUP BY dpo.invoice, hpo.tgl_po, hpo.jam_po')->result(),
             'role'              => $this->M_global->getResult('m_role'),
             'pajak'             => $this->M_global->getData('m_pajak', ['id' => 1])->persentase,
             'list_barang'       => $this->M_global->getResult('barang'),
@@ -1011,15 +1011,25 @@ class Transaksi extends CI_Controller
         $header = $this->db->query('SELECT bpo.*, (SELECT nama FROM m_supplier WHERE kode_supplier = bpo.kode_supplier) AS nama_supplier, (SELECT nama FROM m_gudang WHERE kode_gudang = bpo.kode_gudang) AS nama_gudang FROM barang_po_in_header bpo WHERE bpo.invoice = "' . $invoice . '"')->row();
 
         if ($header) {
-            $detail = $this->M_global->db->query('SELECT bpo.*, bpo.kode_satuan AS satuan_default, b.nama, b.kode_satuan, b.kode_satuan2, b.kode_satuan3 FROM barang_po_in_detail bpo JOIN barang b ON bpo.kode_barang = b.kode_barang WHERE bpo.invoice = "' . $invoice . '"')->result();
+            $cek_bh = $this->M_global->getData('barang_in_header', ['invoice_po' => $invoice]);
+
+            if ($cek_bh) {
+                $detail = $this->db->query('SELECT 
+                    POH.invoice, POD.kode_barang, POD.kode_satuan AS satuan_default,
+                    POD.qty - IFNULL(TD.qty, 0) AS qty_po,
+                    B.nama, B.kode_satuan, B.kode_satuan2, B.kode_satuan3,
+                    POD.harga, POD.discpr, POD.discrp, POD.pajak, POD.pajakrp, POD.jumlah
+                FROM barang_po_in_detail POD
+                JOIN barang B ON B.kode_barang = POD.kode_barang
+                JOIN barang_po_in_header POH ON POD.invoice = POH.invoice
+                LEFT JOIN barang_in_header TH ON TH.invoice_po = POH.invoice
+                LEFT JOIN barang_in_detail TD ON (TH.invoice = TD.invoice AND TD.kode_barang = POD.kode_barang)
+                WHERE POH.invoice = "' . $invoice . '" AND (POD.qty - IFNULL(TD.qty, 0)) > 0')->result();
+            } else {
+                $detail = $this->db->query('SELECT bpo.*, bpo.qty AS qty_po, bpo.kode_satuan AS satuan_default, b.nama, b.kode_satuan, b.kode_satuan2, b.kode_satuan3 FROM barang_po_in_detail bpo JOIN barang b ON bpo.kode_barang = b.kode_barang WHERE bpo.invoice = "' . $invoice . '"')->result();
+            }
 
             foreach ($detail as $value) {
-                $satuan = [
-                    'kode_satuan' => $value->kode_satuan,
-                    'kode_satuan2' => $value->kode_satuan2,
-                    'kode_satuan3' => $value->kode_satuan3,
-                ];
-
                 $satuan = [];
                 foreach ([$value->kode_satuan, $value->kode_satuan2, $value->kode_satuan3] as $satuanCode) {
                     $satuanDetail = $this->M_global->getData('m_satuan', ['kode_satuan' => $satuanCode]);

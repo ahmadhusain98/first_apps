@@ -712,6 +712,8 @@
 
                         jumlahBarisBarang.val(result[1].length);
 
+                        console.log(result[1]);
+
                         var x = 1;
                         $.each(result[1], function(index, value) {
                             if (value.pajak > 0) {
@@ -737,7 +739,7 @@
                                     <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(value.harga)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
                                 </td>
                                 <td>
-                                    <input type="text" id="qty_in${x}" name="qty_in[]" value="${formatRpNoId(value.qty)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_in${x}')">
+                                    <input type="text" id="qty_in${x}" name="qty_in[]" value="${formatRpNoId(value.qty_po)}" class="form-control text-right" onchange="hitung_dpr('${x}'); formatRp(this.value, 'qty_in${x}')">
                                 </td>
                                 <td>
                                     <input type="text" id="discpr_in${x}" name="discpr_in[]" value="${formatRpNoId(value.discpr)}" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">
@@ -839,6 +841,10 @@
         var harga = ($('#harga_in' + x).val()).replaceAll(',', '');
         var qty = ($('#qty_in' + x).val()).replaceAll(',', '');
         var discpr = ($('#discpr_in' + x).val()).replaceAll(',', '');
+
+        if (discpr < 1) {
+            return hitung_drp(x);
+        }
 
         if (Number(discpr) > 100) { // jika disc pr > 100
             // munculkan notifikasi
