@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Waktu pembuatan: 17 Agu 2024 pada 16.21
--- Versi server: 8.0.30
--- Versi PHP: 7.4.3
+-- Generation Time: Aug 28, 2024 at 04:10 PM
+-- Server version: 8.0.30
+-- PHP Version: 7.4.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang`
+-- Table structure for table `barang`
 --
 
 CREATE TABLE `barang` (
@@ -49,16 +49,17 @@ CREATE TABLE `barang` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `barang`
+-- Dumping data for table `barang`
 --
 
 INSERT INTO `barang` (`id`, `kode_barang`, `image`, `nama`, `kode_satuan`, `kode_satuan2`, `kode_satuan3`, `qty_satuan2`, `qty_satuan3`, `opsi_hpp`, `persentase_hpp`, `kode_kategori`, `hna`, `hpp`, `harga_jual`, `nilai_persediaan`, `stok_min`, `stok_max`) VALUES
-(2, 'DIY~S00001', 'default.jpg', 'Susu', 'SAT0000003', 'SAT0000006', 'SAT0000005', 4, 16, 2, 30, 'KAT0000001', 2000.00, 2600.00, 3000.00, 2000.00, 4.00, 160.00);
+(2, 'DIY~S00001', 'default.jpg', 'Susu', 'SAT0000003', 'SAT0000006', 'SAT0000005', 4, 16, 2, 30, 'KAT0000001', 2000.00, 2600.00, 3000.00, 2000.00, 4.00, 160.00),
+(3, 'DIY~P00001', 'default.jpg', 'Paracetamol', 'SAT0000003', 'SAT0000006', '', 4, 0, 2, 30, 'KAT0000004', 3000.00, 3900.00, 4000.00, 4000.00, 20.00, 400.00);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_cabang`
+-- Table structure for table `barang_cabang`
 --
 
 CREATE TABLE `barang_cabang` (
@@ -68,17 +69,19 @@ CREATE TABLE `barang_cabang` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `barang_cabang`
+-- Dumping data for table `barang_cabang`
 --
 
 INSERT INTO `barang_cabang` (`id`, `kode_cabang`, `kode_barang`) VALUES
 (4, 'CAB0000001', 'DIY~S00001'),
-(5, 'CAB0000002', 'DIY~S00001');
+(5, 'CAB0000002', 'DIY~S00001'),
+(6, 'CAB0000001', 'DIY~P00001'),
+(7, 'CAB0000002', 'DIY~P00001');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_in_detail`
+-- Table structure for table `barang_in_detail`
 --
 
 CREATE TABLE `barang_in_detail` (
@@ -96,16 +99,25 @@ CREATE TABLE `barang_in_detail` (
   `jumlah` decimal(20,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `barang_in_detail`
+--
+
+INSERT INTO `barang_in_detail` (`id`, `invoice`, `kode_barang`, `kode_satuan`, `qty_konversi`, `harga`, `qty`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES
+(31, 'DIYTPB-2024082800001', 'DIY~S00001', 'SAT0000003', 5.00, 32000.00, 5.00, 10.00, 16000.00, 1.00, 15840.00, 144000.00),
+(32, 'DIYTPB-2024082800002', 'DIY~P00001', 'SAT0000006', 4.00, 12000.00, 1.00, 0.00, 0.00, 1.00, 1320.00, 12000.00);
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_in_header`
+-- Table structure for table `barang_in_header`
 --
 
 CREATE TABLE `barang_in_header` (
   `id` int NOT NULL,
   `kode_cabang` varchar(10) NOT NULL,
   `invoice` varchar(30) NOT NULL,
+  `invoice_po` varchar(30) NOT NULL,
   `tgl_beli` date NOT NULL,
   `jam_beli` time NOT NULL,
   `kode_supplier` varchar(10) NOT NULL,
@@ -126,10 +138,18 @@ CREATE TABLE `barang_in_header` (
   `jam_valid` time DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `barang_in_header`
+--
+
+INSERT INTO `barang_in_header` (`id`, `kode_cabang`, `invoice`, `invoice_po`, `tgl_beli`, `jam_beli`, `kode_supplier`, `kode_gudang`, `surat_jalan`, `no_faktur`, `pajak`, `diskon`, `subtotal`, `total`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `is_valid`, `tgl_valid`, `jam_valid`) VALUES
+(26, 'CAB0000002', 'DIYTPB-2024082800001', 'DIYTPO-2024081900001', '2024-08-28', '22:55:51', 'SUP0000001', 'GUD0000001', 'NSJ~DIY2808202400001', 'NSF~DIY2808202400001', 15840.00, 16000.00, 160000.00, 175840.00, 'A00001', 0, '0000-00-00', '00:00:00', '', 0, NULL, NULL),
+(27, 'CAB0000002', 'DIYTPB-2024082800002', 'DIYTPO-2024081900001', '2024-08-28', '23:02:43', 'SUP0000001', 'GUD0000001', 'NSJ~DIY2808202400002', 'NSF~DIY2808202400002', 1320.00, 0.00, 12000.00, 13320.00, 'A00001', 0, '0000-00-00', '00:00:00', '', 0, NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_in_retur_detail`
+-- Table structure for table `barang_in_retur_detail`
 --
 
 CREATE TABLE `barang_in_retur_detail` (
@@ -148,7 +168,7 @@ CREATE TABLE `barang_in_retur_detail` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_in_retur_header`
+-- Table structure for table `barang_in_retur_header`
 --
 
 CREATE TABLE `barang_in_retur_header` (
@@ -180,7 +200,7 @@ CREATE TABLE `barang_in_retur_header` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_jenis`
+-- Table structure for table `barang_jenis`
 --
 
 CREATE TABLE `barang_jenis` (
@@ -190,17 +210,20 @@ CREATE TABLE `barang_jenis` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `barang_jenis`
+-- Dumping data for table `barang_jenis`
 --
 
 INSERT INTO `barang_jenis` (`id`, `kode_barang`, `kode_jenis`) VALUES
 (5, 'DIY~S00001', 'JO00000004'),
-(6, 'DIY~S00001', 'JO00000005');
+(6, 'DIY~S00001', 'JO00000005'),
+(7, 'DIY~P00001', 'JO00000001'),
+(8, 'DIY~P00001', 'JO00000002'),
+(9, 'DIY~P00001', 'JO00000007');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_out_detail`
+-- Table structure for table `barang_out_detail`
 --
 
 CREATE TABLE `barang_out_detail` (
@@ -219,7 +242,7 @@ CREATE TABLE `barang_out_detail` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_out_header`
+-- Table structure for table `barang_out_header`
 --
 
 CREATE TABLE `barang_out_header` (
@@ -248,7 +271,7 @@ CREATE TABLE `barang_out_header` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_out_retur_detail`
+-- Table structure for table `barang_out_retur_detail`
 --
 
 CREATE TABLE `barang_out_retur_detail` (
@@ -267,7 +290,7 @@ CREATE TABLE `barang_out_retur_detail` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_out_retur_header`
+-- Table structure for table `barang_out_retur_header`
 --
 
 CREATE TABLE `barang_out_retur_header` (
@@ -293,7 +316,7 @@ CREATE TABLE `barang_out_retur_header` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_po_in_detail`
+-- Table structure for table `barang_po_in_detail`
 --
 
 CREATE TABLE `barang_po_in_detail` (
@@ -312,16 +335,17 @@ CREATE TABLE `barang_po_in_detail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `barang_po_in_detail`
+-- Dumping data for table `barang_po_in_detail`
 --
 
 INSERT INTO `barang_po_in_detail` (`id`, `invoice`, `kode_barang`, `kode_satuan`, `qty_konversi`, `harga`, `qty`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES
-(3, 'INV~DIY1708202400001', 'DIY~S00001', 'SAT0000005', 80.00, 32000.00, 5.00, 0.00, 0.00, 0.00, 0.00, 160000.00);
+(2, 'DIYTPO-2024081900001', 'DIY~S00001', 'SAT0000005', 80.00, 32000.00, 5.00, 10.00, 16000.00, 1.00, 15840.00, 144000.00),
+(3, 'DIYTPO-2024081900001', 'DIY~P00001', 'SAT0000006', 12.00, 12000.00, 3.00, 0.00, 0.00, 1.00, 3960.00, 36000.00);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_po_in_header`
+-- Table structure for table `barang_po_in_header`
 --
 
 CREATE TABLE `barang_po_in_header` (
@@ -347,16 +371,16 @@ CREATE TABLE `barang_po_in_header` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `barang_po_in_header`
+-- Dumping data for table `barang_po_in_header`
 --
 
 INSERT INTO `barang_po_in_header` (`id`, `kode_cabang`, `invoice`, `tgl_po`, `jam_po`, `kode_supplier`, `kode_gudang`, `pajak`, `diskon`, `subtotal`, `total`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `is_valid`, `tgl_valid`, `jam_valid`) VALUES
-(3, 'CAB0000002', 'INV~DIY1708202400001', '2024-08-17', '19:51:56', 'SUP0000002', 'GUD0000001', 0.00, 0.00, 160000.00, 160000.00, 'A00001', 1, '2024-08-17', '23:19:30', 'A00001', 0, NULL, NULL);
+(1, 'CAB0000002', 'DIYTPO-2024081900001', '2024-08-19', '23:59:29', 'SUP0000001', 'GUD0000001', 19800.00, 16000.00, 196000.00, 215800.00, 'A00001', 0, NULL, NULL, '', 1, '2024-08-27', '20:52:08');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_satuan`
+-- Table structure for table `barang_satuan`
 --
 
 CREATE TABLE `barang_satuan` (
@@ -370,7 +394,7 @@ CREATE TABLE `barang_satuan` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_stok`
+-- Table structure for table `barang_stok`
 --
 
 CREATE TABLE `barang_stok` (
@@ -390,16 +414,17 @@ CREATE TABLE `barang_stok` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `barang_stok`
+-- Dumping data for table `barang_stok`
 --
 
 INSERT INTO `barang_stok` (`id`, `kode_cabang`, `kode_barang`, `kode_gudang`, `masuk`, `keluar`, `so`, `penyesuaian`, `akhir`, `last_tgl_trx`, `last_jam_trx`, `last_no_trx`, `last_user`) VALUES
-(1, 'CAB0000002', 'DIY~S00001', 'GUD0000001', 75.00, 0.00, 0.00, 0.00, 75.00, '2024-08-17', '23:17:50', 'INV~DIY1708202400001', 'A00001');
+(1, 'CAB0000002', 'DIY~S00001', 'GUD0000001', 305.00, 0.00, 0.00, 0.00, 305.00, '2024-08-27', '20:52:08', 'DIYTPO-2024081900001', 'A00001'),
+(2, 'CAB0000002', 'DIY~P00001', 'GUD0000001', 12.00, 0.00, 0.00, 0.00, 12.00, '2024-08-27', '20:52:08', 'DIYTPO-2024081900001', 'A00001');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `bayar_card_detail`
+-- Table structure for table `bayar_card_detail`
 --
 
 CREATE TABLE `bayar_card_detail` (
@@ -415,7 +440,7 @@ CREATE TABLE `bayar_card_detail` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `bayar_um_card_detail`
+-- Table structure for table `bayar_um_card_detail`
 --
 
 CREATE TABLE `bayar_um_card_detail` (
@@ -431,7 +456,7 @@ CREATE TABLE `bayar_um_card_detail` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `cabang`
+-- Table structure for table `cabang`
 --
 
 CREATE TABLE `cabang` (
@@ -454,17 +479,17 @@ CREATE TABLE `cabang` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `cabang`
+-- Dumping data for table `cabang`
 --
 
 INSERT INTO `cabang` (`id`, `kode_cabang`, `inisial_cabang`, `cabang`, `email`, `kontak`, `owner`, `provinsi`, `kabupaten`, `kecamatan`, `desa`, `kode_pos`, `rt`, `rw`, `aktif_dari`, `aktif_sampai`) VALUES
-(1, 'CAB0000001', 'MGL', 'Magelang', 'magelang@dtu.com', NULL, 'Ahmad Husain', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-08-01', '2030-08-01'),
-(2, 'CAB0000002', 'DIY', 'Yogyakarta', 'yogyakarta@dtu.com', NULL, 'Ahmad Husain', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-08-01', '2030-08-01');
+(1, 'CAB0000001', 'MGL', 'Magelang', 'magelang@dtu.com', NULL, 'Ahmad Husain', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-08-01', '2024-10-01'),
+(2, 'CAB0000002', 'DIY', 'Yogyakarta', 'yogyakarta@dtu.com', NULL, 'Ahmad Husain', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-08-01', '2024-10-01');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `cabang_user`
+-- Table structure for table `cabang_user`
 --
 
 CREATE TABLE `cabang_user` (
@@ -474,7 +499,7 @@ CREATE TABLE `cabang_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `cabang_user`
+-- Dumping data for table `cabang_user`
 --
 
 INSERT INTO `cabang_user` (`id`, `kode_cabang`, `email`) VALUES
@@ -484,7 +509,7 @@ INSERT INTO `cabang_user` (`id`, `kode_cabang`, `email`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `cart_detail`
+-- Table structure for table `cart_detail`
 --
 
 CREATE TABLE `cart_detail` (
@@ -499,7 +524,7 @@ CREATE TABLE `cart_detail` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `cart_header`
+-- Table structure for table `cart_header`
 --
 
 CREATE TABLE `cart_header` (
@@ -520,7 +545,7 @@ CREATE TABLE `cart_header` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `cart_promo`
+-- Table structure for table `cart_promo`
 --
 
 CREATE TABLE `cart_promo` (
@@ -532,7 +557,7 @@ CREATE TABLE `cart_promo` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `dokter`
+-- Table structure for table `dokter`
 --
 
 CREATE TABLE `dokter` (
@@ -555,7 +580,7 @@ CREATE TABLE `dokter` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `dokter`
+-- Dumping data for table `dokter`
 --
 
 INSERT INTO `dokter` (`id`, `kode_dokter`, `nik`, `sip`, `npwp`, `nama`, `nohp`, `tgl_mulai`, `tgl_berhenti`, `status`, `provinsi`, `kabupaten`, `kecamatan`, `desa`, `kodepos`, `email`) VALUES
@@ -565,7 +590,7 @@ INSERT INTO `dokter` (`id`, `kode_dokter`, `nik`, `sip`, `npwp`, `nama`, `nohp`,
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `dokter_poli`
+-- Table structure for table `dokter_poli`
 --
 
 CREATE TABLE `dokter_poli` (
@@ -575,7 +600,7 @@ CREATE TABLE `dokter_poli` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `dokter_poli`
+-- Dumping data for table `dokter_poli`
 --
 
 INSERT INTO `dokter_poli` (`id`, `kode_dokter`, `kode_poli`) VALUES
@@ -587,7 +612,7 @@ INSERT INTO `dokter_poli` (`id`, `kode_dokter`, `kode_poli`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `jadwal_so`
+-- Table structure for table `jadwal_so`
 --
 
 CREATE TABLE `jadwal_so` (
@@ -601,7 +626,7 @@ CREATE TABLE `jadwal_so` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
--- Dumping data untuk tabel `jadwal_so`
+-- Dumping data for table `jadwal_so`
 --
 
 INSERT INTO `jadwal_so` (`id`, `tgl_dari`, `jam_dari`, `tgl_sampai`, `jam_sampai`, `status`, `kode_user`) VALUES
@@ -610,7 +635,7 @@ INSERT INTO `jadwal_so` (`id`, `tgl_dari`, `jam_dari`, `tgl_sampai`, `jam_sampai
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kabupaten`
+-- Table structure for table `kabupaten`
 --
 
 CREATE TABLE `kabupaten` (
@@ -621,7 +646,7 @@ CREATE TABLE `kabupaten` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `kabupaten`
+-- Dumping data for table `kabupaten`
 --
 
 INSERT INTO `kabupaten` (`id`, `kode_kabupaten`, `kabupaten`, `kode_provinsi`) VALUES
@@ -1143,7 +1168,7 @@ INSERT INTO `kabupaten` (`id`, `kode_kabupaten`, `kabupaten`, `kode_provinsi`) V
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kas_bank`
+-- Table structure for table `kas_bank`
 --
 
 CREATE TABLE `kas_bank` (
@@ -1155,7 +1180,7 @@ CREATE TABLE `kas_bank` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `kas_bank`
+-- Dumping data for table `kas_bank`
 --
 
 INSERT INTO `kas_bank` (`id`, `kode_kas_bank`, `nama`, `tipe`, `akun`) VALUES
@@ -1165,7 +1190,7 @@ INSERT INTO `kas_bank` (`id`, `kode_kas_bank`, `nama`, `tipe`, `akun`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kecamatan`
+-- Table structure for table `kecamatan`
 --
 
 CREATE TABLE `kecamatan` (
@@ -1176,7 +1201,7 @@ CREATE TABLE `kecamatan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `kecamatan`
+-- Dumping data for table `kecamatan`
 --
 
 INSERT INTO `kecamatan` (`id`, `kode_kecamatan`, `kecamatan`, `kode_kabupaten`) VALUES
@@ -8282,7 +8307,7 @@ INSERT INTO `kecamatan` (`id`, `kode_kecamatan`, `kecamatan`, `kode_kabupaten`) 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `logistik`
+-- Table structure for table `logistik`
 --
 
 CREATE TABLE `logistik` (
@@ -8306,7 +8331,7 @@ CREATE TABLE `logistik` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `logistik_cabang`
+-- Table structure for table `logistik_cabang`
 --
 
 CREATE TABLE `logistik_cabang` (
@@ -8318,7 +8343,7 @@ CREATE TABLE `logistik_cabang` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `member`
+-- Table structure for table `member`
 --
 
 CREATE TABLE `member` (
@@ -8353,7 +8378,7 @@ CREATE TABLE `member` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `member`
+-- Dumping data for table `member`
 --
 
 INSERT INTO `member` (`id`, `kode_member`, `nama`, `email`, `password`, `secondpass`, `nohp`, `pendidikan`, `pekerjaan`, `agama`, `provinsi`, `kabupaten`, `kecamatan`, `desa`, `kodepos`, `rt`, `rw`, `nik`, `jkel`, `foto`, `tmp_lahir`, `tgl_lahir`, `kode_role`, `joined`, `on_off`, `last_regist`, `status_regist`, `actived`) VALUES
@@ -8365,7 +8390,7 @@ INSERT INTO `member` (`id`, `kode_member`, `nama`, `email`, `password`, `secondp
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `member_token`
+-- Table structure for table `member_token`
 --
 
 CREATE TABLE `member_token` (
@@ -8376,7 +8401,7 @@ CREATE TABLE `member_token` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `member_token`
+-- Dumping data for table `member_token`
 --
 
 INSERT INTO `member_token` (`id`, `email`, `token`, `valid`) VALUES
@@ -8385,7 +8410,7 @@ INSERT INTO `member_token` (`id`, `email`, `token`, `valid`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_agama`
+-- Table structure for table `m_agama`
 --
 
 CREATE TABLE `m_agama` (
@@ -8395,7 +8420,7 @@ CREATE TABLE `m_agama` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_agama`
+-- Dumping data for table `m_agama`
 --
 
 INSERT INTO `m_agama` (`id`, `kode_agama`, `keterangan`) VALUES
@@ -8409,7 +8434,7 @@ INSERT INTO `m_agama` (`id`, `kode_agama`, `keterangan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_bank`
+-- Table structure for table `m_bank`
 --
 
 CREATE TABLE `m_bank` (
@@ -8419,7 +8444,7 @@ CREATE TABLE `m_bank` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_bank`
+-- Dumping data for table `m_bank`
 --
 
 INSERT INTO `m_bank` (`id`, `kode_bank`, `keterangan`) VALUES
@@ -8432,7 +8457,7 @@ INSERT INTO `m_bank` (`id`, `kode_bank`, `keterangan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_gudang`
+-- Table structure for table `m_gudang`
 --
 
 CREATE TABLE `m_gudang` (
@@ -8446,7 +8471,7 @@ CREATE TABLE `m_gudang` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_gudang`
+-- Dumping data for table `m_gudang`
 --
 
 INSERT INTO `m_gudang` (`id`, `kode_gudang`, `nama`, `bagian`, `keterangan`, `vat`, `pajak`) VALUES
@@ -8459,7 +8484,7 @@ INSERT INTO `m_gudang` (`id`, `kode_gudang`, `nama`, `bagian`, `keterangan`, `va
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_jenis`
+-- Table structure for table `m_jenis`
 --
 
 CREATE TABLE `m_jenis` (
@@ -8469,7 +8494,7 @@ CREATE TABLE `m_jenis` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_jenis`
+-- Dumping data for table `m_jenis`
 --
 
 INSERT INTO `m_jenis` (`id`, `kode_jenis`, `keterangan`) VALUES
@@ -8485,7 +8510,7 @@ INSERT INTO `m_jenis` (`id`, `kode_jenis`, `keterangan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_kategori`
+-- Table structure for table `m_kategori`
 --
 
 CREATE TABLE `m_kategori` (
@@ -8495,7 +8520,7 @@ CREATE TABLE `m_kategori` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_kategori`
+-- Dumping data for table `m_kategori`
 --
 
 INSERT INTO `m_kategori` (`id`, `kode_kategori`, `keterangan`) VALUES
@@ -8507,7 +8532,7 @@ INSERT INTO `m_kategori` (`id`, `kode_kategori`, `keterangan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_menu`
+-- Table structure for table `m_menu`
 --
 
 CREATE TABLE `m_menu` (
@@ -8518,7 +8543,7 @@ CREATE TABLE `m_menu` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_menu`
+-- Dumping data for table `m_menu`
 --
 
 INSERT INTO `m_menu` (`id`, `url`, `icon`, `nama`) VALUES
@@ -8529,13 +8554,13 @@ INSERT INTO `m_menu` (`id`, `url`, `icon`, `nama`) VALUES
 (5, 'Kasir', '<i class=\"fa-solid fa-fw fa-wallet\"></i>&nbsp;&nbsp;', 'Pembayaran'),
 (6, 'Transaksi', '<i class=\"fa-solid fa-fw fa-arrow-right-arrow-left\"></i>&nbsp;&nbsp;', 'Transaksi'),
 (7, 'Marketing', '<i class=\"fa-solid fa-fw fa-square-poll-vertical\"></i>&nbsp;&nbsp;', 'Marketing'),
-(8, 'Backdoor', '<i class=\"fa-solid fa-fw fa-book\"></i>&nbsp;&nbsp;', 'Laporan'),
+(8, 'Laporan', '<i class=\"fa-solid fa-fw fa-book\"></i>&nbsp;&nbsp;', 'Laporan'),
 (9, 'Backdoor', '<i class=\"fa-solid fa-fw fa-screwdriver-wrench\"></i>&nbsp;&nbsp;', 'Pintu Belakang');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_pajak`
+-- Table structure for table `m_pajak`
 --
 
 CREATE TABLE `m_pajak` (
@@ -8546,7 +8571,7 @@ CREATE TABLE `m_pajak` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_pajak`
+-- Dumping data for table `m_pajak`
 --
 
 INSERT INTO `m_pajak` (`id`, `kode_pajak`, `nama`, `persentase`) VALUES
@@ -8555,7 +8580,7 @@ INSERT INTO `m_pajak` (`id`, `kode_pajak`, `nama`, `persentase`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_pekerjaan`
+-- Table structure for table `m_pekerjaan`
 --
 
 CREATE TABLE `m_pekerjaan` (
@@ -8565,7 +8590,7 @@ CREATE TABLE `m_pekerjaan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_pekerjaan`
+-- Dumping data for table `m_pekerjaan`
 --
 
 INSERT INTO `m_pekerjaan` (`id`, `kode_pekerjaan`, `keterangan`) VALUES
@@ -8583,7 +8608,7 @@ INSERT INTO `m_pekerjaan` (`id`, `kode_pekerjaan`, `keterangan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_pendidikan`
+-- Table structure for table `m_pendidikan`
 --
 
 CREATE TABLE `m_pendidikan` (
@@ -8593,7 +8618,7 @@ CREATE TABLE `m_pendidikan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_pendidikan`
+-- Dumping data for table `m_pendidikan`
 --
 
 INSERT INTO `m_pendidikan` (`id`, `kode_pendidikan`, `keterangan`) VALUES
@@ -8612,7 +8637,7 @@ INSERT INTO `m_pendidikan` (`id`, `kode_pendidikan`, `keterangan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_poli`
+-- Table structure for table `m_poli`
 --
 
 CREATE TABLE `m_poli` (
@@ -8622,7 +8647,7 @@ CREATE TABLE `m_poli` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_poli`
+-- Dumping data for table `m_poli`
 --
 
 INSERT INTO `m_poli` (`id`, `kode_poli`, `keterangan`) VALUES
@@ -8637,7 +8662,7 @@ INSERT INTO `m_poli` (`id`, `kode_poli`, `keterangan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_promo`
+-- Table structure for table `m_promo`
 --
 
 CREATE TABLE `m_promo` (
@@ -8652,7 +8677,7 @@ CREATE TABLE `m_promo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_promo`
+-- Dumping data for table `m_promo`
 --
 
 INSERT INTO `m_promo` (`id`, `kode_promo`, `nama`, `tgl_mulai`, `tgl_selesai`, `keterangan`, `min_buy`, `discpr`) VALUES
@@ -8663,7 +8688,7 @@ INSERT INTO `m_promo` (`id`, `kode_promo`, `nama`, `tgl_mulai`, `tgl_selesai`, `
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_provinsi`
+-- Table structure for table `m_provinsi`
 --
 
 CREATE TABLE `m_provinsi` (
@@ -8673,7 +8698,7 @@ CREATE TABLE `m_provinsi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_provinsi`
+-- Dumping data for table `m_provinsi`
 --
 
 INSERT INTO `m_provinsi` (`id`, `kode_provinsi`, `provinsi`) VALUES
@@ -8715,7 +8740,7 @@ INSERT INTO `m_provinsi` (`id`, `kode_provinsi`, `provinsi`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_role`
+-- Table structure for table `m_role`
 --
 
 CREATE TABLE `m_role` (
@@ -8729,7 +8754,7 @@ CREATE TABLE `m_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_role`
+-- Dumping data for table `m_role`
 --
 
 INSERT INTO `m_role` (`id`, `kode_role`, `keterangan`, `created`, `updated`, `deleted`, `confirmed`) VALUES
@@ -8742,7 +8767,7 @@ INSERT INTO `m_role` (`id`, `kode_role`, `keterangan`, `created`, `updated`, `de
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_ruang`
+-- Table structure for table `m_ruang`
 --
 
 CREATE TABLE `m_ruang` (
@@ -8752,7 +8777,7 @@ CREATE TABLE `m_ruang` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_ruang`
+-- Dumping data for table `m_ruang`
 --
 
 INSERT INTO `m_ruang` (`id`, `kode_ruang`, `keterangan`) VALUES
@@ -8762,7 +8787,7 @@ INSERT INTO `m_ruang` (`id`, `kode_ruang`, `keterangan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_satuan`
+-- Table structure for table `m_satuan`
 --
 
 CREATE TABLE `m_satuan` (
@@ -8772,7 +8797,7 @@ CREATE TABLE `m_satuan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_satuan`
+-- Dumping data for table `m_satuan`
 --
 
 INSERT INTO `m_satuan` (`id`, `kode_satuan`, `keterangan`) VALUES
@@ -8787,7 +8812,7 @@ INSERT INTO `m_satuan` (`id`, `kode_satuan`, `keterangan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `m_supplier`
+-- Table structure for table `m_supplier`
 --
 
 CREATE TABLE `m_supplier` (
@@ -8803,7 +8828,7 @@ CREATE TABLE `m_supplier` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `m_supplier`
+-- Dumping data for table `m_supplier`
 --
 
 INSERT INTO `m_supplier` (`id`, `kode_supplier`, `nama`, `nohp`, `alamat`, `email`, `fax`, `vat`, `pajak`) VALUES
@@ -8814,7 +8839,7 @@ INSERT INTO `m_supplier` (`id`, `kode_supplier`, `nama`, `nohp`, `alamat`, `emai
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pembayaran`
+-- Table structure for table `pembayaran`
 --
 
 CREATE TABLE `pembayaran` (
@@ -8846,7 +8871,7 @@ CREATE TABLE `pembayaran` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pembayaran_uangmuka`
+-- Table structure for table `pembayaran_uangmuka`
 --
 
 CREATE TABLE `pembayaran_uangmuka` (
@@ -8865,7 +8890,7 @@ CREATE TABLE `pembayaran_uangmuka` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pendaftaran`
+-- Table structure for table `pendaftaran`
 --
 
 CREATE TABLE `pendaftaran` (
@@ -8889,7 +8914,7 @@ CREATE TABLE `pendaftaran` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `penyesuaian_detail`
+-- Table structure for table `penyesuaian_detail`
 --
 
 CREATE TABLE `penyesuaian_detail` (
@@ -8902,7 +8927,7 @@ CREATE TABLE `penyesuaian_detail` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `penyesuaian_header`
+-- Table structure for table `penyesuaian_header`
 --
 
 CREATE TABLE `penyesuaian_header` (
@@ -8922,7 +8947,7 @@ CREATE TABLE `penyesuaian_header` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `perawat`
+-- Table structure for table `perawat`
 --
 
 CREATE TABLE `perawat` (
@@ -8945,7 +8970,7 @@ CREATE TABLE `perawat` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `perawat`
+-- Dumping data for table `perawat`
 --
 
 INSERT INTO `perawat` (`id`, `kode_perawat`, `nik`, `sip`, `npwp`, `nama`, `nohp`, `tgl_mulai`, `tgl_berhenti`, `status`, `provinsi`, `kabupaten`, `kecamatan`, `desa`, `kodepos`, `email`) VALUES
@@ -8955,7 +8980,7 @@ INSERT INTO `perawat` (`id`, `kode_perawat`, `nik`, `sip`, `npwp`, `nama`, `nohp
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `perawat_poli`
+-- Table structure for table `perawat_poli`
 --
 
 CREATE TABLE `perawat_poli` (
@@ -8965,7 +8990,7 @@ CREATE TABLE `perawat_poli` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `perawat_poli`
+-- Dumping data for table `perawat_poli`
 --
 
 INSERT INTO `perawat_poli` (`id`, `kode_perawat`, `kode_poli`) VALUES
@@ -8979,7 +9004,7 @@ INSERT INTO `perawat_poli` (`id`, `kode_perawat`, `kode_poli`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `sub_menu`
+-- Table structure for table `sub_menu`
 --
 
 CREATE TABLE `sub_menu` (
@@ -8991,7 +9016,7 @@ CREATE TABLE `sub_menu` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='sub menu dari menu';
 
 --
--- Dumping data untuk tabel `sub_menu`
+-- Dumping data for table `sub_menu`
 --
 
 INSERT INTO `sub_menu` (`id`, `id_menu`, `url_submenu`, `icon`, `submenu`) VALUES
@@ -9014,7 +9039,7 @@ INSERT INTO `sub_menu` (`id`, `id_menu`, `url_submenu`, `icon`, `submenu`) VALUE
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `sub_menu2`
+-- Table structure for table `sub_menu2`
 --
 
 CREATE TABLE `sub_menu2` (
@@ -9026,7 +9051,7 @@ CREATE TABLE `sub_menu2` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `sub_menu2`
+-- Dumping data for table `sub_menu2`
 --
 
 INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES
@@ -9042,9 +9067,9 @@ INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VAL
 (10, 5, 'daftar', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Daftar Member'),
 (11, 5, 'pendaftaran', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Pendaftaran'),
 (12, 1, 'poli', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Poli'),
-(13, 8, 'barang_po_in', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Pengajuan Pembelian'),
-(14, 8, 'barang_in', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Pembelian'),
-(15, 8, 'barang_in_retur', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Retur Pembelian'),
+(13, 8, 'barang_po_in', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Pre Order (PO)'),
+(14, 8, 'barang_in', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Penerimaan Barang'),
+(15, 8, 'barang_in_retur', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Retur Penerimaan'),
 (16, 9, 'barang_out', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Penjualan'),
 (17, 9, 'barang_out_retur', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Retur Penjualan'),
 (18, 9, 'barang_out_report', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Laporan Penjualan'),
@@ -9059,7 +9084,7 @@ INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VAL
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tipe_bank`
+-- Table structure for table `tipe_bank`
 --
 
 CREATE TABLE `tipe_bank` (
@@ -9069,7 +9094,7 @@ CREATE TABLE `tipe_bank` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `tipe_bank`
+-- Dumping data for table `tipe_bank`
 --
 
 INSERT INTO `tipe_bank` (`id`, `kode_tipe`, `keterangan`) VALUES
@@ -9081,7 +9106,7 @@ INSERT INTO `tipe_bank` (`id`, `kode_tipe`, `keterangan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `uang_muka`
+-- Table structure for table `uang_muka`
 --
 
 CREATE TABLE `uang_muka` (
@@ -9098,7 +9123,7 @@ CREATE TABLE `uang_muka` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
@@ -9118,17 +9143,17 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `user`
+-- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`id`, `kode_user`, `nama`, `email`, `password`, `secondpass`, `jkel`, `foto`, `kode_role`, `on_off`, `nohp`, `actived`, `joined`) VALUES
-(2, 'A00001', 'admin', 'ahmad.ummgl@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '1234', 'P', 'profile-img.jpg', 'R0001', 1, '', 1, '2024-03-26 06:04:15'),
+(2, 'A00001', 'admin', 'ahmad.ummgl@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '1234', 'P', 'profile-img.jpg', 'R0001', 0, '', 1, '2024-03-26 06:04:15'),
 (7, 'S00001', 'Shali', 'Shali@gmail.com', '5e8607e54e817635b727ca3400561f90', 'shali', 'W', 'wanita.png', 'R0001', 0, '', 1, '2024-08-07 15:05:55');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `user_token`
+-- Table structure for table `user_token`
 --
 
 CREATE TABLE `user_token` (
@@ -9139,7 +9164,7 @@ CREATE TABLE `user_token` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `user_token`
+-- Dumping data for table `user_token`
 --
 
 INSERT INTO `user_token` (`id`, `email`, `token`, `valid`) VALUES
@@ -9149,7 +9174,7 @@ INSERT INTO `user_token` (`id`, `email`, `token`, `valid`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `web_setting`
+-- Table structure for table `web_setting`
 --
 
 CREATE TABLE `web_setting` (
@@ -9164,7 +9189,7 @@ CREATE TABLE `web_setting` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `web_setting`
+-- Dumping data for table `web_setting`
 --
 
 INSERT INTO `web_setting` (`id`, `nama`, `alamat`, `nohp`, `email`, `logo`, `bg_theme`, `watermark`) VALUES
@@ -9173,7 +9198,7 @@ INSERT INTO `web_setting` (`id`, `nama`, `alamat`, `nohp`, `email`, `logo`, `bg_
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `web_version`
+-- Table structure for table `web_version`
 --
 
 CREATE TABLE `web_version` (
@@ -9183,7 +9208,7 @@ CREATE TABLE `web_version` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data untuk tabel `web_version`
+-- Dumping data for table `web_version`
 --
 
 INSERT INTO `web_version` (`id`, `id_web`, `version`) VALUES
@@ -9194,761 +9219,761 @@ INSERT INTO `web_version` (`id`, `id_web`, `version`) VALUES
 --
 
 --
--- Indeks untuk tabel `barang`
+-- Indexes for table `barang`
 --
 ALTER TABLE `barang`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `barang_cabang`
+-- Indexes for table `barang_cabang`
 --
 ALTER TABLE `barang_cabang`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `barang_in_detail`
+-- Indexes for table `barang_in_detail`
 --
 ALTER TABLE `barang_in_detail`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `barang_in_header`
+-- Indexes for table `barang_in_header`
 --
 ALTER TABLE `barang_in_header`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `barang_in_retur_detail`
+-- Indexes for table `barang_in_retur_detail`
 --
 ALTER TABLE `barang_in_retur_detail`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `barang_in_retur_header`
+-- Indexes for table `barang_in_retur_header`
 --
 ALTER TABLE `barang_in_retur_header`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `barang_jenis`
+-- Indexes for table `barang_jenis`
 --
 ALTER TABLE `barang_jenis`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `barang_out_detail`
+-- Indexes for table `barang_out_detail`
 --
 ALTER TABLE `barang_out_detail`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `barang_out_header`
+-- Indexes for table `barang_out_header`
 --
 ALTER TABLE `barang_out_header`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `barang_out_retur_detail`
+-- Indexes for table `barang_out_retur_detail`
 --
 ALTER TABLE `barang_out_retur_detail`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `barang_out_retur_header`
+-- Indexes for table `barang_out_retur_header`
 --
 ALTER TABLE `barang_out_retur_header`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `barang_po_in_detail`
+-- Indexes for table `barang_po_in_detail`
 --
 ALTER TABLE `barang_po_in_detail`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `barang_po_in_header`
+-- Indexes for table `barang_po_in_header`
 --
 ALTER TABLE `barang_po_in_header`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `barang_satuan`
+-- Indexes for table `barang_satuan`
 --
 ALTER TABLE `barang_satuan`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `barang_stok`
+-- Indexes for table `barang_stok`
 --
 ALTER TABLE `barang_stok`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `bayar_card_detail`
+-- Indexes for table `bayar_card_detail`
 --
 ALTER TABLE `bayar_card_detail`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `bayar_um_card_detail`
+-- Indexes for table `bayar_um_card_detail`
 --
 ALTER TABLE `bayar_um_card_detail`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `cabang`
+-- Indexes for table `cabang`
 --
 ALTER TABLE `cabang`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `cabang_user`
+-- Indexes for table `cabang_user`
 --
 ALTER TABLE `cabang_user`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `cart_detail`
+-- Indexes for table `cart_detail`
 --
 ALTER TABLE `cart_detail`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `cart_header`
+-- Indexes for table `cart_header`
 --
 ALTER TABLE `cart_header`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `cart_promo`
+-- Indexes for table `cart_promo`
 --
 ALTER TABLE `cart_promo`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `dokter`
+-- Indexes for table `dokter`
 --
 ALTER TABLE `dokter`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `dokter_poli`
+-- Indexes for table `dokter_poli`
 --
 ALTER TABLE `dokter_poli`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `jadwal_so`
+-- Indexes for table `jadwal_so`
 --
 ALTER TABLE `jadwal_so`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `kabupaten`
+-- Indexes for table `kabupaten`
 --
 ALTER TABLE `kabupaten`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `kas_bank`
+-- Indexes for table `kas_bank`
 --
 ALTER TABLE `kas_bank`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `kecamatan`
+-- Indexes for table `kecamatan`
 --
 ALTER TABLE `kecamatan`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `logistik`
+-- Indexes for table `logistik`
 --
 ALTER TABLE `logistik`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `logistik_cabang`
+-- Indexes for table `logistik_cabang`
 --
 ALTER TABLE `logistik_cabang`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `member`
+-- Indexes for table `member`
 --
 ALTER TABLE `member`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `member_token`
+-- Indexes for table `member_token`
 --
 ALTER TABLE `member_token`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_agama`
+-- Indexes for table `m_agama`
 --
 ALTER TABLE `m_agama`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_bank`
+-- Indexes for table `m_bank`
 --
 ALTER TABLE `m_bank`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_gudang`
+-- Indexes for table `m_gudang`
 --
 ALTER TABLE `m_gudang`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_jenis`
+-- Indexes for table `m_jenis`
 --
 ALTER TABLE `m_jenis`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_kategori`
+-- Indexes for table `m_kategori`
 --
 ALTER TABLE `m_kategori`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_menu`
+-- Indexes for table `m_menu`
 --
 ALTER TABLE `m_menu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_pajak`
+-- Indexes for table `m_pajak`
 --
 ALTER TABLE `m_pajak`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_pekerjaan`
+-- Indexes for table `m_pekerjaan`
 --
 ALTER TABLE `m_pekerjaan`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_pendidikan`
+-- Indexes for table `m_pendidikan`
 --
 ALTER TABLE `m_pendidikan`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_poli`
+-- Indexes for table `m_poli`
 --
 ALTER TABLE `m_poli`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_promo`
+-- Indexes for table `m_promo`
 --
 ALTER TABLE `m_promo`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_provinsi`
+-- Indexes for table `m_provinsi`
 --
 ALTER TABLE `m_provinsi`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_role`
+-- Indexes for table `m_role`
 --
 ALTER TABLE `m_role`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_ruang`
+-- Indexes for table `m_ruang`
 --
 ALTER TABLE `m_ruang`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_satuan`
+-- Indexes for table `m_satuan`
 --
 ALTER TABLE `m_satuan`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `m_supplier`
+-- Indexes for table `m_supplier`
 --
 ALTER TABLE `m_supplier`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `pembayaran`
+-- Indexes for table `pembayaran`
 --
 ALTER TABLE `pembayaran`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `pembayaran_uangmuka`
+-- Indexes for table `pembayaran_uangmuka`
 --
 ALTER TABLE `pembayaran_uangmuka`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `pendaftaran`
+-- Indexes for table `pendaftaran`
 --
 ALTER TABLE `pendaftaran`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `penyesuaian_detail`
+-- Indexes for table `penyesuaian_detail`
 --
 ALTER TABLE `penyesuaian_detail`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `penyesuaian_header`
+-- Indexes for table `penyesuaian_header`
 --
 ALTER TABLE `penyesuaian_header`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `perawat`
+-- Indexes for table `perawat`
 --
 ALTER TABLE `perawat`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `perawat_poli`
+-- Indexes for table `perawat_poli`
 --
 ALTER TABLE `perawat_poli`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `sub_menu`
+-- Indexes for table `sub_menu`
 --
 ALTER TABLE `sub_menu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `sub_menu2`
+-- Indexes for table `sub_menu2`
 --
 ALTER TABLE `sub_menu2`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `tipe_bank`
+-- Indexes for table `tipe_bank`
 --
 ALTER TABLE `tipe_bank`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `uang_muka`
+-- Indexes for table `uang_muka`
 --
 ALTER TABLE `uang_muka`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `user_token`
+-- Indexes for table `user_token`
 --
 ALTER TABLE `user_token`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `web_setting`
+-- Indexes for table `web_setting`
 --
 ALTER TABLE `web_setting`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `web_version`
+-- Indexes for table `web_version`
 --
 ALTER TABLE `web_version`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `barang`
+-- AUTO_INCREMENT for table `barang`
 --
 ALTER TABLE `barang`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_cabang`
+-- AUTO_INCREMENT for table `barang_cabang`
 --
 ALTER TABLE `barang_cabang`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_in_detail`
+-- AUTO_INCREMENT for table `barang_in_detail`
 --
 ALTER TABLE `barang_in_detail`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_in_header`
+-- AUTO_INCREMENT for table `barang_in_header`
 --
 ALTER TABLE `barang_in_header`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_in_retur_detail`
+-- AUTO_INCREMENT for table `barang_in_retur_detail`
 --
 ALTER TABLE `barang_in_retur_detail`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_in_retur_header`
+-- AUTO_INCREMENT for table `barang_in_retur_header`
 --
 ALTER TABLE `barang_in_retur_header`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_jenis`
+-- AUTO_INCREMENT for table `barang_jenis`
 --
 ALTER TABLE `barang_jenis`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_out_detail`
+-- AUTO_INCREMENT for table `barang_out_detail`
 --
 ALTER TABLE `barang_out_detail`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_out_header`
+-- AUTO_INCREMENT for table `barang_out_header`
 --
 ALTER TABLE `barang_out_header`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_out_retur_detail`
+-- AUTO_INCREMENT for table `barang_out_retur_detail`
 --
 ALTER TABLE `barang_out_retur_detail`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_out_retur_header`
+-- AUTO_INCREMENT for table `barang_out_retur_header`
 --
 ALTER TABLE `barang_out_retur_header`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_po_in_detail`
+-- AUTO_INCREMENT for table `barang_po_in_detail`
 --
 ALTER TABLE `barang_po_in_detail`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_po_in_header`
+-- AUTO_INCREMENT for table `barang_po_in_header`
 --
 ALTER TABLE `barang_po_in_header`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_satuan`
+-- AUTO_INCREMENT for table `barang_satuan`
 --
 ALTER TABLE `barang_satuan`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_stok`
+-- AUTO_INCREMENT for table `barang_stok`
 --
 ALTER TABLE `barang_stok`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `bayar_card_detail`
+-- AUTO_INCREMENT for table `bayar_card_detail`
 --
 ALTER TABLE `bayar_card_detail`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `bayar_um_card_detail`
+-- AUTO_INCREMENT for table `bayar_um_card_detail`
 --
 ALTER TABLE `bayar_um_card_detail`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `cabang`
+-- AUTO_INCREMENT for table `cabang`
 --
 ALTER TABLE `cabang`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `cabang_user`
+-- AUTO_INCREMENT for table `cabang_user`
 --
 ALTER TABLE `cabang_user`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `cart_detail`
+-- AUTO_INCREMENT for table `cart_detail`
 --
 ALTER TABLE `cart_detail`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `cart_header`
+-- AUTO_INCREMENT for table `cart_header`
 --
 ALTER TABLE `cart_header`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `cart_promo`
+-- AUTO_INCREMENT for table `cart_promo`
 --
 ALTER TABLE `cart_promo`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `dokter`
+-- AUTO_INCREMENT for table `dokter`
 --
 ALTER TABLE `dokter`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT untuk tabel `dokter_poli`
+-- AUTO_INCREMENT for table `dokter_poli`
 --
 ALTER TABLE `dokter_poli`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT untuk tabel `jadwal_so`
+-- AUTO_INCREMENT for table `jadwal_so`
 --
 ALTER TABLE `jadwal_so`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `kabupaten`
+-- AUTO_INCREMENT for table `kabupaten`
 --
 ALTER TABLE `kabupaten`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=515;
 
 --
--- AUTO_INCREMENT untuk tabel `kas_bank`
+-- AUTO_INCREMENT for table `kas_bank`
 --
 ALTER TABLE `kas_bank`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT untuk tabel `kecamatan`
+-- AUTO_INCREMENT for table `kecamatan`
 --
 ALTER TABLE `kecamatan`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7095;
 
 --
--- AUTO_INCREMENT untuk tabel `logistik`
+-- AUTO_INCREMENT for table `logistik`
 --
 ALTER TABLE `logistik`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT untuk tabel `logistik_cabang`
+-- AUTO_INCREMENT for table `logistik_cabang`
 --
 ALTER TABLE `logistik_cabang`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `member`
+-- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT untuk tabel `member_token`
+-- AUTO_INCREMENT for table `member_token`
 --
 ALTER TABLE `member_token`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT untuk tabel `m_agama`
+-- AUTO_INCREMENT for table `m_agama`
 --
 ALTER TABLE `m_agama`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT untuk tabel `m_bank`
+-- AUTO_INCREMENT for table `m_bank`
 --
 ALTER TABLE `m_bank`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT untuk tabel `m_gudang`
+-- AUTO_INCREMENT for table `m_gudang`
 --
 ALTER TABLE `m_gudang`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT untuk tabel `m_jenis`
+-- AUTO_INCREMENT for table `m_jenis`
 --
 ALTER TABLE `m_jenis`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT untuk tabel `m_kategori`
+-- AUTO_INCREMENT for table `m_kategori`
 --
 ALTER TABLE `m_kategori`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT untuk tabel `m_menu`
+-- AUTO_INCREMENT for table `m_menu`
 --
 ALTER TABLE `m_menu`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
--- AUTO_INCREMENT untuk tabel `m_pajak`
+-- AUTO_INCREMENT for table `m_pajak`
 --
 ALTER TABLE `m_pajak`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `m_pekerjaan`
+-- AUTO_INCREMENT for table `m_pekerjaan`
 --
 ALTER TABLE `m_pekerjaan`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- AUTO_INCREMENT untuk tabel `m_pendidikan`
+-- AUTO_INCREMENT for table `m_pendidikan`
 --
 ALTER TABLE `m_pendidikan`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- AUTO_INCREMENT untuk tabel `m_poli`
+-- AUTO_INCREMENT for table `m_poli`
 --
 ALTER TABLE `m_poli`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT untuk tabel `m_promo`
+-- AUTO_INCREMENT for table `m_promo`
 --
 ALTER TABLE `m_promo`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT untuk tabel `m_provinsi`
+-- AUTO_INCREMENT for table `m_provinsi`
 --
 ALTER TABLE `m_provinsi`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
--- AUTO_INCREMENT untuk tabel `m_role`
+-- AUTO_INCREMENT for table `m_role`
 --
 ALTER TABLE `m_role`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT untuk tabel `m_ruang`
+-- AUTO_INCREMENT for table `m_ruang`
 --
 ALTER TABLE `m_ruang`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `m_satuan`
+-- AUTO_INCREMENT for table `m_satuan`
 --
 ALTER TABLE `m_satuan`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT untuk tabel `m_supplier`
+-- AUTO_INCREMENT for table `m_supplier`
 --
 ALTER TABLE `m_supplier`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT untuk tabel `pembayaran`
+-- AUTO_INCREMENT for table `pembayaran`
 --
 ALTER TABLE `pembayaran`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `pembayaran_uangmuka`
+-- AUTO_INCREMENT for table `pembayaran_uangmuka`
 --
 ALTER TABLE `pembayaran_uangmuka`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `pendaftaran`
+-- AUTO_INCREMENT for table `pendaftaran`
 --
 ALTER TABLE `pendaftaran`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `penyesuaian_detail`
+-- AUTO_INCREMENT for table `penyesuaian_detail`
 --
 ALTER TABLE `penyesuaian_detail`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `penyesuaian_header`
+-- AUTO_INCREMENT for table `penyesuaian_header`
 --
 ALTER TABLE `penyesuaian_header`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `perawat`
+-- AUTO_INCREMENT for table `perawat`
 --
 ALTER TABLE `perawat`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `perawat_poli`
+-- AUTO_INCREMENT for table `perawat_poli`
 --
 ALTER TABLE `perawat_poli`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT untuk tabel `sub_menu`
+-- AUTO_INCREMENT for table `sub_menu`
 --
 ALTER TABLE `sub_menu`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
--- AUTO_INCREMENT untuk tabel `sub_menu2`
+-- AUTO_INCREMENT for table `sub_menu2`
 --
 ALTER TABLE `sub_menu2`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
--- AUTO_INCREMENT untuk tabel `tipe_bank`
+-- AUTO_INCREMENT for table `tipe_bank`
 --
 ALTER TABLE `tipe_bank`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT untuk tabel `uang_muka`
+-- AUTO_INCREMENT for table `uang_muka`
 --
 ALTER TABLE `uang_muka`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `user`
+-- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT untuk tabel `user_token`
+-- AUTO_INCREMENT for table `user_token`
 --
 ALTER TABLE `user_token`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT untuk tabel `web_setting`
+-- AUTO_INCREMENT for table `web_setting`
 --
 ALTER TABLE `web_setting`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT untuk tabel `web_version`
+-- AUTO_INCREMENT for table `web_version`
 --
 ALTER TABLE `web_version`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
