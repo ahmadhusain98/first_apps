@@ -1,7 +1,7 @@
 <form method="post" id="form_report">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Parameter</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Parameter</span>
         </div>
     </div>
     <br>
@@ -57,10 +57,12 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 offset-3 col-12 text-center">
-            <button class="btn btn-primary btn-sm" type="button" onclick="cetak(0)"><ion-icon name="desktop-outline"></ion-icon> LAYAR</button>
-            <button class="btn btn-warning btn-sm" type="button" onclick="cetak(1)"><ion-icon name="document-text-outline"></ion-icon> PDF</button>
-            <button class="btn btn-success btn-sm" type="button" onclick="cetak(2)"><ion-icon name="grid-outline"></ion-icon> EXCEL</button>
+        <div class="col-md-6 offset-3 col-12">
+            <div class="float-right">
+                <button class="btn btn-primary" type="button" onclick="cetak(0)"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</button>
+                <button class="btn btn-warning" type="button" onclick="cetak(1)"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</button>
+                <button class="btn btn-success" type="button" onclick="cetak(2)"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</button>
+            </div>
         </div>
     </div>
 </form>
