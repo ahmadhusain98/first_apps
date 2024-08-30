@@ -883,12 +883,12 @@
 
                 if (result.status == 1) { // jika mendapatkan respon 1
 
-                    Swal.fire("Pengajuan Pembelian", "Berhasil " + message, "success").then(() => {
+                    Swal.fire("Pre Order Pembelian", "Berhasil " + message, "success").then(() => {
                         getUrl('Transaksi/barang_po_in');
                     });
                 } else { // selain itu
 
-                    Swal.fire("Pengajuan Pembelian", "Gagal " + message + ", silahkan dicoba kembali", "info");
+                    Swal.fire("Pre Order Pembelian", "Gagal " + message + ", silahkan dicoba kembali", "info");
                 }
             },
             error: function(result) { // jika fungsi error

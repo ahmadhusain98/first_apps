@@ -309,6 +309,7 @@ class Transaksi extends CI_Controller
                     'harga'         => $harga,
                     'qty_konversi'  => $qty_konversi,
                     'qty'           => $qty,
+                    'qty_terima'    => '0.00',
                     'discpr'        => $discpr,
                     'discrp'        => $discrp,
                     'pajak'         => (($pajakrp > 0) ? 1 : 0),
@@ -1013,21 +1014,13 @@ class Transaksi extends CI_Controller
         if ($header) {
             $cek_bh = $this->M_global->getData('barang_in_header', ['invoice_po' => $invoice]);
 
-            if ($cek_bh) {
-                $detail = $this->db->query('SELECT 
-                    POH.invoice, POD.kode_barang, POD.kode_satuan AS satuan_default,
-                    POD.qty - IFNULL(TD.qty, 0) AS qty_po,
-                    B.nama, B.kode_satuan, B.kode_satuan2, B.kode_satuan3,
-                    POD.harga, POD.discpr, POD.discrp, POD.pajak, POD.pajakrp, POD.jumlah
-                FROM barang_po_in_detail POD
-                JOIN barang B ON B.kode_barang = POD.kode_barang
-                JOIN barang_po_in_header POH ON POD.invoice = POH.invoice
-                LEFT JOIN barang_in_header TH ON TH.invoice_po = POH.invoice
-                LEFT JOIN barang_in_detail TD ON (TH.invoice = TD.invoice AND TD.kode_barang = POD.kode_barang)
-                WHERE POH.invoice = "' . $invoice . '" AND (POD.qty - IFNULL(TD.qty, 0)) > 0')->result();
-            } else {
-                $detail = $this->db->query('SELECT bpo.*, bpo.qty AS qty_po, bpo.kode_satuan AS satuan_default, b.nama, b.kode_satuan, b.kode_satuan2, b.kode_satuan3 FROM barang_po_in_detail bpo JOIN barang b ON bpo.kode_barang = b.kode_barang WHERE bpo.invoice = "' . $invoice . '"')->result();
-            }
+            $detail = $this->db->query('SELECT hpo.invoice, dpo.kode_barang, dpo.kode_satuan AS satuan_default,
+            dpo.qty - dpo.qty_terima AS qty_po, b.nama, b.kode_satuan, b.kode_satuan2, b.kode_satuan3,
+            dpo.harga, dpo.discpr, dpo.discrp, dpo.pajak, dpo.pajakrp, dpo.jumlah
+            FROM barang_po_in_detail dpo
+            JOIN barang_po_in_header hpo ON hpo.invoice = dpo.invoice
+            JOIN barang b ON b.kode_barang = dpo.kode_barang
+            WHERE dpo.qty_terima != dpo.qty AND hpo.invoice = "' . $invoice . '"')->result();
 
             foreach ($detail as $value) {
                 $satuan = [];
@@ -1182,6 +1175,20 @@ class Transaksi extends CI_Controller
             ];
 
             if ($param == 2) { // jika param = 2
+                if ($invoice_po != '' || $invoice_po != null || !empty($invoice_po) || isset($invoice_po)) {
+                    $detail_terima = $this->M_global->getDataResult('barang_in_detail', ['invoice' => $invoice]);
+
+                    foreach ($detail_terima as $dt) {
+                        $where_po = ['invoice' => $invoice_po, 'kode_barang' => $dt->kode_barang, 'kode_satuan' => $dt->kode_satuan];
+
+                        $data_update = [
+                            'qty_terima' => 0
+                        ];
+
+                        $this->M_global->updateData('barang_po_in_detail', $data_update, $where_po);
+                    }
+                }
+
                 // jalankan fungsi cek
                 $cek = [
                     $this->M_global->updateData('barang_in_header', $isi_header, ['invoice' => $invoice]), // update header
@@ -1235,6 +1242,18 @@ class Transaksi extends CI_Controller
 
                     // insert detail
                     $this->M_global->insertData('barang_in_detail', $isi_detail);
+
+                    if ($invoice_po != '' || $invoice_po != null || !empty($invoice_po) || isset($invoice_po)) {
+                        $where_po = ['invoice' => $invoice_po, 'kode_barang' => $kode_barang];
+
+                        $detail_po = $this->M_global->getData('barang_po_in_detail', $where_po);
+
+                        $data_update = [
+                            'qty_terima' => ($detail_po->qty_terima + $qty)
+                        ];
+
+                        $this->M_global->updateData('barang_po_in_detail', $data_update, $where_po);
+                    }
                 }
 
                 $this->single_print_bin($invoice, 1);
@@ -1333,6 +1352,26 @@ class Transaksi extends CI_Controller
     // fungsi hapus barang in
     public function delBeliIn($invoice)
     {
+        $header = $this->M_global->getData('barang_in_header', ['invoice' => $invoice]);
+        $detail_cek = $this->M_global->getDataResult('barang_in_detail', ['invoice' => $invoice]);
+
+        if ($header->invoice_po != '' || $header->invoice_po != null || !empty($header->invoice_po) || isset($header->invoice_po)) {
+            foreach ($detail_cek as $dc) {
+                $detail_terima = $this->M_global->getData('barang_in_detail', ['invoice' => $invoice, 'kode_barang' => $dc->kode_barang]);
+                $detail_po = $this->M_global->getData('barang_po_in_detail', ['invoice' => $header->invoice_po, 'kode_barang' => $dc->kode_barang]);
+
+                if ($detail_po->kode_barang == $detail_terima->kode_barang) {
+                    $where_po = ['invoice' => $header->invoice_po, 'kode_barang' => $detail_po->kode_barang, 'kode_satuan' => $detail_po->kode_satuan];
+
+                    $data_update = [
+                        'qty_terima' => $detail_po->qty_terima - $detail_terima->qty
+                    ];
+
+                    $this->M_global->updateData('barang_po_in_detail', $data_update, $where_po);
+                }
+            }
+        }
+
         // jalankan fungsi cek
         $cek = [
             $this->M_global->delData('barang_in_detail', ['invoice' => $invoice]), // del data detail pembelian
