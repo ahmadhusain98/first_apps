@@ -294,6 +294,9 @@ class Auth extends CI_Controller
         // cek email di table user
         $cek_user = $this->M_auth->jumRow("user", ["email" => $email]);
 
+        $date       = date("Y-m-d");
+        $jam        = date("H:i:s");
+
         if ($cek_user < 1) { // jika email tidak ada/ kurang dari 1
             // kirimkan status 2 ke view
             echo json_encode(["status" => 2]);
@@ -323,6 +326,30 @@ class Auth extends CI_Controller
 
                     // buatkan session baru untuk masuk ke sistem
                     $this->session->set_userdata($isi_session);
+
+                    // aktifitas user
+                    $cek_log = $this->db->query("SELECT * FROM activity_log WHERE kode = '$email'")->num_rows();
+                    if ($cek_log > 0) {
+                        $this->db->query("UPDATE activity_log SET tgl_masuk = '$date', jam_masuk = '$jam' WHERE kode = '$email'");
+                    } else {
+                        $data_pesan = [
+                            'kode'      => $email,
+                            'isi'       => "Login / Logout",
+                            'tgl_masuk' => $date,
+                            'jam_masuk' => $jam,
+                        ];
+                        $this->db->insert("activity_log", $data_pesan);
+                    }
+
+                    $aktifitas = [
+                        'email'     => $email,
+                        'kegiatan'  => "Di Cabang " . $init_cabang . ', Shift: ' . $shift,
+                        'menu'      => "Login",
+                        'waktu'     => date('Y-m-d H:i:s'),
+                    ];
+
+                    $this->db->insert("activity_user", $aktifitas);
+                    $this->db->query("UPDATE user SET on_off = '1' WHERE email = '$email'");
 
                     // kirimkan status 1 ke view
                     echo json_encode(["status" => 1, 'kode_role' => $user->kode_role]);
@@ -390,6 +417,17 @@ class Auth extends CI_Controller
     {
         // session
         $sess = $this->session->userdata('email');
+        $init_cabang = $this->session->userdata('init_cabang');
+        $shift = $this->session->userdata('shift');
+
+        $aktifitas = [
+            'email'     => $sess,
+            'kegiatan'  => "Di Cabang " . $init_cabang . ', Shift: ' . $shift,
+            'menu'      => "Logout",
+            'waktu'     => date('Y-m-d H:i:s'),
+        ];
+
+        $this->db->insert("activity_user", $aktifitas);
 
         // cek user/ member
         $cek = $this->M_global->jumDataRow('user', ['email' => $sess]);

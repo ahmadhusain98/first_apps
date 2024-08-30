@@ -67,14 +67,14 @@ if ($data_user->on_off == 1) {
                                 <div class="row">
                                     <div class="col">
                                         <div class="table-responsive">
-                                            <div class="h4 text-primary font-weight-bold">Keluar / Masuk Sistem</div>
-                                            <table class="table table-bordered table-striped">
+                                            <div class="h4 text-primary font-weight-bold">Masuk & Keluar Sistem</div>
+                                            <table class="table table-bordered" width="100%" style="border-radius: 10px;">
                                                 <thead>
                                                     <tr class="text-center">
-                                                        <th>Tanggal Masuk</th>
+                                                        <th style="border-radius: 10px 0px 0px 0px;">Tanggal Masuk</th>
                                                         <th>Jam Masuk</th>
                                                         <th>Tanggal Keluar</th>
-                                                        <th>Jam Keluar</th>
+                                                        <th style="border-radius: 0px 10px 0px 0px;">Jam Keluar</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -161,7 +161,7 @@ if ($data_user->on_off == 1) {
                                         </div>
                                     </div>
                                 </div>
-                                <hr>
+                                <hr class="border-primary">
                                 <div class="row">
                                     <div class="col">
                                         <div class="row">
@@ -177,37 +177,32 @@ if ($data_user->on_off == 1) {
                                                 <br>
                                                 <span class="badge bg-danger float-right">Banyaknya aktifitas : <?= $jum_aktif; ?></span>
                                                 <br>
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <div class="table-responsive">
-                                                            <table width="100%">
-                                                                <?php foreach ($aktifitas as $au) { ?>
-                                                                    <tr>
-                                                                        <td width="14%" class="text-left"><span class="badge bg-success"><?= date("d m Y", strtotime($au->waktu)); ?></span></td>
-                                                                        <td width="20%" class="text-left"><?= $au->menu; ?></td>
-                                                                        <td width="46%" class="text-left"><?= $au->kegiatan; ?></td>
-                                                                        <td width="20%" class="text-right">Jam : <?= date("H:i", strtotime($au->waktu)); ?></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td colspan="4">
-                                                                            <hr>
-                                                                        </td>
-                                                                    </tr>
-                                                                <?php } ?>
-                                                            </table>
-                                                        </div>
-                                                    </div>
+                                                <div class="table-responsive">
+                                                    <table width="100%" class="table table-striped">
+                                                        <?php foreach ($aktifitas as $au) { ?>
+                                                            <tr>
+                                                                <td width="14%" class="text-left"><span class="badge bg-success"><?= date("d m Y", strtotime($au->waktu)); ?></span></td>
+                                                                <td width="20%" class="text-left"><?= $au->menu; ?></td>
+                                                                <td width="46%" class="text-left"><?= $au->kegiatan; ?></td>
+                                                                <td width="20%" class="text-right">Jam : <?= date("H:i", strtotime($au->waktu)); ?></td>
+                                                            </tr>
+                                                        <?php } ?>
+                                                    </table>
                                                 </div>
                                             <?php else : ?>
                                                 <br>
                                                 <div class="row">
-                                                    <div class="col">
+                                                    <div class="col-md-12">
                                                         <span class="badge bg-danger float-right">Banyaknya aktifitas : 0</span>
                                                         <br>
-                                                        <div class="card">
-                                                            <div class="card-body">
-                                                                <span class="text-center">Tidak ada aktifitas</span>
-                                                            </div>
+                                                        <div class="table-responsive">
+                                                            <table width="100%" class="table table-striped">
+                                                                <tr>
+                                                                    <td>
+                                                                        <span class="text-center font-weight-bold">Tidak ada aktifitas</span>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -248,14 +243,24 @@ if ($data_user->on_off == 1) {
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="inputExperience" class="col-sm-2 col-form-label">Nomor Hp/Telp</label>
+                                        <label for="inputExperience" class="col-sm-2 col-form-label">Nomor Hp</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="nohp" name="nohp" placeholder="Nomor Hp/Telp" value="<?= $data_user->nohp; ?>">
+                                            <input type="text" class="form-control" id="nohp" name="nohp" placeholder="Nomor Hp" value="<?= $data_user->nohp; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputExperience" class="col-sm-2 col-form-label">Gender</label>
+                                        <div class="col-sm-10">
+                                            <select name="jkel" id="jkel" class="form-control select2_global" data-placeholder="~ Pilih Gender">
+                                                <option value="~ Pilih Gender"></option>
+                                                <option value="P" <?= ($data_user->jkel == 'P') ? 'selected' : '' ?>>Pria</option>
+                                                <option value="W" <?= ($data_user->jkel == 'W') ? 'selected' : '' ?>>Wanita</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <div class="offset-sm-2 col-sm-10">
-                                            <button type="button" class="btn btn-danger btn-flat float-right" onclick="simpan_profile('<?= $data_user->email; ?>')">Perbarui Data Diri&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-hard-drive"></i></button>
+                                            <button type="button" class="btn btn-danger float-right" onclick="simpan_profile('<?= $data_user->kode_user; ?>')"><i class="fa-solid fa-hard-drive mr-1"></i> Perbarui Data Diri</button>
                                         </div>
                                     </div>
                                 </form>
@@ -291,7 +296,7 @@ if ($data_user->on_off == 1) {
                                     </div>
                                     <div class="row">
                                         <div class="col">
-                                            <button class="btn btn-flat btn-success float-right" type="button" id="btnpassword" onclick="c_pas()">Simpan Password Baru <i class="fa-solid fa-key"></i></button>
+                                            <button class="btn btn-success float-right" type="button" id="btnpassword" onclick="c_pas()"><i class="fa-solid fa-key mr-1"></i> Simpan Password Baru</button>
                                         </div>
                                     </div>
                                 </form>
@@ -320,4 +325,79 @@ if ($data_user->on_off == 1) {
             document.getElementById('show_log').checked = false;
         }
     })
+
+    function simpan_profile(id) {
+        Swal.fire({
+            title: "Kamu yakin?",
+            text: "Data profile akan diupdate!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, update!",
+            cancelButtonText: "Tidak!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var form = $('#form-profile')[0];
+                var data = new FormData(form);
+                $.ajax({
+                    url: "<?= site_url('Profile/updateAkun/'); ?>" + id,
+                    type: "POST",
+                    enctype: 'multipart/form-data',
+                    data: data,
+                    dataType: "JSON",
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    timeout: 600000,
+                    success: function(result) {
+                        if (result.status == 1) { // jika mendapatkan respon 1
+
+                            Swal.fire("Profile", "Berhasil diupdate", "success").then(() => {
+                                getUrl('Profile');
+                            });
+                        } else { // selain itu
+
+                            Swal.fire("Profile", "Gagal diupdate" + ", silahkan dicoba kembali", "info");
+                        }
+                    },
+                    error: function(result) { // jika fungsi error
+                        error_proccess();
+                    }
+                });
+            }
+        })
+    }
+
+    // when photo has been change
+    $("#filefoto").change(function() {
+        readURL(this);
+    });
+
+    // preview image
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#div_preview_foto').css("display", "block");
+                $('#preview_img').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            $('#div_preview_foto').css("display", "none");
+            $('#preview_img').attr('src', '');
+        }
+    }
+
+    // aktifitas
+    function lihat_aktifitas(params) {
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("cekaktif_user").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "<?= base_url(); ?>Profile/aktifitas_user/" + params, true);
+        xhttp.send();
+    }
 </script>

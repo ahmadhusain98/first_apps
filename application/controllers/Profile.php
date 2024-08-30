@@ -93,8 +93,19 @@ class Profile extends CI_Controller
         $nama         = $this->input->post('nama');
         $email        = $this->input->post('email');
         $jkel         = $this->input->post('jkel');
+        $nohp         = $this->input->post('nohp');
         $secondpass   = $this->input->post('secondpass');
         $password     = md5($secondpass);
+
+        $cek_user = $this->M_global->getData('user', ['email' => $email]);
+
+        if ($secondpass == '') {
+            $secondpass = $cek_user->secondpass;
+            $password = $cek_user->password;
+        } else {
+            $secondpass = $secondpass;
+            $password = $password;
+        }
 
         // configurasi upload file
         $config['upload_path']    = 'assets/user/';
@@ -110,8 +121,6 @@ class Profile extends CI_Controller
             // ambil namanya berdasarkan nama file upload
             $gambar = $this->upload->data('file_name');
         } else { // selain itu
-            $cek_user = $this->M_global->getData('user', ['email' => $email]);
-
             if ($cek_user) {
                 if ($cek_user->foto == '' || $cek_user->foto == null) {
                     // beri nilai default
@@ -157,6 +166,7 @@ class Profile extends CI_Controller
             'secondpass'    => $secondpass,
             'password'      => $password,
             'foto'          => $gambar,
+            'nohp'          => $nohp,
         ];
 
         // jalankan fungsi update berdasarkan id
@@ -167,6 +177,48 @@ class Profile extends CI_Controller
         } else { // selain itu beri nilai 0
             echo json_encode(['status' => 0]);
         }
+    }
+
+    public function aktifitas_user($date)
+    {
+        $email = $this->session->userdata("email");
+        $jum_aktif = $this->db->query("SELECT * FROM activity_user WHERE email = '$email' AND waktu LIKE '%$date%'")->num_rows();
+        $aktifitas = $this->db->query("SELECT * FROM activity_user WHERE email = '$email' AND waktu LIKE '%$date%' ORDER BY id_activity DESC")->result();
+        if ($aktifitas) :
+?>
+            <br>
+            <span class="badge bg-danger float-right">Banyaknya aktifitas : <?= $jum_aktif; ?></span>
+            <br>
+            <div class="table-responsive">
+                <table width="100%" class="table table-striped">
+                    <?php foreach ($aktifitas as $au) { ?>
+                        <tr>
+                            <td width="14%" class="text-left"><span class="badge bg-success"><?= date("d m Y", strtotime($au->waktu)); ?></span></td>
+                            <td width="20%" class="text-left"><?= $au->menu; ?></td>
+                            <td width="46%" class="text-left"><?= $au->kegiatan; ?></td>
+                            <td width="20%" class="text-right">Jam : <?= date("H:i", strtotime($au->waktu)); ?></td>
+                        </tr>
+                    <?php } ?>
+                </table>
+            </div>
+        <?php else : ?>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <span class="badge bg-danger float-right shadow">Banyaknya aktifitas : 0</span>
+                    <br>
+                    <div class="table-responsive">
+                        <table width="100%" class="table table-striped">
+                            <tr>
+                                <td>
+                                    <span class="text-center font-weight-bold">Tidak ada aktifitas</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+<?php endif;
     }
 
     // fungsi update akun member
