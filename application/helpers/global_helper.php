@@ -780,10 +780,10 @@ function _invoiceDepoUM()
     $number       = 1;
     if ($lastNumber) {
         $number   = $CI->db->query('SELECT * FROM pembayaran_uangmuka WHERE tgl_pembayaran = "' . $now . '"')->num_rows() + 1;
-        $invoice  = 'DEPOUM~' . date('dmY') . sprintf("%05d", $number);
+        $invoice  = 'UM-' . date('Ymd') . sprintf("%05d", $number);
     } else {
         $number   = 0;
-        $invoice  = 'DEPOUM~' . date('dmY') . "00001";
+        $invoice  = 'UM-' . date('Ymd') . "00001";
     }
     return $invoice;
 }

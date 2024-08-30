@@ -5,24 +5,24 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 <form method="post" id="form_uangmuka">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Daftar Uang Muka Member</span>
-            <button type="button" class="btn btn-sm float-right btn-primary ml-1" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Uang Muka Member</span>
+            <button type="button" class="btn btn-primary float-right" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
         </div>
     </div>
     <br>
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tableUangMuka" width="100%">
+                <table class="table table-hover table-bordered" id="tableUangMuka" width="100%" style="border-radius: 10px;">
                     <thead>
                         <tr class="text-center">
-                            <th width="5%" class="bg-primary">#</th>
-                            <th width="20%" class="bg-primary">Member</th>
-                            <th width="20%" class="bg-primary">Tgl/Jam Terkahir</th>
-                            <th width="15%" class="bg-primary">Invoice Terakhir</th>
-                            <th width="15%" class="bg-primary">Masuk</th>
-                            <th width="15%" class="bg-primary">Keluar</th>
-                            <th width="15%" class="bg-primary">Tersedia</th>
+                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                            <th width="20%">Member</th>
+                            <th width="20%">Tgl/Jam Terkahir</th>
+                            <th width="15%">Invoice Terakhir</th>
+                            <th width="15%">Masuk</th>
+                            <th width="15%">Keluar</th>
+                            <th width="15%" style="border-radius: 0px 10px 0px 0px;">Tersedia</th>
                         </tr>
                     </thead>
                 </table>

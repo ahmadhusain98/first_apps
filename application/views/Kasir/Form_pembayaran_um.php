@@ -1,7 +1,7 @@
 <form method="post" id="form_pembayaran">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir Deposit</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir Deposit</span>
         </div>
     </div>
     <br>
@@ -95,7 +95,7 @@
     <hr>
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Pembayaran Deposit</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Pembayaran Deposit</span>
         </div>
     </div>
     <br>
@@ -130,15 +130,15 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-hover table-bordered" id="tableBayarCard" style="width: 100%;">
+                                <table class="table table-hover table-bordered" id="tableBayarCard" width="100%" style="border-radius: 10px;">
                                     <thead>
                                         <tr class="text-center">
-                                            <th style="width: 5%;" class="bg-primary">Hapus</th>
-                                            <th style="width: 15%;" class="bg-primary">Bank</th>
-                                            <th style="width: 10%;" class="bg-primary">Tipe</th>
-                                            <th style="width: 20%;" class="bg-primary">No. Kartu</th>
-                                            <th style="width: 20%;" class="bg-primary">Approval</th>
-                                            <th style="width: 20%;" class="bg-primary">Pembayaran</th>
+                                            <th style="width: 5%; border-radius: 10px 0px 0px 0px;">Hapus</th>
+                                            <th style="width: 15%;">Bank</th>
+                                            <th style="width: 10%;">Tipe</th>
+                                            <th style="width: 20%;">No. Kartu</th>
+                                            <th style="width: 20%;">Approval</th>
+                                            <th style="width: 20%; border-radius: 0px 10px 0px 0px;">Pembayaran</th>
                                         </tr>
                                     </thead>
                                     <tbody id="bodyBayarCard">
@@ -147,7 +147,7 @@
                                             foreach ($bayar_detail as $bd) : ?>
                                                 <tr id="rowCard<?= $no ?>">
                                                     <td>
-                                                        <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Hapus" onclick="hapusBaris(<?= $no ?>)"><ion-icon name="ban-outline"></ion-icon></button>
+                                                        <button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no ?>" onclick="hapusBaris('<?= $no ?>')"><i class="fa-solid fa-delete-left"></i></button>
                                                     </td>
                                                     <td>
                                                         <select name="kode_bank[]" id="kode_bank<?= $no ?>" class="select2_bank" data-placeholder="~ Pilih Bank">
@@ -174,7 +174,7 @@
                                         <?php else : ?>
                                             <tr id="rowCard1">
                                                 <td>
-                                                    <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Hapus" onclick="hapusBaris(1)"><ion-icon name="ban-outline"></ion-icon></button>
+                                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapus1" onclick="hapusBaris(1)"><i class="fa-solid fa-delete-left"></i></button>
                                                 </td>
                                                 <td>
                                                     <select name="kode_bank[]" id="kode_bank1" class="select2_bank" data-placeholder="~ Pilih Bank"></select>
@@ -202,7 +202,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <input type="hidden" class="form-control" id="jumCard" value="<?= (!empty($bayar_detail) ? count($bayar_detail) : '1') ?>">
-                            <button type="button" class="btn btn-primary" onclick="tambah_card()"><ion-icon name="add-circle-outline"></ion-icon> Tambah Card</button>
+                            <button type="button" class="btn btn-primary" onclick="tambah_card()" id="btnCard"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah Card</button>
                         </div>
                         <div class="col-md-6 text-right">
                             <div class="row">
@@ -219,15 +219,13 @@
     </div>
     <br>
     <div class="row">
-        <div class="col-md-6">
-            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Kasir/deposit_um')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
-        </div>
-        <div class="col-md-6">
-            <button type="button" class="btn btn-success float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_pembayaran) ? 'Perbarui' : 'Simpan') ?></button>
+        <div class="col-md-12">
+            <button type="button" class="btn btn-danger" onclick="getUrl('Kasir/deposit_um')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
             <?php if (!empty($data_pembayaran)) : ?>
-                <button type="button" class="btn btn-info float-right btn-sm" onclick="getUrl('Kasir/form_uangmuka/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                <button type="button" class="btn btn-info float-right" onclick="getUrl('Kasir/form_uangmuka/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Baru</button>
             <?php else : ?>
-                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+                <button type="button" class="btn btn-info float-right" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
             <?php endif ?>
         </div>
     </div>
@@ -315,7 +313,7 @@
         $('#jumCard').val(row);
         bodyCard.append(`<tr id="rowCard${row}">
             <td>
-                <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Hapus" onclick="hapusBaris(${row})"><ion-icon name="ban-outline"></ion-icon></button>
+                <button class="btn btn-sm btn-danger" type="button" id="btnHapus${row}" onclick="hapusBaris('${row}')"><i class="fa-solid fa-delete-left"></i></button>
             </td>
             <td>
                 <select name="kode_bank[]" id="kode_bank${row}" class="select2_bank" data-placeholder="~ Pilih Bank"></select>
