@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 30, 2024 at 04:58 PM
+-- Generation Time: Aug 30, 2024 at 05:48 PM
 -- Server version: 8.0.30
 -- PHP Version: 7.4.3
 
@@ -42,7 +42,7 @@ CREATE TABLE `activity_log` (
 --
 
 INSERT INTO `activity_log` (`id_activity`, `kode`, `isi`, `tgl_masuk`, `jam_masuk`, `tgl_keluar`, `jam_keluar`) VALUES
-(1, 'ahmad.ummgl@gmail.com', 'Login / Logout', '2024-08-30', '23:09:07', '2023-12-21', '00:37:29');
+(1, 'ahmad.ummgl@gmail.com', 'Login / Logout', '2024-08-31', '00:33:07', '2023-12-21', '00:37:29');
 
 -- --------------------------------------------------------
 
@@ -57,6 +57,15 @@ CREATE TABLE `activity_user` (
   `menu` varchar(200) NOT NULL,
   `waktu` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `activity_user`
+--
+
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`) VALUES
+(2, 'ahmad.ummgl@gmail.com', 'Di Cabang DIY, Shift: 1', 'Login', '2024-08-31 00:30:29'),
+(3, 'ahmad.ummgl@gmail.com', 'Di Cabang DIY, Shift: 1', 'Logout', '2024-08-31 00:32:42'),
+(4, 'ahmad.ummgl@gmail.com', 'Di Cabang DIY, Shift: 1', 'Login', '2024-08-31 00:33:07');
 
 -- --------------------------------------------------------
 
@@ -9189,7 +9198,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `kode_user`, `nama`, `email`, `password`, `secondpass`, `jkel`, `foto`, `kode_role`, `on_off`, `nohp`, `actived`, `joined`) VALUES
-(2, 'A00001', 'admin', 'ahmad.ummgl@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '1234', 'P', 'profile-img.jpg', 'R0001', 1, '', 1, '2024-03-26 06:04:15'),
+(2, 'A00001', 'Ahmad Husain', 'ahmad.ummgl@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '1234', 'P', 'profile-img.jpg', 'R0001', 1, '0895363260970', 1, '2024-03-26 06:04:15'),
 (7, 'S00001', 'Shali', 'Shali@gmail.com', '5e8607e54e817635b727ca3400561f90', 'shali', 'W', 'wanita.png', 'R0001', 0, '', 1, '2024-08-07 15:05:55');
 
 -- --------------------------------------------------------
@@ -9664,7 +9673,7 @@ ALTER TABLE `activity_log`
 -- AUTO_INCREMENT for table `activity_user`
 --
 ALTER TABLE `activity_user`
-  MODIFY `id_activity` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_activity` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `barang`
