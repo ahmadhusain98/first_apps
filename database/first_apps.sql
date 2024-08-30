@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 30, 2024 at 04:02 PM
+-- Generation Time: Aug 30, 2024 at 04:58 PM
 -- Server version: 8.0.30
 -- PHP Version: 7.4.3
 
@@ -20,6 +20,43 @@ SET time_zone = "+00:00";
 --
 -- Database: `first_apps`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `activity_log`
+--
+
+CREATE TABLE `activity_log` (
+  `id_activity` int NOT NULL,
+  `kode` varchar(200) NOT NULL,
+  `isi` text NOT NULL,
+  `tgl_masuk` date NOT NULL,
+  `jam_masuk` time NOT NULL,
+  `tgl_keluar` date NOT NULL,
+  `jam_keluar` time NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `activity_log`
+--
+
+INSERT INTO `activity_log` (`id_activity`, `kode`, `isi`, `tgl_masuk`, `jam_masuk`, `tgl_keluar`, `jam_keluar`) VALUES
+(1, 'ahmad.ummgl@gmail.com', 'Login / Logout', '2024-08-30', '23:09:07', '2023-12-21', '00:37:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `activity_user`
+--
+
+CREATE TABLE `activity_user` (
+  `id_activity` int NOT NULL,
+  `email` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `kegiatan` text NOT NULL,
+  `menu` varchar(200) NOT NULL,
+  `waktu` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -9224,6 +9261,18 @@ INSERT INTO `web_version` (`id`, `id_web`, `version`) VALUES
 --
 
 --
+-- Indexes for table `activity_log`
+--
+ALTER TABLE `activity_log`
+  ADD PRIMARY KEY (`id_activity`);
+
+--
+-- Indexes for table `activity_user`
+--
+ALTER TABLE `activity_user`
+  ADD PRIMARY KEY (`id_activity`);
+
+--
 -- Indexes for table `barang`
 --
 ALTER TABLE `barang`
@@ -9604,6 +9653,18 @@ ALTER TABLE `web_version`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `activity_log`
+--
+ALTER TABLE `activity_log`
+  MODIFY `id_activity` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `activity_user`
+--
+ALTER TABLE `activity_user`
+  MODIFY `id_activity` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `barang`

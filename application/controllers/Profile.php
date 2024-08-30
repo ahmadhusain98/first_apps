@@ -53,6 +53,8 @@ class Profile extends CI_Controller
             $data = $this->db->query("SELECT m.*, m.kode_member AS kode_user FROM member m WHERE m.kode_member = '" . $this->session->userdata('kode_user') . "'");
         }
 
+        $now = date('Y-m-d');
+
         $parameter = [
             $this->data,
             'judul'         => 'Profile',
@@ -61,6 +63,9 @@ class Profile extends CI_Controller
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
             'data_user'     => $data,
+            "in_out"        => $this->M_global->getData("activity_log", ['kode' => $this->session->userdata('email')]),
+            "aktifitas" => $this->db->query("SELECT * FROM activity_user WHERE email = '" . $this->data["email"] . "' AND waktu LIKE '%$now%' ORDER BY id_activity DESC")->result(),
+            "jum_aktif" => $this->db->query("SELECT * FROM activity_user WHERE email = '" . $this->data["email"] . "' AND waktu LIKE '%$now%'")->num_rows(),
         ];
 
         $this->template->load('Template/Content', 'Pengaturan/Profile', $parameter);
