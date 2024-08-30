@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 30, 2024 at 03:10 PM
+-- Generation Time: Aug 30, 2024 at 04:02 PM
 -- Server version: 8.0.30
 -- PHP Version: 7.4.3
 
@@ -437,6 +437,13 @@ CREATE TABLE `bayar_um_card_detail` (
   `approval` varchar(6) NOT NULL,
   `jumlah` decimal(20,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `bayar_um_card_detail`
+--
+
+INSERT INTO `bayar_um_card_detail` (`id`, `invoice`, `kode_bank`, `kode_tipe`, `no_card`, `approval`, `jumlah`) VALUES
+(2, 'UM-2024083000002', 'B000000005', 'TB0000003', '123', '456', 400000.00);
 
 -- --------------------------------------------------------
 
@@ -8872,6 +8879,14 @@ CREATE TABLE `pembayaran_uangmuka` (
   `kode_user` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `pembayaran_uangmuka`
+--
+
+INSERT INTO `pembayaran_uangmuka` (`id`, `invoice`, `tgl_pembayaran`, `jam_pembayaran`, `kode_member`, `jenis_pembayaran`, `cash`, `card`, `total`, `kode_user`) VALUES
+(2, 'UM-2024083000001', '2024-08-30', '22:44:21', 'A00001', 0, 100000.00, 0.00, 100000.00, 'A00001'),
+(3, 'UM-2024083000002', '2024-08-30', '22:44:52', 'A00001', 1, 0.00, 400000.00, 400000.00, 'A00001');
+
 -- --------------------------------------------------------
 
 --
@@ -9057,14 +9072,12 @@ INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VAL
 (15, 8, 'barang_in_retur', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Retur Penerimaan'),
 (16, 9, 'barang_out', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Penjualan'),
 (17, 9, 'barang_out_retur', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Retur Penjualan'),
-(18, 9, 'barang_out_report', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Laporan Penjualan'),
 (19, 16, 'penyesuaian_stok', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Penyesuaian Stok'),
 (20, 16, 'so', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Stock Opname'),
 (21, 16, 'riwayat_stok', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Riwayat Stok'),
 (23, 16, 'laporan_stok', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Laporan Stok'),
 (24, 1, 'kas_bank', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Kas & Bank'),
-(25, 1, 'pajak', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Pajak'),
-(26, 8, 'barang_in_report', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Laporan Pembelian');
+(25, 1, 'pajak', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Pajak');
 
 -- --------------------------------------------------------
 
@@ -9104,6 +9117,13 @@ CREATE TABLE `uang_muka` (
   `uang_keluar` decimal(20,2) NOT NULL DEFAULT '0.00',
   `uang_sisa` decimal(20,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `uang_muka`
+--
+
+INSERT INTO `uang_muka` (`id`, `last_tgl`, `last_jam`, `last_invoice`, `kode_member`, `uang_masuk`, `uang_keluar`, `uang_sisa`) VALUES
+(1, '2024-08-30', '22:44:52', 'UM-2024083000002', 'A00001', 500000.00, 0.00, 500000.00);
 
 -- --------------------------------------------------------
 
@@ -9685,7 +9705,7 @@ ALTER TABLE `bayar_card_detail`
 -- AUTO_INCREMENT for table `bayar_um_card_detail`
 --
 ALTER TABLE `bayar_um_card_detail`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cabang`
@@ -9883,7 +9903,7 @@ ALTER TABLE `pembayaran`
 -- AUTO_INCREMENT for table `pembayaran_uangmuka`
 --
 ALTER TABLE `pembayaran_uangmuka`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `pendaftaran`
@@ -9937,7 +9957,7 @@ ALTER TABLE `tipe_bank`
 -- AUTO_INCREMENT for table `uang_muka`
 --
 ALTER TABLE `uang_muka`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user`
