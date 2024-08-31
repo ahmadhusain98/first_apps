@@ -175,7 +175,9 @@ if ($data_user->on_off == 1) {
                                         <div id="cekaktif_user">
                                             <?php if ($aktifitas) : ?>
                                                 <br>
+                                                <span class="badge bg-info" type="button" onclick="lihat_aktifitas($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
                                                 <span class="badge bg-danger float-right">Banyaknya aktifitas : <?= $jum_aktif; ?></span>
+                                                <br>
                                                 <br>
                                                 <div class="table-responsive">
                                                     <table width="100%" class="table table-striped">
@@ -193,7 +195,9 @@ if ($data_user->on_off == 1) {
                                                 <br>
                                                 <div class="row">
                                                     <div class="col-md-12">
+                                                        <span class="badge bg-info" type="button" onclick="lihat_aktifitas($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
                                                         <span class="badge bg-danger float-right">Banyaknya aktifitas : 0</span>
+                                                        <br>
                                                         <br>
                                                         <div class="table-responsive">
                                                             <table width="100%" class="table table-striped">

@@ -196,7 +196,9 @@ class Profile extends CI_Controller
         if ($aktifitas) :
 ?>
             <br>
+            <span class="badge bg-info" type="button" onclick="lihat_aktifitas($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
             <span class="badge bg-danger float-right">Banyaknya aktifitas : <?= $jum_aktif; ?></span>
+            <br>
             <br>
             <div class="table-responsive">
                 <table width="100%" class="table table-striped">
@@ -214,7 +216,9 @@ class Profile extends CI_Controller
             <br>
             <div class="row">
                 <div class="col-md-12">
-                    <span class="badge bg-danger float-right shadow">Banyaknya aktifitas : 0</span>
+                    <span class="badge bg-info" type="button" onclick="lihat_aktifitas($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
+                    <span class="badge bg-danger float-right">Banyaknya aktifitas : 0</span>
+                    <br>
                     <br>
                     <div class="table-responsive">
                         <table width="100%" class="table table-striped">

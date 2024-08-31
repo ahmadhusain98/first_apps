@@ -65,6 +65,21 @@ function _sendMail($emailUser, $title, $message)
     }
 }
 
+function aktifitas_user($menu, $message, $kode, $value)
+{
+    $CI         = &get_instance();
+    $sess       = $CI->session->userdata('email');
+
+    $aktifitas = [
+        'email'     => $sess,
+        'kegiatan'  => $sess . " Telah " . $message . " '" . $value . "' dengan kode/inv " . $kode,
+        'menu'      => $menu,
+        'waktu'     => date('Y-m-d H:i:s'),
+    ];
+
+    $CI->db->insert("activity_user", $aktifitas);
+}
+
 function _codeUser($nama)
 {
     $CI         = &get_instance();

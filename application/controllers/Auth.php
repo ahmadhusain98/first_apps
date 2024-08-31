@@ -343,7 +343,7 @@ class Auth extends CI_Controller
 
                     $aktifitas = [
                         'email'     => $email,
-                        'kegiatan'  => "Di Cabang " . $init_cabang . ', Shift: ' . $shift,
+                        'kegiatan'  => $email . " masuk di Cabang " . $init_cabang . ', Shift: ' . $shift,
                         'menu'      => "Login",
                         'waktu'     => date('Y-m-d H:i:s'),
                     ];
@@ -422,7 +422,7 @@ class Auth extends CI_Controller
 
         $aktifitas = [
             'email'     => $sess,
-            'kegiatan'  => "Di Cabang " . $init_cabang . ', Shift: ' . $shift,
+            'kegiatan'  => $sess . " keluar di Cabang " . $init_cabang . ', Shift: ' . $shift,
             'menu'      => "Logout",
             'waktu'     => date('Y-m-d H:i:s'),
         ];

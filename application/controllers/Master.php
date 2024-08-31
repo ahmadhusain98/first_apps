@@ -159,12 +159,18 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('m_satuan', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('m_satuan', $isi, ['kode_satuan' => $kodeSatuan]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Satuan', $cek_param, $kodeSatuan, $this->M_global->getData('m_satuan', ['kode_satuan' => $kodeSatuan])->keterangan);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -186,9 +192,11 @@ class Master extends CI_Controller
     public function delSat($kode_satuan)
     {
         // jalankan fungsi hapus satuan berdasarkan kode_satuan
+        aktifitas_user('Master Satuan', 'menghapus', $kode_satuan, $this->M_global->getData('m_satuan', ['kode_satuan' => $kode_satuan])->keterangan);
         $cek = $this->M_global->delData('m_satuan', ['kode_satuan' => $kode_satuan]);
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -324,12 +332,18 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('m_kategori', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('m_kategori', $isi, ['kode_kategori' => $kodeKategori]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Kategori', $cek_param, $kodeKategori, $this->M_global->getData('m_kategori', ['kode_kategori' => $kodeKategori])->keterangan);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -351,9 +365,11 @@ class Master extends CI_Controller
     public function delKat($kode_kategori)
     {
         // jalankan fungsi hapus kategori berdasarkan kode_kategori
+        aktifitas_user('Master Kategori', 'menghapus', $kode_kategori, $this->M_global->getData('m_kategori', ['kode_kategori' => $kode_kategori])->keterangan);
         $cek = $this->M_global->delData('m_kategori', ['kode_kategori' => $kode_kategori]);
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -539,12 +555,18 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('m_supplier', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('m_supplier', $isi, ['kode_supplier' => $kodeSupplier]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Pemasok', $cek_param, $kodeSupplier, $this->M_global->getData('m_supplier', ['kode_supplier' => $kodeSupplier])->nama);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -557,9 +579,11 @@ class Master extends CI_Controller
     public function delSup($kode_supplier)
     {
         // jalankan fungsi hapus supplier berdasarkan kode_supplier
+        aktifitas_user('Master Pemasok', 'menghapus', $kode_supplier, $this->M_global->getData('m_supplier', ['kode_supplier' => $kode_supplier])->nama);
         $cek = $this->M_global->delData('m_supplier', ['kode_supplier' => $kode_supplier]);
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -746,12 +770,18 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('m_gudang', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('m_gudang', $isi, ['kode_gudang' => $kodeGudang]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Gudang', $cek_param, $kodeGudang, $this->M_global->getData('m_gudang', ['kode_gudang' => $kodeGudang])->nama);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -764,9 +794,11 @@ class Master extends CI_Controller
     public function delGud($kode_gudang)
     {
         // jalankan fungsi hapus gudang berdasarkan kode_gudang
+        aktifitas_user('Master Gudang', 'menghapus', $kode_gudang, $this->M_global->getData('m_gudang', ['kode_gudang' => $kode_gudang])->nama);
         $cek = $this->M_global->delData('m_gudang', ['kode_gudang' => $kode_gudang]);
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -901,12 +933,18 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('m_bank', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('m_bank', $isi, ['kode_bank' => $kodeBank]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Bank EDC', $cek_param, $kodeBank, $this->M_global->getData('m_bank', ['kode_bank' => $kodeBank])->keterangan);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -928,9 +966,11 @@ class Master extends CI_Controller
     public function delBank($kode_bank)
     {
         // jalankan fungsi hapus bank berdasarkan kode_bank
+        aktifitas_user('Master Bank EDC', 'menghapus', $kode_bank, $this->M_global->getData('m_bank', ['kode_bank' => $kode_bank])->keterangan);
         $cek = $this->M_global->delData('m_bank', ['kode_bank' => $kode_bank]);
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -1065,12 +1105,18 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('m_pekerjaan', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('m_pekerjaan', $isi, ['kode_pekerjaan' => $kodePekerjaan]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Pekerjaan', $cek_param, $kodePekerjaan, $this->M_global->getData('m_pekerjaan', ['kode_pekerjaan' => $kodePekerjaan])->keterangan);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -1092,9 +1138,11 @@ class Master extends CI_Controller
     public function delPekerjaan($kode_pekerjaan)
     {
         // jalankan fungsi hapus pekerjaan berdasarkan kode_pekerjaan
+        aktifitas_user('Master Pekerjaan', 'menghapus', $kode_pekerjaan, $this->M_global->getData('m_pekerjaan', ['kode_pekerjaan' => $kode_pekerjaan])->keterangan);
         $cek = $this->M_global->delData('m_pekerjaan', ['kode_pekerjaan' => $kode_pekerjaan]);
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -1338,6 +1386,8 @@ class Master extends CI_Controller
             $cek = [
                 $this->M_global->insertData('barang', $isi),
             ];
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = [
@@ -1345,6 +1395,8 @@ class Master extends CI_Controller
                 $this->M_global->delData('barang_jenis', ['kode_barang' => $kodeBarang]),
                 $this->M_global->delData('barang_cabang', ['kode_barang' => $kodeBarang]),
             ];
+
+            $cek_param = 'mengubah';
         }
 
         // barang cabang
@@ -1370,6 +1422,8 @@ class Master extends CI_Controller
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Barang', $cek_param, $kodeBarang, $this->M_global->getData('barang', ['kode_barang' => $kodeBarang])->nama);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -1387,6 +1441,7 @@ class Master extends CI_Controller
         if ($barang_cabang > 0) {
             echo json_encode(['status' => 2]);
         } else {
+            aktifitas_user('Master Barang', 'menghapus', $kode_barang, $this->M_global->getData('barang', ['kode_barang' => $kode_barang])->nama);
             $cek = [
                 $this->M_global->delData('barang', ['kode_barang' => $kode_barang]),
                 $this->M_global->delData('barang_cabang', ['kode_barang' => $kode_barang]),
@@ -1394,6 +1449,7 @@ class Master extends CI_Controller
             ];
 
             if ($cek) { // jika fungsi berjalan
+
                 // kirimkan status 1 ke view
                 echo json_encode(['status' => 1]);
             } else { // selain itu
@@ -1597,12 +1653,16 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('logistik', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = [
                 $this->M_global->updateData('logistik', $isi, ['kode_logistik' => $kodeLogistik]),
                 $this->M_global->delData('logistik_cabang', ['kode_barang' => $kodeLogistik]),
             ];
+
+            $cek_param = 'mengubah';
         }
 
         // barang cabang
@@ -1618,6 +1678,8 @@ class Master extends CI_Controller
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Logistik', $cek_param, $kodeLogistik, $this->M_global->getData('logistik', ['kode_logistik' => $kodeLogistik])->nama);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -1635,12 +1697,14 @@ class Master extends CI_Controller
         if ($barang_cabang > 0) {
             echo json_encode(['status' => 2]);
         } else {
+            aktifitas_user('Master Logistik', 'menghapus', $kode_logistik, $this->M_global->getData('logistik', ['kode_logistik' => $kode_logistik])->nama);
             $cek = [
                 $this->M_global->delData('logistik', ['kode_logistik' => $kode_logistik]),
                 $this->M_global->delData('logistik_cabang', ['kode_barang' => $kode_logistik]),
             ];
 
             if ($cek) { // jika fungsi berjalan
+
                 // kirimkan status 1 ke view
                 echo json_encode(['status' => 1]);
             } else { // selain itu
@@ -1867,12 +1931,18 @@ class Master extends CI_Controller
                 $this->M_global->insertData('user', $isi), // insert ke table user
                 $this->M_global->insertData('user_token', $isi2), // insert ke table user_token
             ];
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('user', $isi, ['kode_user' => $kodeUser]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Pengguna', $cek_param, $kodeUser, $this->M_global->getData('user', ['kode_user' => $kodeUser])->email);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -1885,9 +1955,11 @@ class Master extends CI_Controller
     public function delUser($kode_user)
     {
         // jalankan fungsi hapus user berdasarkan kode_user
+        aktifitas_user('Master Pengguna', 'menghapus', $kode_user, $this->M_global->getData('user', ['kode_user' => $kode_user])->email);
         $cek = $this->M_global->delData('user', ['kode_user' => $kode_user]);
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -2022,12 +2094,18 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('m_agama', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('m_agama', $isi, ['kode_agama' => $kodeAgama]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Agama', $cek_param, $kodeAgama, $this->M_global->getData('m_agama', ['kode_agama' => $kodeAgama])->keterangan);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -2049,9 +2127,11 @@ class Master extends CI_Controller
     public function delAgama($kode_agama)
     {
         // jalankan fungsi hapus agama berdasarkan kode_agama
+        aktifitas_user('Master Agama', 'menghapus', $kode_agama, $this->M_global->getData('m_agama', ['kode_agama' => $kode_agama])->keterangan);
         $cek = $this->M_global->delData('m_agama', ['kode_agama' => $kode_agama]);
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -2186,12 +2266,18 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('m_pendidikan', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('m_pendidikan', $isi, ['kode_pendidikan' => $kodePendidikan]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Pendidikan', $cek_param, $kodePendidikan, $this->M_global->getData('m_pendidikan', ['kode_pendidikan' => $kodePendidikan])->keterangan);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -2213,9 +2299,11 @@ class Master extends CI_Controller
     public function delPendidikan($kode_pendidikan)
     {
         // jalankan fungsi hapus pendidikan berdasarkan kode_pendidikan
+        aktifitas_user('Master Pendidikan', 'menghapus', $kode_pendidikan, $this->M_global->getData('m_pendidikan', ['kode_pendidikan' => $kode_pendidikan])->keterangan);
         $cek = $this->M_global->delData('m_pendidikan', ['kode_pendidikan' => $kode_pendidikan]);
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -2361,12 +2449,18 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('m_poli', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('m_poli', $isi, ['kode_poli' => $kodePoli]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Poli', $cek_param, $kodePoli, $this->M_global->getData('m_poli', ['kode_poli' => $kodePoli])->keterangan);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -2388,9 +2482,11 @@ class Master extends CI_Controller
     public function delPol($kode_poli)
     {
         // jalankan fungsi hapus poli berdasarkan kode_poli
+        aktifitas_user('Master Poli', 'menghapus', $kode_poli, $this->M_global->getData('m_poli', ['kode_poli' => $kode_poli])->keterangan);
         $cek = $this->M_global->delData('m_poli', ['kode_poli' => $kode_poli]);
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -2633,12 +2729,18 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('dokter', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('dokter', $isi, ['kode_dokter' => $kodeDokter]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Dokter', $cek_param, $kodeDokter, $this->M_global->getData('dokter', ['kode_dokter' => $kodeDokter])->nama);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -2651,12 +2753,14 @@ class Master extends CI_Controller
     public function delDokter($kode_dokter)
     {
         // jalankan fungsi hapus dokter berdasarkan kode_dokter
+        aktifitas_user('Master Dokter', 'menghapus', $kode_dokter, $this->M_global->getData('dokter', ['kode_dokter' => $kode_dokter])->nama);
         $cek = [
             $this->M_global->delData('dokter', ['kode_dokter' => $kode_dokter]),
             $this->M_global->delData('dokter_poli', ['kode_dokter' => $kode_dokter]),
         ];
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -2909,12 +3013,18 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('perawat', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('perawat', $isi, ['kode_perawat' => $kodePerawat]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Perawat', $cek_param, $kodePerawat, $this->M_global->getData('perawat', ['kode_perawat' => $kodePerawat])->nama);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -2927,12 +3037,14 @@ class Master extends CI_Controller
     public function delPerawat($kode_perawat)
     {
         // jalankan fungsi hapus perawat berdasarkan kode_perawat
+        aktifitas_user('Master Perawat', 'menghapus', $kode_perawat, $this->M_global->getData('perawat', ['kode_perawat' => $kode_perawat])->nama);
         $cek = [
             $this->M_global->delData('perawat', ['kode_perawat' => $kode_perawat]),
             $this->M_global->delData('perawat_poli', ['kode_perawat' => $kode_perawat]),
         ];
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -3069,12 +3181,18 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('m_jenis', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('m_jenis', $isi, ['kode_jenis' => $kodeJenis]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Jenis Obat', $cek_param, $kodeJenis, $this->M_global->getData('m_jenis', ['kode_jenis' => $kodeJenis])->keterangan);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -3096,9 +3214,11 @@ class Master extends CI_Controller
     public function delJenis($kode_jenis)
     {
         // jalankan fungsi hapus jenis berdasarkan kode_jenis
+        aktifitas_user('Master Jenis Obat', 'menghapus', $kode_jenis, $this->M_global->getData('m_jenis', ['kode_jenis' => $kode_jenis])->keterangan);
         $cek = $this->M_global->delData('m_jenis', ['kode_jenis' => $kode_jenis]);
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -3276,12 +3396,18 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('kas_bank', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('kas_bank', $isi, ['kode_kas_bank' => $kodeKas_bank]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Kas & Bank', $cek_param, $kodeKas_bank, $this->M_global->getData('kas_bank', ['kode_kas_bank' => $kodeKas_bank])->nama);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -3294,9 +3420,11 @@ class Master extends CI_Controller
     public function delKas_bank($kode_kas_bank)
     {
         // jalankan fungsi hapus kas_bank berdasarkan kode_kas_bank
+        aktifitas_user('Master Kas & Bank', 'menghapus', $kode_kas_bank, $this->M_global->getData('kas_bank', ['kode_kas_bank' => $kode_kas_bank])->nama);
         $cek = $this->M_global->delData('kas_bank', ['kode_kas_bank' => $kode_kas_bank]);
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -3436,12 +3564,18 @@ class Master extends CI_Controller
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('m_pajak', $isi);
+
+            $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
             $cek = $this->M_global->updateData('m_pajak', $isi, ['kode_pajak' => $kodePajak]);
+
+            $cek_param = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Pajak', $cek_param, $kodePajak, $this->M_global->getData('m_pajak', ['kode_pajak' => $kodePajak])->nama);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -3463,9 +3597,11 @@ class Master extends CI_Controller
     public function delPajak($kode_pajak)
     {
         // jalankan fungsi hapus pajak berdasarkan kode_pajak
+        aktifitas_user('Master Pajak', 'menghapus', $kode_pajak, $this->M_global->getData('m_pajak', ['kode_pajak' => $kode_pajak])->nama);
         $cek = $this->M_global->delData('m_pajak', ['kode_pajak' => $kode_pajak]);
 
         if ($cek) { // jika fungsi berjalan
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
