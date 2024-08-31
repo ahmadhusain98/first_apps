@@ -776,7 +776,7 @@ class Transaksi extends CI_Controller
         $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         $breaktable     = '<br>';
-        $file = 'Pembelian ~ ' . $invoice;
+        $file = 'Pembelian';
 
         // isi body
         $header = $this->M_global->getData('barang_in_header', ['invoice' => $invoice]);
@@ -786,12 +786,13 @@ class Transaksi extends CI_Controller
             <tr>
                 <td style="width: 15%;">Perihal</td>
                 <td style="width: 2%;"> : </td>
-                <td colspan="2">' . $file . '</td>
+                <td style="width: 33%;">' . $file . '</td>
+                <td style="width: 50%; text-align: right; font-weight: bold; color: white;"><span style="border: 1px solid #0e1d2e; background-color: #0e1d2e;">' . $invoice . '</span></td>
             </tr>
             <tr>
                 <td style="width: 15%;">Tgl/Jam Beli</td>
                 <td style="width: 2%;"> : </td>
-                <td colspan="2">' . date('d-m-Y', strtotime($header->tgl_beli)) . ' ~ ' . date('H:i:s', strtotime($header->jam_beli)) . '</td>
+                <td colspan="2">' . date('d-m-Y', strtotime($header->tgl_beli)) . ' / ' . date('H:i:s', strtotime($header->jam_beli)) . '</td>
             </tr>
             <tr>
                 <td style="width: 15%;">Pemasok</td>
@@ -919,8 +920,8 @@ class Transaksi extends CI_Controller
 
         $body .= '</table>';
 
-        $judul = $file . ' Tgl/Jam: ' . date('d-m-Y', strtotime($header->tgl_beli)) . ' ~ ' . date('H:i:s', strtotime($header->jam_beli));
-        $filename = $file; // nama file yang ingin di simpan
+        $judul = $invoice;
+        $filename = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf
         cetak_pdf($judul, $body, $param, $position, $filename, $web_setting, $yes);
@@ -1405,6 +1406,7 @@ class Transaksi extends CI_Controller
         $cek = [
             $this->M_global->delData('barang_in_detail', ['invoice' => $invoice]), // del data detail pembelian
             $this->M_global->delData('barang_in_header', ['invoice' => $invoice]), // del data header pembelian
+            $this->M_global->delData('piutang', ['referensi' => $invoice]),
         ];
 
         if ($cek) { // jika fungsi cek berjalan
@@ -1523,27 +1525,40 @@ class Transaksi extends CI_Controller
 
             if ($rd->is_valid < 1) {
                 if ($rd->batal < 1) {
-                    $actived_akun = '<button type="button" class="btn btn-dark" title="Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
+                    $batal = '<button type="button" style="margin-bottom: 5px;" class="btn btn-secondary" title="Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><i class="fa-solid fa-ban"></i></button>';
 
-                    $valid = '<button type="button" class="btn btn-dark" title="ACC" onclick="valided(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>';
+                    $ubah = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>';
+
+                    $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="ACC" onclick="valided(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><i class="fa-regular fa-circle-check"></i></button>';
+
+                    $email = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Kirim Email" disabled><i class="fa-solid fa-envelope-open-text"></i></button>';
                 } else {
-                    $actived_akun = '<button type="button" class="btn btn-dark" title="Re-batalkan" onclick="actived(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><ion-icon name="ban-outline"></ion-icon></button>';
+                    $batal = '<button type="button" style="margin-bottom: 5px;" class="btn btn-light" title="Re-Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><i class="fa-solid fa-arrow-rotate-left"></i></button>';
 
-                    $valid = '<button type="button" class="btn btn-dark" title="ACC" disabled><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>';
+                    $ubah = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" disabled><i class="fa-regular fa-pen-to-square"></i></button>';
+
+                    $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="ACC" disabled><i class="fa-regular fa-circle-check"></i></button>';
+
+                    $email = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Kirim Email" disabled><i class="fa-solid fa-envelope-open-text"></i></button>';
                 }
             } else {
-                $actived_akun = '<button type="button" class="btn btn-dark" title="Batalkan" disabled><ion-icon name="ban-outline"></ion-icon></button>';
+                $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><i class="fa-solid fa-check-to-slot"></i></button>';
 
-                $valid = '<button type="button" class="btn btn-dark" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><ion-icon name="checkmark-done-circle-outline"></ion-icon></button>';
+                $ubah = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" disabled><i class="fa-regular fa-pen-to-square"></i></button>';
+
+                $batal = '<button type="button" style="margin-bottom: 5px;" class="btn btn-secondary" title="Batalkan" disabled><i class="fa-solid fa-ban"></i></button>';
+
+                $email = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Kirim Email" onclick="email(' . "'" . $rd->invoice . "', 0" . ')"><i class="fa-solid fa-envelope-open-text"></i></button>';
             }
 
             $row[]  = '<div class="text-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    ' . $actived_akun . '
-                    ' . $valid . '
-                    <button type="button" class="btn btn-dark" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"></ion-icon></button>
-                    <button type="button" class="btn btn-dark" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '><ion-icon name="close-circle-outline"></ion-icon></button>
-                </div>
+                ' . $accept . '
+                ' . $ubah . '
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <br>
+                ' . $batal . '
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-dark" title="Cetak" onclick="cetak(' . "'" . $rd->invoice . "', 0" . ')"><i class="fa-solid fa-print"></i></button>
+                ' . $email . '
             </div>';
 
             $data[] = $row;
@@ -1568,14 +1583,16 @@ class Transaksi extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
+        $kode_cabang = $this->session->userdata('cabang');
+
         if ($param != '0') {
             $barang_in_retur    = $this->M_global->getData('barang_in_retur_header', ['invoice' => $param]);
             $barang_detail      = $this->M_global->getDataResult('barang_in_retur_detail', ['invoice' => $param]);
-            $pembeli            = $this->db->query('SELECT * FROM barang_in_header WHERE is_valid = 1')->result();
+            $pembeli            = $this->db->query('SELECT dpo.invoice, hpo.tgl_beli, hpo.jam_beli FROM barang_in_detail dpo JOIN barang_in_header hpo ON dpo.invoice = hpo.invoice WHERE hpo.kode_cabang = "' . $kode_cabang . '" AND (hpo.invoice NOT IN (SELECT ht.invoice FROM barang_in_header ht WHERE ht.kode_cabang = "' . $kode_cabang . '") OR dpo.qty != (SELECT COALESCE(SUM(dt.qty), 0) FROM barang_in_retur_detail dt JOIN barang_in_retur_header ht ON dt.invoice = ht.invoice WHERE ht.invoice = hpo.invoice AND dt.kode_barang = dpo.kode_barang AND ht.kode_cabang = "' . $kode_cabang . '"))GROUP BY dpo.invoice, hpo.tgl_beli, hpo.jam_beli')->result();
         } else {
             $barang_in_retur    = null;
             $barang_detail      = null;
-            $pembeli            = $this->db->query('SELECT * FROM barang_in_header WHERE is_valid = 1 AND invoice NOT IN (SELECT invoice_in FROM barang_in_retur_header WHERE invoice_in IS NOT NULL)')->result();
+            $pembeli            = $this->db->query('SELECT bpo.* FROM barang_in_header bpo WHERE bpo.is_valid = 1 AND bpo.kode_cabang = "' . $kode_cabang . '"')->result();
         }
 
         $parameter = [
@@ -1591,7 +1608,6 @@ class Transaksi extends CI_Controller
             'pembelian'             => $pembeli,
             'role'                  => $this->M_global->getResult('m_role'),
             'pajak'                 => $this->M_global->getData('m_pajak', ['id' => 1])->persentase,
-            'list_barang'           => $this->M_global->getResult('barang'),
         ];
 
         $this->template->load('Template/Content', 'Barang/Form_barang_in_retur', $parameter);
@@ -1600,13 +1616,42 @@ class Transaksi extends CI_Controller
     // fungsi get Barang In 
     public function getBarangIn($invoice)
     {
-        $kode_cabang = $this->session->userdata('cabang');
-
-        $header = $this->db->query('SELECT b.*, (s.nama) AS nama_supplier, (g.nama) AS nama_gudang FROM barang_in_header b JOIN m_supplier s USING (kode_supplier) JOIN m_gudang g USING(kode_gudang) WHERE b.invoice = "' . $invoice . '" AND b.kode_cabang = "' . $kode_cabang . '"')->row();
-        $detail = $this->db->query('SELECT b.*, (brg.nama) AS nama_barang FROM barang_in_detail b JOIN barang brg USING(kode_barang) WHERE b.invoice = "' . $invoice . '"')->result();
+        $header = $this->db->query('SELECT bpo.*, (SELECT nama FROM m_supplier WHERE kode_supplier = bpo.kode_supplier) AS nama_supplier, (SELECT nama FROM m_gudang WHERE kode_gudang = bpo.kode_gudang) AS nama_gudang FROM barang_in_header bpo WHERE bpo.invoice = "' . $invoice . '"')->row();
 
         if ($header) {
-            echo json_encode([['status' => 1], $header, $detail]);
+            $detail = $this->db->query('SELECT hpo.invoice, dpo.kode_barang, dpo.kode_satuan AS satuan_default,
+            dpo.qty - dpo.qty_retur AS qty_po, b.nama, b.kode_satuan, b.kode_satuan2, b.kode_satuan3,
+            dpo.harga, dpo.discpr, dpo.discrp, dpo.pajak, dpo.pajakrp, dpo.jumlah, hpo.surat_jalan, hpo.no_faktur
+            FROM barang_in_detail dpo
+            JOIN barang_in_header hpo ON hpo.invoice = dpo.invoice
+            JOIN barang b ON b.kode_barang = dpo.kode_barang
+            WHERE dpo.qty_retur != dpo.qty AND hpo.invoice = "' . $invoice . '"')->result();
+
+            foreach ($detail as $value) {
+                $satuanDetail = $this->M_global->getData('m_satuan', ['kode_satuan' => $value->satuan_default]);
+                if ($satuanDetail) {
+                    $satuan = [
+                        'kode_satuan' => $value->satuan_default,
+                        'keterangan' => $satuanDetail->keterangan,
+                    ];
+                } else {
+                    $satuan = '';
+                }
+            }
+
+            echo json_encode([['status' => 1, 'header' => $header], $detail, $satuan]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi ambil satuan
+    public function getSatuanBarangIn($kode_satuan)
+    {
+        $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $kode_satuan]);
+
+        if ($satuan) {
+            echo json_encode(['status' => 1, 'kode_satuan' => $satuan->kode_satuan, 'keterangan' => $satuan->keterangan]);
         } else {
             echo json_encode(['status' => 0]);
         }
@@ -1615,12 +1660,15 @@ class Transaksi extends CI_Controller
     // fungsi insert/update proses barang_in_retur
     public function barang_in_retur_proses($param)
     {
+        $kode_cabang = $this->session->userdata('cabang');
+
         // header
         if ($param == 1) { // jika param = 1
-            $invoice    = _invoice_retur();
+            $invoice    = _invoice_retur($kode_cabang);
         } else {
             $invoice    = $this->input->post('invoice');
         }
+
         $invoice_in     = $this->input->post('invoice_in');
         $tgl_beli       = $this->input->post('tgl_beli');
         $jam_beli       = $this->input->post('jam_beli');
@@ -1629,6 +1677,18 @@ class Transaksi extends CI_Controller
         $surat_jalan    = $this->input->post('surat_jalan');
         $no_faktur      = $this->input->post('no_faktur');
 
+        if (!$surat_jalan || $surat_jalan == null) {
+            $sj = _surat_jalan($kode_cabang);
+        } else {
+            $sj = $surat_jalan;
+        }
+
+        if (!$no_faktur || $no_faktur == null) {
+            $nf = _no_faktur($kode_cabang);
+        } else {
+            $nf = $no_faktur;
+        }
+
         $subtotal       = str_replace(',', '', $this->input->post('subtotal'));
         $diskon         = str_replace(',', '', $this->input->post('diskon'));
         $pajak          = str_replace(',', '', $this->input->post('pajak'));
@@ -1636,6 +1696,7 @@ class Transaksi extends CI_Controller
 
         // detail
         $kode_barang_in = $this->input->post('kode_barang_in');
+        $kode_satuan    = $this->input->post('kode_satuan');
         $harga_in       = $this->input->post('harga_in');
         $qty_in         = $this->input->post('qty_in');
         $discpr_in      = $this->input->post('discpr_in');
@@ -1648,14 +1709,15 @@ class Transaksi extends CI_Controller
 
         // tampung isi header
         $isi_header = [
+            'kode_cabang'   => $kode_cabang,
             'invoice'       => $invoice,
             'invoice_in'    => $invoice_in,
             'tgl_beli'      => $tgl_beli,
             'jam_beli'      => $jam_beli,
             'kode_supplier' => $kode_supplier,
             'kode_gudang'   => $kode_gudang,
-            'surat_jalan'   => $surat_jalan,
-            'no_faktur'     => $no_faktur,
+            'surat_jalan'   => $sj,
+            'no_faktur'     => $nf,
             'pajak'         => $pajak,
             'diskon'        => $diskon,
             'subtotal'      => $subtotal,
@@ -1666,12 +1728,30 @@ class Transaksi extends CI_Controller
         ];
 
         if ($param == 2) { // jika param = 2
+            aktifitas_user_transaksi('Transaksi Masuk', 'mengubah Retur Pembelian', $invoice);
+
+            if ($invoice_in != '' || $invoice_in != null || !empty($invoice_in) || isset($invoice_in)) {
+                $detail_retur = $this->M_global->getDataResult('barang_in_retur_detail', ['invoice' => $invoice]);
+
+                foreach ($detail_retur as $dt) {
+                    $where_po = ['invoice' => $invoice_in, 'kode_barang' => $dt->kode_barang, 'kode_satuan' => $dt->kode_satuan];
+
+                    $data_update = [
+                        'qty_retur' => 0
+                    ];
+
+                    $this->M_global->updateData('barang_in_detail', $data_update, $where_po);
+                }
+            }
+
             // jalankan fungsi cek
             $cek = [
                 $this->M_global->updateData('barang_in_retur_header', $isi_header, ['invoice' => $invoice]), // update header
                 $this->M_global->delData('barang_in_retur_detail', ['invoice' => $invoice]), // delete detail
             ];
         } else { // selain itu
+            aktifitas_user_transaksi('Transaksi Masuk', 'menambahkan Retur Pembelian', $invoice);
+
             // jalankan fungsi cek
             $cek = $this->M_global->insertData('barang_in_retur_header', $isi_header); // insert header
         }
@@ -1680,6 +1760,7 @@ class Transaksi extends CI_Controller
             // lakukan loop
             for ($x = 0; $x <= ($jum - 1); $x++) {
                 $kode_barang    = $kode_barang_in[$x];
+                $kode_satuan    = $kode_satuan[$x];
                 $harga          = str_replace(',', '', $harga_in[$x]);
                 $qty            = str_replace(',', '', $qty_in[$x]);
                 $discpr         = str_replace(',', '', $discpr_in[$x]);
@@ -1687,11 +1768,27 @@ class Transaksi extends CI_Controller
                 $pajakrp        = str_replace(',', '', $pajakrp_in[$x]);
                 $jumlah         = str_replace(',', '', $jumlah_in[$x]);
 
+                $barang1 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan' => $kode_satuan]);
+                $barang2 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan2' => $kode_satuan]);
+                $barang3 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan3' => $kode_satuan]);
+
+                if ($barang1) {
+                    $qty_satuan = 1;
+                } else if ($barang2) {
+                    $qty_satuan = $barang2->qty_satuan2;
+                } else {
+                    $qty_satuan = $barang3->qty_satuan3;
+                }
+
+                $qty_konversi   = $qty * $qty_satuan;
+
                 // tamping isi detail
                 $isi_detail = [
                     'invoice'       => $invoice,
                     'kode_barang'   => $kode_barang,
+                    'kode_satuan'   => $kode_satuan,
                     'harga'         => $harga,
+                    'qty_konversi'  => $qty_konversi,
                     'qty'           => $qty,
                     'discpr'        => $discpr,
                     'discrp'        => $discrp,
@@ -1702,8 +1799,21 @@ class Transaksi extends CI_Controller
 
                 // insert detail
                 $this->M_global->insertData('barang_in_retur_detail', $isi_detail);
-                $this->M_global->updateData('barang', ['hna' => $harga, 'nilai_persediaan' => $harga], ['kode_barang' => $kode_barang]); // update barang
+
+                if ($invoice_in != '' || $invoice_in != null || !empty($invoice_in) || isset($invoice_in)) {
+                    $where_in = ['invoice' => $invoice_in, 'kode_barang' => $kode_barang];
+
+                    $detail_in = $this->M_global->getData('barang_in_detail', $where_in);
+
+                    $data_update = [
+                        'qty_retur' => ($detail_in->qty_retur + $qty)
+                    ];
+
+                    $this->M_global->updateData('barang_in_detail', $data_update, $where_in);
+                }
             }
+
+            $this->single_print_bin_ret($invoice, 1);
 
             // beri nilai status = 1 kirim ke view
             echo json_encode(['status' => 1]);
@@ -1711,6 +1821,175 @@ class Transaksi extends CI_Controller
             // beri nilai status = 0 kirim ke view
             echo json_encode(['status' => 0]);
         }
+    }
+
+    // fungsi print single barang_in_retur
+    public function single_print_bin_ret($invoice, $yes)
+    {
+        $param          = 1;
+
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        $breaktable     = '<br>';
+        $file = 'Retur Pembelian';
+
+        // isi body
+        $header = $this->M_global->getData('barang_in_retur_header', ['invoice' => $invoice]);
+
+        // body header
+        $body .= '<table style="width: 100%; font-size: 11px;">
+            <tr>
+                <td style="width: 15%;">Perihal</td>
+                <td style="width: 2%;"> : </td>
+                <td style="width: 33%;">' . $file . '</td>
+                <td style="width: 50%; text-align: right; font-weight: bold; color: white;"><span style="border: 1px solid #0e1d2e; background-color: #0e1d2e;">' . $invoice . '</span></td>
+            </tr>
+            <tr>
+                <td style="width: 15%;">Tgl/Jam Beli</td>
+                <td style="width: 2%;"> : </td>
+                <td colspan="2">' . date('d-m-Y', strtotime($header->tgl_beli)) . ' / ' . date('H:i:s', strtotime($header->jam_beli)) . '</td>
+            </tr>
+            <tr>
+                <td style="width: 15%;">Pemasok</td>
+                <td style="width: 2%;"> : </td>
+                <td colspan="2">' . $this->M_global->getData('m_supplier', ['kode_supplier' => $header->kode_supplier])->nama . '</td>
+            </tr>
+            <tr>
+                <td style="width: 15%;">Gudang</td>
+                <td style="width: 2%;"> : </td>
+                <td style="width: 33%;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $header->kode_gudang])->nama . '</td>
+                <td style="width: 50%; text-align: right;">Pencetak : ' . $pencetak . '</td>
+            </tr>
+        </table>';
+
+        $body .= $breaktable;
+
+        $body .= '<table style="width: 100%; font-size: 10px;" autosize="1" cellpadding="5px">';
+
+        $body .= '<thead>
+            <tr>
+                <th rowspan="2" style="width: 5%; border: 1px solid black; background-color: #0e1d2e; color: white;">#</th>
+                <th rowspan="2" style="width: 30%; border: 1px solid black; background-color: #0e1d2e; color: white;">Barang</th>
+                <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Harga</th>
+                <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Jumlah</th>
+                <th colspan="2" style="width: 20%; border: 1px solid black; background-color: #0e1d2e; color: white;">Diskon</th>
+                <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Pajak</th>
+                <th rowspan="2" style="width: 15%; border: 1px solid black; background-color: #0e1d2e; color: white;">Total</th>
+            </tr>
+            <tr>
+                <th style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">%</th>
+                <th style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Rp</th>
+            </tr>
+        </thead>';
+
+        $body .= '<tbody>';
+
+        if ($param == 1) {
+            $total = number_format($header->total);
+        } else {
+            $total = ceil($header->total);
+        }
+        $body .= '<tr style="background-color: skyblue;">
+            <td colspan="6" style="border: 1px solid black; font-weight: bold;">No. Transaksi: ' . $header->invoice . '</td>
+            <td colspan="2" style="border: 1px solid black; font-weight: bold; text-align: right">' . $total . '</td>
+        </tr>';
+
+        // detail barang
+        $detail   = $this->M_global->getDataResult('barang_in_retur_detail', ['invoice' => $header->invoice]);
+
+        $no       = 1;
+        $tdiskon  = 0;
+        $tpajak   = 0;
+        $ttotal   = 0;
+        foreach ($detail as $d) {
+            $tdiskon    += $d->discrp;
+            $tpajak     += $d->pajakrp;
+            $ttotal     += $d->jumlah;
+
+            if ($param == 1) {
+                $harga    = number_format($d->harga);
+                $qty      = number_format($d->qty);
+                $discpr   = number_format($d->discpr);
+                $discrp   = number_format($d->discrp);
+                $pajak    = number_format($d->pajakrp);
+                $jumlah   = number_format($d->jumlah);
+
+                $tdiskonx = number_format($tdiskon);
+                $tpajakx  = number_format($tpajak);
+                $ttotalx  = number_format($ttotal);
+            } else {
+                $harga    = ceil($d->harga);
+                $qty      = ceil($d->qty);
+                $discpr   = ceil($d->discpr);
+                $discrp   = ceil($d->discrp);
+                $pajak    = ceil($d->pajakrp);
+                $jumlah   = ceil($d->jumlah);
+
+                $tdiskonx = ceil($tdiskon);
+                $tpajakx  = ceil($tpajak);
+                $ttotalx  = ceil($ttotal);
+            }
+            $body .= '<tr>
+                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $d->kode_barang . ' ~ ' . $this->M_global->getData('barang', ['kode_barang' => $d->kode_barang])->nama . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $harga . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $qty . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $discpr . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $discrp . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $pajak . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $jumlah . '</td>
+            </tr>';
+            $no++;
+        }
+        $body .= '<tr style="background-color: green;">
+            <td colspan="5" style="border: 1px solid black; font-weight: bold; color: white;">Total</td>
+            <td style="border: 1px solid black; font-weight: bold; color: white; text-align: right">' . $tdiskonx . '</td>
+            <td style="border: 1px solid black; font-weight: bold; color: white; text-align: right">' . $tpajakx . '</td>
+            <td style="border: 1px solid black; font-weight: bold; color: white; text-align: right">' . $ttotalx . '</td>
+        </tr>';
+
+        $body .= '</tbody>';
+
+        $body .= '<tfoot>
+            <tr>
+                <td colspan="5">&nbsp;</td>
+                <td colspan="3" style="text-align: center;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="5" style="width:60%;">&nbsp;</td>
+                <td colspan="3" style="width:40%; text-align: center;">Yogyakarta, ' . date('d M Y') . '</td>
+            </tr>
+            <tr>
+                <td colspan="5" style="width:60%;">&nbsp;</td>
+                <td colspan="3" style="width:40%; text-align: center;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="5" style="width:60%;">&nbsp;</td>
+                <td colspan="3" style="width:40%; text-align: center;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="5" style="width:60%;">&nbsp;</td>
+                <td colspan="3" style="width:40%; text-align: center;">' . $pencetak . '</td>
+            </tr>
+        </tfoot>';
+
+        $body .= '</table>';
+
+        $judul = $invoice;
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting, $yes);
     }
 
     // fungsi batal/re-batal
@@ -1736,6 +2015,7 @@ class Transaksi extends CI_Controller
     // fungsi acc/re-acc
     public function accbarang_in_retur($invoice, $acc)
     {
+        $kode_cabang = $this->session->userdata('cabang');
         // header barang by invoice
         $header         = $this->M_global->getData('barang_in_retur_header', ['invoice' => $invoice]);
         // kode_gudang
@@ -1745,13 +2025,41 @@ class Transaksi extends CI_Controller
         $detail         = $this->M_global->getDataResult('barang_in_retur_detail', ['invoice' => $invoice]);
 
         if ($acc == 0) { // jika acc = 0
+            aktifitas_user_transaksi('Transaksi Masuk', 'Reject Retur Pembelian', $invoice);
+
+            // update piutang
+            $piutang = $this->M_global->getData('piutang', ['referensi' => $invoice, 'kode_cabang' => $kode_cabang]);
+            $piutang_no = $piutang->piutang_no;
+
             // update is_valid jadi 0
-            $cek = $this->M_global->updateData('barang_in_retur_header', ['is_valid' => 0, 'tgl_valid' => null, 'jam_valid' => null], ['invoice' => $invoice]);
+            $cek = [
+                $this->M_global->updateData('barang_in_retur_header', ['is_valid' => 0, 'tgl_valid' => null, 'jam_valid' => null], ['invoice' => $invoice]),
+                $this->M_global->delData('piutang', ['piutang_no' => $piutang_no]),
+            ];
 
             hitungStokBrgRtOut($detail, $kode_gudang, $invoice);
         } else { // selain itu
+            aktifitas_user_transaksi('Transaksi Masuk', 'Confirm Retur Pembelian', $invoice);
+
+            // insert piutang ketika di acc
+            $piutang_no = _noPiutang($kode_cabang);
+
+            $isi_piutang = [
+                'kode_cabang'       => $kode_cabang,
+                'piutang_no'        => $piutang_no,
+                'tanggal'           => $header->tgl_beli,
+                'jam'               => $header->jam_beli,
+                'referensi'         => $invoice,
+                'jumlah'            => 0 - $header->total,
+                'status'            => 0,
+            ];
+
             // update is_valid jadi 1
-            $cek = $this->M_global->updateData('barang_in_retur_header', ['is_valid' => 1, 'tgl_valid' => date('Y-m-d'), 'jam_valid' => date('H:i:s')], ['invoice' => $invoice]);
+            $cek = [
+                $this->M_global->updateData('barang_in_retur_header', ['is_valid' => 1, 'tgl_valid' => date('Y-m-d'), 'jam_valid' => date('H:i:s')], ['invoice' => $invoice]),
+                $this->M_global->insertData('piutang', $isi_piutang),
+            ];
+
             hitungStokBrgRtIn($detail, $kode_gudang, $invoice);
         }
 
@@ -1764,13 +2072,35 @@ class Transaksi extends CI_Controller
         }
     }
 
-    // fungsi hapus barang in
+    // fungsi hapus barang in retur
     public function delBeliInRetur($invoice)
     {
+        $header = $this->M_global->getData('barang_in_retur_header', ['invoice' => $invoice]);
+        $detail_cek = $this->M_global->getDataResult('barang_in_retur_detail', ['invoice' => $invoice]);
+
+        if ($header->invoice_in != '' || $header->invoice_in != null || !empty($header->invoice_in) || isset($header->invoice_in)) {
+            foreach ($detail_cek as $dc) {
+                $detail_terima = $this->M_global->getData('barang_in_retur_detail', ['invoice' => $invoice, 'kode_barang' => $dc->kode_barang]);
+                $detail_po = $this->M_global->getData('barang_in_detail', ['invoice' => $header->invoice_in, 'kode_barang' => $dc->kode_barang]);
+
+                if ($detail_po->kode_barang == $detail_terima->kode_barang) {
+                    $where_po = ['invoice' => $header->invoice_in, 'kode_barang' => $detail_po->kode_barang, 'kode_satuan' => $detail_po->kode_satuan];
+
+                    $data_update = [
+                        'qty_retur' => $detail_po->qty_retur - $detail_terima->qty
+                    ];
+
+                    $this->M_global->updateData('barang_in_detail', $data_update, $where_po);
+                }
+            }
+        }
+        aktifitas_user_transaksi('Transaksi Masuk', 'menghapus Retur Pembelian', $invoice);
+
         // jalankan fungsi cek
         $cek = [
-            $this->M_global->delData('barang_in_retur_detail', ['invoice' => $invoice]), // del data detail pembelian
-            $this->M_global->delData('barang_in_retur_header', ['invoice' => $invoice]), // del data header pembelian
+            $this->M_global->delData('barang_in_retur_detail', ['invoice' => $invoice]), // del data detail retur pembelian
+            $this->M_global->delData('barang_in_retur_header', ['invoice' => $invoice]), // del data header retur pembelian
+            $this->M_global->delData('piutang', ['referensi' => $invoice]),
         ];
 
         if ($cek) { // jika fungsi cek berjalan
@@ -1780,6 +2110,58 @@ class Transaksi extends CI_Controller
             // kirim status 0 ke view
             echo json_encode(['status' => 0]);
         }
+    }
+
+    // fungsi kirim email barang in
+    public function email_retur($invoice)
+    {
+        $email = $this->input->get('email');
+
+        $header = $this->M_global->getData('barang_in_retur_header', ['invoice' => $invoice]);
+
+        $judul = 'Retur Pembelian ~ ' . $invoice;
+
+        // $attched_file    = base_url() . 'assets/file/pdf/' . $judul . '.pdf';ahmad.ummgl@gmail.com
+        $attched_file    = $_SERVER["DOCUMENT_ROOT"] . '/first_apps/assets/file/pdf/' . $judul . '.pdf';
+
+        $ready_message   = "";
+        $ready_message   .= "<table border=0>
+            <tr>
+                <td style='width: 30%;'>Invoice</td>
+                <td style='width: 10%;'> : </td>
+                <td style='width: 60%;'> $invoice </td>
+            </tr>
+            <tr>
+                <td style='width: 30%;'>Tgl/Jam</td>
+                <td style='width: 10%;'> : </td>
+                <td style='width: 60%;'>" . date('d-m-Y', strtotime($header->tgl_beli)) . " / " . date('H:i:s', strtotime($header->jam_beli)) . "</td>
+            </tr>
+            <tr>
+                <td style='width: 30%;'>Pemasok</td>
+                <td style='width: 10%;'> : </td>
+                <td style='width: 60%;'>" . $this->M_global->getData('m_supplier', ['kode_supplier' => $header->kode_supplier])->nama . "</td>
+            </tr>
+            <tr>
+                <td style='width: 30%;'>Gudang</td>
+                <td style='width: 10%;'> : </td>
+                <td style='width: 60%;'>" . $this->M_global->getData('m_gudang', ['kode_gudang' => $header->kode_gudang])->nama . "</td>
+            </tr>
+            <tr>
+                <td style='width: 30%;'>Jumlah</td>
+                <td style='width: 10%;'> : </td>
+                <td style='width: 60%;'>Rp. " . number_format($header->total) . " </td>
+            </tr>
+        </table>";
+
+        $server_subject = $judul;
+
+        if ($this->email->send_my_email($email, $server_subject, $ready_message, $attched_file)) {
+            echo json_encode(["status" => 1, 'result' => $attched_file]);
+        } else {
+            echo json_encode(["status" => 0]);
+        }
+
+        // echo json_encode($attched_file);
     }
 
     /*

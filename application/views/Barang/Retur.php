@@ -52,12 +52,12 @@ echo _lock_so();
                         <tr class="text-center">
                             <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
                             <th width="15%">Invoice</th>
-                            <th width="20%">Tgl/Jam Beli</th>
+                            <th width="15%">Tgl/Jam Beli</th>
                             <th width="15%">Pemasok</th>
-                            <th width="15%">Gudang</th>
-                            <th width="10%">Pembeli</th>
-                            <th>Total</th>
-                            <th width="10%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
+                            <th width="10%">Gudang</th>
+                            <th width="10%">Peretur</th>
+                            <th width="10%">Total</th>
+                            <th width="20%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                         </tr>
                     </thead>
                 </table>
@@ -171,10 +171,10 @@ echo _lock_so();
     // fungsi acc/unacc
     function valided(invoice, param) {
         if (param == 0) {
-            var pesan = "Pembelian ini akan di re-acc!";
+            var pesan = "Retur Pembelian ini akan di re-acc!";
             var pesan2 = "di re-acc!";
         } else {
-            var pesan = "Pembelian ini akan diacc!";
+            var pesan = "Retur Pembelian ini akan diacc!";
             var pesan2 = "diacc!";
         }
         // ajukan pertanyaaan
@@ -198,12 +198,12 @@ echo _lock_so();
                     success: function(result) { // jika fungsi berjalan dengan baik
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
-                            Swal.fire("Pembelian", "Berhasil " + pesan2, "success").then(() => {
+                            Swal.fire("Retur Pembelian", "Berhasil " + pesan2, "success").then(() => {
                                 reloadTable();
                             });
                         } else { // selain itu
 
-                            Swal.fire("Pembelian", "Gagal " + pesan2 + ", silahkan dicoba kembali", "info");
+                            Swal.fire("Retur Pembelian", "Gagal " + pesan2 + ", silahkan dicoba kembali", "info");
                         }
                     },
                     error: function(result) { // jika fungsi error
@@ -211,6 +211,47 @@ echo _lock_so();
                         error_proccess();
                     }
                 });
+            }
+        });
+    }
+
+    // fungsi cetak
+    function cetak(x, y) {
+        printsingle('Transaksi/single_print_bin_ret/' + x + '/' + y);
+    }
+
+    // fungsi kirim email
+    function email(x) {
+        Swal.fire({
+            title: "Masukan Email",
+            input: "text",
+            inputAttributes: {
+                autocapitalize: "off"
+            },
+            showCancelButton: true,
+            confirmButtonText: "Kirim",
+            cancelButtonText: "Tutup",
+            showLoaderOnConfirm: true,
+            preConfirm: async (email) => {
+                try {
+                    const githubUrl = `${siteUrl}Transaksi/email_retur/${x}?email=${email}`;
+                    const response = await fetch(githubUrl);
+                    if (!response.ok) {
+                        return Swal.showValidationMessage(`${JSON.stringify(await response.json())}`);
+                    }
+                    return response.json();
+                } catch (error) {
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (result.value.status == 1) {
+                    Swal.fire("Laporan Retur Pembelian", "Berhasil dikirim via Email!, silahkan cek email", "success");
+                } else {
+                    Swal.fire("Laporan Retur Pembelian", "Gagal dikirim via Email!, silahkan cek email", "info");
+                }
             }
         });
     }

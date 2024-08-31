@@ -2,8 +2,11 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
+
 class MY_Email extends CI_Email
 {
+    private $CI;
+
     private $config = [
         'mailtype'      => 'html',
         'charset'       => 'utf-8',
@@ -20,13 +23,21 @@ class MY_Email extends CI_Email
     public function __construct()
     {
         parent::__construct($this->config);
+        $this->CI = &get_instance();
+        $this->CI->load->database();
     }
 
     public function send_my_email($to, $subject, $message, $pdf)
     {
+        $CI = &get_instance();
+
+        $web_setting = $CI->db->query('SELECT * FROM web_setting WHERE id = 1')->row();
+
+        // ahmad.ummgl@gmail.com
+
         $this->clear();
         $this->initialize($this->config);
-        $this->from('myhers.official@gmail.com', 'MY HERS');
+        $this->from('myhers.official@gmail.com', $web_setting->nama);
         $this->to($to);
         $this->subject($subject);
         $this->message($message);

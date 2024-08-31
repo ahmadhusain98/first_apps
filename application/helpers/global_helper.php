@@ -484,10 +484,10 @@ function _invoice_retur($cabang)
     $number       = 1;
     if ($lastNumber) {
         $number   = $CI->db->query('SELECT * FROM barang_in_retur_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
-        $invoice  = 'RTB~' . $CI->session->userdata('init_cabang') . date('dmY') . sprintf("%05d", $number);
+        $invoice  = $CI->session->userdata('init_cabang') . 'TRB-' . date('Ymd') . sprintf("%05d", $number);
     } else {
         $number   = 0;
-        $invoice  = 'RTB~' . $CI->session->userdata('init_cabang') . date('dmY') . "00001";
+        $invoice  = $CI->session->userdata('init_cabang') . 'TRB-' . date('Ymd') . "00001";
     }
     return $invoice;
 }
@@ -503,22 +503,22 @@ function konversi_show_satuan($s_akhir, $kode_barang)
     $satuan3 = $CI->M_global->getData('m_satuan', ['kode_satuan' => $barang->kode_satuan3]);
 
     $sat = '';
-    
+
     if ($satuan3) {
         $stok3 = floor($s_akhir / $barang->qty_satuan3);
         $sisa3 = $s_akhir % $barang->qty_satuan3;
-        
+
         if ($stok3 > 0) {
             $sat .= number_format($stok3) . ' ' . $satuan3->keterangan;
-            
+
             if ($satuan2) {
                 $stok2 = floor($sisa3 / $barang->qty_satuan2);
                 $sisa2 = $sisa3 % $barang->qty_satuan2;
-                
+
                 if ($stok2 > 0) {
                     $sat .= '<br>' . number_format($stok2) . ' ' . $satuan2->keterangan;
                 }
-                
+
                 if ($sisa2 > 0 || $stok2 === 0) {
                     $sat .= '<br>' . number_format($sisa2) . ' ' . $satuan1->keterangan;
                 }
@@ -535,10 +535,10 @@ function konversi_show_satuan($s_akhir, $kode_barang)
     } elseif ($satuan2) {
         $stok2 = floor($s_akhir / $barang->qty_satuan2);
         $sisa2 = $s_akhir % $barang->qty_satuan2;
-        
+
         if ($stok2 > 0) {
             $sat .= number_format($stok2) . ' ' . $satuan2->keterangan;
-            
+
             if ($sisa2 > 0) {
                 $sat .= '<br>' . number_format($sisa2) . ' ' . $satuan1->keterangan;
             }
@@ -582,12 +582,12 @@ function hitungStokBrgIn($detail, $kode_gudang, $invoice)
             $CI->M_global->insertData('barang_stok', $isi_stok);
         } else {
             $CI->db->query("UPDATE barang_stok SET 
-            masuk = masuk + $d->qty_konversi, 
-            akhir = akhir + $d->qty_konversi, 
-            last_tgl_trx = '$date', 
-            last_jam_trx = '$time',
-            last_no_trx = '$invoice',
-            last_user = '$user' 
+            masuk           = masuk + $d->qty_konversi, 
+            akhir           = akhir + $d->qty_konversi, 
+            last_tgl_trx    = '$date', 
+            last_jam_trx    = '$time',
+            last_no_trx     = '$invoice',
+            last_user       = '$user' 
             WHERE kode_barang = '$d->kode_barang' AND kode_gudang = '$kode_gudang' AND kode_cabang = '$kode_cabang'");
         }
     }
@@ -648,8 +648,8 @@ function hitungStokBrgRtIn($detail, $kode_gudang, $invoice)
             $isi_stok = [
                 'kode_barang'   => $d->kode_barang,
                 'kode_gudang'   => $kode_gudang,
-                'keluar'        => $d->qty,
-                'akhir'         => 0 - $d->qty,
+                'keluar'        => $d->qty_konversi,
+                'akhir'         => 0 - $d->qty_konversi,
                 'last_tgl_trx'  => $date,
                 'last_jam_trx'  => $time,
                 'last_no_trx'   => $invoice,
@@ -659,12 +659,12 @@ function hitungStokBrgRtIn($detail, $kode_gudang, $invoice)
             $CI->M_global->insertData('barang_stok', $isi_stok);
         } else {
             $CI->db->query("UPDATE barang_stok SET 
-            keluar = keluar + $d->qty, 
-            akhir = akhir - $d->qty, 
-            last_tgl_trx = '$date', 
-            last_jam_trx = '$time',
-            last_no_trx = '$invoice',
-            last_user = '$user' 
+            keluar          = keluar + $d->qty_konversi, 
+            akhir           = akhir - $d->qty_konversi, 
+            last_tgl_trx    = '$date', 
+            last_jam_trx    = '$time',
+            last_no_trx     = '$invoice',
+            last_user       = '$user' 
             WHERE kode_barang = '$d->kode_barang' AND kode_gudang = '$kode_gudang'");
         }
     }
@@ -685,8 +685,8 @@ function hitungStokBrgRtOut($detail, $kode_gudang, $invoice)
             $isi_stok = [
                 'kode_barang'   => $d->kode_barang,
                 'kode_gudang'   => $kode_gudang,
-                'keluar'        => 0 - $d->qty,
-                'akhir'         => $d->qty,
+                'keluar'        => 0 - $d->qty_konversi,
+                'akhir'         => $d->qty_konversi,
                 'last_tgl_trx'  => $date,
                 'last_jam_trx'  => $time,
                 'last_no_trx'   => $invoice,
@@ -696,8 +696,8 @@ function hitungStokBrgRtOut($detail, $kode_gudang, $invoice)
             $CI->M_global->insertData('barang_stock', $isi_stok);
         } else {
             $CI->db->query("UPDATE barang_stok SET 
-            keluar = keluar - $d->qty, 
-            akhir = akhir + $d->qty, 
+            keluar = keluar - $d->qty_konversi, 
+            akhir = akhir + $d->qty_konversi, 
             last_tgl_trx = '$date', 
             last_jam_trx = '$time',
             last_no_trx = '$invoice',

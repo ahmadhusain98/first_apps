@@ -1003,7 +1003,7 @@ class Report extends CI_Controller
             h.invoice,
             CONCAT('Pembelian ~ ', s.nama) AS keterangan,
             d.qty_konversi AS masuk,
-            '0' AS keluar,
+            0 AS keluar,
             h.tgl_beli AS tgl,
             h.jam_beli AS jam,
             d.kode_barang,
@@ -1011,6 +1011,25 @@ class Report extends CI_Controller
             h.kode_gudang
             FROM barang_in_header h
             JOIN barang_in_detail d ON h.invoice = d.invoice
+            JOIN barang b ON d.kode_barang = b.kode_barang
+            JOIN m_supplier s ON h.kode_supplier = s.kode_supplier
+            WHERE h.is_valid = 1
+
+            UNION ALL
+
+            SELECT
+            CONCAT(DATE_FORMAT(h.tgl_beli, '%d/%m/%Y'), ' ~ ', h.jam_beli) AS record_date,
+            h.invoice,
+            CONCAT('Retur Pembelian ~ ', s.nama) AS keterangan,
+            0 AS masuk,
+            d.qty_konversi AS keluar,
+            h.tgl_beli AS tgl,
+            h.jam_beli AS jam,
+            d.kode_barang,
+            h.kode_cabang AS kode_cabang,
+            h.kode_gudang
+            FROM barang_in_retur_header h
+            JOIN barang_in_retur_detail d ON h.invoice = d.invoice
             JOIN barang b ON d.kode_barang = b.kode_barang
             JOIN m_supplier s ON h.kode_supplier = s.kode_supplier
             WHERE h.is_valid = 1

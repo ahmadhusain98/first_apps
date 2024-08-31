@@ -95,7 +95,7 @@
                 <div class="col-md-6">
                     <label for="">Surat Jalan <sup class="text-danger">**</sup></label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Surat Jalan" id="surat_jalan" name="surat_jalan" value="<?= (!empty($data_barang_in_retur) ? $data_barang_in_retur->surat_jalan : '') ?>">
+                        <input type="text" class="form-control" placeholder="Otomatis" id="surat_jalan" name="surat_jalan" value="<?= (!empty($data_barang_in_retur) ? $data_barang_in_retur->surat_jalan : '') ?>">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <ion-icon name="barcode-outline"></ion-icon>
@@ -106,7 +106,7 @@
                 <div class="col-md-6">
                     <label for="">No. Faktur <sup class="text-danger">**</sup></label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="No. Faktur" id="no_faktur" name="no_faktur" value="<?= (!empty($data_barang_in_retur) ? $data_barang_in_retur->no_faktur : '') ?>">
+                        <input type="text" class="form-control" placeholder="Otomatis" id="no_faktur" name="no_faktur" value="<?= (!empty($data_barang_in_retur) ? $data_barang_in_retur->no_faktur : '') ?>">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <ion-icon name="pricetag-outline"></ion-icon>
@@ -159,21 +159,21 @@
                         <?php if (!empty($barang_detail)) : ?>
                             <?php $no = 1;
                             foreach ($barang_detail as $bd) :
-                                $satuan = $this->db->query("SELECT bs.kode_satuan AS id, ms.keterangan AS text FROM barang_satuan bs JOIN m_satuan ms USING(kode_satuan) WHERE bs.kode_barang = '$bd->kode_barang'")->result();
+                                $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $bd->kode_satuan]);
                             ?>
                                 <tr id="rowBarangIn<?= $no ?>">
-                                    <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no ?>" onclick="hapusBarang('<?= $no ?>')"><i class="fa-solid fa-delete-left"></i></button></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no ?>" onclick="hapusBarang('<?= $no ?>')">
+                                            <i class="fa-solid fa-delete-left"></i>
+                                        </button>
+                                    </td>
                                     <td>
                                         <input type="hidden" id="kode_barang_in<?= $no ?>" name="kode_barang_in[]" value="<?= $bd->kode_barang ?>">
                                         <span><?= $bd->kode_barang ?> ~ <?= $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang])->nama ?></span>
                                     </td>
                                     <td>
-                                        <select name="kode_satuan[]" id="kode_satuan<?= $no ?>" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, <?= $no ?>)">
-                                            <option value="">~ Pilih Satuan</option>
-                                            <?php foreach ($satuan as $s) : ?>
-                                                <option value="<?= $s->id ?>" <?= (($bd->kode_satuan == $s->id) ? 'selected' : '') ?>><?= $s->text ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
+                                        <input type="hidden" id="kode_satuan<?= $no ?>" name="kode_satuan[]" value="<?= $bd->kode_satuan ?>">
+                                        <input type="text" class="form-control" id="kode_satuanx<?= $no ?>" name="kode_satuanx[]" value="<?= $satuan->keterangan ?>" readonly>
                                     </td>
                                     <td>
                                         <input type="text" id="harga_in<?= $no ?>" name="harga_in[]" value="<?= number_format($bd->harga) ?>" class="form-control text-right" onchange="hitung_st('<?= $no ?>'); formatRp(this.value, 'harga_in<?= $no ?>'); cekHarga(this.value, <?= $no ?>)">
@@ -206,23 +206,7 @@
     </div>
     <br>
     <div class="row">
-        <div class="col-md-7 col-12">
-            <div class="row" id="forInvoiceIn">
-                <div class="col-md-8 col-6">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Masukan Kode/Nama Barang" id="kode_barang" name="kode_barang">
-                        <div class="input-group-append" onclick="showBarang()">
-                            <div class="input-group-text">
-                                <ion-icon name="search-outline"></ion-icon>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-6">
-                    <button type="button" class="btn btn-sm btn-secondary float-right" onclick="searchBarang()" id="btnCari"><ion-icon name="add-circle-outline"></ion-icon> Tambah Barang</button>
-                </div>
-            </div>
-        </div>
+        <div class="col-md-7 col-12"></div>
         <div class="col-md-5 col-12">
             <div class="card">
                 <div class="card-footer">
@@ -267,61 +251,6 @@
         </div>
     </div>
 </form>
-
-<!-- modal semua barang -->
-<div class="modal fade" id="modal_barang" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"># List Barang</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="tutupModal()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div style="height: 400px; overflow: auto;">
-                            <div class="table-responsive">
-                                <table class="table table-hover table-bordered" id="tableSederhanaObat" style="width: 100%; border-radius: 10px;">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
-                                            <th width="90%">Obat</th>
-                                            <th width="5%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $nolb = 1;
-                                        foreach ($list_barang as $lb) : ?>
-                                            <tr>
-                                                <td width="5%"><?= $nolb ?></td>
-                                                <td width="90%">
-                                                    <?= $lb->kode_barang . ' ~ ' . $lb->nama . ' ~ Satuan: ' . $this->M_global->getData('m_satuan', ['kode_satuan' => $lb->kode_satuan])->keterangan . ' ~ Kategori: ' . $this->M_global->getData('m_kategori', ['kode_kategori' => $lb->kode_kategori])->keterangan . ' ~ HNA: Rp. ' . number_format($lb->hna) ?>
-                                                    <input type="hidden" name="selobat[]" id="selobat<?= $nolb ?>" value="<?= $lb->kode_barang ?>">
-                                                </td>
-                                                <td width="5%" class="text-center">
-                                                    <input type="hidden" class="form-control" name="select_barang[]" id="select_barang<?= $nolb ?>" value="0">
-                                                    <input type="checkbox" class="form-control" name="select_barangx[]" id="select_barangx<?= $nolb ?>" onclick="selbar('<?= $nolb ?>')">
-                                                </td>
-                                            </tr>
-                                        <?php $nolb++;
-                                        endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-md-12">
-                        <button type="button" class="btn btn-primary float-right" onclick="selbarfunc()"><ion-icon name="file-tray-full-outline"></ion-icon> Pilih Obat</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     var kode_barang = $('#kode_barang');
@@ -392,273 +321,6 @@
 
             $('#forInvoiceIn').show();
         }
-    }
-
-    // fungsi tampil modal list barang
-    function showBarang() {
-        $('#modal_barang').modal('show');
-    }
-
-    // fungsi tutup modal list barang
-    function tutupModal() {
-        $('#modal_barang').modal('hide');
-    }
-
-    // fungsi pencarian by input dan enter
-    kode_barang.keypress(function(e) {
-        if (e.which == 13) { // jika di enter
-            // jalankan fungsi
-            return searchBarang();
-        }
-    });
-
-    // fungsi select barang on check
-    function selbar(x) {
-        if (document.getElementById('select_barangx' + x).checked == true) {
-            $('#select_barang' + x).val(1);
-        } else {
-            $('#select_barang' + x).val(0);
-        }
-    }
-
-    // tampilkan fungsi select barang
-    function selbarfunc() {
-        var tableBarang = $('#tableSederhanaObat').dataTable(); // ambil id table detail
-        var rowCount = tableBarang.fnGetData().length; // hitung jumlah rownya
-        var tableBarangIn = document.getElementById('tableDetailBarangIn'); // ambil id table detail
-        var no = tableBarangIn.rows.length; // hitung jumlah rownya
-
-        // var no = 0;
-        // lakukan loop
-        for (var i = 1; i <= rowCount; i++) {
-            if ($('#select_barang' + i).val() == 1) {
-                $('#select_barang' + i).val(0);
-                document.getElementById('select_barangx' + i).checked = false;
-                var obat = $('#selobat' + i).val();
-                $('#modal_barang').modal('hide');
-                tampilList2(obat, i);
-                no += 1;
-                jumlahBarisBarang.val(no);
-            }
-        }
-    }
-
-    // fungsi tampilList2
-    function tampilList2(brg, i) {
-        // jalankan fungsi
-        $.ajax({
-            url: siteUrl + 'Transaksi/getBarang/' + brg,
-            type: 'POST',
-            dataType: 'JSON',
-            success: function(result) { // jika fungsi berjalan
-                // reset inputan pencarian barang
-                kode_barang.val('');
-
-                if (result.status == 0) { // jika mendapatkan status 0
-                    // munculkan notifikasi
-                    return Swal.fire("Barang", "Tidak ditemukan!", "info");
-                } else { // selain itu
-                    // tambahkan jumlah row
-                    var tableBarangIn = document.getElementById('tableDetailBarangIn'); // ambil id table detail
-                    var jum = tableBarangIn.rows.length; // hitung jumlah rownya
-                    var x = Number(jum) + 1;
-
-                    // masukan ke body table barang in detail
-                    bodyBarangIn.append(`<tr id="rowBarangIn${x}">
-                    <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button></td>
-                    <td>
-                        <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${result[0].kode_barang}">
-                        <span>${result[0].kode_barang} ~ ${result[0].nama}</span>
-                    </td>
-                    <td>
-                        <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
-                    </td>
-                    <td>
-                        <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
-                    </td>
-                    <td>
-                        <input type="text" id="qty_in${x}" name="qty_in[]" value="1" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_in${x}')">
-                    </td>
-                    <td>
-                        <input type="text" id="discpr_in${x}" name="discpr_in[]" value="0" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">
-                    </td>
-                    <td>
-                        <input type="text" id="discrp_in${x}" name="discrp_in[]" value="0" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_in${x}')">
-                    </td>
-                    <td class="text-center">
-                        <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')">
-                        <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="0">
-                    </td>
-                    <td class="text-right">
-                        <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" readonly>
-                        <span id="jumlah2_in${x}">${formatRpNoId(result[0].nilai_persediaan)}</span>
-                    </td>
-                </tr>`);
-
-                    // each satuan
-                    $.each(result[1], function(index, value) {
-                        $('#kode_satuan' + x).append(`<option value="${value.kode_satuan}">${value.keterangan}</option>`)
-                    });
-
-                    jumlahBarisBarang.val(x);
-
-                    $(".select2_global").select2({
-                        placeholder: $(this).data('placeholder'),
-                        width: '100%',
-                        allowClear: true,
-                    });
-
-                    // jalankan fungsi
-                    hitung_st(x);
-                }
-            },
-            error: function(result) { // jika fungsi error
-
-                // jalankan notifikasi error
-                error_proccess();
-            }
-        });
-    }
-
-    // fungsi pilih barang dari modal
-    function selectBarang(x) {
-        // ambil angka row terakhir
-        var jum = Number(jumlahBarisBarang.val());
-
-        if (x == '' || x == null) { // jika x kosong/ null
-        } else { // selain itu
-
-            // jalankan fungsi
-            $('#modal_barang').modal('hide');
-            tampilList(x, jum);
-        }
-    }
-
-    // fungsi pencarian barang
-    function searchBarang() {
-        // ambil angka row terakhir
-        var jum = Number(jumlahBarisBarang.val());
-
-        if (kode_barang.val() == '' || kode_barang.val() == null) { // jika kode_barang kosong/ null
-        } else { // selain itu
-
-            // jalankan fungsi
-            tampilList(kode_barang.val(), jum);
-        }
-    }
-
-    // fungsi tampilList
-    function tampilList(brg, jum) {
-
-        // jalankan fungsi
-        $.ajax({
-            url: siteUrl + 'Transaksi/getBarang/' + brg,
-            type: 'POST',
-            dataType: 'JSON',
-            success: function(result) { // jika fungsi berjalan
-                // reset inputan pencarian barang
-                kode_barang.val('');
-
-                if (result.status == 0) { // jika mendapatkan status 0
-                    // munculkan notifikasi
-                    return Swal.fire("Barang", "Tidak ditemukan!", "info");
-                } else { // selain itu
-                    // tambahkan jumlah row
-                    var x = jum + 1;
-                    jumlahBarisBarang.val(x);
-
-                    // masukan ke body table barang in detail
-                    bodyBarangIn.append(`<tr id="rowBarangIn${x}">
-                        <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button></td>
-                        <td>
-                            <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${result[0].kode_barang}">
-                            <span>${result[0].kode_barang} ~ ${result[0].nama}</span>
-                        </td>
-                        <td>
-                            <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
-                        </td>
-                        <td>
-                            <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
-                        </td>
-                        <td>
-                            <input type="text" id="qty_in${x}" name="qty_in[]" value="1" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_in${x}')">
-                        </td>
-                        <td>
-                            <input type="text" id="discpr_in${x}" name="discpr_in[]" value="0" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">
-                        </td>
-                        <td>
-                            <input type="text" id="discrp_in${x}" name="discrp_in[]" value="0" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_in${x}')">
-                        </td>
-                        <td class="text-center">
-                            <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')">
-                            <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="0">
-                        </td>
-                        <td class="text-right">
-                            <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(result[0].nilai_persediaan)}" class="form-control text-right" readonly>
-                            <span id="jumlah2_in${x}">${formatRpNoId(result[0].nilai_persediaan)}</span>
-                        </td>
-                    </tr>`);
-
-                    // each satuan
-                    $.each(result[1], function(index, value) {
-                        $('#kode_satuan' + x).append(`<option value="${value.kode_satuan}">${value.keterangan}</option>`)
-                    });
-
-                    $(".select2_global").select2({
-                        placeholder: $(this).data('placeholder'),
-                        width: '100%',
-                        allowClear: true,
-                    });
-
-                    // jalankan fungsi
-                    hitung_st(x);
-                }
-            },
-            error: function(result) { // jika fungsi error
-
-                // jalankan notifikasi error
-                error_proccess();
-            }
-        });
-    }
-
-    // fungsi ubah satuan untuk ubah harga
-    function ubahSatuan(param, id) {
-        var kode_barang_in = $('#kode_barang_in' + id).val();
-        var kode_satuan = $('#kode_satuan' + id).val();
-
-        // console.log(kode_barang_in + ' - ' + id + ' - ' + kode_satuan);
-
-        if (!param || param === null) {
-            error_proccess();
-            return; // Add return to stop further execution
-        }
-
-        $.ajax({
-            url: siteUrl + 'Transaksi/getSatuan/' + param + '/' + kode_barang_in,
-            type: "POST",
-            data: form.serialize(),
-            dataType: "JSON",
-            success: function(result) {
-                var qty_satuan = Number(result.qty_satuan);
-                var hna_master = Number(result.hna);
-                var qty = Number($('#qty_in' + id).val().replaceAll(',', ''));
-
-                if (isNaN(qty)) qty = 0; // Ensure qty is valid
-
-                var newHarga = hna_master * qty_satuan;
-                $('#harga_in' + id).val(formatRpNoId(newHarga));
-
-                var discpr = Number($('#discpr_in' + id).val().replaceAll(',', ''));
-                var newDiskon = (discpr > 0) ? (newHarga * qty) * (discpr / 100) : ($('#discrp_in' + id).val()).replaceAll(',', '');
-
-                $('#discrp_in' + id).val(formatRpNoId(newDiskon));
-                hitung_st(id);
-            },
-            error: function(result) {
-                error_proccess();
-            }
-        });
     }
 
     // fungsi hapus baris barang detail
@@ -769,11 +431,11 @@
             var row = tableBarang.rows[i];
 
             // ambil data berdasarkan loop
-            var harga1 = Number((row.cells[2].children[0].value).replace(/[^0-9\.]+/g, ""));
-            var qty1 = Number((row.cells[3].children[0].value).replace(/[^0-9\.]+/g, ""));
-            var discrp1 = Number((row.cells[5].children[0].value).replace(/[^0-9\.]+/g, ""));
-            var pajak1 = Number((row.cells[6].children[1].value).replace(/[^0-9\.]+/g, ""));
-            var jumlah1 = Number((row.cells[7].children[0].value).replace(/[^0-9\.]+/g, ""));
+            var harga1 = Number((row.cells[3].children[0].value).replace(/[^0-9\.]+/g, ""));
+            var qty1 = Number((row.cells[4].children[0].value).replace(/[^0-9\.]+/g, ""));
+            var discrp1 = Number((row.cells[6].children[0].value).replace(/[^0-9\.]+/g, ""));
+            var pajak1 = Number((row.cells[7].children[1].value).replace(/[^0-9\.]+/g, ""));
+            var jumlah1 = Number((row.cells[8].children[0].value).replace(/[^0-9\.]+/g, ""));
 
             // lakukan rumus sum
             tjumlah += jumlah1 + discrp1;
@@ -882,22 +544,10 @@
             return Swal.fire("Gudang", "Form sudah dipilih?", "question");
         }
 
-        if (surat_jalan.val() == '' || surat_jalan.val() == null) { // jika surat_jalan null/ kosong
-            btnSimpan.attr('disabled', false);
-
-            return Swal.fire("Surat Jalan", "Form sudah diisi?", "question");
-        }
-
         if (alasan.val() == '' || alasan.val() == null) { // jika alasan null/ kosong
             btnSimpan.attr('disabled', false);
 
             return Swal.fire("Alasan", "Form sudah diisi?", "question");
-        }
-
-        if (no_faktur.val() == '' || no_faktur.val() == null) { // jika no_faktur null/ kosong
-            btnSimpan.attr('disabled', false);
-
-            return Swal.fire("No. Faktur", "Form sudah diisi?", "question");
         }
 
         if (invoice.val() == '' || invoice.val() == null) { // jika invoice null/ kosong
@@ -990,41 +640,43 @@
                 dataType: 'JSON',
                 success: function(result) {
                     if (result[0].status == 1) {
+                        $('#surat_jalan').val(result[0]['header'].surat_jalan);
+                        $('#no_faktur').val(result[0]['header'].no_faktur);
+                        $('#kode_supplier').html(`<option value="${result[0]['header'].kode_supplier}">${result[0]['header'].nama_supplier}</option>`);
 
-                        // isi header
-                        kode_supplier.html(`<option value="${result[1].kode_supplier}">${result[1].kode_supplier} ~ ${result[1].nama_supplier}</option>`);
-                        kode_gudang.html(`<option value="${result[1].kode_gudang}">${result[1].kode_gudang} ~ ${result[1].nama_gudang}</option>`);
-                        surat_jalan.val(result[1].surat_jalan);
-                        no_faktur.val(result[1].no_faktur);
+                        $('#kode_gudang').html(`<option value="${result[0]['header'].kode_gudang}">${result[0]['header'].nama_gudang}</option>`);
 
-                        // Detail
-                        // tambahkan jumlah row
+                        jumlahBarisBarang.val(result[1].length);
+
                         var x = 1;
-                        var jum = Number(jumlahBarisBarang.val()) + Number(result[2].length);
-                        jumlahBarisBarang.val(jum);
-
-                        $.each(result[2], function(index, value) {
+                        $.each(result[1], function(index, value) {
                             if (value.pajak > 0) {
-                                var cekpajak = 'checked';
+                                var cek_pajak = 'checked';
                             } else {
-                                var cekpajak = '';
+                                var cek_pajak = '';
                             }
 
-                            // masukan ke body table barang in detail
+                            getSatuan(value.satuan_default, x);
+
                             bodyBarangIn.append(`<tr id="rowBarangIn${x}">
-                                <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button></td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')">
+                                        <i class="fa-solid fa-delete-left"></i>
+                                    </button>
+                                </td>
                                 <td>
                                     <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${value.kode_barang}">
                                     <span>${value.kode_barang} ~ ${value.nama}</span>
                                 </td>
                                 <td>
-                                    <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
+                                    <input type="hidden" id="kode_satuan${x}" name="kode_satuan[]" value="">
+                                    <input type="text" class="form-control" id="kode_satuanx${x}" name="kode_satuanx[]" value="" readonly>
                                 </td>
                                 <td>
                                     <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(value.harga)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
                                 </td>
                                 <td>
-                                    <input type="text" id="qty_in${x}" name="qty_in[]" value="${formatRpNoId(valur.qty)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_in${x}')">
+                                    <input type="text" id="qty_in${x}" name="qty_in[]" value="${formatRpNoId(value.qty_po)}" class="form-control text-right" onchange="hitung_dpr('${x}'); formatRp(this.value, 'qty_in${x}')">
                                 </td>
                                 <td>
                                     <input type="text" id="discpr_in${x}" name="discpr_in[]" value="${formatRpNoId(value.discpr)}" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">
@@ -1033,7 +685,7 @@
                                     <input type="text" id="discrp_in${x}" name="discrp_in[]" value="${formatRpNoId(value.discrp)}" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_in${x}')">
                                 </td>
                                 <td class="text-center">
-                                    <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')" ${cekpajak}>
+                                    <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')" ${cek_pajak}>
                                     <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="${formatRpNoId(value.pajakrp)}">
                                 </td>
                                 <td class="text-right">
@@ -1042,19 +694,15 @@
                                 </td>
                             </tr>`);
 
-                            // each satuan
-                            $.each(result[1], function(index, value) {
-                                $('#kode_satuan' + x).append(`<option value="${value.kode_satuan}">${value.keterangan}</option>`)
-                            });
-
-                            $(".select2_global").select2({
-                                placeholder: $(this).data('placeholder'),
-                                width: '100%',
-                                allowClear: true,
-                            });
+                            // jalankan fungsi
+                            hitung_st(x);
 
                             x++;
                         });
+                    } else {
+                        $('#bodyBarangIn').html('');
+
+                        $('#jumlahBarisBarang').val(1);
 
                         hitung_t();
                     }
@@ -1064,6 +712,29 @@
                 }
             });
         }
+    }
+
+    function getSatuan(ks, x) {
+        if (ks == '' || ks == null) {
+            return Swal.fire("Satuan", "Tidak terdefinisi, silahkan dicoba kembali", "info");
+        }
+
+        $.ajax({
+            url: siteUrl + 'Transaksi/getSatuanBarangIn/' + ks,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(result) {
+                if (result.status == 1) {
+                    $('#kode_satuan' + x).val(result.kode_satuan);
+                    $('#kode_satuanx' + x).val(result.keterangan);
+                } else {
+                    return Swal.fire("Satuan", "Tidak terdefinisi, silahkan dicoba kembali", "info");
+                }
+            },
+            error: function(result) {
+                error_proccess();
+            }
+        });
     }
 
     // fungsi reset
