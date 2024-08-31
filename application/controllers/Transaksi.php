@@ -265,12 +265,16 @@ class Transaksi extends CI_Controller
         ];
 
         if ($param == 2) { // jika param = 2
+            aktifitas_user_transaksi('Transaksi Masuk', 'mengubah PO', $invoice);
+
             // jalankan fungsi cek
             $cek = [
                 $this->M_global->updateData('barang_po_in_header', $isi_header, ['invoice' => $invoice]), // update header
                 $this->M_global->delData('barang_po_in_detail', ['invoice' => $invoice]), // delete detail
             ];
         } else { // selain itu
+            aktifitas_user_transaksi('Transaksi Masuk', 'menambahkan PO', $invoice);
+
             // jalankan fungsi cek
             $cek = $this->M_global->insertData('barang_po_in_header', $isi_header); // insert header
         }
@@ -539,11 +543,15 @@ class Transaksi extends CI_Controller
         $detail = $this->M_global->getDataResult('barang_po_in_detail', ['invoice' => $invoice]);
 
         if ($acc == 0) { // jika acc = 0
+            aktifitas_user_transaksi('Transaksi Masuk', 'Reject PO', $invoice);
+
             // update is_valid jadi 0
             $cek = $this->M_global->updateData('barang_po_in_header', ['is_valid' => 0, 'tgl_valid' => null, 'jam_valid' => null], ['invoice' => $invoice]);
 
             hitungStokBrgOut($detail, $kode_gudang, $invoice);
         } else { // selain itu
+            aktifitas_user_transaksi('Transaksi Masuk', 'Confirm PO', $invoice);
+
             // update is_valid jadi 1
             $cek = $this->M_global->updateData('barang_po_in_header', ['is_valid' => 1, 'tgl_valid' => date('Y-m-d'), 'jam_valid' => date('H:i:s')], ['invoice' => $invoice]);
             hitungStokBrgIn($detail, $kode_gudang, $invoice);
@@ -1175,6 +1183,8 @@ class Transaksi extends CI_Controller
             ];
 
             if ($param == 2) { // jika param = 2
+                aktifitas_user_transaksi('Transaksi Masuk', 'mengubah Terima Barang', $invoice);
+
                 if ($invoice_po != '' || $invoice_po != null || !empty($invoice_po) || isset($invoice_po)) {
                     $detail_terima = $this->M_global->getDataResult('barang_in_detail', ['invoice' => $invoice]);
 
@@ -1195,8 +1205,12 @@ class Transaksi extends CI_Controller
                     $this->M_global->delData('barang_in_detail', ['invoice' => $invoice]), // delete detail
                 ];
             } else { // selain itu
+                aktifitas_user_transaksi('Transaksi Masuk', 'menambahkan Terima Barang', $invoice);
+
                 // jalankan fungsi cek
-                $cek = $this->M_global->insertData('barang_in_header', $isi_header); // insert header
+                $cek = [
+                    $this->M_global->insertData('barang_in_header', $isi_header),
+                ]; // insert header
             }
 
             if ($cek) { // jika fungsi cek berjalan
@@ -1294,6 +1308,7 @@ class Transaksi extends CI_Controller
     // fungsi acc/re-acc
     public function accbarang_in($invoice, $acc)
     {
+        $kode_cabang = $this->session->userdata('cabang');
         // header barang by invoice
         $header = $this->M_global->getData('barang_in_header', ['invoice' => $invoice]);
         // kode_gudang
@@ -1303,37 +1318,50 @@ class Transaksi extends CI_Controller
         $detail = $this->M_global->getDataResult('barang_in_detail', ['invoice' => $invoice]);
 
         if ($acc == 0) { // jika acc = 0
+            aktifitas_user_transaksi('Transaksi Masuk', 'Reject Terima Barang', $invoice);
+
+            // update piutang
+            $piutang = $this->M_global->getData('piutang', ['referensi' => $invoice, 'kode_cabang' => $kode_cabang]);
+            $piutang_no = $piutang->piutang_no;
+
             // update is_valid jadi 0
-            $cek = $this->M_global->updateData('barang_in_header', ['is_valid' => 0, 'tgl_valid' => null, 'jam_valid' => null], ['invoice' => $invoice]);
+            $cek = [
+                $this->M_global->updateData('barang_in_header', ['is_valid' => 0, 'tgl_valid' => null, 'jam_valid' => null], ['invoice' => $invoice]),
+                $this->M_global->delData('piutang', ['piutang_no' => $piutang_no]),
+            ];
 
             hitungStokBrgOut($detail, $kode_gudang, $invoice);
         } else { // selain itu
+            aktifitas_user_transaksi('Transaksi Masuk', 'Confirm Terima Barang', $invoice);
+
+            // insert piutang ketika di acc
+            $piutang_no = _noPiutang($kode_cabang);
+
+            $isi_piutang = [
+                'kode_cabang'       => $kode_cabang,
+                'piutang_no'        => $piutang_no,
+                'tanggal'           => $header->tgl_beli,
+                'jam'               => $header->jam_beli,
+                'referensi'         => $invoice,
+                'jumlah'            => $header->total,
+                'status'            => 0,
+            ];
+
             // update is_valid jadi 1
-            $cek = $this->M_global->updateData('barang_in_header', ['is_valid' => 1, 'tgl_valid' => date('Y-m-d'), 'jam_valid' => date('H:i:s')], ['invoice' => $invoice]);
+            $cek = [
+                $this->M_global->updateData('barang_in_header', ['is_valid' => 1, 'tgl_valid' => date('Y-m-d'), 'jam_valid' => date('H:i:s')], ['invoice' => $invoice]),
+                $this->M_global->insertData('piutang', $isi_piutang),
+            ];
 
             $detail = $this->M_global->getDataResult('barang_in_detail', ['invoice' => $invoice]);
 
             foreach ($detail as $d) {
-                $kode_barang = $d->kode_barang;
-                $kode_satuan = $d->kode_satuan;
-                $harga = $d->harga;
-                $qty = $d->qty;
+                $kode_barang    = $d->kode_barang;
+                $harga          = $d->harga;
+                $qty_konversi   = $d->qty_konversi;
+                $qty            = $d->qty;
 
-                $barang1 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan' => $kode_satuan]);
-                $barang2 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan2' => $kode_satuan]);
-                $barang3 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan3' => $kode_satuan]);
-
-                if ($barang1) {
-                    $qty_satuan = 1;
-                } else if ($barang2) {
-                    $qty_satuan = $barang2->qty_satuan2;
-                } else {
-                    $qty_satuan = $barang3->qty_satuan3;
-                }
-
-                $qty_konversi   = $qty * $qty_satuan;
-
-                $new_hna = $harga / ($qty_konversi / $qty);
+                $new_hna = ($harga / ($qty_konversi / $qty));
                 $this->M_global->updateData('barang', ['hna' => $new_hna, 'nilai_persediaan' => $new_hna], ['kode_barang' => $kode_barang]); // update barang
             }
 
@@ -1371,6 +1399,7 @@ class Transaksi extends CI_Controller
                 }
             }
         }
+        aktifitas_user_transaksi('Transaksi Masuk', 'menghapus Terima Barang', $invoice);
 
         // jalankan fungsi cek
         $cek = [
@@ -3140,7 +3169,8 @@ class Transaksi extends CI_Controller
 
         // Loop through the list to populate the data array
         foreach ($list as $rd) {
-            $s_akhir = (int)$rd->akhir;
+            $s_akhir    = (int)$rd->akhir;
+            $barang     = $this->M_global->getData('barang', ['kode_barang' => $rd->kode_barang]);
 
             $row = [];
             $row[] = $no++;

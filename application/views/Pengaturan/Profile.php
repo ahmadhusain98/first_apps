@@ -30,7 +30,7 @@ if ($data_user->on_off == 1) {
                 </div>
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Tentang Aku</h3>
+                        <h3 class="card-title">Informasi Pribadi</h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                                 <i class="fas fa-minus"></i>
@@ -56,9 +56,9 @@ if ($data_user->on_off == 1) {
                 <div class="card">
                     <div class="card-header p-2">
                         <ul class="nav nav-pills">
-                            <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Activity</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#password" data-toggle="tab">Change Password</a></li>
+                            <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Aktifitas</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Pengaturan Akun</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#password" data-toggle="tab">Ubah Password</a></li>
                         </ul>
                     </div>
                     <div class="card-body">
@@ -149,11 +149,26 @@ if ($data_user->on_off == 1) {
                                                             $hari_keluar = "Tidak di ketahui";
                                                             break;
                                                     }
+
+                                                    $bulan = array(
+                                                        '01' => 'Januari',
+                                                        '02' => 'Februari',
+                                                        '03' => 'Maret',
+                                                        '04' => 'April',
+                                                        '05' => 'Mei',
+                                                        '06' => 'Juni',
+                                                        '07' => 'Juli',
+                                                        '08' => 'Agustus',
+                                                        '09' => 'September',
+                                                        '10' => 'Oktober',
+                                                        '11' => 'November',
+                                                        '12' => 'Desember',
+                                                    );
                                                     ?>
                                                     <tr>
-                                                        <td><?= $hari_masuk . ", " . date('d M Y', strtotime($in_out->tgl_masuk)); ?></td>
+                                                        <td><?= $hari_masuk . ", " . date('d', strtotime($in_out->tgl_masuk)) . " " . $bulan[date('m', strtotime($in_out->tgl_masuk))] . " " . date('Y', strtotime($in_out->tgl_masuk)); ?></td>
                                                         <td><?= date("H:i:s", strtotime($in_out->jam_masuk)); ?></td>
-                                                        <td><?= $hari_keluar . ", " . date('d M Y', strtotime($in_out->tgl_masuk)); ?></td>
+                                                        <td><?= $hari_keluar . ", " . date('d', strtotime($in_out->tgl_keluar)) . " " . $bulan[date('m', strtotime($in_out->tgl_keluar))] . " " . date('Y', strtotime($in_out->tgl_keluar)); ?></td>
                                                         <td><?= date("H:i:s", strtotime($in_out->jam_keluar)); ?></td>
                                                     </tr>
                                                 </tbody>
@@ -184,8 +199,10 @@ if ($data_user->on_off == 1) {
                                                         <?php foreach ($aktifitas as $au) { ?>
                                                             <tr>
                                                                 <td width="14%" class="text-left"><span class="badge bg-success"><?= date("d m Y", strtotime($au->waktu)); ?></span></td>
-                                                                <td width="20%" class="text-left"><?= $au->menu; ?></td>
-                                                                <td width="46%" class="text-left"><?= $au->kegiatan; ?></td>
+                                                                <td width="10%" class="text-left"><?= $au->menu; ?></td>
+                                                                <td width="41%" class="text-left"><?= $au->kegiatan; ?></td>
+                                                                <td width="5%" class="text-left"><?= $au->kode_cabang; ?></td>
+                                                                <td width="10%" class="text-left">Shif: <?= $au->shift; ?></td>
                                                                 <td width="20%" class="text-right">Jam : <?= date("H:i", strtotime($au->waktu)); ?></td>
                                                             </tr>
                                                         <?php } ?>

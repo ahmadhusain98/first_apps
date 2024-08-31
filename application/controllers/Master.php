@@ -874,7 +874,7 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_bank;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_bank . "'" . ')" ' . $upd_diss . '><ion-icon name="create-outline"><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_bank . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
                 <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_bank . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;

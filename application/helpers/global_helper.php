@@ -69,12 +69,35 @@ function aktifitas_user($menu, $message, $kode, $value)
 {
     $CI         = &get_instance();
     $sess       = $CI->session->userdata('email');
+    $cabang     = $CI->session->userdata('init_cabang');
+    $shift      = $CI->session->userdata('shift');
 
     $aktifitas = [
-        'email'     => $sess,
-        'kegiatan'  => $sess . " Telah " . $message . " '" . $value . "' dengan kode/inv " . $kode,
-        'menu'      => $menu,
-        'waktu'     => date('Y-m-d H:i:s'),
+        'email'         => $sess,
+        'kegiatan'      => $sess . " Telah <b>" . $message . " " . $value . "</b> dengan kode/inv <b>" . $kode . "</b>",
+        'menu'          => $menu,
+        'waktu'         => date('Y-m-d H:i:s'),
+        'kode_cabang'   => $cabang,
+        'shift'         => $shift,
+    ];
+
+    $CI->db->insert("activity_user", $aktifitas);
+}
+
+function aktifitas_user_transaksi($menu, $message, $kode)
+{
+    $CI         = &get_instance();
+    $sess       = $CI->session->userdata('email');
+    $cabang     = $CI->session->userdata('init_cabang');
+    $shift      = $CI->session->userdata('shift');
+
+    $aktifitas = [
+        'email'         => $sess,
+        'kegiatan'      => $sess . " Telah <b>" . $message . "</b> dengan kode/inv <b>" . $kode . "</b>",
+        'menu'          => $menu,
+        'waktu'         => date('Y-m-d H:i:s'),
+        'kode_cabang'   => $cabang,
+        'shift'         => $shift,
     ];
 
     $CI->db->insert("activity_user", $aktifitas);
@@ -397,6 +420,24 @@ function _invoice($cabang)
     return $invoice;
 }
 
+function _noPiutang($cabang)
+{
+    $CI           = &get_instance();
+
+    $now          = date('Y-m-d');
+
+    $lastNumber   = $CI->db->query('SELECT * FROM piutang WHERE tanggal = "' . $now . '" AND kode_cabang = "' . $cabang . '" ORDER BY id DESC LIMIT 1')->row();
+    $number       = 1;
+    if ($lastNumber) {
+        $number   = $CI->db->query('SELECT * FROM piutang WHERE tanggal = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
+        $invoice  = $CI->session->userdata('init_cabang') . 'PUT-' . date('Ymd') . sprintf("%05d", $number);
+    } else {
+        $number   = 0;
+        $invoice  = $CI->session->userdata('init_cabang') . 'PUT-' . date('Ymd') . "00001";
+    }
+    return $invoice;
+}
+
 function _surat_jalan($cabang)
 {
     $CI           = &get_instance();
@@ -453,52 +494,64 @@ function _invoice_retur($cabang)
 
 function konversi_show_satuan($s_akhir, $kode_barang)
 {
-    $CI   = &get_instance();
-
+    $CI = &get_instance();
     $kode_cabang = $CI->session->userdata("cabang");
+    $barang = $CI->M_global->getData('barang', ['kode_barang' => $kode_barang]);
 
-    $satuan1 = $CI->M_global->getData('barang_satuan', ['kode_barang' => $kode_barang, 'kode_cabang' => $kode_cabang, 'ke' => 1]);
-    $satuan3 = $CI->M_global->getData('barang_satuan', ['kode_barang' => $kode_barang, 'kode_cabang' => $kode_cabang, 'ke' => 3]);
+    $satuan1 = $CI->M_global->getData('m_satuan', ['kode_satuan' => $barang->kode_satuan]);
+    $satuan2 = $CI->M_global->getData('m_satuan', ['kode_satuan' => $barang->kode_satuan2]);
+    $satuan3 = $CI->M_global->getData('m_satuan', ['kode_satuan' => $barang->kode_satuan3]);
 
+    $sat = '';
+    
     if ($satuan3) {
-        $stok3 = floor($s_akhir / $satuan3->qty_satuan);
-        $qty_sat_3 = $stok3 * $satuan3->qty_satuan;
-
-        $cek_sisa3 = $s_akhir - $qty_sat_3;
+        $stok3 = floor($s_akhir / $barang->qty_satuan3);
+        $sisa3 = $s_akhir % $barang->qty_satuan3;
+        
         if ($stok3 > 0) {
-            $satuan2 = $CI->M_global->getData('barang_satuan', ['kode_barang' => $kode_barang, 'kode_cabang' => $kode_cabang, 'ke' => 2]);
-            $stok2 = floor($cek_sisa3 / $satuan2->qty_satuan);
-            $qty_sat_2 = $stok2 * $satuan2->qty_satuan;
-
-            $cek_sisa2 = $cek_sisa3 - $qty_sat_2;
-            if ($stok2 > 0) {
-                $sat = number_format($stok3) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan3->kode_satuan])->keterangan . (($stok2 > 0) ? '<br>' . number_format($stok2) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan2->kode_satuan])->keterangan : '') . (($cek_sisa2 > 0) ? '<br>' . number_format($cek_sisa2) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan1->kode_satuan])->keterangan : '');
+            $sat .= number_format($stok3) . ' ' . $satuan3->keterangan;
+            
+            if ($satuan2) {
+                $stok2 = floor($sisa3 / $barang->qty_satuan2);
+                $sisa2 = $sisa3 % $barang->qty_satuan2;
+                
+                if ($stok2 > 0) {
+                    $sat .= '<br>' . number_format($stok2) . ' ' . $satuan2->keterangan;
+                }
+                
+                if ($sisa2 > 0 || $stok2 === 0) {
+                    $sat .= '<br>' . number_format($sisa2) . ' ' . $satuan1->keterangan;
+                }
             } else {
-                $sat = number_format($stok3) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan3->kode_satuan])->keterangan . (($stok2 > 0) ? '<br>' . number_format($stok2) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan2->kode_satuan])->keterangan : '');
+                if ($sisa3 > 0) {
+                    $sat .= '<br>' . number_format($sisa3) . ' ' . $satuan1->keterangan;
+                }
             }
         } else {
-            $sat = number_format($stok3) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan3->kode_satuan])->keterangan;
+            if ($sisa3 > 0) {
+                $sat .= number_format($sisa3) . ' ' . $satuan1->keterangan;
+            }
+        }
+    } elseif ($satuan2) {
+        $stok2 = floor($s_akhir / $barang->qty_satuan2);
+        $sisa2 = $s_akhir % $barang->qty_satuan2;
+        
+        if ($stok2 > 0) {
+            $sat .= number_format($stok2) . ' ' . $satuan2->keterangan;
+            
+            if ($sisa2 > 0) {
+                $sat .= '<br>' . number_format($sisa2) . ' ' . $satuan1->keterangan;
+            }
+        } else {
+            $sat .= number_format($sisa2) . ' ' . $satuan1->keterangan;
         }
     } else {
-        $satuan2 = $CI->M_global->getData('barang_satuan', ['kode_barang' => $kode_barang, 'kode_cabang' => $kode_cabang, 'ke' => 2]);
-
-        if ($satuan2) {
-            $stok2 = floor($s_akhir / $satuan2->qty_satuan);
-            $qty_sat_2 = $stok2 * $satuan2->qty_satuan;
-
-            $cek_sisa2 = $s_akhir - $qty_sat_2;
-            if ($stok2 > 0) {
-                $sat = number_format($stok2) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan2->kode_satuan])->keterangan . (($cek_sisa2 > 0) ? '<br>' . number_format($cek_sisa2) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan1->kode_satuan])->keterangan : '');
-            } else {
-                $sat = number_format($cek_sisa2) . ' ' . $CI->M_global->getData('m_satuan', ['kode_satuan' => $satuan1->kode_satuan])->keterangan;
-            }
-        } else {
-            $sat = '';
-        }
+        $sat = number_format($s_akhir) . ' ' . $satuan1->keterangan;
     }
 
     return $sat;
 }
+
 
 function hitungStokBrgIn($detail, $kode_gudang, $invoice)
 {
@@ -558,8 +611,8 @@ function hitungStokBrgOut($detail, $kode_gudang, $invoice)
                 'kode_cabang'   => $d->kode_cabang,
                 'kode_barang'   => $d->kode_barang,
                 'kode_gudang'   => $kode_gudang,
-                'masuk'         => 0 - $d->qty,
-                'akhir'         => 0 - $d->qty,
+                'masuk'         => 0 - $d->qty_konversi,
+                'akhir'         => 0 - $d->qty_konversi,
                 'last_tgl_trx'  => $date,
                 'last_jam_trx'  => $time,
                 'last_no_trx'   => $invoice,
@@ -569,8 +622,8 @@ function hitungStokBrgOut($detail, $kode_gudang, $invoice)
             $CI->M_global->insertData('barang_stock', $isi_stok);
         } else {
             $CI->db->query("UPDATE barang_stok SET 
-            masuk = masuk - $d->qty, 
-            akhir = akhir - $d->qty, 
+            masuk = masuk - $d->qty_konversi, 
+            akhir = akhir - $d->qty_konversi, 
             last_tgl_trx = '$date', 
             last_jam_trx = '$time',
             last_no_trx = '$invoice',

@@ -841,8 +841,9 @@
         var harga = ($('#harga_in' + x).val()).replaceAll(',', '');
         var qty = ($('#qty_in' + x).val()).replaceAll(',', '');
         var discpr = ($('#discpr_in' + x).val()).replaceAll(',', '');
+        var discrp = ($('#discrp_in' + x).val()).replaceAll(',', '');
 
-        if (discpr < 1) {
+        if (discpr < 1 && discrp < 1) {
             return hitung_drp(x);
         }
 

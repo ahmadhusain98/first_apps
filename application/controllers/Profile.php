@@ -59,7 +59,7 @@ class Profile extends CI_Controller
             $this->data,
             'judul'         => 'Profile',
             'nama_apps'     => $web_setting->nama,
-            'page'          => 'Akun Pengguna',
+            'page'          => 'Informasi Personal',
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
             'data_user'     => $data,
@@ -205,8 +205,10 @@ class Profile extends CI_Controller
                     <?php foreach ($aktifitas as $au) { ?>
                         <tr>
                             <td width="14%" class="text-left"><span class="badge bg-success"><?= date("d m Y", strtotime($au->waktu)); ?></span></td>
-                            <td width="20%" class="text-left"><?= $au->menu; ?></td>
-                            <td width="46%" class="text-left"><?= $au->kegiatan; ?></td>
+                            <td width="10%" class="text-left"><?= $au->menu; ?></td>
+                            <td width="41%" class="text-left"><?= $au->kegiatan; ?></td>
+                            <td width="5%" class="text-left"><?= $au->kode_cabang; ?></td>
+                            <td width="10%" class="text-left">Shif: <?= $au->shift; ?></td>
                             <td width="20%" class="text-right">Jam : <?= date("H:i", strtotime($au->waktu)); ?></td>
                         </tr>
                     <?php } ?>

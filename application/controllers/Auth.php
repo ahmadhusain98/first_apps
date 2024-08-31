@@ -333,19 +333,21 @@ class Auth extends CI_Controller
                         $this->db->query("UPDATE activity_log SET tgl_masuk = '$date', jam_masuk = '$jam' WHERE kode = '$email'");
                     } else {
                         $data_pesan = [
-                            'kode'      => $email,
-                            'isi'       => "Login / Logout",
-                            'tgl_masuk' => $date,
-                            'jam_masuk' => $jam,
+                            'kode'          => $email,
+                            'isi'           => "Login / Logout",
+                            'tgl_masuk'     => $date,
+                            'jam_masuk'     => $jam,
                         ];
                         $this->db->insert("activity_log", $data_pesan);
                     }
 
                     $aktifitas = [
-                        'email'     => $email,
-                        'kegiatan'  => $email . " masuk di Cabang " . $init_cabang . ', Shift: ' . $shift,
-                        'menu'      => "Login",
-                        'waktu'     => date('Y-m-d H:i:s'),
+                        'email'         => $email,
+                        'kegiatan'      => $email . " <b>Masuk Sistem</b>",
+                        'menu'          => "Login",
+                        'waktu'         => date('Y-m-d H:i:s'),
+                        'kode_cabang'   => $init_cabang,
+                        'shift'         => $shift,
                     ];
 
                     $this->db->insert("activity_user", $aktifitas);
@@ -415,22 +417,29 @@ class Auth extends CI_Controller
     // fungsi keluar sistem
     public function logout()
     {
+        $date = date('Y-m-d');
+        $jam = date('H:i:s');
+
         // session
         $sess = $this->session->userdata('email');
         $init_cabang = $this->session->userdata('init_cabang');
         $shift = $this->session->userdata('shift');
 
         $aktifitas = [
-            'email'     => $sess,
-            'kegiatan'  => $sess . " keluar di Cabang " . $init_cabang . ', Shift: ' . $shift,
-            'menu'      => "Logout",
-            'waktu'     => date('Y-m-d H:i:s'),
+            'email'         => $sess,
+            'kegiatan'      => $sess . " <b>Meninggalkan Sistem</b>",
+            'menu'          => "Logout",
+            'waktu'         => date('Y-m-d H:i:s'),
+            'kode_cabang'   => $init_cabang,
+            'shift'         => $shift,
         ];
 
-        $this->db->insert("activity_user", $aktifitas);
-
         // cek user/ member
-        $cek = $this->M_global->jumDataRow('user', ['email' => $sess]);
+        $cek = [
+            $this->db->insert("activity_user", $aktifitas),
+            $this->db->query("UPDATE activity_log SET tgl_keluar = '$date', jam_keluar = '$jam' WHERE kode = '$sess'"),
+            $this->M_global->jumDataRow('user', ['email' => $sess]),
+        ];
 
         if ($cek > 0) { // jika ini user
             // update user on_off

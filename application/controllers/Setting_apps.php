@@ -85,9 +85,9 @@ class Setting_apps extends CI_Controller
             }
         }
 
-        if ($_FILES['bg_theme']['name']) { // jika file didapatkan nama filenya
+        if ($_FILES['watermark']['name']) { // jika file didapatkan nama filenya
             // upload file
-            $this->upload->do_upload('bg_theme');
+            $this->upload->do_upload('watermark');
 
             // ambil namanya berdasarkan nama file upload
             $theme = $this->upload->data('file_name');
@@ -96,7 +96,7 @@ class Setting_apps extends CI_Controller
             if ($web->logo == 'sidebar1.jpeg') {
                 $theme = 'sidebar1.jpeg';
             } else {
-                $theme = $web->bg_theme;
+                $theme = $web->watermark;
             }
         }
 
@@ -107,7 +107,7 @@ class Setting_apps extends CI_Controller
             'nohp'      => $nohp,
             'alamat'    => $alamat,
             'logo'      => $gambar,
-            'bg_theme'  => $theme,
+            'watermark' => $theme,
         ];
 
         // jalankan fungsi update berdasarkan id

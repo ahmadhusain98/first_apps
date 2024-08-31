@@ -165,10 +165,10 @@
 
     $master_cabang = $this->M_global->getData('cabang', ["kode_cabang" => $this->session->userdata('cabang')]);
 
-    $tgl1 = strtotime($master_cabang->aktif_dari);
+    $tgl1 = strtotime(date('Y-m-d'));
     $tgl2 = strtotime($master_cabang->aktif_sampai);
 
-    $jarak = $tgl2 - $tgl1;
+    $jarak = ($tgl2 - $tgl1);
 
     $aktif_cabang = $jarak / 60 / 60 / 24;
 
@@ -525,7 +525,7 @@
         function display_ct() {
             var x = new Date()
             var x1 = x.getMonth() + 1 + "/" + x.getDate() + "/" + x.getFullYear();
-            x1 = x1 + " - " + x.getHours() + ":" + x.getMinutes();
+            x1 = x1 + " - " + x.getHours() + ":" + x.getMinutes() + ":" + x.getSeconds();
             document.getElementById('time').innerHTML = x1;
             display_c();
         }

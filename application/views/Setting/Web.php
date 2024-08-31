@@ -5,7 +5,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 <form method="post" id="form_web">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
         </div>
     </div>
     <br>
@@ -76,17 +76,17 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label for="wallpaper_web" class="control-label">Latar Belakang</label>
+                                    <label for="wallpaper_web" class="control-label">Watermark</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <img id="preview_theme" class="rounded mx-auto d-block" style="border: 2px solid grey; width: 100%; height: 300px; background-position: center; background-size: cover;" src="<?= base_url('assets/img/web/') . $web->bg_theme; ?>" alt="User profile picture">
+                                    <img id="preview_theme" class="rounded mx-auto d-block" style="border: 2px solid grey; width: 100%; height: 100px; background-position: center; background-size: cover;" src="<?= base_url('assets/img/web/') . $web->watermark; ?>" alt="User profile picture">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="input-group">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="bg_theme" aria-describedby="inputGroupFileAddon01" name="bg_theme" onchange="readURLTheme(this)">
+                                            <input type="file" class="custom-file-input" id="watermark" aria-describedby="inputGroupFileAddon01" name="watermark" onchange="readURLTheme(this)">
                                             <label class="custom-file-label" id="label-gambar" for="inputGroupFile01">Cari Gambar</label>
                                         </div>
                                     </div>
