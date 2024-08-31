@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="col-md-1 col-1">
                     <div class="input-group mb-3">
-                        <input type="checkbox" name="cek_beli" id="cek_beli" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Menggunakan Pembelian" onclick="cekBeli()" <?= (!empty($data_barang_in_retur) ? (($data_barang_in_retur->invoice_in == '' || $data_barang_in_retur->invoice_in == null) ? '' : 'checked') : '') ?>>
+                        <input type="checkbox" name="cek_retur" id="cek_retur" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Menggunakan Pembelian" onclick="cekBeli()" <?= (!empty($data_barang_in_retur) ? (($data_barang_in_retur->invoice_in == '' || $data_barang_in_retur->invoice_in == null) ? '' : 'checked') : '') ?>>
                     </div>
                 </div>
                 <div class="col-md-11 col-11">
@@ -19,7 +19,7 @@
                         <select name="invoice_in" id="invoice_in" class="form-control select2_global" data-placeholder="~ Pilih Invoice Pembelian" onchange="getBarangIn(this.value)">
                             <option value="">~ Pilih Invoice Pembelian</option>
                             <?php foreach ($pembelian as $p) : ?>
-                                <option value="<?= $p->invoice ?>" <?= ((!empty($data_barang_in_retur) ? (($p->invoice == $data_barang_in_retur->invoice_in) ? 'selected' : '') : '')) ?>><?= $p->invoice . ' ~ Pemasok: ' . $this->M_global->getData('m_supplier', ['kode_supplier' => $p->kode_supplier])->nama . ' | Gudang: ' . $this->M_global->getData('m_gudang', ['kode_gudang' => $p->kode_gudang])->nama . ' | Tanggal: ' . date('d/m/Y', strtotime($p->tgl_beli)) ?></option>
+                                <option value="<?= $p->invoice ?>" <?= ((!empty($data_barang_in_retur) ? (($p->invoice == $data_barang_in_retur->invoice_in) ? 'selected' : '') : '')) ?>><?= $p->invoice . ' ~ Pemasok: ' . $this->M_global->getData('m_supplier', ['kode_supplier' => $p->kode_supplier])->nama . ' | Gudang: ' . $this->M_global->getData('m_gudang', ['kode_gudang' => $p->kode_gudang])->nama . ' | Tanggal: ' . date('d/m/Y', strtotime($p->tgl_retur)) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -42,7 +42,7 @@
                     <div class="row">
                         <div class="col-md-6 col-6">
                             <div class="input-group mb-3">
-                                <input type="date" title="Tgl Beli" class="form-control" placeholder="Tgl Beli" id="tgl_beli" name="tgl_beli" value="<?= (!empty($data_barang_in_retur) ? date('Y-m-d', strtotime($data_barang_in_retur->tgl_beli)) : date('Y-m-d')) ?>" readonly>
+                                <input type="date" title="Tgl Retur" class="form-control" placeholder="Tgl Retur" id="tgl_retur" name="tgl_retur" value="<?= (!empty($data_barang_in_retur) ? date('Y-m-d', strtotime($data_barang_in_retur->tgl_retur)) : date('Y-m-d')) ?>" readonly>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <ion-icon name="today-outline"></ion-icon>
@@ -52,7 +52,7 @@
                         </div>
                         <div class="col-md-6 col-6">
                             <div class="input-group mb-3">
-                                <input type="time" title="Jam Beli" class="form-control" placeholder="Jam Beli" id="jam_beli" name="jam_beli" value="<?= (!empty($data_barang_in_retur) ? date('H:i:s', strtotime($data_barang_in_retur->jam_beli)) : date('H:i:s')) ?>" readonly>
+                                <input type="time" title="Jam Retur" class="form-control" placeholder="Jam Retur" id="jam_retur" name="jam_retur" value="<?= (!empty($data_barang_in_retur) ? date('H:i:s', strtotime($data_barang_in_retur->jam_retur)) : date('H:i:s')) ?>" readonly>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <ion-icon name="time-outline"></ion-icon>
@@ -260,8 +260,8 @@
 
     // header
     var invoice = $('#invoice');
-    var tgl_beli = $('#tgl_beli');
-    var jam_beli = $('#jam_beli');
+    var tgl_retur = $('#tgl_retur');
+    var jam_retur = $('#jam_retur');
     var kode_supplier = $('#kode_supplier');
     var kode_gudang = $('#kode_gudang');
     var surat_jalan = $('#surat_jalan');
@@ -312,7 +312,7 @@
     } else {
         hitung_t();
 
-        if (document.getElementById('cek_beli').checked == true) {
+        if (document.getElementById('cek_retur').checked == true) {
             $('#invoice_in').attr('disabled', false);
 
             $('#forInvoiceIn').hide();
@@ -520,13 +520,13 @@
             return Swal.fire("Detail Barang Pembelian", "Form sudah diisi?", "question");
         }
 
-        if (tgl_beli.val() == '' || tgl_beli.val() == null) { // jika tgl_beli null/ kosong
+        if (tgl_retur.val() == '' || tgl_retur.val() == null) { // jika tgl_retur null/ kosong
             btnSimpan.attr('disabled', false);
 
             return Swal.fire("Tgl Beli", "Form sudah diisi?", "question");
         }
 
-        if (jam_beli.val() == '' || jam_beli.val() == null) { // jika jam_beli null/ kosong
+        if (jam_retur.val() == '' || jam_retur.val() == null) { // jika jam_retur null/ kosong
             btnSimpan.attr('disabled', false);
 
             return Swal.fire("Jam Beli", "Form sudah diisi?", "question");
@@ -612,7 +612,7 @@
 
         hitung_t();
 
-        if (document.getElementById('cek_beli').checked == true) {
+        if (document.getElementById('cek_retur').checked == true) {
             $('#invoice_in').attr('disabled', false);
 
             $('#forInvoiceIn').hide();

@@ -62,7 +62,7 @@ class M_global extends CI_Model
     }
 
     // fungsi track record stok pembelian
-    function getReportPembelian($dari, $sampai, $kode_gudang)
+    function getReportPembelian($dari, $sampai, $kode_gudang, $kode_barang)
     {
         $cabang = $this->session->userdata('cabang');
 
@@ -71,17 +71,20 @@ class M_global extends CI_Model
             h.kode_cabang AS cabang,
             CONCAT('Pembelian ~ ', s.nama) AS keterangan,
             CONCAT(d.kode_barang, ' ~ ', b.nama) AS barang,
+            d.kode_barang,
             d.qty AS masuk,
             '0' AS keluar,
+            d.kode_satuan AS satuan,
             (d.harga - (d.discrp / d.qty)) AS harga,
-            h.tgl_beli,
-            h.jam_beli,
+            h.tgl_beli AS tgl,
+            h.jam_beli AS jam,
             h.kode_gudang,
             CONCAT(DATE_FORMAT(h.tgl_beli, '%d/%m/%Y'), ' ~ ', h.jam_beli) AS record_date
             FROM barang_in_header h
             JOIN barang_in_detail d ON h.invoice = d.invoice
             JOIN barang b ON d.kode_barang = b.kode_barang
             JOIN m_supplier s ON h.kode_supplier = s.kode_supplier
+            WHERE h.is_valid = 1
 
             UNION ALL
 
@@ -89,19 +92,22 @@ class M_global extends CI_Model
             h.kode_cabang AS cabang,
             CONCAT('Retur Pembelian ~ ', s.nama) AS keterangan,
             CONCAT(d.kode_barang, ' ~ ', b.nama) AS barang,
+            d.kode_barang,
             '0' AS masuk,
             d.qty AS keluar,
+            d.kode_satuan AS satuan,
             (d.harga - (d.discrp / d.qty)) AS harga,
-            h.tgl_beli,
-            h.jam_beli,
+            h.tgl_retur AS tgl,
+            h.jam_retur AS jam,
             h.kode_gudang,
-            CONCAT(DATE_FORMAT(h.tgl_beli, '%d/%m/%Y'), ' ~ ', h.jam_beli) AS record_date
+            CONCAT(DATE_FORMAT(h.tgl_retur, '%d/%m/%Y'), ' ~ ', h.jam_retur) AS record_date
             FROM barang_in_retur_header h
             JOIN barang_in_retur_detail d ON h.invoice = d.invoice
             JOIN barang b ON d.kode_barang = b.kode_barang
             JOIN m_supplier s ON h.kode_supplier = s.kode_supplier
+            WHERE h.is_valid = 1
         ) AS m_pembelian
-        WHERE kode_gudang = '$kode_gudang' AND cabang = '$cabang' AND tgl_beli >= '$dari' AND tgl_beli <= '$sampai' ORDER BY tgl_beli, jam_beli ASC")->result();
+        WHERE kode_gudang = '$kode_gudang' AND cabang = '$cabang' AND tgl >= '$dari' AND tgl <= '$sampai' AND kode_barang = '$kode_barang' ORDER BY tgl, jam ASC")->result();
 
         return $sintax;
     }

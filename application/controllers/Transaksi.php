@@ -1448,12 +1448,12 @@ class Transaksi extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'barang_in_retur_header';
-        $colum            = ['id', 'invoice', 'invoice_in', 'tgl_beli', 'jam_beli', 'kode_supplier', 'kode_gudang', 'surat_jalan', 'no_faktur', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid'];
+        $colum            = ['id', 'invoice', 'invoice_in', 'tgl_retur', 'jam_retur', 'kode_supplier', 'kode_gudang', 'surat_jalan', 'no_faktur', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
         $kondisi_param2   = 'kode_gudang';
-        $kondisi_param1   = 'tgl_beli';
+        $kondisi_param1   = 'tgl_retur';
 
         // kondisi role
         $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
@@ -1517,7 +1517,7 @@ class Transaksi extends CI_Controller
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->invoice . '<br>' . (($rd->batal == 0) ? (($rd->is_valid > 0) ? '<span class="badge badge-primary">ACC</span>' : '<span class="badge badge-success">Buka</span>') : '<span class="badge badge-danger">Batal</span>');
-            $row[]  = date('d/m/Y', strtotime($rd->tgl_beli)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_beli));
+            $row[]  = date('d/m/Y', strtotime($rd->tgl_retur)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_retur));
             $row[]  = $this->M_global->getData('m_supplier', ['kode_supplier' => $rd->kode_supplier])->nama;
             $row[]  = $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->kode_gudang])->nama;
             $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama;
@@ -1588,7 +1588,7 @@ class Transaksi extends CI_Controller
         if ($param != '0') {
             $barang_in_retur    = $this->M_global->getData('barang_in_retur_header', ['invoice' => $param]);
             $barang_detail      = $this->M_global->getDataResult('barang_in_retur_detail', ['invoice' => $param]);
-            $pembeli            = $this->db->query('SELECT dpo.invoice, hpo.tgl_beli, hpo.jam_beli FROM barang_in_detail dpo JOIN barang_in_header hpo ON dpo.invoice = hpo.invoice WHERE hpo.kode_cabang = "' . $kode_cabang . '" AND (hpo.invoice NOT IN (SELECT ht.invoice FROM barang_in_header ht WHERE ht.kode_cabang = "' . $kode_cabang . '") OR dpo.qty != (SELECT COALESCE(SUM(dt.qty), 0) FROM barang_in_retur_detail dt JOIN barang_in_retur_header ht ON dt.invoice = ht.invoice WHERE ht.invoice = hpo.invoice AND dt.kode_barang = dpo.kode_barang AND ht.kode_cabang = "' . $kode_cabang . '"))GROUP BY dpo.invoice, hpo.tgl_beli, hpo.jam_beli')->result();
+            $pembeli            = $this->db->query('SELECT dpo.invoice, hpo.tgl_beli AS tgl_retur, hpo.jam_beli AS jam_retur, hpo.kode_supplier, hpo.kode_gudang FROM barang_in_detail dpo JOIN barang_in_header hpo ON dpo.invoice = hpo.invoice WHERE hpo.kode_cabang = "' . $kode_cabang . '" AND (hpo.invoice NOT IN (SELECT ht.invoice FROM barang_in_header ht WHERE ht.kode_cabang = "' . $kode_cabang . '") OR dpo.qty != (SELECT COALESCE(SUM(dt.qty), 0) FROM barang_in_retur_detail dt JOIN barang_in_retur_header ht ON dt.invoice = ht.invoice WHERE ht.invoice = hpo.invoice AND dt.kode_barang = dpo.kode_barang AND ht.kode_cabang = "' . $kode_cabang . '"))GROUP BY dpo.invoice, hpo.tgl_beli, hpo.jam_beli, hpo.kode_supplier, hpo.kode_gudang')->result();
         } else {
             $barang_in_retur    = null;
             $barang_detail      = null;
@@ -1670,12 +1670,13 @@ class Transaksi extends CI_Controller
         }
 
         $invoice_in     = $this->input->post('invoice_in');
-        $tgl_beli       = $this->input->post('tgl_beli');
-        $jam_beli       = $this->input->post('jam_beli');
+        $tgl_retur      = $this->input->post('tgl_retur');
+        $jam_retur      = $this->input->post('jam_retur');
         $kode_supplier  = $this->input->post('kode_supplier');
         $kode_gudang    = $this->input->post('kode_gudang');
         $surat_jalan    = $this->input->post('surat_jalan');
         $no_faktur      = $this->input->post('no_faktur');
+        $alasan         = $this->input->post('alasan');
 
         if (!$surat_jalan || $surat_jalan == null) {
             $sj = _surat_jalan($kode_cabang);
@@ -1712,8 +1713,9 @@ class Transaksi extends CI_Controller
             'kode_cabang'   => $kode_cabang,
             'invoice'       => $invoice,
             'invoice_in'    => $invoice_in,
-            'tgl_beli'      => $tgl_beli,
-            'jam_beli'      => $jam_beli,
+            'tgl_retur'     => $tgl_retur,
+            'jam_retur'     => $jam_retur,
+            'alasan'        => $alasan,
             'kode_supplier' => $kode_supplier,
             'kode_gudang'   => $kode_gudang,
             'surat_jalan'   => $sj,
@@ -2047,8 +2049,8 @@ class Transaksi extends CI_Controller
             $isi_piutang = [
                 'kode_cabang'       => $kode_cabang,
                 'piutang_no'        => $piutang_no,
-                'tanggal'           => $header->tgl_beli,
-                'jam'               => $header->jam_beli,
+                'tanggal'           => $header->tgl_retur,
+                'jam'               => $header->jam_retur,
                 'referensi'         => $invoice,
                 'jumlah'            => 0 - $header->total,
                 'status'            => 0,

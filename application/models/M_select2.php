@@ -393,4 +393,22 @@ class M_select2 extends CI_Model
 
         return $sintak;
     }
+
+    // fungsi barang
+    function getBarang($key)
+    {
+        $kode_cabang = $this->session->userdata('cabang');
+
+        $limit = ' LIMIT 20';
+
+        if (!empty($key)) {
+            $add_sintak = ' AND (b.kode_barang LIKE "%' . $key . '%" OR b.nama LIKE "%' . $key . '%") ORDER BY b.nama ASC';
+        } else {
+            $add_sintak = ' ORDER BY b.nama ASC';
+        }
+
+        $sintak = $this->db->query('SELECT b.kode_barang AS id, b.nama AS text FROM barang b JOIN barang_cabang bc ON bc.kode_barang = b.kode_barang WHERE bc.kode_cabang = "' . $kode_cabang . '" ' . $add_sintak . $limit)->result();
+
+        return $sintak;
+    }
 }

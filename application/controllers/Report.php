@@ -1018,13 +1018,13 @@ class Report extends CI_Controller
             UNION ALL
 
             SELECT
-            CONCAT(DATE_FORMAT(h.tgl_beli, '%d/%m/%Y'), ' ~ ', h.jam_beli) AS record_date,
+            CONCAT(DATE_FORMAT(h.tgl_retur, '%d/%m/%Y'), ' ~ ', h.jam_retur) AS record_date,
             h.invoice,
             CONCAT('Retur Pembelian ~ ', s.nama) AS keterangan,
             0 AS masuk,
             d.qty_konversi AS keluar,
-            h.tgl_beli AS tgl,
-            h.jam_beli AS jam,
+            h.tgl_retur AS tgl,
+            h.jam_retur AS jam,
             d.kode_barang,
             h.kode_cabang AS kode_cabang,
             h.kode_gudang

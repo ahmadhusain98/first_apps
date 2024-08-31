@@ -200,4 +200,11 @@ class Select2_master extends CI_Controller
         $key = $this->input->post('searchTerm');
         echo json_encode($this->M_select2->getPromo($key, $min_buy));
     }
+
+    // master barang
+    function dataBarang()
+    {
+        $key = $this->input->post('searchTerm');
+        echo json_encode($this->M_select2->getBarang($key));
+    }
 }
