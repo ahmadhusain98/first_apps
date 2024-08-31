@@ -400,4 +400,34 @@ if ($data_user->on_off == 1) {
         xhttp.open("GET", "<?= base_url(); ?>Profile/aktifitas_user/" + params, true);
         xhttp.send();
     }
+
+    // update password
+    function c_pas() {
+        if (input.value != input2.value) {
+            return Swal.fire("Password", "Tidak sama, coba lagi!", "info");
+        }
+
+        $.ajax({
+            url: '<?= site_url('Profile/update_pass') ?>',
+            type: 'POST',
+            dataType: 'JSON',
+            data: $("#form-password").serialize(),
+            success: function(result) {
+                if (result.status == 1) { // jika mendapatkan respon 1
+                    input.value = '';
+                    input2.value = '';
+
+                    Swal.fire("Password", "Berhasil diupdate", "success").then(() => {
+                        getUrl('Profile');
+                    });
+                } else { // selain itu
+
+                    Swal.fire("Password", "Gagal diupdate" + ", silahkan dicoba kembali", "warning");
+                }
+            },
+            error: function(result) {
+                error_proccess();
+            }
+        })
+    }
 </script>

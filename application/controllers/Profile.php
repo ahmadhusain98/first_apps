@@ -173,6 +173,15 @@ class Profile extends CI_Controller
         $cek = $this->M_global->updateData('user', $isi, ['kode_user' => $kode_user]);
 
         if ($cek) { // jika proses berhasil beri nilai 1
+
+            $aktifitas = [
+                'email'     => $email,
+                'kegiatan'  => $email . " Telah merubah Profile",
+                'menu'      => "Profile",
+                'waktu'     => date('Y-m-d H:i:s'),
+            ];
+
+            $this->db->insert("activity_user", $aktifitas);
             echo json_encode(['status' => 1]);
         } else { // selain itu beri nilai 0
             echo json_encode(['status' => 0]);
@@ -322,5 +331,30 @@ class Profile extends CI_Controller
         ];
 
         $this->template->load('Template/App', 'Pengaturan/Profile_member', $parameter);
+    }
+
+    public function update_pass()
+    {
+        $secondpass = $this->input->post('password2');
+        $password = md5($secondpass);
+        $email = $this->session->userdata('email');
+
+        $cek = $this->M_global->updateData('user', ['secondpass' => $secondpass, 'password' => $password], ['email' => $email]);
+
+        if ($cek) { // jika proses berhasil beri nilai 1
+
+            $aktifitas = [
+                'email'     => $email,
+                'kegiatan'  => $email . " Telah merubah Password",
+                'menu'      => "Password",
+                'waktu'     => date('Y-m-d H:i:s'),
+            ];
+
+            $this->db->insert("activity_user", $aktifitas);
+
+            echo json_encode(['status' => 1]);
+        } else { // selain itu beri nilai 0
+            echo json_encode(['status' => 0]);
+        }
     }
 }
