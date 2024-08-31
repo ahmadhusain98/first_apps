@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 31, 2024 at 03:12 PM
+-- Generation Time: Aug 31, 2024 at 06:45 PM
 -- Server version: 8.0.30
 -- PHP Version: 7.4.3
 
@@ -42,7 +42,7 @@ CREATE TABLE `activity_log` (
 --
 
 INSERT INTO `activity_log` (`id_activity`, `kode`, `isi`, `tgl_masuk`, `jam_masuk`, `tgl_keluar`, `jam_keluar`) VALUES
-(2, 'ahmad.ummgl@gmail.com', 'Login / Logout', '2024-08-31', '20:24:12', '2024-08-31', '19:36:58');
+(2, 'ahmad.ummgl@gmail.com', 'Login / Logout', '2024-08-31', '23:21:35', '2024-09-01', '01:45:40');
 
 -- --------------------------------------------------------
 
@@ -86,7 +86,18 @@ INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`
 (19, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menambahkan Retur Pembelian</b> dengan kode/inv <b>DIYTRB-2024083100001</b>', 'Transaksi Masuk', '2024-08-31 21:55:34', 'DIY', 3),
 (20, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Retur Pembelian</b> dengan kode/inv <b>DIYTRB-2024083100001</b>', 'Transaksi Masuk', '2024-08-31 21:56:10', 'DIY', 3),
 (21, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Reject Retur Pembelian</b> dengan kode/inv <b>DIYTRB-2024083100001</b>', 'Transaksi Masuk', '2024-08-31 22:00:06', 'DIY', 3),
-(22, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Retur Pembelian</b> dengan kode/inv <b>DIYTRB-2024083100001</b>', 'Transaksi Masuk', '2024-08-31 22:00:26', 'DIY', 3);
+(22, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Retur Pembelian</b> dengan kode/inv <b>DIYTRB-2024083100001</b>', 'Transaksi Masuk', '2024-08-31 22:00:26', 'DIY', 3),
+(23, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-08-31 22:12:39', 'DIY', 3),
+(24, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-08-31 23:21:35', 'DIY', 3),
+(25, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menambahkan Terima Barang</b> dengan kode/inv <b>DIYTPB-2024090100001</b>', 'Transaksi Masuk', '2024-09-01 00:16:31', 'DIY', 3),
+(26, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Terima Barang</b> dengan kode/inv <b>DIYTPB-2024090100001</b>', 'Transaksi Masuk', '2024-09-01 00:16:50', 'DIY', 3),
+(27, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Reject Terima Barang</b> dengan kode/inv <b>DIYTPB-2024090100001</b>', 'Transaksi Masuk', '2024-09-01 00:19:20', 'DIY', 3),
+(28, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Terima Barang</b> dengan kode/inv <b>DIYTPB-2024090100001</b>', 'Transaksi Masuk', '2024-09-01 00:19:32', 'DIY', 3),
+(29, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Reject Retur Pembelian</b> dengan kode/inv <b>DIYTRB-2024083100001</b>', 'Transaksi Masuk', '2024-09-01 00:43:21', 'DIY', 3),
+(30, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Retur Pembelian</b> dengan kode/inv <b>DIYTRB-2024083100001</b>', 'Transaksi Masuk', '2024-09-01 00:48:33', 'DIY', 3),
+(31, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Retur Pembelian</b> dengan kode/inv <b>DIYTRB-2024083100001</b>', 'Transaksi Masuk', '2024-09-01 00:48:43', 'DIY', 3),
+(32, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Retur Pembelian</b> dengan kode/inv <b>DIYTRB-2024083100001</b>', 'Transaksi Masuk', '2024-09-01 00:49:08', 'DIY', 3),
+(33, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-09-01 01:45:40', 'DIY', 3);
 
 -- --------------------------------------------------------
 
@@ -174,7 +185,8 @@ CREATE TABLE `barang_in_detail` (
 INSERT INTO `barang_in_detail` (`id`, `invoice`, `kode_barang`, `kode_satuan`, `qty_konversi`, `harga`, `qty`, `qty_retur`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES
 (3, 'DIYTPB-2024083100001', 'DIY~S00001', 'SAT0000005', 80.00, 96000.00, 5.00, 0.00, 0.00, 0.00, 0.00, 0.00, 480000.00),
 (4, 'DIYTPB-2024083100001', 'DIY~P00001', 'SAT0000006', 40.00, 12000.00, 10.00, 0.00, 0.00, 0.00, 0.00, 0.00, 120000.00),
-(5, 'DIYTPB-2024083100002', 'DIY~S00001', 'SAT0000003', 14.00, 6000.00, 14.00, 4.00, 0.00, 0.00, 0.00, 0.00, 84000.00);
+(5, 'DIYTPB-2024083100002', 'DIY~S00001', 'SAT0000003', 14.00, 6000.00, 14.00, 4.00, 0.00, 0.00, 0.00, 0.00, 84000.00),
+(6, 'DIYTPB-2024090100001', 'DIY~S00001', 'SAT0000006', 68.00, 24000.00, 17.00, 0.00, 0.00, 0.00, 0.00, 0.00, 408000.00);
 
 -- --------------------------------------------------------
 
@@ -213,7 +225,8 @@ CREATE TABLE `barang_in_header` (
 
 INSERT INTO `barang_in_header` (`id`, `kode_cabang`, `invoice`, `invoice_po`, `tgl_beli`, `jam_beli`, `kode_supplier`, `kode_gudang`, `surat_jalan`, `no_faktur`, `pajak`, `diskon`, `subtotal`, `total`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `is_valid`, `tgl_valid`, `jam_valid`) VALUES
 (2, 'CAB0000002', 'DIYTPB-2024083100001', NULL, '2024-08-31', '18:45:26', 'SUP0000001', 'GUD0000001', 'NSJ~DIY3108202400001', 'NSF~DIY3108202400001', 0.00, 0.00, 600000.00, 600000.00, 'A00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-08-31', '19:18:51'),
-(3, 'CAB0000002', 'DIYTPB-2024083100002', NULL, '2024-08-31', '19:19:00', 'SUP0000002', 'GUD0000001', 'NSJ~DIY3108202400002', 'NSF~DIY3108202400002', 0.00, 0.00, 84000.00, 84000.00, 'A00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-08-31', '19:20:02');
+(3, 'CAB0000002', 'DIYTPB-2024083100002', NULL, '2024-08-31', '19:19:00', 'SUP0000002', 'GUD0000001', 'NSJ~DIY3108202400002', 'NSF~DIY3108202400002', 0.00, 0.00, 84000.00, 84000.00, 'A00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-08-31', '19:20:02'),
+(4, 'CAB0000002', 'DIYTPB-2024090100001', NULL, '2024-09-01', '00:16:07', 'SUP0000001', 'GUD0000001', 'NSJ~DIY0109202400001', 'NSF~DIY0109202400001', 0.00, 0.00, 408000.00, 408000.00, 'A00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-09-01', '00:19:32');
 
 -- --------------------------------------------------------
 
@@ -254,8 +267,8 @@ CREATE TABLE `barang_in_retur_header` (
   `kode_cabang` varchar(10) NOT NULL,
   `invoice` varchar(30) NOT NULL,
   `invoice_in` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `tgl_beli` date DEFAULT NULL,
-  `jam_beli` time DEFAULT NULL,
+  `tgl_retur` date DEFAULT NULL,
+  `jam_retur` time DEFAULT NULL,
   `kode_supplier` varchar(10) NOT NULL,
   `kode_gudang` varchar(10) NOT NULL,
   `surat_jalan` varchar(30) NOT NULL,
@@ -279,8 +292,8 @@ CREATE TABLE `barang_in_retur_header` (
 -- Dumping data for table `barang_in_retur_header`
 --
 
-INSERT INTO `barang_in_retur_header` (`id`, `kode_cabang`, `invoice`, `invoice_in`, `tgl_beli`, `jam_beli`, `kode_supplier`, `kode_gudang`, `surat_jalan`, `no_faktur`, `pajak`, `diskon`, `subtotal`, `total`, `alasan`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `is_valid`, `tgl_valid`, `jam_valid`) VALUES
-(3, 'CAB0000002', 'DIYTRB-2024083100001', 'DIYTPB-2024083100002', '2024-08-31', '21:55:20', 'SUP0000002', 'GUD0000001', 'NSJ~DIY3108202400002', 'NSF~DIY3108202400002', 0.00, 0.00, 24000.00, 24000.00, '', 'A00001', 0, NULL, NULL, '', 1, '2024-08-31', '22:00:26');
+INSERT INTO `barang_in_retur_header` (`id`, `kode_cabang`, `invoice`, `invoice_in`, `tgl_retur`, `jam_retur`, `kode_supplier`, `kode_gudang`, `surat_jalan`, `no_faktur`, `pajak`, `diskon`, `subtotal`, `total`, `alasan`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `is_valid`, `tgl_valid`, `jam_valid`) VALUES
+(3, 'CAB0000002', 'DIYTRB-2024083100001', 'DIYTPB-2024083100002', '2024-08-31', '21:55:20', 'SUP0000002', 'GUD0000001', 'NSJ~DIY3108202400002', 'NSF~DIY3108202400002', 0.00, 0.00, 24000.00, 24000.00, '', 'A00001', 0, NULL, NULL, '', 1, '2024-09-01', '00:49:08');
 
 -- --------------------------------------------------------
 
@@ -489,7 +502,7 @@ CREATE TABLE `barang_stok` (
 --
 
 INSERT INTO `barang_stok` (`id`, `kode_cabang`, `kode_barang`, `kode_gudang`, `masuk`, `keluar`, `so`, `penyesuaian`, `akhir`, `last_tgl_trx`, `last_jam_trx`, `last_no_trx`, `last_user`) VALUES
-(1, 'CAB0000002', 'DIY~S00001', 'GUD0000001', 94.00, 4.00, 0.00, 0.00, 90.00, '2024-08-31', '22:00:26', 'DIYTRB-2024083100001', 'A00001'),
+(1, 'CAB0000002', 'DIY~S00001', 'GUD0000001', 162.00, 4.00, 0.00, 0.00, 158.00, '2024-09-01', '00:49:09', 'DIYTRB-2024083100001', 'A00001'),
 (2, 'CAB0000002', 'DIY~P00001', 'GUD0000001', 40.00, 0.00, 0.00, 0.00, 40.00, '2024-08-31', '19:18:51', 'DIYTPB-2024083100001', 'A00001');
 
 -- --------------------------------------------------------
@@ -9112,7 +9125,8 @@ CREATE TABLE `piutang` (
 INSERT INTO `piutang` (`id`, `kode_cabang`, `piutang_no`, `tanggal`, `jam`, `referensi`, `jumlah`, `status`) VALUES
 (2, 'CAB0000002', 'DIYPUT-2024083100001', '2024-08-31', '18:45:26', 'DIYTPB-2024083100001', 600000.00, 0),
 (4, 'CAB0000002', 'DIYPUT-2024083100002', '2024-08-31', '19:19:00', 'DIYTPB-2024083100002', 84000.00, 0),
-(6, 'CAB0000002', 'DIYPUT-2024083100003', '2024-08-31', '21:55:20', 'DIYTRB-2024083100001', -24000.00, 0);
+(8, 'CAB0000002', 'DIYPUT-2024090100001', '2024-09-01', '00:16:07', 'DIYTPB-2024090100001', 408000.00, 0),
+(9, 'CAB0000002', 'DIYPUT-2024090100002', '2024-08-31', '21:55:20', 'DIYTRB-2024083100001', -24000.00, 0);
 
 -- --------------------------------------------------------
 
@@ -9265,7 +9279,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `kode_user`, `nama`, `email`, `password`, `secondpass`, `jkel`, `foto`, `kode_role`, `on_off`, `nohp`, `actived`, `joined`) VALUES
-(2, 'A00001', 'Admin', 'ahmad.ummgl@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '1234', 'P', 'profile-img.jpg', 'R0001', 1, '0895363260970', 1, '2024-03-26 06:04:15'),
+(2, 'A00001', 'Admin', 'ahmad.ummgl@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '1234', 'P', 'profile-img.jpg', 'R0001', 0, '0895363260970', 1, '2024-03-26 06:04:15'),
 (7, 'S00001', 'Shali', 'Shali@gmail.com', '5e8607e54e817635b727ca3400561f90', 'shali', 'W', 'wanita.png', 'R0001', 0, '', 1, '2024-08-07 15:05:55');
 
 -- --------------------------------------------------------
@@ -9747,7 +9761,7 @@ ALTER TABLE `activity_log`
 -- AUTO_INCREMENT for table `activity_user`
 --
 ALTER TABLE `activity_user`
-  MODIFY `id_activity` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id_activity` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `barang`
@@ -9765,13 +9779,13 @@ ALTER TABLE `barang_cabang`
 -- AUTO_INCREMENT for table `barang_in_detail`
 --
 ALTER TABLE `barang_in_detail`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `barang_in_header`
 --
 ALTER TABLE `barang_in_header`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `barang_in_retur_detail`
@@ -10083,7 +10097,7 @@ ALTER TABLE `perawat_poli`
 -- AUTO_INCREMENT for table `piutang`
 --
 ALTER TABLE `piutang`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `sub_menu`
