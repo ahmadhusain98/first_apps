@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 31, 2024 at 01:21 AM
+-- Generation Time: Aug 31, 2024 at 12:37 PM
 -- Server version: 8.0.30
 -- PHP Version: 7.4.3
 
@@ -42,7 +42,7 @@ CREATE TABLE `activity_log` (
 --
 
 INSERT INTO `activity_log` (`id_activity`, `kode`, `isi`, `tgl_masuk`, `jam_masuk`, `tgl_keluar`, `jam_keluar`) VALUES
-(1, 'ahmad.ummgl@gmail.com', 'Login / Logout', '2024-08-31', '08:09:53', '2023-12-21', '00:37:29');
+(2, 'ahmad.ummgl@gmail.com', 'Login / Logout', '2024-08-31', '18:10:23', '2024-08-31', '19:36:58');
 
 -- --------------------------------------------------------
 
@@ -55,8 +55,28 @@ CREATE TABLE `activity_user` (
   `email` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `kegiatan` text NOT NULL,
   `menu` varchar(200) NOT NULL,
-  `waktu` datetime NOT NULL
+  `waktu` datetime NOT NULL,
+  `kode_cabang` varchar(10) NOT NULL,
+  `shift` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `activity_user`
+--
+
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES
+(1, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-08-31 18:10:23', 'DIY', 3),
+(2, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menambahkan 500ml</b> dengan kode/inv <b>SAT0000008</b>', 'Master Satuan', '2024-08-31 18:17:13', 'DIY', 3),
+(3, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mengubah 100ml</b> dengan kode/inv <b>SAT0000008</b>', 'Master Satuan', '2024-08-31 18:18:26', 'DIY', 3),
+(4, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menambahkan Terima Barang</b> dengan kode/inv <b>DIYTPB-2024083100001</b>', 'Transaksi Masuk', '2024-08-31 18:46:26', 'DIY', 3),
+(5, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Terima Barang</b> dengan kode/inv <b>DIYTPB-2024083100001</b>', 'Transaksi Masuk', '2024-08-31 18:50:55', 'DIY', 3),
+(6, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Reject Terima Barang</b> dengan kode/inv <b>DIYTPB-2024083100001</b>', 'Transaksi Masuk', '2024-08-31 19:18:25', 'DIY', 3),
+(7, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Terima Barang</b> dengan kode/inv <b>DIYTPB-2024083100001</b>', 'Transaksi Masuk', '2024-08-31 19:18:51', 'DIY', 3),
+(8, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menambahkan Terima Barang</b> dengan kode/inv <b>DIYTPB-2024083100002</b>', 'Transaksi Masuk', '2024-08-31 19:19:20', 'DIY', 3),
+(9, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Terima Barang</b> dengan kode/inv <b>DIYTPB-2024083100002</b>', 'Transaksi Masuk', '2024-08-31 19:19:33', 'DIY', 3),
+(10, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Reject Terima Barang</b> dengan kode/inv <b>DIYTPB-2024083100002</b>', 'Transaksi Masuk', '2024-08-31 19:19:55', 'DIY', 3),
+(11, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Terima Barang</b> dengan kode/inv <b>DIYTPB-2024083100002</b>', 'Transaksi Masuk', '2024-08-31 19:20:02', 'DIY', 3),
+(12, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-08-31 19:36:58', 'DIY', 3);
 
 -- --------------------------------------------------------
 
@@ -90,8 +110,8 @@ CREATE TABLE `barang` (
 --
 
 INSERT INTO `barang` (`id`, `kode_barang`, `image`, `nama`, `kode_satuan`, `kode_satuan2`, `kode_satuan3`, `qty_satuan2`, `qty_satuan3`, `opsi_hpp`, `persentase_hpp`, `kode_kategori`, `hna`, `hpp`, `harga_jual`, `nilai_persediaan`, `stok_min`, `stok_max`) VALUES
-(2, 'DIY~S00001', 'default.jpg', 'Susu', 'SAT0000003', 'SAT0000006', 'SAT0000005', 4, 16, 2, 30, 'KAT0000001', 2000.00, 2600.00, 3000.00, 2000.00, 4.00, 160.00),
-(3, 'DIY~P00001', 'default.jpg', 'Paracetamol', 'SAT0000003', 'SAT0000006', '', 4, 0, 2, 30, 'KAT0000004', 3000.00, 3900.00, 4000.00, 4000.00, 20.00, 400.00);
+(2, 'DIY~S00001', 'default.jpg', 'Susu', 'SAT0000003', 'SAT0000006', 'SAT0000005', 4, 16, 2, 30, 'KAT0000001', 6000.00, 7800.00, 8000.00, 6000.00, 4.00, 160.00),
+(3, 'DIY~P00001', 'default.jpg', 'Paracetamol', 'SAT0000003', 'SAT0000006', '', 4, 0, 2, 30, 'KAT0000004', 3000.00, 3900.00, 4000.00, 3000.00, 20.00, 400.00);
 
 -- --------------------------------------------------------
 
@@ -110,10 +130,10 @@ CREATE TABLE `barang_cabang` (
 --
 
 INSERT INTO `barang_cabang` (`id`, `kode_cabang`, `kode_barang`) VALUES
-(4, 'CAB0000001', 'DIY~S00001'),
-(5, 'CAB0000002', 'DIY~S00001'),
 (6, 'CAB0000001', 'DIY~P00001'),
-(7, 'CAB0000002', 'DIY~P00001');
+(7, 'CAB0000002', 'DIY~P00001'),
+(10, 'CAB0000001', 'DIY~S00001'),
+(11, 'CAB0000002', 'DIY~S00001');
 
 -- --------------------------------------------------------
 
@@ -136,6 +156,15 @@ CREATE TABLE `barang_in_detail` (
   `jumlah` decimal(20,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `barang_in_detail`
+--
+
+INSERT INTO `barang_in_detail` (`id`, `invoice`, `kode_barang`, `kode_satuan`, `qty_konversi`, `harga`, `qty`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES
+(3, 'DIYTPB-2024083100001', 'DIY~S00001', 'SAT0000005', 80.00, 96000.00, 5.00, 0.00, 0.00, 0.00, 0.00, 480000.00),
+(4, 'DIYTPB-2024083100001', 'DIY~P00001', 'SAT0000006', 40.00, 12000.00, 10.00, 0.00, 0.00, 0.00, 0.00, 120000.00),
+(5, 'DIYTPB-2024083100002', 'DIY~S00001', 'SAT0000003', 14.00, 6000.00, 14.00, 0.00, 0.00, 0.00, 0.00, 84000.00);
+
 -- --------------------------------------------------------
 
 --
@@ -146,7 +175,7 @@ CREATE TABLE `barang_in_header` (
   `id` int NOT NULL,
   `kode_cabang` varchar(10) NOT NULL,
   `invoice` varchar(30) NOT NULL,
-  `invoice_po` varchar(30) NOT NULL,
+  `invoice_po` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `tgl_beli` date NOT NULL,
   `jam_beli` time NOT NULL,
   `kode_supplier` varchar(10) NOT NULL,
@@ -166,6 +195,14 @@ CREATE TABLE `barang_in_header` (
   `tgl_valid` date DEFAULT NULL,
   `jam_valid` time DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `barang_in_header`
+--
+
+INSERT INTO `barang_in_header` (`id`, `kode_cabang`, `invoice`, `invoice_po`, `tgl_beli`, `jam_beli`, `kode_supplier`, `kode_gudang`, `surat_jalan`, `no_faktur`, `pajak`, `diskon`, `subtotal`, `total`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `is_valid`, `tgl_valid`, `jam_valid`) VALUES
+(2, 'CAB0000002', 'DIYTPB-2024083100001', NULL, '2024-08-31', '18:45:26', 'SUP0000001', 'GUD0000001', 'NSJ~DIY3108202400001', 'NSF~DIY3108202400001', 0.00, 0.00, 600000.00, 600000.00, 'A00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-08-31', '19:18:51'),
+(3, 'CAB0000002', 'DIYTPB-2024083100002', NULL, '2024-08-31', '19:19:00', 'SUP0000002', 'GUD0000001', 'NSJ~DIY3108202400002', 'NSF~DIY3108202400002', 0.00, 0.00, 84000.00, 84000.00, 'A00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-08-31', '19:20:02');
 
 -- --------------------------------------------------------
 
@@ -235,11 +272,11 @@ CREATE TABLE `barang_jenis` (
 --
 
 INSERT INTO `barang_jenis` (`id`, `kode_barang`, `kode_jenis`) VALUES
-(5, 'DIY~S00001', 'JO00000004'),
-(6, 'DIY~S00001', 'JO00000005'),
 (7, 'DIY~P00001', 'JO00000001'),
 (8, 'DIY~P00001', 'JO00000002'),
-(9, 'DIY~P00001', 'JO00000007');
+(9, 'DIY~P00001', 'JO00000007'),
+(12, 'DIY~S00001', 'JO00000004'),
+(13, 'DIY~S00001', 'JO00000005');
 
 -- --------------------------------------------------------
 
@@ -356,14 +393,6 @@ CREATE TABLE `barang_po_in_detail` (
   `jumlah` decimal(20,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `barang_po_in_detail`
---
-
-INSERT INTO `barang_po_in_detail` (`id`, `invoice`, `kode_barang`, `kode_satuan`, `qty_konversi`, `harga`, `qty`, `qty_terima`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES
-(6, 'DIYTPO-2024083000001', 'DIY~S00001', 'SAT0000005', 160.00, 32000.00, 10.00, 0.00, 2.00, 6400.00, 1, 34496.00, 313600.00),
-(7, 'DIYTPO-2024083000001', 'DIY~P00001', 'SAT0000006', 40.00, 12000.00, 10.00, 0.00, 0.00, 0.00, 0, 0.00, 120000.00);
-
 -- --------------------------------------------------------
 
 --
@@ -391,13 +420,6 @@ CREATE TABLE `barang_po_in_header` (
   `tgl_valid` date DEFAULT NULL,
   `jam_valid` time DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `barang_po_in_header`
---
-
-INSERT INTO `barang_po_in_header` (`id`, `kode_cabang`, `invoice`, `tgl_po`, `jam_po`, `kode_supplier`, `kode_gudang`, `pajak`, `diskon`, `subtotal`, `total`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `is_valid`, `tgl_valid`, `jam_valid`) VALUES
-(2, 'CAB0000002', 'DIYTPO-2024083000001', '2024-08-30', '21:09:22', 'SUP0000001', 'GUD0000001', 34496.00, 6400.00, 440000.00, 474496.00, 'A00001', 0, NULL, NULL, '', 1, '2024-08-30', '21:31:07');
 
 -- --------------------------------------------------------
 
@@ -440,8 +462,8 @@ CREATE TABLE `barang_stok` (
 --
 
 INSERT INTO `barang_stok` (`id`, `kode_cabang`, `kode_barang`, `kode_gudang`, `masuk`, `keluar`, `so`, `penyesuaian`, `akhir`, `last_tgl_trx`, `last_jam_trx`, `last_no_trx`, `last_user`) VALUES
-(1, 'CAB0000002', 'DIY~S00001', 'GUD0000001', 610.00, 0.00, 0.00, 0.00, 610.00, '2024-08-30', '21:31:07', 'DIYTPO-2024083000001', 'A00001'),
-(2, 'CAB0000002', 'DIY~P00001', 'GUD0000001', 79.00, 0.00, 0.00, 0.00, 79.00, '2024-08-30', '21:31:07', 'DIYTPO-2024083000001', 'A00001');
+(1, 'CAB0000002', 'DIY~S00001', 'GUD0000001', 94.00, 0.00, 0.00, 0.00, 94.00, '2024-08-31', '19:20:02', 'DIYTPB-2024083100002', 'A00001'),
+(2, 'CAB0000002', 'DIY~P00001', 'GUD0000001', 40.00, 0.00, 0.00, 0.00, 40.00, '2024-08-31', '19:18:51', 'DIYTPB-2024083100001', 'A00001');
 
 -- --------------------------------------------------------
 
@@ -8836,7 +8858,8 @@ INSERT INTO `m_satuan` (`id`, `kode_satuan`, `keterangan`) VALUES
 (4, 'SAT0000004', 'Liter'),
 (7, 'SAT0000005', 'Dus'),
 (8, 'SAT0000006', 'Pack'),
-(9, 'SAT0000007', 'Tablet');
+(9, 'SAT0000007', 'Tablet'),
+(12, 'SAT0000008', '100ml');
 
 -- --------------------------------------------------------
 
@@ -9037,6 +9060,31 @@ INSERT INTO `perawat_poli` (`id`, `kode_perawat`, `kode_poli`) VALUES
 (4, 'S00001', 'POL0000007'),
 (5, 'K00001', 'POL0000005'),
 (6, 'K00001', 'POL0000007');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `piutang`
+--
+
+CREATE TABLE `piutang` (
+  `id` int NOT NULL,
+  `kode_cabang` varchar(10) NOT NULL,
+  `piutang_no` varchar(30) NOT NULL,
+  `tanggal` date NOT NULL,
+  `jam` time NOT NULL,
+  `referensi` varchar(30) NOT NULL,
+  `jumlah` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `status` int NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `piutang`
+--
+
+INSERT INTO `piutang` (`id`, `kode_cabang`, `piutang_no`, `tanggal`, `jam`, `referensi`, `jumlah`, `status`) VALUES
+(2, 'CAB0000002', 'DIYPUT-2024083100001', '2024-08-31', '18:45:26', 'DIYTPB-2024083100001', 600000.00, 0),
+(4, 'CAB0000002', 'DIYPUT-2024083100002', '2024-08-31', '19:19:00', 'DIYTPB-2024083100002', 84000.00, 0);
 
 -- --------------------------------------------------------
 
@@ -9604,6 +9652,12 @@ ALTER TABLE `perawat_poli`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `piutang`
+--
+ALTER TABLE `piutang`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `sub_menu`
 --
 ALTER TABLE `sub_menu`
@@ -9659,13 +9713,13 @@ ALTER TABLE `web_version`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id_activity` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_activity` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `activity_user`
 --
 ALTER TABLE `activity_user`
-  MODIFY `id_activity` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_activity` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `barang`
@@ -9677,19 +9731,19 @@ ALTER TABLE `barang`
 -- AUTO_INCREMENT for table `barang_cabang`
 --
 ALTER TABLE `barang_cabang`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `barang_in_detail`
 --
 ALTER TABLE `barang_in_detail`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `barang_in_header`
 --
 ALTER TABLE `barang_in_header`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `barang_in_retur_detail`
@@ -9707,7 +9761,7 @@ ALTER TABLE `barang_in_retur_header`
 -- AUTO_INCREMENT for table `barang_jenis`
 --
 ALTER TABLE `barang_jenis`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `barang_out_detail`
@@ -9947,7 +10001,7 @@ ALTER TABLE `m_ruang`
 -- AUTO_INCREMENT for table `m_satuan`
 --
 ALTER TABLE `m_satuan`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `m_supplier`
@@ -9996,6 +10050,12 @@ ALTER TABLE `perawat`
 --
 ALTER TABLE `perawat_poli`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `piutang`
+--
+ALTER TABLE `piutang`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `sub_menu`
