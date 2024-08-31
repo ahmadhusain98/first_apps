@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 30, 2024 at 05:48 PM
+-- Generation Time: Aug 31, 2024 at 01:21 AM
 -- Server version: 8.0.30
 -- PHP Version: 7.4.3
 
@@ -42,7 +42,7 @@ CREATE TABLE `activity_log` (
 --
 
 INSERT INTO `activity_log` (`id_activity`, `kode`, `isi`, `tgl_masuk`, `jam_masuk`, `tgl_keluar`, `jam_keluar`) VALUES
-(1, 'ahmad.ummgl@gmail.com', 'Login / Logout', '2024-08-31', '00:33:07', '2023-12-21', '00:37:29');
+(1, 'ahmad.ummgl@gmail.com', 'Login / Logout', '2024-08-31', '08:09:53', '2023-12-21', '00:37:29');
 
 -- --------------------------------------------------------
 
@@ -57,15 +57,6 @@ CREATE TABLE `activity_user` (
   `menu` varchar(200) NOT NULL,
   `waktu` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `activity_user`
---
-
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`) VALUES
-(2, 'ahmad.ummgl@gmail.com', 'Di Cabang DIY, Shift: 1', 'Login', '2024-08-31 00:30:29'),
-(3, 'ahmad.ummgl@gmail.com', 'Di Cabang DIY, Shift: 1', 'Logout', '2024-08-31 00:32:42'),
-(4, 'ahmad.ummgl@gmail.com', 'Di Cabang DIY, Shift: 1', 'Login', '2024-08-31 00:33:07');
 
 -- --------------------------------------------------------
 
@@ -9198,7 +9189,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `kode_user`, `nama`, `email`, `password`, `secondpass`, `jkel`, `foto`, `kode_role`, `on_off`, `nohp`, `actived`, `joined`) VALUES
-(2, 'A00001', 'Ahmad Husain', 'ahmad.ummgl@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '1234', 'P', 'profile-img.jpg', 'R0001', 1, '0895363260970', 1, '2024-03-26 06:04:15'),
+(2, 'A00001', 'Admin', 'ahmad.ummgl@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '1234', 'P', 'profile-img.jpg', 'R0001', 0, '0895363260970', 1, '2024-03-26 06:04:15'),
 (7, 'S00001', 'Shali', 'Shali@gmail.com', '5e8607e54e817635b727ca3400561f90', 'shali', 'W', 'wanita.png', 'R0001', 0, '', 1, '2024-08-07 15:05:55');
 
 -- --------------------------------------------------------
@@ -9220,7 +9211,8 @@ CREATE TABLE `user_token` (
 
 INSERT INTO `user_token` (`id`, `email`, `token`, `valid`) VALUES
 (2, 'ahmad.ummgl@gmail.com', 827825, 1),
-(8, 'Shali@gmail.com', 0, 1);
+(8, 'Shali@gmail.com', 0, 1),
+(9, 'admin@gmail.com', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -9673,19 +9665,19 @@ ALTER TABLE `activity_log`
 -- AUTO_INCREMENT for table `activity_user`
 --
 ALTER TABLE `activity_user`
-  MODIFY `id_activity` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_activity` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `barang`
 --
 ALTER TABLE `barang`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `barang_cabang`
 --
 ALTER TABLE `barang_cabang`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `barang_in_detail`
@@ -9715,7 +9707,7 @@ ALTER TABLE `barang_in_retur_header`
 -- AUTO_INCREMENT for table `barang_jenis`
 --
 ALTER TABLE `barang_jenis`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `barang_out_detail`
@@ -9811,13 +9803,13 @@ ALTER TABLE `cart_promo`
 -- AUTO_INCREMENT for table `dokter`
 --
 ALTER TABLE `dokter`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `dokter_poli`
 --
 ALTER TABLE `dokter_poli`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `jadwal_so`
@@ -9835,7 +9827,7 @@ ALTER TABLE `kabupaten`
 -- AUTO_INCREMENT for table `kas_bank`
 --
 ALTER TABLE `kas_bank`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `kecamatan`
@@ -9847,13 +9839,13 @@ ALTER TABLE `kecamatan`
 -- AUTO_INCREMENT for table `logistik`
 --
 ALTER TABLE `logistik`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `logistik_cabang`
 --
 ALTER TABLE `logistik_cabang`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `member`
@@ -9871,31 +9863,31 @@ ALTER TABLE `member_token`
 -- AUTO_INCREMENT for table `m_agama`
 --
 ALTER TABLE `m_agama`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `m_bank`
 --
 ALTER TABLE `m_bank`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `m_gudang`
 --
 ALTER TABLE `m_gudang`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `m_jenis`
 --
 ALTER TABLE `m_jenis`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `m_kategori`
 --
 ALTER TABLE `m_kategori`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `m_menu`
@@ -9907,25 +9899,25 @@ ALTER TABLE `m_menu`
 -- AUTO_INCREMENT for table `m_pajak`
 --
 ALTER TABLE `m_pajak`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `m_pekerjaan`
 --
 ALTER TABLE `m_pekerjaan`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `m_pendidikan`
 --
 ALTER TABLE `m_pendidikan`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `m_poli`
 --
 ALTER TABLE `m_poli`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `m_promo`
@@ -9955,13 +9947,13 @@ ALTER TABLE `m_ruang`
 -- AUTO_INCREMENT for table `m_satuan`
 --
 ALTER TABLE `m_satuan`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `m_supplier`
 --
 ALTER TABLE `m_supplier`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `pembayaran`
@@ -9997,13 +9989,13 @@ ALTER TABLE `penyesuaian_header`
 -- AUTO_INCREMENT for table `perawat`
 --
 ALTER TABLE `perawat`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `perawat_poli`
 --
 ALTER TABLE `perawat_poli`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `sub_menu`
@@ -10033,13 +10025,13 @@ ALTER TABLE `uang_muka`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `user_token`
 --
 ALTER TABLE `user_token`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `web_setting`
