@@ -12,17 +12,19 @@
                 <div class="col-md-9">
                     <select name="laporan" id="laporan" class="form-control select2_global" data-placeholder="~ Pilih Laporan" onchange="cekReport(this.value)">
                         <option value="">~ Pilih Laporan</option>
-                        <optgroup label="Laporan Transaksi Pembelian">
-                            <option value="1">** Pembelian</option>
-                            <option value="1.1">** Pembelian Detail</option>
-                            <option value="2">** Retur Pembelian</option>
-                            <option value="2.1">** Retur Pembelian Detail</option>
-                            <option value="3">** Riwayat Stok Pembelian</option>
+                        <optgroup label="Transaksi Pembelian">
+                            <option value="1">1.1) Pembelian</option>
+                            <option value="1.1">1.2) Pembelian Detail</option>
+                            <option value="2">2.1) Retur Pembelian</option>
+                            <option value="2.1">2.2) Retur Pembelian Detail</option>
+                            <option value="3">3.1) Riwayat Stok Pembelian</option>
                         </optgroup>
-                        <optgroup label="Laporan Transaksi Penjualan">
-                            <option value="4">** Penjualan</option>
-                            <option value="5">** Retur Penjualan</option>
-                            <option value="6">** Riwayat Stok Penjualan</option>
+                        <optgroup label="Transaksi Penjualan">
+                            <option value="4">1.1) Penjualan</option>
+                            <option value="4.1">1.2) Penjualan Detail</option>
+                            <option value="5">2.1) Retur Penjualan</option>
+                            <option value="5.1">2.2) Retur Penjualan Detail</option>
+                            <option value="6">3.1) Riwayat Stok Penjualan</option>
                         </optgroup>
                     </select>
                 </div>
@@ -97,18 +99,20 @@
     // fungsi cek report
     function cekReport(param) {
         if (param == 1 || param == '1.1' || param == 2 || param == '2.1') {
-            idSupplier.hide(200);
-            idGudang.hide(200);
-            barang.hide(200);
+            idSupplier.fadeOut(0);
+            idGudang.fadeOut(0);
+            barang.fadeOut(0);
+            pemasok.fadeIn(0);
         } else if (param == 3) {
-            pemasok.hide(200);
-            idSupplier.hide(200);
-            idGudang.show(200);
-            barang.show(200);
+            pemasok.fadeOut(0);
+            idSupplier.fadeOut(0);
+            idGudang.fadeIn(0);
+            barang.fadeIn(0);
         } else {
-            idSupplier.show(200);
-            idGudang.show(200);
-            barang.show(200);
+            pemasok.fadeIn(0);
+            idSupplier.fadeIn(0);
+            idGudang.fadeIn(0);
+            barang.fadeOut(0);
         }
     }
 

@@ -362,7 +362,7 @@ function _kodePerawat($keterangan)
     return $kode_user;
 }
 
-function _kodeTrx($kode_poli)
+function _noAntrian($kode_poli, $kode_cabang, $tgl_daftar)
 {
     $CI           = &get_instance();
 
@@ -372,14 +372,36 @@ function _kodeTrx($kode_poli)
 
     $awal         = strtoupper(substr($poli->keterangan, 0, 2));
 
-    $lastNumber   = $CI->db->query('SELECT * FROM pendaftaran WHERE tgl_daftar = "' . $now . '" AND kode_poli = "' . $kode_poli . '" ORDER BY id DESC LIMIT 1')->row();
+    $lastNumber   = $CI->db->query('SELECT * FROM pendaftaran WHERE kode_cabang = "' . $kode_cabang . '" AND tgl_daftar = "' . $tgl_daftar . '" AND kode_poli = "' . $kode_poli . '" ORDER BY id DESC LIMIT 1')->row();
     $number       = 1;
     if ($lastNumber) {
-        $number       = count($CI->db->query('SELECT * FROM pendaftaran WHERE tgl_daftar = "' . $now . '" AND kode_poli = "' . $kode_poli . '"')->result()) + 1;
-        $kode_user    = $awal . '~' . date('dmY') . sprintf("%05d", $number);
+        $number       = count($CI->db->query('SELECT * FROM pendaftaran WHERE kode_cabang = "' . $kode_cabang . '" AND tgl_daftar = "' . $tgl_daftar . '" AND kode_poli = "' . $kode_poli . '"')->result()) + 1;
+        $kode_user    = $poli->inisial_room . sprintf("%05d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $awal . '~' . date('dmY') . "00001";
+        $kode_user    = $poli->inisial_room . "00001";
+    }
+    return $kode_user;
+}
+
+function _kodeTrx($kode_poli, $kode_cabang)
+{
+    $CI           = &get_instance();
+
+    $now          = date('Y-m-d');
+
+    $poli         = $CI->db->get_where('m_poli', ['kode_poli' => $kode_poli])->row();
+
+    $awal         = strtoupper(substr($poli->keterangan, 0, 2));
+
+    $lastNumber   = $CI->db->query('SELECT * FROM pendaftaran WHERE kode_cabang = "' . $kode_cabang . '" AND tgl_daftar = "' . $now . '" AND kode_poli = "' . $kode_poli . '" ORDER BY id DESC LIMIT 1')->row();
+    $number       = 1;
+    if ($lastNumber) {
+        $number       = count($CI->db->query('SELECT * FROM pendaftaran WHERE kode_cabang = "' . $kode_cabang . '" AND tgl_daftar = "' . $now . '" AND kode_poli = "' . $kode_poli . '"')->result()) + 1;
+        $kode_user    = $CI->session->userdata('init_cabang') . 'P' . $awal . '-' . date('Ymd') . sprintf("%05d", $number);
+    } else {
+        $number       = 0;
+        $kode_user    = $CI->session->userdata('init_cabang') . 'P' . $awal . '-' . date('Ymd') . "00001";
     }
     return $kode_user;
 }

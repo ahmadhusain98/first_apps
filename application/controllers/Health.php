@@ -547,12 +547,12 @@ class Health extends CI_Controller
         $ready_message   = "";
         $ready_message   .= "<table border=0>
             <tr>
-                <td style='width: 30%;'>Invoice</td>
+                <td style='width: 30%;'>No Pendaftaran</td>
                 <td style='width: 10%;'> : </td>
                 <td style='width: 60%;'> $header->no_trx </td>
             </tr>
             <tr>
-                <td style='width: 30%;'>Tgl/Jam</td>
+                <td style='width: 30%;'>Tgl/Jam Daftar</td>
                 <td style='width: 10%;'> : </td>
                 <td style='width: 60%;'>" . date('d-m-Y', strtotime($header->tgl_daftar)) . " / " . date('H:i:s', strtotime($header->jam_daftar)) . "</td>
             </tr>
@@ -562,14 +562,14 @@ class Health extends CI_Controller
                 <td style='width: 60%;'>" . $this->M_global->getData('member', ['kode_member' => $header->kode_member])->nama . "</td>
             </tr>
             <tr>
-                <td style='width: 30%;'>Poli</td>
+                <td style='width: 30%;'>Poli/Dokter</td>
                 <td style='width: 10%;'> : </td>
-                <td style='width: 60%;'>" . $this->M_global->getData('m_poli', ['kode_poli' => $header->kode_poli])->keterangan . "</td>
+                <td style='width: 60%;'>" . $this->M_global->getData('m_poli', ['kode_poli' => $header->kode_poli])->keterangan . ' / Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $header->kode_dokter])->nama . "</td>
             </tr>
             <tr>
                 <td style='width: 30%;'>Status</td>
                 <td style='width: 10%;'> : </td>
-                <td style='width: 60%;'>" . (($header->status_trx == 0) ? 'Proses' : 'Sudah Pulang') . " </td>
+                <td style='width: 60%;'>" . (($header->status_trx == 0) ? 'Open' : (($header->status_trx == 2) ? 'Cancel' : 'Close')) . " </td>
             </tr>
         </table>";
 
@@ -585,7 +585,7 @@ class Health extends CI_Controller
     }
 
     // fungsi cetak pendaftaran member
-    function print_pendaftaran($no_trx)
+    public function print_pendaftaran($no_trx)
     {
         $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
 
@@ -612,9 +612,7 @@ class Health extends CI_Controller
         $body .= '<table style="width: 100%; font-size: 9px;" cellpadding="2px">';
 
         $body .= '<tr>
-            <td style="width: 23%;">No Trx</td>
-            <td style="width: 2%;">:</td>
-            <td style="width: 75%;">' . $no_trx . '</td>
+            <td colspan="3" style="text-align: right; color: white;"><span style="border: 1px solid #0e1d2e; background-color: #0e1d2e;">NO: #' . $no_trx . '</span></td>
         </tr>
         <tr>
             <td style="width: 23%;">RM</td>
@@ -655,25 +653,30 @@ class Health extends CI_Controller
             <td style="width: 75%;">' . $pendaftaran->no_antrian . '</td>
         </tr>
         <tr>
+            <td style="width: 23%;">Status</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 75%;">' . (($pendaftaran->status_trx == 0) ? 'Open' : (($pendaftaran->status_trx == 2) ? 'Cancel' : 'Close')) . '</td>
+        </tr>
+        <tr>
             <td style="width: 100%;" colspan="3">&nbsp;</td>
         </tr>
         <tr>
-            <td style="width: 23%;">Tgl In</td>
+            <td style="width: 23%;">Tgl Masuk</td>
             <td style="width: 2%;">:</td>
             <td style="width: 75%;">' . date('d/m/Y', strtotime($pendaftaran->tgl_daftar)) . '</td>
         </tr>
         <tr>
-            <td style="width: 23%;">Jam In</td>
+            <td style="width: 23%;">Jam Masuk</td>
             <td style="width: 2%;">:</td>
             <td style="width: 75%;">' . date('H:i:s', strtotime($pendaftaran->jam_daftar)) . '</td>
         </tr>
         <tr>
-            <td style="width: 23%;">Tgl Out</td>
+            <td style="width: 23%;">Tgl Keluar</td>
             <td style="width: 2%;">:</td>
             <td style="width: 75%;">' . (isset($pendaftaran->tgl_keluar) ? date('d/m/Y', strtotime($pendaftaran->tgl_keluar)) : '-')  . '</td>
         </tr>
         <tr>
-            <td style="width: 23%;">Jam Out</td>
+            <td style="width: 23%;">Jam Keluar</td>
             <td style="width: 2%;">:</td>
             <td style="width: 75%;">' . (isset($pendaftaran->jam_keluar) ? date('H:i:s', strtotime($pendaftaran->jam_keluar)) : '-')  . '</td>
         </tr>
@@ -694,7 +697,14 @@ class Health extends CI_Controller
     // fungsi ambil riwayat
     public function getRiwayat($kode_member)
     {
-        $data = $this->db->query('SELECT p.no_trx, p.tgl_daftar, p.jam_daftar, p.tgl_keluar, p.jam_keluar, pol.keterangan AS nama_poli, dok.nama AS nama_dokter FROM pendaftaran p JOIN m_poli pol ON pol.kode_poli = p.kode_poli JOIN dokter dok ON dok.kode_dokter = p.kode_dokter WHERE p.kode_member = "' . $kode_member . '"')->result();
+        $data = $this->db->query('SELECT 
+            p.no_trx, p.tgl_daftar, p.jam_daftar, p.tgl_keluar, p.jam_keluar, pol.keterangan AS nama_poli, dok.nama AS nama_dokter,
+            c.cabang, p.status_trx
+        FROM pendaftaran p 
+        JOIN cabang c ON c.kode_cabang = p.kode_cabang
+        JOIN m_poli pol ON pol.kode_poli = p.kode_poli 
+        JOIN dokter dok ON dok.kode_dokter = p.kode_dokter 
+        WHERE p.kode_member = "' . $kode_member . '"')->result();
         echo json_encode($data);
     }
 
@@ -754,26 +764,24 @@ class Health extends CI_Controller
         $kode_cabang  = $this->session->userdata('cabang');
 
         $kode_poli    = $this->input->post('kode_poli');
+        $tgl_daftar   = date('Y-m-d');
 
         if ($param == 1) { // jika param = 1
             // buat kode baru
-            $no_trx   = _kodeTrx($kode_poli);
+            $no_trx         = _kodeTrx($kode_poli, $kode_cabang);
+            $no_antrian     = _noAntrian($kode_poli, $kode_cabang, $tgl_daftar);
         } else { // selain itu
             // ambil dari inputan
-            $no_trx   = $this->input->post('no_trx');
+            $no_trx         = $this->input->post('no_trx');
+            $no_antrian     = $this->input->post('no_antrian');
         }
 
-        $tgl_daftar   = date('Y-m-d');
         $jam_daftar   = date('H:i:s');
         $kode_member  = $this->input->post('kode_member');
         $kode_dokter  = $this->input->post('kode_dokter');
         $kode_ruang   = $this->input->post('kode_ruang');
 
-        // cek last antrian berdasarkan poli
-        $cek_antrian  = $this->M_global->getDataResult('pendaftaran', ['tgl_daftar' => $tgl_daftar, "kode_poli" => $kode_poli]);
-
         // jika ada last antrian + 1, jika tidak ada 0 + 1
-        $no_antrian   = ((!empty($cek_antrian) ? count($cek_antrian) : 0)) + 1;
 
         // masukan kedalam variable $isi
         $isi = [
@@ -794,12 +802,15 @@ class Health extends CI_Controller
         ];
 
         if ($param == 1) { // jika param = 1
+            aktifitas_user_transaksi('Pendaftaran', 'mendaftarkan Member ' . $kode_member, $no_trx);
+
             // lakukan fungsi tambah ke table pendaftaran
             $cek = [
                 $this->M_global->insertData('pendaftaran', $isi),
                 $this->M_global->updateData('member', ['status_regist' => 1, 'last_regist' => $no_trx], ['kode_member' => $kode_member]),
             ];
         } else { // selain itu
+            aktifitas_user_transaksi('Pendaftaran', 'mengubah Pendaftaran Member ' . $kode_member, $no_trx);
             // lakukan fungsi ubah ke table pendaftaran
             $cek = $this->M_global->updateData('pendaftaran', $isi, ['no_trx' => $no_trx]);
         }
@@ -817,6 +828,9 @@ class Health extends CI_Controller
     public function activedpendaftaran($no_trx)
     {
         // jalankan fungsi update actived pendaftaran
+        $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+        aktifitas_user_transaksi('Pendaftaran', 'membatalkan Pendaftaran Member ' . $pendaftaran->kode_member, $no_trx);
+
         $cek = [
             $this->M_global->updateData('pendaftaran', ['status_trx' => 2, 'tgl_keluar' => date('Y-m-d'), 'jam_keluar' => date('H:i:s')], ['no_trx' => $no_trx]),
             $this->M_global->updateData('member', ['status_regist' => 0], ['last_regist' => $no_trx]),
@@ -836,6 +850,8 @@ class Health extends CI_Controller
     {
         // jalankan fungsi hapus pendaftaran berdasarkan no_trx
         $member = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+
+        aktifitas_user_transaksi('Pendaftaran', 'menghapus Pendaftaran Member ' . $member->kode_member, $no_trx);
 
         $cek = $this->M_global->delData('pendaftaran', ['no_trx' => $no_trx]);
 

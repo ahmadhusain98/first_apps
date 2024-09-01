@@ -192,9 +192,9 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
         }).then((result) => {
             if (result.isConfirmed) {
                 if (result.value.status == 1) {
-                    Swal.fire("Kwitansi", "Berhasil dikirim via Email!, silahkan cek email", "success");
+                    Swal.fire("Berkas Pendaftaran", "Berhasil dikirim via Email!, silahkan cek email", "success");
                 } else {
-                    Swal.fire("Kwitansi", "Gagal dikirim via Email!, silahkan cek email", "info");
+                    Swal.fire("Berkas Pendaftaran", "Gagal dikirim via Email!, silahkan cek email", "info");
                 }
             }
         });

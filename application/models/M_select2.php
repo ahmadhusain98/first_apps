@@ -110,17 +110,36 @@ class M_select2 extends CI_Model
     }
 
     // fungsi member
-    function getMember($key)
+    function getMember($key, $param)
     {
         $limit = ' LIMIT 50';
 
         if (!empty($key)) {
-            $add_sintak = ' AND (nik LIKE "%' . $key . '%" OR kode_member LIKE "%' . $key . '%" OR nama LIKE "%' . $key . '%" OR email LIKE "%' . $key . '%") ORDER BY nama ASC';
+            $add_sintak = ' AND (nik LIKE "%' . $key . '%" OR kode_member LIKE "%' . $key . '%" OR nama LIKE "%' . $key . '%" OR email LIKE "%' . $key . '%")';
         } else {
-            $add_sintak = ' ORDER BY nama ASC';
+            $add_sintak = '';
         }
 
-        $sintak = $this->db->query('SELECT kode_member AS id, CONCAT(kode_member, " ~ " , nama) AS text FROM member WHERE actived = 1 ' . $add_sintak . $limit)->result();
+        if ($param == 'Health') {
+            $sintak = $this->db->query('SELECT kode_member AS id, CONCAT(kode_member, " ~ " , nama) AS text, nik, email
+            FROM member 
+            WHERE kode_member != "U00001" AND actived = 1 ' . $add_sintak . ' ORDER BY kode_member ASC ' . $limit)->result();
+        } else {
+            $sintak = $this->db->query('SELECT kode_member AS id, CONCAT(kode_member, " ~ " , nama) AS text, nik, email, id2
+            FROM ( 
+                SELECT kode_member, nama, actived, 0 AS id2, nik, email
+                FROM member 
+                WHERE kode_member = "U00001"
+                
+                UNION ALL 
+                
+                SELECT kode_member, nama, actived, kode_member AS id2, nik, email
+                FROM member 
+                WHERE kode_member != "U00001"
+            ) AS member_in 
+            WHERE actived = 1 ' . $add_sintak . ' ORDER BY id2 ASC ' . $limit)->result();
+        }
+
 
         return $sintak;
     }
@@ -147,12 +166,24 @@ class M_select2 extends CI_Model
         $limit = ' LIMIT 50';
 
         if (!empty($key)) {
-            $add_sintak = ' WHERE (keterangan LIKE "%' . $key . '%") ORDER BY keterangan ASC';
+            $add_sintak = ' WHERE (keterangan LIKE "%' . $key . '%")';
         } else {
-            $add_sintak = ' ORDER BY keterangan ASC';
+            $add_sintak = '';
         }
 
-        $sintak = $this->db->query('SELECT kode_poli AS id, keterangan AS text FROM m_poli ' . $add_sintak . $limit)->result();
+        $sintak = $this->db->query('SELECT kode_poli AS id, CONCAT(keterangan) AS text, id2
+        FROM ( 
+            SELECT kode_poli, keterangan, 0 AS id2
+            FROM m_poli
+            WHERE kode_poli = "POL0000001"
+            
+            UNION ALL 
+            
+            SELECT kode_poli, keterangan, kode_poli AS id2
+            FROM m_poli
+            WHERE kode_poli != "POL0000001"
+        ) AS member_in 
+        ' . $add_sintak . ' ORDER BY id2 ASC ' . $limit)->result();
 
         return $sintak;
     }
@@ -171,7 +202,7 @@ class M_select2 extends CI_Model
                 $add_sintak = ' ORDER BY dp.kode_dokter ASC';
             }
 
-            $sintak = $this->db->query('SELECT dp.kode_dokter AS id, CONCAT(d.nama, " ~ ", p.keterangan) AS text FROM dokter_poli dp JOIN dokter d ON dp.kode_dokter = d.kode_dokter JOIN m_poli p ON p.kode_poli = dp.kode_poli WHERE dp.kode_poli = "' . $kode_poli . '" ' . $add_sintak . $limit)->result();
+            $sintak = $this->db->query('SELECT dp.kode_dokter AS id, CONCAT("Dr. ", d.nama) AS text FROM dokter_poli dp JOIN dokter d ON dp.kode_dokter = d.kode_dokter JOIN m_poli p ON p.kode_poli = dp.kode_poli WHERE dp.kode_poli = "' . $kode_poli . '" ' . $add_sintak . $limit)->result();
         }
 
         return $sintak;

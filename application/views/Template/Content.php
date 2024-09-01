@@ -894,10 +894,10 @@
         initailizeSelect2_provinsi();
         initailizeSelect2_kabupaten(param = '');
         initailizeSelect2_kecamatan(param = '');
-        initailizeSelect2_member();
+        initailizeSelect2_member("<?= (($this->uri->segment(1) == 'Health') ? 'Health' : 'Transaksi') ?>");
         initailizeSelect2_user();
         initailizeSelect2_poli();
-        initailizeSelect2_dokter_poli(param = 'K00001');
+        initailizeSelect2_dokter_poli(param = 'POL0000001');
         initailizeSelect2_ruang();
         initailizeSelect2_supplier();
         initailizeSelect2_gudang_int();
@@ -905,7 +905,7 @@
         initailizeSelect2_pekerjaan();
         initailizeSelect2_agama();
         initailizeSelect2_pendidikan();
-        initailizeSelect2_pendaftaran(param = 'K00001');
+        initailizeSelect2_pendaftaran('');
         initailizeSelect2_penjualan();
         initailizeSelect2_penjualan_retur();
         initailizeSelect2_bank();
@@ -1102,7 +1102,7 @@
             }
         }
 
-        function initailizeSelect2_member() {
+        function initailizeSelect2_member(param) {
             $(".select2_member").select2({
                 allowClear: true,
                 multiple: false,
@@ -1116,7 +1116,7 @@
                     }
                 },
                 ajax: {
-                    url: siteUrl + 'Select2_master/dataMember',
+                    url: siteUrl + 'Select2_master/dataMember/' + param,
                     type: 'POST',
                     dataType: 'JSON',
                     delay: 100,

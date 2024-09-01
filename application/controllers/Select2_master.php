@@ -76,10 +76,10 @@ class Select2_master extends CI_Controller
     }
 
     // master member
-    function dataMember()
+    function dataMember($param)
     {
         $key = $this->input->post('searchTerm');
-        echo json_encode($this->M_select2->getMember($key));
+        echo json_encode($this->M_select2->getMember($key, $param));
     }
 
     // master user

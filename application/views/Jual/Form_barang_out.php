@@ -1,7 +1,7 @@
 <form method="post" id="form_barang_out">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Formulir</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
         </div>
     </div>
     <br>
@@ -118,7 +118,9 @@
                             <?php
                             if (!empty($data_barang_out)) :
                                 $gudang = $this->M_global->getData('m_gudang', ['kode_gudang' => $data_barang_out->kode_gudang])->nama;
-                                echo '<option value="' . $data_barang_out->kode_gudang . '">' . $data_barang_out->kode_gudang . ' ~ ' . $gudang . '</option>';
+                                echo '<option value="' . $data_barang_out->kode_gudang . '">' . $gudang . '</option>';
+                            else :
+                                echo '<option value="GUD0000001" selected>Farmasi Tunai</option>';
                             endif;
                             ?>
                         </select>
@@ -141,7 +143,7 @@
     <hr>
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Detail Barang Jual</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Detail Barang Jual</span>
         </div>
     </div>
     <br>
@@ -149,17 +151,17 @@
         <div class="col-md-12">
             <div class="table-responsive">
                 <input type="hidden" name="jumlahBarisBarang" id="jumlahBarisBarang" value="<?= (!empty($barang_detail) ? count($barang_detail) : '0') ?>">
-                <table class="table table-hover table-bordered" id="tableDetailBarangOut">
+                <table class="table table-hover table-bordered" id="tableDetailBarangOut" width="100%" style="border-radius: 10px;">
                     <thead>
                         <tr class="text-center">
-                            <th width="5%" class="bg-primary">Hapus</th>
-                            <th rowspan="2" class="bg-primary">Barang</th>
-                            <th width="14%" class="bg-primary">Harga</th>
-                            <th width="14%" class="bg-primary">Qty</th>
-                            <th width="14%" class="bg-primary">Disc (%)</th>
-                            <th width="14%" class="bg-primary">Disc (Rp)</th>
-                            <th width="5%" class="bg-primary">Pajak</th>
-                            <th width="14%" class="bg-primary">Jumlah</th>
+                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">Hapus</th>
+                            <th rowspan="2">Barang</th>
+                            <th width="14%">Harga</th>
+                            <th width="14%">Qty</th>
+                            <th width="14%">Disc (%)</th>
+                            <th width="14%">Disc (Rp)</th>
+                            <th width="5%">Pajak</th>
+                            <th width="14%" style="border-radius: 0px 10px 0px 0px;">Jumlah</th>
                         </tr>
                     </thead>
                     <tbody id="bodyBarangIn">
@@ -281,12 +283,12 @@
                     <div class="col-md-12">
                         <div style="height: 400px; overflow: auto;">
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover table-bordered" id="tableSederhanaObat" style="width: 100%;">
+                                <table class="table table-striped table-hover table-bordered" id="tableSederhanaObat" style="width: 100%; border-radius: 10px;">
                                     <thead>
                                         <tr class="text-center">
-                                            <th width="5%">#</th>
+                                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
                                             <th width="90%">Obat</th>
-                                            <th width="5%">Aksi</th>
+                                            <th width="5%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -475,7 +477,8 @@
         btnSimpan.attr('disabled', true);
 
         // isi kode_poli menjadi default Kulit
-        kode_poli.html(`<option value="K00001">K00001 ~ Kulit</option>`);
+        kode_poli.html(`<option value="POL0000001">Umum</option>`);
+        kode_member.html(`<option value="U00001">U00001 ~ UMUM</option>`);
     } else { // selain itu
         // jalankan fungsi hitung_t()
         hitung_t();

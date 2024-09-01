@@ -9,21 +9,23 @@
         <div class="col-md-12">
             <div class="row">
                 <div class="col-md-6">
+                    <label for="">No. Pendaftaran</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="No. Transaksi" placeholder="No. Transaksi (Otomatis)" id="no_trx" name="no_trx" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_trx : '') ?>" readonly>
+                        <input type="text" class="form-control" placeholder="Otomatis" id="no_trx" name="no_trx" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_trx : '') ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <ion-icon name="id-card-outline"></ion-icon>
+                                <i class="fa-regular fa-id-badge"></i>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
+                    <label for="">No. Antrian</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="No. Antrian" placeholder="No. Antrian (Otomatis)" id="no_antrian" name="no_antrian" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_antrian : '') ?>" readonly>
+                        <input type="text" class="form-control" placeholder="Otomatis" id="no_antrian" name="no_antrian" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_antrian : '') ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <ion-icon name="hand-left-outline"></ion-icon>
+                                <i class="fa-solid fa-hourglass"></i>
                             </div>
                         </div>
                     </div>
@@ -31,18 +33,25 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <div class="input-group mb-3">
-                        <select name="kode_member" id="kode_member" class="form-control select2_member" data-placeholder="~ Cari Member" onchange="getRiwayat(this.value)">
-                            <?php
-                            if (!empty($data_pendaftaran)) :
-                                $member = $this->M_global->getData('member', ['kode_member' => $data_pendaftaran->kode_member]);
-                                echo '<option value="' . $member->kode_member . '">' . $member->kode_member . ' ~ ' . $member->nama . '</option>';
-                            endif;
-                            ?>
-                        </select>
+                    <label for="">Member <sup class="text-danger">**</sup></label>
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <select name="kode_member" id="kode_member" class="form-control select2_member" data-placeholder="~ Cari Member" onchange="getRiwayat(this.value)">
+                                <?php
+                                if (!empty($data_pendaftaran)) :
+                                    $member = $this->M_global->getData('member', ['kode_member' => $data_pendaftaran->kode_member]);
+                                    echo '<option value="' . $member->kode_member . '">' . $member->kode_member . ' ~ ' . $member->nama . '</option>';
+                                endif;
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-primary w-100" onclick="updateMember()" id="btnUMember"><i class="fa-regular fa-pen-to-square"></i>&nbsp;&nbsp;Update</button>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6">
+                    <label for="">Poli <sup class="text-danger">**</sup></label>
                     <div class="input-group mb-3">
                         <select name="kode_poli" id="kode_poli" class="form-control select2_poli" data-placeholder="~ Pilih Poli" onchange="getDokter(this.value)">
                             <?php
@@ -57,23 +66,24 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
+                    <label for="">Tgl/Jam Daftar <sup class="text-danger">**</sup></label>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="input-group mb-3">
-                                <input type="date" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Tgl Masuk" placeholder="Tgl Masuk" id="tgl_masuk" name="tgl_masuk" value="<?= (!empty($data_pendaftaran) ? date('Y-m-d', strtotime($data_pendaftaran->tgl_daftar)) : date('Y-m-d')) ?>" readonly>
+                                <input type="date" class="form-control" id="tgl_masuk" name="tgl_masuk" value="<?= (!empty($data_pendaftaran) ? date('Y-m-d', strtotime($data_pendaftaran->tgl_daftar)) : date('Y-m-d')) ?>" readonly>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <ion-icon name="calendar-number-outline"></ion-icon>
+                                        <i class="fa-regular fa-calendar"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-group mb-3">
-                                <input type="time" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Jam Masuk" placeholder="Jam Masuk" id="jam_masuk" name="jam_masuk" value="<?= (!empty($data_pendaftaran) ? date('H:i:s', strtotime($data_pendaftaran->jam_daftar)) : date('H:i:s')) ?>" readonly>
+                                <input type="time" class="form-control" id="jam_masuk" name="jam_masuk" value="<?= (!empty($data_pendaftaran) ? date('H:i:s', strtotime($data_pendaftaran->jam_daftar)) : date('H:i:s')) ?>" readonly>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <ion-icon name="time-outline"></ion-icon>
+                                        <i class="fa-regular fa-clock"></i>
                                     </div>
                                 </div>
                             </div>
@@ -81,6 +91,7 @@
                     </div>
                 </div>
                 <div class="col-md-6">
+                    <label for="">Dokter Poli <sup class="text-danger">**</sup></label>
                     <div class="input-group mb-3">
                         <select name="kode_dokter" id="kode_dokter" class="form-control select2_dokter_poli" data-placeholder="~ Pilih Dokter">
                             <?php
@@ -93,8 +104,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-md-6">
+                    <label for="">Ruangan/Bed <sup class="text-danger">**</sup></label>
                     <div class="input-group mb-3">
                         <select name="kode_ruang" id="kode_ruang" class="form-control select2_ruang" data-placeholder="~ Pilih Ruang">
                             <?php
@@ -106,15 +118,21 @@
                         </select>
                     </div>
                 </div>
+                <div class="col-md-6"></div>
+            </div>
+            <div class="row mb-3">
                 <div class="col-md-6">
                     <button type="button" class="btn btn-danger" onclick="getUrl('Health/pendaftaran')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
-                    <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
-                    <?php if (!empty($data_pendaftaran)) : ?>
-                        <button type="button" class="btn btn-success float-right" onclick="getUrl('Health/form_pendaftaran/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
-                    <?php else : ?>
-                        <button type="button" class="btn btn-info float-right" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
-                    <?php endif ?>
-                    <button type="button" class="btn btn-primary float-right mr-2" onclick="updateMember()" id="btnUMember"><i class="fa-regular fa-pen-to-square"></i>&nbsp;&nbsp;Update Data Member</button>
+                </div>
+                <div class="col-md-6">
+                    <div class="float-right">
+                        <?php if (!empty($data_pendaftaran)) : ?>
+                            <button type="button" class="btn btn-info" onclick="getUrl('Health/form_pendaftaran/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                        <?php else : ?>
+                            <button type="button" class="btn btn-info" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
+                        <?php endif ?>
+                        <button type="button" class="btn btn-success" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -133,6 +151,7 @@
                     <thead>
                         <tr class="text-center">
                             <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                            <th>Cabang</th>
                             <th>No. Transaksi</th>
                             <th>Tgl/Jam Daftar</th>
                             <th>Tgl/Jam Keluar</th>
@@ -147,13 +166,29 @@
                             foreach ($riwayat as $r) : ?>
                                 <tr>
                                     <td><?= $no ?></td>
+                                    <td>
+                                        <?= $this->M_global->getData('cabang', ['kode_cabang' => $r->kode_cabang])->cabang ?>
+                                        <?php
+                                        if ($r->status_trx == 0) {
+                                            $cek_status = 'success';
+                                            $message_status = 'Open';
+                                        } else if ($r->status_trx == 2) {
+                                            $cek_status = 'warning';
+                                            $message_status = 'Cancel';
+                                        } else {
+                                            $cek_status = 'danger';
+                                            $message_status = 'Close';
+                                        }
+                                        ?>
+                                        <span class="badge badge-<?= $cek_status ?>"><?= $message_status ?></span>
+                                    </td>
                                     <td><?= $r->no_trx ?></td>
                                     <td><?= date('Y-m-d', strtotime($r->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($r->jam_daftar)) ?></td>
                                     <td><?= '<span class="text-center">' . (($r->status_trx < 1) ? '-' : date('d/m/Y', strtotime($r->tgl_keluar)) . ' ~ ' . date('H:i:s', strtotime($r->jam_keluar))) . '</>' ?></td>
                                     <td><?= $this->M_global->getData('m_poli', ['kode_poli' => $r->kode_poli])->keterangan ?></td>
                                     <td><?= $this->M_global->getData('dokter', ['kode_dokter' => $r->kode_dokter])->nama ?></td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getDetail('<?= $r->no_trx ?>')"><ion-icon name="information-circle-outline"></ion-icon></button>
+                                        <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getDetail('<?= $r->no_trx ?>')"><i class="fa-solid fa-circle-info"></i></button>
                                     </td>
                                 </tr>
                             <?php $no++;
@@ -182,6 +217,8 @@
 
     const form = $('#form_pendaftaran');
     const btnSimpan = $('#btnSimpan');
+
+    $('#btnUMember').attr('disabled', true);
 
     // fungsi get dokter berdasarkan kode poli
     function getDokter(kode_poli) {
@@ -277,15 +314,16 @@
         $.ajax({
             url: siteUrl + 'Health/pendaftaran_proses/' + param,
             type: "POST",
-            data: form.serialize(),
+            data: $('#form_pendaftaran').serialize(),
             dataType: "JSON",
             success: function(result) { // jika fungsi berjalan dengan baik
+                console.log(result);
                 btnSimpan.attr('disabled', false);
 
                 if (result.status == 1) { // jika mendapatkan respon 1
 
                     Swal.fire("Pendaftaran", "Berhasil " + message, "success").then(() => {
-                        question_cetak(result.no_trx);
+                        querstion(result.no_trx);
                     });
                 } else { // selain itu
 
@@ -300,20 +338,20 @@
         });
     }
 
-    function question_cetak(x) {
+    function querstion(param) {
         Swal.fire({
-            title: "Cetak Bukti?",
-            text: 'Cetak bukti pendaftaran!',
+            title: "Cetak Berkas?",
+            text: "Berkas bukti pendaftaran pasien!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, Cetak",
+            confirmButtonText: "Ya, cetak!",
             cancelButtonText: "Tidak!"
         }).then((result) => {
             if (result.isConfirmed) { // jika yakin
-                window.open(siteUrl + 'Health/print_pendaftaran/' + x, '_blank');
                 getUrl('Health/pendaftaran');
+                getDetail(param);
             } else {
                 getUrl('Health/pendaftaran');
             }
@@ -324,9 +362,11 @@
     function getRiwayat(kode_member) {
         if (kode_member == '' || kode_member == null) { // jika kode_member kosong/ null
             // kosongkan body
+            $('#btnUMember').attr('disabled', true);
             return body.empty();
         }
 
+        $('#btnUMember').attr('disabled', false);
         // kosongkan body
         body.empty();
 
@@ -348,16 +388,28 @@
                         var keluar = value.tgl_keluar + ' ~ ' + value.jam_keluar;
                     }
 
+                    if (value.status_trx == 0) {
+                        var cek_color = 'success';
+                        var message = 'Open';
+                    } else if (value.status_trx == 2) {
+                        var cek_color = 'warning';
+                        var message = 'Cancel';
+                    } else {
+                        var cek_color = 'danger';
+                        var message = 'Close';
+                    }
+
                     // tampilkan ke bodyRiwayat
-                    body.append(`<tr>
+                    $('#bodyRiwayat').append(`<tr>
                         <td>${no}</td>
+                        <td>${value.cabang} <span class="badge badge-${cek_color}">${message}</span></td>
                         <td>${value.no_trx}</td>
                         <td>${value.tgl_daftar} ~ ${value.jam_daftar}</td>
                         <td>${keluar}</td>
                         <td>${value.nama_poli}</td>
                         <td>${value.nama_dokter}</td>
                         <td class="text-center">
-                            <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getDetail('${value.no_trx}')"><ion-icon name="information-circle-outline"></ion-icon></button>
+                            <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getDetail('${value.no_trx}')"><i class="fa-solid fa-circle-info"></i></button>
                         </td>
                     </tr>`);
                     no++;
@@ -381,6 +433,17 @@
         getUrl('Health/form_daftar/' + param);
     }
 
+    function reseting() {
+        $('#no_trx').val('');
+        $('#no_antrian').val('');
+        $('#kode_member').val('').change();
+        $('#kode_poli').val('').change();
+        $('#kode_dokter').val('').change();
+        $('#kode_ruang').val('').change();
+    }
+
     // fungsi lihat detail
-    function getDetail(param) {}
+    function getDetail(param) {
+        window.open(siteUrl + 'Health/print_pendaftaran/' + param, '_blank');
+    }
 </script>
