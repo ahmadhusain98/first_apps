@@ -1329,3 +1329,26 @@ function _kodeKas_bank()
     }
     return $kode_user;
 }
+
+function _drop_db()
+{
+    $CI         = &get_instance();
+
+    $cek        = $CI->db->query("SELECT table_name AS my_table FROM information_schema.tables
+    WHERE table_schema = '" . $CI->db->database . "'");
+
+    if ($cek->num_rows() > 0) {
+        foreach ($cek->result() as $c) {
+            // if ($c->my_table == 'user' || $c->my_table == 'member' || $c->my_table == 'cabang' || $c->my_table == 'kecamatan' || $c->my_table == 'kabupaten' || $c->my_table == 'backup_db' || $c->my_table == 'cabang_user' || $c->my_table == 'm_agama' || $c->my_table == 'm_gudang' || $c->my_table == 'm_pekerjaan' || $c->my_table == 'm_pendidikan' || $c->my_table == 'm_provinsi' || $c->my_table == 'm_role'  || $c->my_table == 'member_token' || $c->my_table == 'sub_menu' || $c->my_table == 'sub_menu2' || $c->my_table == 'user_token' || $c->my_table == 'web_setting' || $c->my_table == 'web_version' || $c->my_table == 'm_menu') {
+            //     $query = TRUE;
+            // } else {
+            //     $query = $CI->db->query("DROP TABLE $c->my_table");
+            // }
+            $query = $CI->db->query("DROP TABLE $c->my_table");
+        }
+    } else {
+        $query = TRUE;
+    }
+
+    return $query;
+}
