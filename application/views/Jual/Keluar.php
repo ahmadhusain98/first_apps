@@ -168,49 +168,43 @@ echo _lock_so();
         filter(x);
     }
 
-    // fungsi acc/unacc
-    function valided(invoice, param) {
-        if (param == 0) {
-            var pesan = "Penjualan ini akan di re-acc!";
-            var pesan2 = "di re-acc!";
-        } else {
-            var pesan = "Penjualan ini akan diacc!";
-            var pesan2 = "diacc!";
-        }
-        // ajukan pertanyaaan
+    // fungsi cetak
+    function cetak(x, y) {
+        printsingle('Transaksi/single_print_bout/' + x + '/' + y);
+    }
+
+    // fungsi kirim email
+    function email(x) {
         Swal.fire({
-            title: "Kamu yakin?",
-            text: pesan,
-            icon: "warning",
+            title: "Masukan Email",
+            input: "text",
+            inputAttributes: {
+                autocapitalize: "off"
+            },
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, " + pesan2,
-            cancelButtonText: "Tidak!"
-        }).then((result) => {
-            if (result.isConfirmed) { // jika yakin
-
-                // jalankan fungsi
-                $.ajax({
-                    url: siteUrl + 'Transaksi/accbarang_out/' + invoice + '/' + param,
-                    type: 'POST',
-                    dataType: 'JSON',
-                    success: function(result) { // jika fungsi berjalan dengan baik
-
-                        if (result.status == 1) { // jika mendapatkan hasil 1
-                            reloadTable();
-
-                            Swal.fire("Penjualan", "Berhasil " + pesan2, "success");
-                        } else { // selain itu
-
-                            Swal.fire("Penjualan", "Gagal " + pesan2 + ", silahkan dicoba kembali", "info");
-                        }
-                    },
-                    error: function(result) { // jika fungsi error
-
-                        error_proccess();
+            confirmButtonText: "Kirim",
+            cancelButtonText: "Tutup",
+            showLoaderOnConfirm: true,
+            preConfirm: async (email) => {
+                try {
+                    const githubUrl = `${siteUrl}Transaksi/email_out/${x}?email=${email}`;
+                    const response = await fetch(githubUrl);
+                    if (!response.ok) {
+                        return Swal.showValidationMessage(`${JSON.stringify(await response.json())}`);
                     }
-                });
+                    return response.json();
+                } catch (error) {
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (result.value.status == 1) {
+                    Swal.fire("Invoice Penjualan", "Berhasil dikirim via Email!, silahkan cek email", "success");
+                } else {
+                    Swal.fire("Invoice Penjualan", "Gagal dikirim via Email!, silahkan cek email", "info");
+                }
             }
         });
     }

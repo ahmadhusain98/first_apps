@@ -11,10 +11,10 @@
                 <div class="col-md-6">
                     <label for="">Invoice Penjualan</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Invoice (Otomatis)" id="invoice" name="invoice" value="<?= (!empty($data_barang_out) ? $data_barang_out->invoice : '') ?>" readonly>
+                        <input type="text" class="form-control" placeholder="Otomatis" id="invoice" name="invoice" value="<?= (!empty($data_barang_out) ? $data_barang_out->invoice : '') ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <ion-icon name="id-card-outline"></ion-icon>
+                                <i class="fa-regular fa-id-badge"></i>
                             </div>
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                                 <input type="date" title="Tgl Jual" class="form-control" placeholder="Tgl Jual" id="tgl_jual" name="tgl_jual" value="<?= (!empty($data_barang_out) ? date('Y-m-d', strtotime($data_barang_out->tgl_jual)) : date('Y-m-d')) ?>" readonly>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <ion-icon name="today-outline"></ion-icon>
+                                        <i class="fa-regular fa-calendar"></i>
                                     </div>
                                 </div>
                             </div>
@@ -37,7 +37,7 @@
                                 <input type="time" title="Jam Jual" class="form-control" placeholder="Jam Jual" id="jam_jual" name="jam_jual" value="<?= (!empty($data_barang_out) ? date('H:i:s', strtotime($data_barang_out->jam_jual)) : date('H:i:s')) ?>" readonly>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <ion-icon name="time-outline"></ion-icon>
+                                        <i class="fa-regular fa-clock"></i>
                                     </div>
                                 </div>
                             </div>
@@ -63,7 +63,7 @@
                         </div>
                         <div class="col-md-2 col-2">
                             <div class="input-group mb-3">
-                                <input type="checkbox" name="cek_pendaftaran" id="cek_pendaftaran" class="form-control" checked onclick="cekPendaftaran()">
+                                <input type="checkbox" name="cek_pendaftaran" id="cek_pendaftaran" class="form-control" onclick="cekPendaftaran()">
                             </div>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                         <textarea name="alamat" id="alamat" class="form-control" rows="3" readonly><?= (!empty($data_barang_out) ? $data_barang_out->alamat : '') ?></textarea>
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <ion-icon name="navigate-circle-outline"></ion-icon>
+                                <i class="fa-solid fa-location-arrow"></i>
                             </div>
                         </div>
                     </div>
@@ -155,24 +155,50 @@
                     <thead>
                         <tr class="text-center">
                             <th width="5%" style="border-radius: 10px 0px 0px 0px;">Hapus</th>
-                            <th rowspan="2">Barang</th>
-                            <th width="14%">Harga</th>
-                            <th width="14%">Qty</th>
-                            <th width="14%">Disc (%)</th>
-                            <th width="14%">Disc (Rp)</th>
+                            <th width="20%">Barang</th>
+                            <th width="10%">Satuan</th>
+                            <th width="15%">Harga</th>
+                            <th width="10%">Qty</th>
+                            <th width="10%">Disc (%)</th>
+                            <th width="10%">Disc (Rp)</th>
                             <th width="5%">Pajak</th>
-                            <th width="14%" style="border-radius: 0px 10px 0px 0px;">Jumlah</th>
+                            <th width="15%" style="border-radius: 0px 10px 0px 0px;">Jumlah</th>
                         </tr>
                     </thead>
                     <tbody id="bodyBarangIn">
                         <?php if (!empty($barang_detail)) : ?>
                             <?php $no = 1;
-                            foreach ($barang_detail as $bd) : ?>
-                                <tr id="rowBarangOut<?= $no ?>">
-                                    <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no ?>" onclick="hapusBarang('<?= $no ?>')"><ion-icon name="ban-outline"></ion-icon></button></td>
+                            foreach ($barang_detail as $bd) :
+                                $barang = $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang]);
+
+                                $satuan = [];
+                                foreach ([$barang->kode_satuan, $barang->kode_satuan2, $barang->kode_satuan3] as $satuanCode) {
+                                    $satuanDetail = $this->M_global->getData('m_satuan', ['kode_satuan' => $satuanCode]);
+                                    if ($satuanDetail) {
+                                        $satuan[] = [
+                                            'kode_satuan' => $satuanCode,
+                                            'keterangan' => $satuanDetail->keterangan,
+                                        ];
+                                    } else {
+                                        $satuan[] = '';
+                                    }
+                                }
+                            ?>
+                                <tr id="rowBarangIn<?= $no ?>">
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no ?>" onclick="hapusBarang('<?= $no ?>')"><i class="fa-solid fa-delete-left"></i></button>
+                                    </td>
                                     <td>
                                         <input type="hidden" id="kode_barang_out<?= $no ?>" name="kode_barang_out[]" value="<?= $bd->kode_barang ?>">
                                         <span><?= $bd->kode_barang ?> ~ <?= $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang])->nama ?></span>
+                                    </td>
+                                    <td>
+                                        <select name="kode_satuan[]" id="kode_satuan<?= $no ?>" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, <?= $no ?>)">
+                                            <option value="">~ Pilih Satuan</option>
+                                            <?php foreach ($satuan as $s) : ?>
+                                                <option value="<?= $s['kode_satuan'] ?>" <?= (($bd->kode_satuan == $s['kode_satuan']) ? 'selected' : '') ?>><?= $s['keterangan'] ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </td>
                                     <td>
                                         <input type="text" id="harga_out<?= $no ?>" name="harga_out[]" value="<?= number_format($bd->harga) ?>" class="form-control text-right" onchange="hitung_st('<?= $no ?>'); formatRp(this.value, 'harga_out<?= $no ?>'); cekHarga(this.value, <?= $no ?>)">
@@ -211,15 +237,14 @@
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" placeholder="Masukan Kode/Nama Barang" id="kode_barang" name="kode_barang">
                         <div class="input-group-append" onclick="showBarang()">
-                            <!-- onclick="showBarang()" -->
                             <div class="input-group-text">
-                                <ion-icon name="search-outline"></ion-icon>
+                                <i class="fa-solid fa-magnifying-glass-plus"></i>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 col-6">
-                    <button type="button" class="btn btn-sm btn-secondary float-right" onclick="searchBarang()" id="btnCari"><ion-icon name="add-circle-outline"></ion-icon> Tambah Barang</button>
+                    <button type="button" class="btn btn-primary" onclick="searchBarang()" id="btnCari"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah Barang</button>
                 </div>
             </div>
         </div>
@@ -430,13 +455,18 @@
 
                     // masukan ke body table barang in detail
                     bodyBarangIn.append(`<tr id="rowBarangOut${x}">
-                        <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><ion-icon name="ban-outline"></ion-icon></button></td>
-                        <td>
-                            <input type="hidden" id="kode_barang_out${x}" name="kode_barang_out[]" value="${result.kode_barang}">
-                            <span>${result.kode_barang} ~ ${result.nama}</span>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button>
                         </td>
                         <td>
-                            <input type="text" id="harga_out${x}" name="harga_out[]" value="${formatRpNoId(Number(result.harga_jual))}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_out${x}'); cekHarga(this.value, ${x})">
+                            <input type="hidden" id="kode_barang_out${x}" name="kode_barang_out[]" value="${result[0].kode_barang}">
+                            <span>${result[0].kode_barang} ~ ${result[0].nama}</span>
+                        </td>
+                        <td>
+                            <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
+                        </td>
+                        <td>
+                            <input type="text" id="harga_out${x}" name="harga_out[]" value="${formatRpNoId(Number(result[0].harga_jual))}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_out${x}'); cekHarga(this.value, ${x})">
                         </td>
                         <td>
                             <input type="text" id="qty_out${x}" name="qty_out[]" value="1" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_out${x}')">
@@ -452,10 +482,21 @@
                             <input type="hidden" id="pajakrp_out${x}" name="pajakrp_out[]" value="0">
                         </td>
                         <td class="text-right">
-                            <input type="hidden" id="jumlah_out${x}" name="jumlah_out[]" value="${formatRpNoId(Number(result.harga_jual))}" class="form-control text-right" readonly>
-                            <span id="jumlah2_out${x}">${formatRpNoId(Number(result.harga_jual))}</span>
+                            <input type="hidden" id="jumlah_out${x}" name="jumlah_out[]" value="${formatRpNoId(Number(result[0].harga_jual))}" class="form-control text-right" readonly>
+                            <span id="jumlah2_out${x}">${formatRpNoId(Number(result[0].harga_jual))}</span>
                         </td>
                     </tr>`);
+
+                    // each satuan
+                    $.each(result[1], function(index, value) {
+                        $('#kode_satuan' + x).append(`<option value="${value.kode_satuan}">${value.keterangan}</option>`)
+                    });
+
+                    $(".select2_global").select2({
+                        placeholder: $(this).data('placeholder'),
+                        width: '100%',
+                        allowClear: true,
+                    });
 
                     // jalankan fungsi
                     hitung_st(x);
@@ -470,18 +511,25 @@
     }
 
     // onload
-    if (invoice.val() == '' || invoice.val() == null) { // jika invoice kosong/ null
-        // disabled id
-        kode_barang.attr('disabled', true);
-        btnCari.attr('disabled', true);
-        btnSimpan.attr('disabled', true);
+    load_first()
 
-        // isi kode_poli menjadi default Kulit
-        kode_poli.html(`<option value="POL0000001">Umum</option>`);
-        kode_member.html(`<option value="U00001">U00001 ~ UMUM</option>`);
-    } else { // selain itu
-        // jalankan fungsi hitung_t()
-        hitung_t();
+    function load_first() {
+        if (invoice.val() == '' || invoice.val() == null) { // jika invoice kosong/ null
+            // disabled id
+            kode_barang.attr('disabled', false);
+            btnCari.attr('disabled', false);
+            btnSimpan.attr('disabled', true);
+
+            // isi kode_poli menjadi default Kulit
+            kode_poli.html(`<option value="">~ Pilih Poli</option>`);
+            kode_poli.attr(`disabled`, true);
+            kode_pendaftaran.html(`<option value="">~ Pilih Member Terdaftar</option>`);
+            kode_pendaftaran.attr(`disabled`, true);
+            kode_member.html(`<option value="U00001">U00001 ~ UMUM</option>`);
+        } else { // selain itu
+            // jalankan fungsi hitung_t()
+            hitung_t();
+        }
     }
 
     // cek pendaftaran
@@ -498,7 +546,7 @@
             kode_pendaftaran.attr('disabled', true);
             kode_pendaftaran.html(`<option value="">~ Pilih Member Terdaftar</option>`);
 
-            $('#kode_member').html(`<option value="U00001">UMUM</option>`);
+            $('#kode_member').html(`<option value="U00001">U00001 ~ UMUM</option>`);
         }
     }
 
@@ -759,13 +807,18 @@
 
                     // masukan ke body table barang in detail
                     bodyBarangIn.append(`<tr id="rowBarangOut${x}">
-                            <td class="text-center"><button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><ion-icon name="ban-outline"></ion-icon></button></td>
-                            <td>
-                                <input type="hidden" id="kode_barang_out${x}" name="kode_barang_out[]" value="${result.kode_barang}">
-                                <span>${result.kode_barang} ~ ${result.nama}</span>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button>
                             </td>
                             <td>
-                                <input type="text" id="harga_out${x}" name="harga_out[]" value="${formatRpNoId(Number(result.harga_jual))}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_out${x}'); cekHarga(this.value, ${x})">
+                                <input type="hidden" id="kode_barang_out${x}" name="kode_barang_out[]" value="${result[0].kode_barang}">
+                                <span>${result[0].kode_barang} ~ ${result[0].nama}</span>
+                            </td>
+                            <td>
+                                <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
+                            </td>
+                            <td>
+                                <input type="text" id="harga_out${x}" name="harga_out[]" value="${formatRpNoId(Number(result[0].harga_jual))}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_out${x}'); cekHarga(this.value, ${x})">
                             </td>
                             <td>
                                 <input type="text" id="qty_out${x}" name="qty_out[]" value="1" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_out${x}')">
@@ -781,10 +834,21 @@
                                 <input type="hidden" id="pajakrp_out${x}" name="pajakrp_out[]" value="0">
                             </td>
                             <td class="text-right">
-                                <input type="hidden" id="jumlah_out${x}" name="jumlah_out[]" value="${formatRpNoId(Number(result.harga_jual))}" class="form-control text-right" readonly>
-                                <span id="jumlah2_out${x}">${formatRpNoId(Number(result.harga_jual))}</span>
+                                <input type="hidden" id="jumlah_out${x}" name="jumlah_out[]" value="${formatRpNoId(Number(result[0].harga_jual))}" class="form-control text-right" readonly>
+                                <span id="jumlah2_out${x}">${formatRpNoId(Number(result[0].harga_jual))}</span>
                             </td>
                         </tr>`);
+
+                    // each satuan
+                    $.each(result[1], function(index, value) {
+                        $('#kode_satuan' + x).append(`<option value="${value.kode_satuan}">${value.keterangan}</option>`)
+                    });
+
+                    $(".select2_global").select2({
+                        placeholder: $(this).data('placeholder'),
+                        width: '100%',
+                        allowClear: true,
+                    });
 
                     // jalankan fungsi
                     hitung_st(x);
@@ -793,6 +857,43 @@
             error: function(result) { // jika fungsi error
 
                 // jalankan notifikasi error
+                error_proccess();
+            }
+        });
+    }
+
+    // fungsi ubah satuan untuk ubah harga
+    function ubahSatuan(param, id) {
+        var kode_barang_out = $('#kode_barang_out' + id).val();
+        var kode_satuan = $('#kode_satuan' + id).val();
+
+        if (!param || param === null) {
+            error_proccess();
+            return; // Add return to stop further execution
+        }
+
+        $.ajax({
+            url: siteUrl + 'Transaksi/getSatuan/' + param + '/' + kode_barang_out,
+            type: "POST",
+            data: form.serialize(),
+            dataType: "JSON",
+            success: function(result) {
+                var qty_satuan = Number(result.qty_satuan);
+                var hna_master = Number(result.harga_jual);
+                var qty = Number($('#qty_out' + id).val().replaceAll(',', ''));
+
+                if (isNaN(qty)) qty = 0; // Ensure qty is valid
+
+                var newHarga = hna_master * qty_satuan;
+                $('#harga_out' + id).val(formatRpNoId(newHarga));
+
+                var discpr = Number($('#discpr_out' + id).val().replaceAll(',', ''));
+                var newDiskon = (discpr > 0) ? (newHarga * qty) * (discpr / 100) : ($('#discrp_out' + id).val()).replaceAll(',', '');
+
+                $('#discrp_out' + id).val(formatRpNoId(newDiskon));
+                hitung_st(id);
+            },
+            error: function(result) {
                 error_proccess();
             }
         });
@@ -895,11 +996,11 @@
             var row = tableBarang.rows[i];
 
             // ambil data berdasarkan loop
-            var harga1 = Number((row.cells[2].children[0].value).replace(/[^0-9\.]+/g, ""));
-            var qty1 = Number((row.cells[3].children[0].value).replace(/[^0-9\.]+/g, ""));
-            var discrp1 = Number((row.cells[5].children[0].value).replace(/[^0-9\.]+/g, ""));
-            var pajak1 = Number((row.cells[6].children[1].value).replace(/[^0-9\.]+/g, ""));
-            var jumlah1 = Number((row.cells[7].children[0].value).replace(/[^0-9\.]+/g, ""));
+            var harga1 = Number((row.cells[3].children[0].value).replace(/[^0-9\.]+/g, ""));
+            var qty1 = Number((row.cells[4].children[0].value).replace(/[^0-9\.]+/g, ""));
+            var discrp1 = Number((row.cells[6].children[0].value).replace(/[^0-9\.]+/g, ""));
+            var pajak1 = Number((row.cells[7].children[1].value).replace(/[^0-9\.]+/g, ""));
+            var jumlah1 = Number((row.cells[8].children[0].value).replace(/[^0-9\.]+/g, ""));
 
             // lakukan rumus sum
             tjumlah += jumlah1 + discrp1;
@@ -1055,7 +1156,8 @@
                 if (result.status == 1) { // jika mendapatkan respon 1
 
                     Swal.fire("Penjualan", "Berhasil " + message, "success").then(() => {
-                        question_cetak(result.invoice);
+                        // question_cetak(result.invoice);
+                        getUrl('Transaksi/barang_out');
                     });
                 } else { // selain itu
 
