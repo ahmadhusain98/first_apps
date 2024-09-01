@@ -162,7 +162,7 @@
                     <thead>
                         <tr class="text-center">
                             <th width="5%" style="border-radius: 10px 0px 0px 0px;">Hapus</th>
-                            <th rowspan="2">Barang</th>
+                            <th>Barang</th>
                             <th width="12%">Satuan</th>
                             <th width="14%">Harga</th>
                             <th width="10%">Qty</th>

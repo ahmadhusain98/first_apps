@@ -502,10 +502,10 @@ function _invoice_retur($cabang)
 
     $now          = date('Y-m-d');
 
-    $lastNumber   = $CI->db->query('SELECT * FROM barang_in_retur_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '" ORDER BY id DESC LIMIT 1')->row();
+    $lastNumber   = $CI->db->query('SELECT * FROM barang_in_retur_header WHERE tgl_retur = "' . $now . '" AND kode_cabang = "' . $cabang . '" ORDER BY id DESC LIMIT 1')->row();
     $number       = 1;
     if ($lastNumber) {
-        $number   = $CI->db->query('SELECT * FROM barang_in_retur_header WHERE tgl_beli = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
+        $number   = $CI->db->query('SELECT * FROM barang_in_retur_header WHERE tgl_retur = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
         $invoice  = $CI->session->userdata('init_cabang') . 'TRB-' . date('Ymd') . sprintf("%05d", $number);
     } else {
         $number   = 0;
@@ -832,7 +832,7 @@ function hitungStokJualIn($detail, $kode_gudang, $invoice)
     }
 }
 
-function tokenKasir($jum)
+function generatorToken($jum)
 {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $randomString = '';
@@ -841,24 +841,38 @@ function tokenKasir($jum)
         $index = rand(0, strlen($characters) - 1);
         $randomString .= $characters[$index];
     }
-
     return $randomString;
 }
 
-function _invoiceKasir()
+function tokenKasir($jum)
+{
+    $CI             = &get_instance();
+    $generatorToken = generatorToken($jum);
+    $cek_token      = $CI->db->query("SELECT * FROM pembayaran WHERE token_pembayaran = '$generatorToken'")->num_rows();
+
+    if ($cek_token > 0) {
+        generatorToken($jum);
+    } else {
+        return $generatorToken;
+    }
+}
+
+function _invoiceKasir($cabang)
 {
     $CI           = &get_instance();
 
+    $init_cabang = $CI->session->userdata('init_cabang');
+
     $now          = date('Y-m-d');
 
-    $lastNumber   = $CI->db->query('SELECT * FROM pembayaran WHERE tgl_pembayaran = "' . $now . '" ORDER BY id DESC LIMIT 1')->row();
+    $lastNumber   = $CI->db->query('SELECT * FROM pembayaran WHERE kode_cabang = "' . $cabang . '" AND tgl_pembayaran = "' . $now . '" ORDER BY id DESC LIMIT 1')->row();
     $number       = 1;
     if ($lastNumber) {
-        $number   = $CI->db->query('SELECT * FROM pembayaran WHERE tgl_pembayaran = "' . $now . '"')->num_rows() + 1;
-        $invoice  = 'KWITANSI~' . date('dmY') . sprintf("%05d", $number);
+        $number   = $CI->db->query('SELECT * FROM pembayaran WHERE kode_cabang = "' . $cabang . '" AND tgl_pembayaran = "' . $now . '"')->num_rows() + 1;
+        $invoice  = $init_cabang . 'KWI-' . date('Ymd') . sprintf("%05d", $number);
     } else {
         $number   = 0;
-        $invoice  = 'KWITANSI~' . date('dmY') . "00001";
+        $invoice  = $init_cabang . 'KWI-' . date('Ymd') . "00001";
     }
     return $invoice;
 }

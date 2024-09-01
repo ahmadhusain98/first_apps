@@ -584,6 +584,181 @@ class Health extends CI_Controller
         // echo json_encode($attched_file);
     }
 
+    // fungsi cetak histori
+    public function print_hispas($no_trx)
+    {
+        $web_setting          = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position             = 'L'; // cek posisi l/p
+
+        // body cetakan
+        $body                 = '';
+        $body                 .= '<br><br>'; // beri jarak antara kop dengan body
+
+        $pendaftaran          = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+        $pembayaran           = $this->M_global->getData('pembayaran', ['no_trx' => $no_trx]);
+        $barang_out_header    = $this->M_global->getData('barang_out_header', ['invoice' => $pembayaran->inv_jual]);
+        $barang_out_detail    = $this->M_global->getDataResult('barang_out_detail', ['invoice' => $pembayaran->inv_jual]);
+        $member               = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kode_member]);
+
+        $judul                = 'Riwayat ~ ' . $no_trx;
+        $filename             = $judul;
+
+        if ($pendaftaran->status_trx == 1) {
+            $open = '<input type="checkbox" style="width: 80px;" checked="checked"> Terbayar';
+            $close = '<input type="checkbox" style="width: 80px;"> Belum Bayar';
+        } else {
+            $open = '<input type="checkbox" style="width: 80px;"> Terbayar';
+            $close = '<input type="checkbox" style="width: 80px;" checked="checked"> Belum Bayar';
+        }
+
+        $body .= '<table style="width: 100%; font-size: 14px;" cellpadding="2px" autosize="1">
+            <tr>
+                <td>(Masuk: ' . date('d/m/Y', strtotime($pendaftaran->tgl_daftar)) . ' - ' . date('H:i:s', strtotime($pendaftaran->jam_daftar)) . ') ~ (Keluar: ' . date('d/m/Y', strtotime($pendaftaran->tgl_keluar)) . ' - ' . date('H:i:s', strtotime($pendaftaran->jam_keluar)) . ')</td>
+                <td colspan="2" style="text-align: right; color: white;"><span style="border: 1px solid #0e1d2e; background-color: #0e1d2e;">NO: #' . $no_trx . '</span></td>
+            </tr>
+        </table>';
+
+        $body .= '<br>';
+
+        $body .= '<table style="width: 100%; font-size: 14px;" cellpadding="2px" autosize="1">
+            <tr>
+                <td style="width: 10%;">Poli</td>
+                <td style="width: 2%;">:</td>
+                <td style="width: 38%;">' . (($pendaftaran->kode_poli != 'UMUM') ? $this->M_global->getData('m_poli', ['kode_poli' => $pendaftaran->kode_poli])->keterangan : 'UMUM') . '</td>
+                <td style="width: 10%;">RM</td>
+                <td style="width: 2%;">:</td>
+                <td style="width: 38%;">' . $member->kode_member . '</td>
+            </tr>
+            <tr>
+                <td style="width: 10%;">Dr. Poli</td>
+                <td style="width: 2%;">:</td>
+                <td style="width: 38%;">' . $this->M_global->getData('dokter', ['kode_dokter' => $pendaftaran->kode_dokter])->nama . '</td>
+                <td style="width: 10%;">Nama</td>
+                <td style="width: 2%;">:</td>
+                <td style="width: 38%;">' . $member->nama . '</td>
+            </tr>
+            <tr>
+                <td style="width: 10%;">Ruangan</td>
+                <td style="width: 2%;">:</td>
+                <td style="width: 38%;">' . $this->M_global->getData('m_ruang', ['kode_ruang' => $pendaftaran->kode_ruang])->keterangan . '</td>
+                <td style="width: 10%;">Umur</td>
+                <td style="width: 2%;">:</td>
+                <td style="width: 38%;">' . hitung_umur($member->tgl_lahir) . '</td>
+            </tr>
+            <tr>
+                <td style="width: 10%;">Antrian</td>
+                <td style="width: 2%;">:</td>
+                <td style="width: 38%;">' . $pendaftaran->no_antrian . '</td>
+                <td style="width: 10%;">Status</td>
+                <td style="width: 2%;">:</td>
+                <td style="width: 38%;">' . (($pendaftaran->status_trx == 0) ? 'Open' : (($pendaftaran->status_trx == 2) ? 'Cancel' : 'Close')) . '</td>
+            </tr>
+            <tr>
+                <td style="width: 10%;"></td>
+                <td style="width: 2%;"></td>
+                <td style="width: 38%;"></td>
+                <td style="width: 10%;">Status Bayar</td>
+                <td style="width: 2%;">:</td>
+                <td style="width: 38%;">' . $open . '&nbsp;&nbsp;' . $close . '</td>
+            </tr>
+        </table>';
+
+        $body .= '<br>';
+
+        $body .= '<table style="width: 100%; font-size: 18px;" autosize="1">
+            <tr>
+                <td><span style="background-color: #0e1d2e; color: white; margin: 10px 10px; text-align: center; border-radius: 5px;">~ Pembelian #' . $pembayaran->inv_jual . ' / ' . $this->M_global->getData('user', ['kode_user' => $barang_out_header->kode_user])->nama . ' / ' . date('d-m-Y', strtotime($barang_out_header->tgl_jual)) . ' - ' . date('H:i:s', strtotime($barang_out_header->jam_jual)) . '</span></td>
+            </tr>
+        </table>';
+
+        $body .= '<table style="width: 100%; font-size: 14px;" autosize="1" cellpadding="5px">
+            <thead>
+                <tr style="background-color: #0e1d2e;">
+                    <th style="color: white; width: 5%;">No</th>
+                    <th style="color: white; width: 35%;">Barang</th>
+                    <th style="color: white; width: 10%;">Satuan</th>
+                    <th style="color: white; width: 10%;">Harga</th>
+                    <th style="color: white; width: 10%;">Qty</th>
+                    <th style="color: white; width: 10%;">Diskon</th>
+                    <th style="color: white; width: 10%;">Pajak</th>
+                    <th style="color: white; width: 10%;">Jumlah</th>
+                </tr>
+            </thead>
+            <tbody>';
+        $no = 1;
+        foreach ($barang_out_detail as $bd) {
+            $body .= '<tr>
+                <td style="border: 1px solid black; text-align: right;">' . $no++ . '</td>
+                <td style="border: 1px solid black; ">' . $bd->kode_barang . ' ~ ' . $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang])->nama . '</td>
+                <td style="border: 1px solid black; ">' . $this->M_global->getData('m_satuan', ['kode_satuan' => $bd->kode_satuan])->keterangan . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . number_format($bd->harga) . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . number_format($bd->qty) . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . number_format($bd->discrp) . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . number_format($bd->pajakrp) . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . number_format($bd->jumlah) . '</td>
+            </tr>';
+        }
+        $body .= '</tbody>
+        <tfoot>
+            <tr>
+                <td colspan="7" style="text-align: right;">Subtotal: Rp. </td>
+                <td style="text-align: right;">' . number_format($barang_out_header->subtotal) . '</td>
+            </tr>
+            <tr>
+                <td colspan="7" style="text-align: right;">Diskon: Rp. </td>
+                <td style="text-align: right;">' . number_format($barang_out_header->diskon) . '</td>
+            </tr>
+            <tr>
+                <td colspan="7" style="text-align: right;">Pajak: Rp. </td>
+                <td style="text-align: right;">' . number_format($barang_out_header->pajak) . '</td>
+            </tr>
+            <tr>
+                <td colspan="7" style="text-align: right;">Total: Rp. </td>
+                <td style="text-align: right;">' . number_format($barang_out_header->total) . '</td>
+            </tr>
+        </tfoot>
+        </table>';
+
+        $body .= '<br>';
+
+        $body .= '<table style="width: 100%; font-size: 18px;" autosize="1">
+            <tr>
+                <td><span style="background-color: #0e1d2e; color: white; margin: 10px 10px; text-align: center; border-radius: 5px;">~ Pembayaran #' . $pembayaran->invoice . ' / ' . $this->M_global->getData('user', ['kode_user' => $pembayaran->kode_user])->nama . ' / ' . date('d-m-Y', strtotime($pembayaran->tgl_pembayaran)) . ' - ' . date('H:i:s', strtotime($pembayaran->jam_pembayaran)) . '</span></td>
+            </tr>
+        </table>';
+
+        $body .= '<table style="width: 100%; font-size: 14px;" autosize="1" cellpadding="5px">
+            <thead>
+                <tr>
+                    <th style="background-color: #0e1d2e; color: white; width: 48%;" colspan="3">Pembayaran</th>
+                    <th style="width: 4%;"></th>
+                    <th style="background-color: #0e1d2e; color: white; width: 48%;" colspan="3">Kembalian</th>
+                </tr>
+                <tr>
+                    <th style="background-color: #0e1d2e; color: white; width: 16%;">Uang Muka</th>
+                    <th style="background-color: #0e1d2e; color: white; width: 16%;">Cash</th>
+                    <th style="background-color: #0e1d2e; color: white; width: 16%;">Card</th>
+                    <th style="width: 4%;"></th>
+                    <th style="background-color: #0e1d2e; color: white; width: 24%;">Uang Muka</th>
+                    <th style="background-color: #0e1d2e; color: white; width: 24%;">Cash</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid black; width: 16%; text-align: right;">' . number_format($pembayaran->um_keluar) . '</td>
+                    <td style="border: 1px solid black; width: 16%; text-align: right;">' . number_format($pembayaran->cash) . '</td>
+                    <td style="border: 1px solid black; width: 16%; text-align: right;">' . number_format($pembayaran->card) . '</td>
+                    <td style="width: 4%;"></td>
+                    <td style="border: 1px solid black; width: 24%; text-align: right;">' . number_format($pembayaran->um_masuk) . '</td>
+                    <td style="border: 1px solid black; width: 24%; text-align: right;">' . (($pembayaran->cek_um > 0) ? 0 : number_format($pembayaran->kembalian)) . '</td>
+                </tr>
+            </tbody>
+        </table>';
+
+        cetak_pdf($judul, $body, 1, $position, $filename, $web_setting);
+    }
+
     // fungsi cetak pendaftaran member
     public function print_pendaftaran($no_trx)
     {

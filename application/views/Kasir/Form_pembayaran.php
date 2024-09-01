@@ -12,7 +12,7 @@
                     <label for="">Invoice <?= (($param2) ? 'Retur' : ''); ?> <sup class="text-danger">**</sup></label>
                     <div class="input-group mb-3">
                         <input type="hidden" name="token_pembayaran" id="token_pembayaran" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->token_pembayaran : '') ?>">
-                        <input type="text" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Invoice" placeholder="Invoice (Otomatis)" id="invoice" name="invoice" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->invoice : '') ?>" readonly>
+                        <input type="text" class="form-control" placeholder="Otomatis" id="invoice" name="invoice" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->invoice : '') ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <ion-icon name="id-card-outline"></ion-icon>
@@ -25,7 +25,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="input-group mb-3">
-                                <input type="date" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Tgl Pembayaran" placeholder="Tgl Pembayaran" id="tgl_pembayaran" name="tgl_pembayaran" value="<?= (!empty($data_pembayaran) ? date('Y-m-d', strtotime($data_pembayaran->tgl_pembayaran)) : date('Y-m-d')) ?>" readonly>
+                                <input type="date" class="form-control" placeholder="Tgl Pembayaran" id="tgl_pembayaran" name="tgl_pembayaran" value="<?= (!empty($data_pembayaran) ? date('Y-m-d', strtotime($data_pembayaran->tgl_pembayaran)) : date('Y-m-d')) ?>" readonly>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <ion-icon name="calendar-number-outline"></ion-icon>
@@ -35,7 +35,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="input-group mb-3">
-                                <input type="time" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Jam Pembayaran" placeholder="Jam Pembayaran" id="jam_pembayaran" name="jam_pembayaran" value="<?= (!empty($data_pembayaran) ? date('H:i:s', strtotime($data_pembayaran->jam_pembayaran)) : date('H:i:s')) ?>" readonly>
+                                <input type="time" class="form-control" placeholder="Jam Pembayaran" id="jam_pembayaran" name="jam_pembayaran" value="<?= (!empty($data_pembayaran) ? date('H:i:s', strtotime($data_pembayaran->jam_pembayaran)) : date('H:i:s')) ?>" readonly>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <ion-icon name="time-outline"></ion-icon>
@@ -113,7 +113,7 @@
                 <div class="col-md-6">
                     <label for="">Potongan Promo (%)</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control text-right" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Potongan Promo" title="Potongan Promo" placeholder="Potongan Promo" id="potongan_promo" name="potongan_promo" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->discpr_promo) : '0') ?>" readonly>
+                        <input type="text" class="form-control text-right" placeholder="Potongan Promo" id="potongan_promo" name="potongan_promo" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->discpr_promo) : '0') ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <ion-icon name="balloon-outline"></ion-icon>
@@ -126,7 +126,7 @@
                 <div class="col-md-6">
                     <label for="">Total Yang Harus Dibayar</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control text-right font-weight-bold" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Total Harus Bayar" placeholder="Total Harus Bayar" id="total_jual" name="total_jual" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->total - $data_pembayaran->kembalian) : '0') ?>" readonly>
+                        <input type="text" class="form-control text-right font-weight-bold" placeholder="Total Harus Bayar" id="total_jual" name="total_jual" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->total - $data_pembayaran->kembalian) : '0') ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <ion-icon name="cash-outline"></ion-icon>
@@ -137,7 +137,7 @@
                 <div class="col-md-6">
                     <label for="">Kekurangan Dibayar <?= (!empty($data_pembayaran) ? (($data_pembayaran->cek_um == 1) ? '<span class="badge badge-primary">Masuk Ke Uang Muka</span>' : '') : '') ?></label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control text-right font-weight-bold" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Kekurangan" placeholder="Kekurangan" id="total_kurang" name="total_kurang" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->kembalian) : '0') ?>" readonly>
+                        <input type="text" class="form-control text-right font-weight-bold" placeholder="Kekurangan" id="total_kurang" name="total_kurang" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->kembalian) : '0') ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <ion-icon name="cash-outline"></ion-icon>
@@ -161,7 +161,7 @@
                 <div class="col-md-6 col-6">
                     <label for="" class="text-success font-weight-bold">Uang Muka Tersedia</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control text-right text-primary font-weight-bold" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Uang Muka Tersedia" placeholder="Uang Muka Tersedia" id="uang_sisa" name="uang_sisa" value="0" readonly>
+                        <input type="text" class="form-control text-right text-primary font-weight-bold" placeholder="Uang Muka Tersedia" id="uang_sisa" name="uang_sisa" value="0" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <ion-icon name="wallet-outline"></ion-icon>
@@ -172,7 +172,7 @@
                 <div class="col-md-6 col-6">
                     <label for="" class="font-weight-bold">Uang Muka Pakai</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control text-right" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Uang Muka Pakai" placeholder="Uang Muka Pakai" id="um_keluar" name="um_keluar" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->um_keluar) : '0') ?>" onchange="pakai_um()">
+                        <input type="text" class="form-control text-right" placeholder="Uang Muka Pakai" id="um_keluar" name="um_keluar" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->um_keluar) : '0') ?>" onchange="pakai_um()">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <ion-icon name="wallet-outline"></ion-icon>
@@ -186,7 +186,7 @@
                 <div class="col-md-6">
                     <label for="" class="text-danger font-weight-bold">Total Pembayaran</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control text-right text-primary font-weight-bold" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Pembayaran Total" placeholder="Pembayaran Total" id="total" name="total" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->total) : '0') ?>" readonly>
+                        <input type="text" class="form-control text-right text-primary font-weight-bold" placeholder="Pembayaran Total" id="total" name="total" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->total) : '0') ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <ion-icon name="wallet-outline"></ion-icon>
@@ -197,7 +197,7 @@
                 <div class="col-md-6" id="fortableCash">
                     <label for="">Cash</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control text-right" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Pembayaran Cash" placeholder="Pembayaran Cash" id="cash" name="cash" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->cash) : '0') ?>" onchange="hitung_bayar()">
+                        <input type="text" class="form-control text-right" placeholder="Pembayaran Cash" id="cash" name="cash" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->cash) : '0') ?>" onchange="hitung_bayar()">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <ion-icon name="cash-outline"></ion-icon>

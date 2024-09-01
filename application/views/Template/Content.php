@@ -241,12 +241,12 @@
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <span class="dropdown-item dropdown-header"><?= number_format(count($sintak)) ?> Transaksi Belum Dibayar</span>
                         <div class="dropdown-divider"></div>
-                        <a type="button" class="dropdown-item text-center">
+                        <a type="button" class="dropdown-item">
                             <?php
                             if (count($sintak) > 0) :
                                 foreach ($sintak as $s) :
                             ?>
-                                    <a type="button" href="<?= site_url('Kasir/form_kasir/0') ?>" class="pl-3" style="text-decoration: none; color: skyblue;">
+                                    <a type="button" href="<?= site_url('Kasir/form_kasir/0') ?>" class="pl-3 text-primary" style="text-decoration: none; margin-left: 3vw;">
                                         <i class="fas fa-envelope"></i> <?= $s->invoice ?>
                                     </a>
                                 <?php

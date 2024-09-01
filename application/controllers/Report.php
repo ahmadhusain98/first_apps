@@ -1033,6 +1033,25 @@ class Report extends CI_Controller
             JOIN barang b ON d.kode_barang = b.kode_barang
             JOIN m_supplier s ON h.kode_supplier = s.kode_supplier
             WHERE h.is_valid = 1
+
+            UNION ALL
+
+            SELECT
+            CONCAT(DATE_FORMAT(h.tgl_jual, '%d/%m/%Y'), ' ~ ', h.jam_jual) AS record_date,
+            h.invoice,
+            CONCAT('Penjualan ~ ', s.nama) AS keterangan,
+            0 AS masuk,
+            d.qty_konversi AS keluar,
+            h.tgl_jual AS tgl,
+            h.jam_jual AS jam,
+            d.kode_barang,
+            h.kode_cabang AS kode_cabang,
+            h.kode_gudang
+            FROM barang_out_header h
+            JOIN barang_out_detail d ON h.invoice = d.invoice
+            JOIN barang b ON d.kode_barang = b.kode_barang
+            JOIN member s ON h.kode_member = s.kode_member
+            WHERE h.status_jual = 1
         ) AS semua WHERE kode_barang = '$kode_barang' AND kode_gudang = '$kode_gudang' AND kode_cabang = '$kode_cabang' ORDER BY tgl, jam ASC")->result();
 
         $barang = $this->M_global->getData('barang', ['kode_barang' => $kode_barang]);
@@ -1087,7 +1106,7 @@ class Report extends CI_Controller
 
         $body .= '</table>';
 
-        $judul = 'Report Stock of History';
+        $judul = 'Report Stock of History ' . $kode_barang;
         $filename = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf

@@ -24,7 +24,8 @@ class M_datatables2 extends CI_Model
         $this->db->select($columns);
         $this->db->from($table);
 
-        if (($this->uri->segment(1) != 'Kasir') && ($this->uri->segment(2) != 'deposit_um')) {
+        if ((($this->uri->segment(1) == 'Kasir') && ($this->uri->segment(2) == 'deposit_um'))) {
+        } else {
             $this->db->where(['kode_cabang' => $this->session->userdata('cabang')]);
         }
 

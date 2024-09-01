@@ -493,10 +493,12 @@ class Kasir extends CI_Controller
     // fungsi proses insert/update
     public function kasir_proses($param, $cek_retur)
     {
+        $kode_cabang            = $this->session->userdata('cabang');
+
         if ($param == 1) { // jika param 1
             // buat token dan invoice
             $token_pembayaran   = tokenKasir(30);
-            $invoice            = _invoiceKasir();
+            $invoice            = _invoiceKasir($kode_cabang);
         } else { // selain itu
             // ambil token dan invoice dari inputan
             $token_pembayaran   = $this->input->post('token_pembayaran');
@@ -542,6 +544,7 @@ class Kasir extends CI_Controller
 
         // isi pembayaran
         $isi_pembayaran = [
+            'kode_cabang'       => $kode_cabang,
             'token_pembayaran'  => $token_pembayaran,
             'approved'          => 1,
             'invoice'           => $invoice,
@@ -565,6 +568,7 @@ class Kasir extends CI_Controller
         if ($param == 1) { // jika param = 1
             // insert ke pembayaran
             if ($cek_retur < 1) {
+
                 $update_um = $this->db->query("UPDATE uang_muka SET 
                     last_tgl = '$tgl_pembayaran', 
                     last_jam = '$jam_pembayaran', 
@@ -582,12 +586,14 @@ class Kasir extends CI_Controller
                     $update_um,
                 ];
             } else {
+
                 $cek = [
                     $this->M_global->insertData('pembayaran', $isi_pembayaran),
                 ];
             }
         } else { // selain itu
             if ($cek_retur < 1) {
+
                 $um_awal = $this->M_global->getData('pembayaran', ['invoice' => $invoice]);
                 $total_awal = $um_awal->kembalian;
 
@@ -637,6 +643,8 @@ class Kasir extends CI_Controller
             }
 
             if ($cek_retur < 1) { // jika tidak ada returan/ 0
+                aktifitas_user_transaksi('Pembayaran', 'membayar Kasir', $invoice);
+
                 // update barang_out_header dan member
                 $this->M_global->updateData(
                     'barang_out_header',
@@ -650,6 +658,8 @@ class Kasir extends CI_Controller
                     ['kode_member' => $kode_member]
                 );
             } else { // selain itu
+                aktifitas_user_transaksi('Pembayaran Retur', 'membayar Retur Kasir', $inv_jual);
+
                 // update barang_out_retur_header
                 $this->M_global->updateData(
                     'barang_out_retur_header',

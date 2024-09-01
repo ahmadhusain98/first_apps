@@ -19,7 +19,7 @@
                         <select name="invoice_in" id="invoice_in" class="form-control select2_global" data-placeholder="~ Pilih Invoice Pembelian" onchange="getBarangIn(this.value)">
                             <option value="">~ Pilih Invoice Pembelian</option>
                             <?php foreach ($pembelian as $p) : ?>
-                                <option value="<?= $p->invoice ?>" <?= ((!empty($data_barang_in_retur) ? (($p->invoice == $data_barang_in_retur->invoice_in) ? 'selected' : '') : '')) ?>><?= $p->invoice . ' ~ Pemasok: ' . $this->M_global->getData('m_supplier', ['kode_supplier' => $p->kode_supplier])->nama . ' | Gudang: ' . $this->M_global->getData('m_gudang', ['kode_gudang' => $p->kode_gudang])->nama . ' | Tanggal: ' . date('d/m/Y', strtotime($p->tgl_retur)) ?></option>
+                                <option value="<?= $p->invoice ?>" <?= ((!empty($data_barang_in_retur) ? (($p->invoice == $data_barang_in_retur->invoice_in) ? 'selected' : '') : '')) ?>><?= $p->invoice . ' ~ Pemasok: ' . $this->M_global->getData('m_supplier', ['kode_supplier' => $p->kode_supplier])->nama . ' | Gudang: ' . $this->M_global->getData('m_gudang', ['kode_gudang' => $p->kode_gudang])->nama . ' | Tanggal: ' . date('d/m/Y', strtotime($p->tgl_beli)) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -145,7 +145,7 @@
                     <thead>
                         <tr class="text-center">
                             <th width="5%" style="border-radius: 10px 0px 0px 0px;">Hapus</th>
-                            <th rowspan="2">Barang</th>
+                            <th>Barang</th>
                             <th width="12%">Satuan</th>
                             <th width="14%">Harga</th>
                             <th width="10%">Qty</th>

@@ -444,6 +444,6 @@
 
     // fungsi lihat detail
     function getDetail(param) {
-        window.open(siteUrl + 'Health/print_pendaftaran/' + param, '_blank');
+        window.open(siteUrl + 'Health/print_hispas/' + param, '_blank');
     }
 </script>

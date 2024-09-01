@@ -1864,7 +1864,7 @@ class Transaksi extends CI_Controller
             <tr>
                 <td style="width: 15%;">Tgl/Jam Beli</td>
                 <td style="width: 2%;"> : </td>
-                <td colspan="2">' . date('d-m-Y', strtotime($header->tgl_beli)) . ' / ' . date('H:i:s', strtotime($header->jam_beli)) . '</td>
+                <td colspan="2">' . date('d-m-Y', strtotime($header->tgl_retur)) . ' / ' . date('H:i:s', strtotime($header->jam_retur)) . '</td>
             </tr>
             <tr>
                 <td style="width: 15%;">Pemasok</td>
@@ -2022,7 +2022,7 @@ class Transaksi extends CI_Controller
     // fungsi acc/re-acc
     public function accbarang_in_retur($invoice, $acc)
     {
-        $kode_cabang = $this->session->userdata('cabang');
+        $kode_cabang    = $this->session->userdata('cabang');
         // header barang by invoice
         $header         = $this->M_global->getData('barang_in_retur_header', ['invoice' => $invoice]);
         // kode_gudang
@@ -2141,7 +2141,7 @@ class Transaksi extends CI_Controller
             <tr>
                 <td style='width: 30%;'>Tgl/Jam</td>
                 <td style='width: 10%;'> : </td>
-                <td style='width: 60%;'>" . date('d-m-Y', strtotime($header->tgl_beli)) . " / " . date('H:i:s', strtotime($header->jam_beli)) . "</td>
+                <td style='width: 60%;'>" . date('d-m-Y', strtotime($header->tgl_retur)) . " / " . date('H:i:s', strtotime($header->jam_retur)) . "</td>
             </tr>
             <tr>
                 <td style='width: 30%;'>Pemasok</td>
