@@ -409,7 +409,7 @@
                         <td>${value.nama_poli}</td>
                         <td>${value.nama_dokter}</td>
                         <td class="text-center">
-                            <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getDetail('${value.no_trx}')"><i class="fa-solid fa-circle-info"></i></button>
+                            <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getHisPas('${value.no_trx}')"><i class="fa-solid fa-circle-info"></i></button>
                         </td>
                     </tr>`);
                     no++;
