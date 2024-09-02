@@ -108,6 +108,11 @@
             idSupplier.fadeOut(0);
             idGudang.fadeIn(0);
             barang.fadeIn(0);
+        } else if (param == 4 || param == '4.1') {
+            pemasok.fadeOut(0);
+            idSupplier.fadeOut(0);
+            idGudang.fadeOut(0);
+            barang.fadeOut(0);
         } else {
             pemasok.fadeIn(0);
             idSupplier.fadeIn(0);
@@ -118,7 +123,7 @@
 
     // fungsi cetak
     function cetak(param) {
-        if (laporan.val() == 1 || laporan.val() == '1' || laporan.val() == '1.1' || laporan.val() == 2 || laporan.val() == '2' || laporan.val() == '2.1') {} else if (laporan.val() == 3 || laporan.val() == '3') {
+        if (laporan.val() == 1 || laporan.val() == '1' || laporan.val() == '1.1' || laporan.val() == 2 || laporan.val() == '2' || laporan.val() == '2.1' || laporan.val() == 4 || laporan.val() == '4' || laporan.val() == '4.1') {} else if (laporan.val() == 3 || laporan.val() == '3') {
             if (kode_barang.val() == '' || kode_barang.val() == null) {
                 return Swal.fire("Barang", "Form sudah diisi?", "question");
             }

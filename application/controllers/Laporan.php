@@ -13,14 +13,14 @@ class Laporan extends CI_Controller
         $this->load->model("M_auth");
 
         if (!empty($this->session->userdata("email"))) { // jika session email masih ada
-            
-            $id_menu = $this->M_global->getData('m_menu', ['url' => 'Master'])->id;
+
+            $id_menu = $this->M_global->getData('m_menu', ['url' => 'Laporan'])->id;
 
             // ambil isi data berdasarkan email session dari table user, kemudian tampung ke variable $user
             $user = $this->M_global->getData("user", ["email" => $this->session->userdata("email")]);
 
             $cek_akses_menu = $this->M_global->getData('akses_menu', ['id_menu' => $id_menu, 'kode_role' => $user->kode_role]);
-            if($cek_akses_menu) {
+            if ($cek_akses_menu) {
                 // tampung data ke variable data public
                 $this->data = [
                     'nama'      => $user->nama,
@@ -35,7 +35,6 @@ class Laporan extends CI_Controller
                 // kirimkan kembali ke Auth
                 redirect('Home');
             }
-
         } else { // selain itu
             // kirimkan kembali ke Auth
             redirect('Auth');
@@ -702,112 +701,245 @@ class Laporan extends CI_Controller
         } else if ($laporan == 4) {
             $file = 'Laporan Penjualan';
 
+            $position = 'L';
+
             // isi body
-            $header = $this->M_global->getDataResult('barang_out_header', ['tgl_jual >= ' => $dari, 'tgl_jual <= ' => $sampai]);
+            if ($kode_gudang == '') {
+                $header     = $this->M_global->getDataResult('barang_out_header', ['tgl_jual >= ' => $dari, 'tgl_jual <= ' => $sampai, 'status_jual' => 1, 'kode_cabang' => $kode_cabang]);
+            } else {
+                $header     = $this->M_global->getDataResult('barang_out_header', ['tgl_jual >= ' => $dari, 'tgl_jual <= ' => $sampai, 'status_jual' => 1, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
+            }
 
             // body header
-            $body .= '<table style="width: 100%; font-size: 11px;">
+            $body .= '<table style="width: 100%; font-size: 14px;">
                 <tr>
-                    <td style="width: 15%;">Perihal</td>
+                    <td style="width: 10%;">Perihal</td>
                     <td style="width: 2%;"> : </td>
                     <td colspan="2">' . $file . '</td>
                 </tr>
                 <tr>
-                    <td style="width: 15%;">Periode</td>
+                    <td style="width: 10%;">Periode</td>
                     <td style="width: 2%;"> : </td>
-                    <td colspan="2">' . date('d-m-Y', strtotime($dari)) . ' ~ ' . date('d-m-Y', strtotime($sampai)) . '</td>
-                </tr>
-                <tr>
-                    <td style="width: 15%;">Gudang</td>
-                    <td style="width: 2%;"> : </td>
-                    <td style="width: 33%;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $kode_gudang])->nama . '</td>
+                    <td style="width: 38%;">' . date('d/m/Y', strtotime($dari)) . ' ~ ' . date('d/m/Y', strtotime($sampai)) . '</td>
                     <td style="width: 50%; text-align: right;">Pencetak : ' . $pencetak . '</td>
                 </tr>
             </table>';
 
             $body .= $breaktable;
 
-            $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
-            $body .= '<tr>
-                <th rowspan="2" style="width: 5%; border: 1px solid black; background-color: #0e1d2e; color: white;">#</th>
-                <th rowspan="2" style="width: 30%; border: 1px solid black; background-color: #0e1d2e; color: white;">Barang</th>
-                <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Harga</th>
-                <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Jumlah</th>
-                <th colspan="2" style="width: 20%; border: 1px solid black; background-color: #0e1d2e; color: white;">Diskon</th>
-                <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Pajak</th>
-                <th rowspan="2" style="width: 15%; border: 1px solid black; background-color: #0e1d2e; color: white;">Total</th>
-            </tr>
-            <tr>
-                <th style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">%</th>
-                <th style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Rp</th>
-            </tr>';
-            foreach ($header as $h) {
-                if ($param == 1) {
-                    $total = number_format($h->total);
-                } else {
-                    $total = ceil($h->total);
-                }
-                $body .= '<tr style="background-color: skyblue;">
-                    <td colspan="6" style="border: 1px solid black; font-weight: bold;">No. Transaksi: ' . $h->invoice . '</td>
-                    <td colspan="2" style="border: 1px solid black; font-weight: bold; text-align: right">' . $total . '</td>
-                </tr>';
+            $body .= '<table style="width: 100%; font-size: 14px;" cellpadding="5px" autosize="1">';
+            $body .= '<thead>
+                <tr>
+                    <th style="width: 5%; border: 1px solid black; background-color: #0e1d2e; color: white;">#</th>
+                    <th style="width: 15%; border: 1px solid black; background-color: #0e1d2e; color: white;">Invoice</th>
+                    <th style="width: 20%; border: 1px solid black; background-color: #0e1d2e; color: white;">No Pendaftaran</th>
+                    <th style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Pembeli</th>
+                    <th style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Tgl/Jam Jual</th>
+                    <th style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Poli/Dokter</th>
+                    <th style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Gudang</th>
+                    <th style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">User</th>
+                    <th style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Total</th>
+                </tr>
+            </thead>';
 
-                // detail barang
-                $detail = $this->M_global->getDataResult('barang_out_detail', ['invoice' => $h->invoice]);
+            $body .= '<tbody>';
 
+            if ($header) {
                 $no = 1;
-                foreach ($detail as $d) {
+                foreach ($header as $h) {
                     if ($param == 1) {
-                        $harga = number_format($d->harga);
-                        $qty = number_format($d->qty);
-                        $discpr = number_format($d->discpr);
-                        $discrp = number_format($d->discrp);
-                        $pajak = number_format($d->pajakrp);
-                        $jumlah = number_format($d->jumlah);
+                        $total = number_format($h->total);
                     } else {
-                        $harga = ceil($d->harga);
-                        $qty = ceil($d->qty);
-                        $discpr = ceil($d->discpr);
-                        $discrp = ceil($d->discrp);
-                        $pajak = ceil($d->pajakrp);
-                        $jumlah = ceil($d->jumlah);
+                        $total = ceil($h->total);
                     }
                     $body .= '<tr>
-                        <td style="border: 1px solid black;">' . $no . '</td>
-                        <td style="border: 1px solid black;">' . $d->kode_barang . ' ~ ' . $this->M_global->getData('barang', ['kode_barang' => $d->kode_barang])->nama . '</td>
-                        <td style="border: 1px solid black; text-align: right;">' . $harga . '</td>
-                        <td style="border: 1px solid black; text-align: right;">' . $qty . '</td>
-                        <td style="border: 1px solid black; text-align: right;">' . $discpr . '</td>
-                        <td style="border: 1px solid black; text-align: right;">' . $discrp . '</td>
-                        <td style="border: 1px solid black; text-align: right;">' . $pajak . '</td>
-                        <td style="border: 1px solid black; text-align: right;">' . $jumlah . '</td>
+                        <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
+                        <td style="border: 1px solid black;">' . $h->invoice . '</td>
+                        <td style="border: 1px solid black;">' . (($h->no_trx == '' || $h->no_trx == null) ? 'Umum' : $h->no_trx) . '</td>
+                        <td style="border: 1px solid black;">' . $h->kode_member . ' ~ ' . $this->M_global->getData('member', ['kode_member' => $h->kode_member])->nama . '</td>
+                        <td style="border: 1px solid black;">' . date('d-m-Y', strtotime($h->tgl_jual)) . ' / ' . date('H:i:s', strtotime($h->jam_jual)) . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global->getData('m_poli', ['kode_poli' => $h->kode_poli])->keterangan . ' ~ ' . $this->M_global->getData('dokter', ['kode_dokter' => $h->kode_dokter])->nama . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $h->kode_gudang])->keterangan . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global->getData('user', ['kode_user' => $h->kode_user])->nama . '</td>
+                        <td style="border: 1px solid black; text-align: right;">' . $total . '</td>
                     </tr>';
+
                     $no++;
                 }
+            } else {
+                $body .= '<tr>
+                    <td colspan="9" style="border: 1px solid black; font-weight: bold; text-align: center;">Tidak Ada Transaksi</td>
+                </tr>';
             }
 
+
+            $body .= '</tbody>';
+
+            $body .= '<tfoot>
+                <tr>
+                    <td colspan="7">&nbsp;</td>
+                    <td colspan="2" style="text-align: center;">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="width:60%;">&nbsp;</td>
+                    <td colspan="2" style="width:40%; text-align: center;">Yogyakarta, ' . date('d M Y') . '</td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="width:60%;">&nbsp;</td>
+                    <td colspan="2" style="width:40%; text-align: center;">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="width:60%;">&nbsp;</td>
+                    <td colspan="2" style="width:40%; text-align: center;">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="width:60%;">&nbsp;</td>
+                    <td colspan="2" style="width:40%; text-align: center;">' . $pencetak . '</td>
+                </tr>
+            </tfoot>';
+
             $body .= '</table>';
+        } else if ($laporan == '4.1') {
+            $file       = 'Laporan Penjualan Detail';
+            $position   = 'P'; // cek posisi l/p
+
+            // isi body
+            if ($kode_gudang == '') {
+                $header     = $this->M_global->getDataResult('barang_out_header', ['tgl_jual >= ' => $dari, 'tgl_jual <= ' => $sampai, 'status_jual' => 1, 'kode_cabang' => $kode_cabang]);
+            } else {
+                $header     = $this->M_global->getDataResult('barang_out_header', ['tgl_jual >= ' => $dari, 'tgl_jual <= ' => $sampai, 'status_jual' => 1, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
+            }
+
+            // body header
+            $body .= '<table style="width: 100%; font-size: 11px;">
+                <tr>
+                    <td style="width: 10%;">Perihal</td>
+                    <td style="width: 2%;"> : </td>
+                    <td colspan="2">' . $file . '</td>
+                </tr>
+                <tr>
+                    <td style="width: 10%;">Periode</td>
+                    <td style="width: 2%;"> : </td>
+                    <td style="width: 38%;">' . date('d/m/Y', strtotime($dari)) . ' ~ ' . date('d/m/Y', strtotime($sampai)) . '</td>
+                    <td style="width: 50%; text-align: right;">Pencetak : ' . $pencetak . '</td>
+                </tr>
+            </table>';
 
             $body .= $breaktable;
 
-            $body .= '<table style="width: 100%; font-weight: 12px;">
+            $body .= '<table style="width: 100%; font-size: 11px;" autosize="1" cellpadding="5px">';
+            $body .= '<thead>
                 <tr>
-                    <td style="width:60%;">&nbsp;</td>
-                    <td style="width:40%; text-align: center;">Yogyakarta, ' . date('d M Y') . '</td>
+                    <th rowspan="2" style="width: 5%; border: 1px solid black; background-color: #0e1d2e; color: white;">#</th>
+                    <th rowspan="2" style="border: 1px solid black; background-color: #0e1d2e; color: white;">Barang</th>
+                    <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Satuan</th>
+                    <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Harga</th>
+                    <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Jumlah</th>
+                    <th colspan="2" style="width: 20%; border: 1px solid black; background-color: #0e1d2e; color: white;">Diskon</th>
+                    <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Pajak</th>
+                    <th rowspan="2" style="width: 15%; border: 1px solid black; background-color: #0e1d2e; color: white;">Total</th>
                 </tr>
                 <tr>
-                    <td style="width:60%;">&nbsp;</td>
-                    <td style="width:40%; text-align: center;">&nbsp;</td>
+                    <th style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">%</th>
+                    <th style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Rp</th>
+                </tr>
+            </thead>';
+            $body .= '<tbody>';
+
+            if ($header) {
+                $total_all = 0;
+                foreach ($header as $h) {
+                    $total_all += $h->total;
+
+                    if ($param == 1) {
+                        $total        = number_format($h->total);
+                        $total_allx   = number_format($total_all);
+                    } else {
+                        $total        = ceil($h->total);
+                        $total_allx   = ceil($total_all);
+                    }
+
+                    $body .= '<tr>
+                        <td colspan="8" style="border: 1px solid black; background-color: #007bff; color: white;">' . date('d-m-Y', strtotime($h->tgl_out)) . ' / ' . date('H:i:s', strtotime($h->jam_out)) . ' / ' . $h->invoice . ' / ' . $h->kode_member . ' ~ ' . $this->M_global->getData('member', ['kode_member' => $h->kode_member])->nama . ' / ' . $this->M_global->getData('m_gudang', ['kode_gudang' => $h->kode_gudang])->nama . '</td>
+                        <td style="border: 1px solid black; background-color: #007bff; color: white; text-align: right; font-weight: bold;">' . $total . '</td>
+                    </tr>';
+
+                    $detail = $this->M_global->getDataResult('barang_out_detail', ['invoice' => $h->invoice]);
+
+                    $no = 1;
+                    foreach ($detail as $d) {
+                        $barang = $this->M_global->getData('barang', ['kode_barang' => $d->kode_barang]);
+                        $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $d->kode_satuan]);
+
+                        if ($param == 1) {
+                            $harga      = number_format($d->harga);
+                            $qty        = number_format($d->qty);
+                            $discpr     = number_format($d->discpr);
+                            $discrp     = number_format($d->discrp);
+                            $pajakrp    = number_format($d->pajakrp);
+                            $jumlah     = number_format($d->jumlah);
+                        } else {
+                            $harga      = ceil($d->harga);
+                            $qty        = ceil($d->qty);
+                            $discpr     = ceil($d->discpr);
+                            $discrp     = ceil($d->discrp);
+                            $pajakrp    = ceil($d->pajakrp);
+                            $jumlah     = ceil($d->jumlah);
+                        }
+
+                        $body .= '<tr>
+                            <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
+                            <td style="border: 1px solid black;">' . $barang->kode_barang . ' ~ ' . $barang->nama . '</td>
+                            <td style="border: 1px solid black;">' . $satuan->keterangan . '</td>
+                            <td style="border: 1px solid black; text-align: right;">' . $harga . '</td>
+                            <td style="border: 1px solid black; text-align: right;">' . $qty . '</td>
+                            <td style="border: 1px solid black; text-align: right;">' . $discpr . '</td>
+                            <td style="border: 1px solid black; text-align: right;">' . $discrp . '</td>
+                            <td style="border: 1px solid black; text-align: right;">' . $pajakrp . '</td>
+                            <td style="border: 1px solid black; text-align: right;">' . $jumlah . '</td>
+                        </tr>';
+
+                        $no++;
+                    }
+                }
+
+                $body .= '<tr>
+                    <td colspan="8" style="border: 1px solid black; background-color: #0e1d2e; color: white;">Total Keseluruhan</td>
+                    <td style="border: 1px solid black; background-color: #0e1d2e; color: white; text-align: right;">' . $total_allx . '</td>
+                </tr>';
+            } else {
+                $body .= '<tr>
+                    <td colspan="9" style="border: 1px solid black; text-align: center;">Tidak Ada Transaksi</td>
+                </tr>';
+            }
+
+
+            $body .= '</tbody>';
+
+            $body .= '<tfoot>
+                <tr>
+                    <td colspan="7">&nbsp;</td>
+                    <td colspan="3" style="text-align: center;">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="width:60%;">&nbsp;</td>
-                    <td style="width:40%; text-align: center;">&nbsp;</td>
+                    <td colspan="7" style="width:60%;">&nbsp;</td>
+                    <td colspan="3" style="width:40%; text-align: center;">Yogyakarta, ' . date('d M Y') . '</td>
                 </tr>
                 <tr>
-                    <td style="width:60%;">&nbsp;</td>
-                    <td style="width:40%; text-align: center;">' . $pencetak . '</td>
+                    <td colspan="7" style="width:60%;">&nbsp;</td>
+                    <td colspan="3" style="width:40%; text-align: center;">&nbsp;</td>
                 </tr>
-            </table>';
+                <tr>
+                    <td colspan="7" style="width:60%;">&nbsp;</td>
+                    <td colspan="3" style="width:40%; text-align: center;">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="width:60%;">&nbsp;</td>
+                    <td colspan="3" style="width:40%; text-align: center;">' . $pencetak . '</td>
+                </tr>
+            </tfoot>';
+
+            $body .= '</table>';
         } else if ($laporan == 5) {
             $file = 'Laporan Retur Penjualan';
 
