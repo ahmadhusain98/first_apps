@@ -42,6 +42,16 @@
             </div>
         </div>
     </div>
+    <div class="col-lg-4 col-4" type="button" onclick="getUrl('Backdoor/menu_akses')">
+        <div class="small-box bg-light" style="height: 20vh;">
+            <div class="inner">
+                <h4>Pengaturan Akses Menu</h4>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-user-gear"></i>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>

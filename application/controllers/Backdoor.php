@@ -381,4 +381,93 @@ class Backdoor extends CI_Controller
             echo json_encode(['status' => 0]);
         }
     }
+
+    // menu akses page
+    public function menu_akses()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'             => 'Pintasan',
+            'nama_apps'         => $web_setting->nama,
+            'page'              => 'Backdoor',
+            'web'               => $web_setting,
+            'web_version'       => $web_version->version,
+            'kunjungan_poli'    => $this->db->query("SELECT p.keterangan AS poli, COUNT(boh.kode_poli) AS jumlah FROM pembayaran buy JOIN barang_out_header boh ON buy.inv_jual = boh.invoice JOIN m_poli p ON boh.kode_poli = p.kode_poli GROUP BY boh.kode_poli")->result(),
+            'role'              => $this->M_global->getResult('m_role'),
+            'list_data'         => 'Backdoor/akses_menu_list/',
+            'param1'            => null,
+        ];
+
+        $this->template->load('Template/Content', 'Backdoor/Akses_menu', $parameter);
+    }
+
+    // list akses menu
+    public function akses_menu_list() {
+        $this->load->model("M_menu_list");
+        // Retrieve data from the model
+        $list = $this->M_menu_list->get_datatables();
+
+        $data = [];
+        $no = $_POST['start'] + 1;
+
+        // Loop through the list to populate the data array
+        foreach ($list as $rd) {
+            $role       = $this->M_global->getResult('m_role');
+
+            $row = [];
+            $row[] = $no;
+            $row[] = $rd->nama;
+            $nor = 1;
+            foreach($role AS $r) {
+                $menu_akses = $this->db->query("SELECT * FROM akses_menu WHERE kode_role = '$r->kode_role' AND id_menu = '$rd->idm' LIMIT 1")->row();
+
+                $akses = ($menu_akses) ? $menu_akses->id : '0';
+                $row[] = '<div class="text-center">
+                    <input type="checkbox" class="form-control" id="krole'. $no . '_'.$nor.'" '.(($akses > 0) ? 'checked' : '' ).' name="krole[]" value="'.$r->kode_role.'" onclick="changeAkses(' . "'" . $rd->idm . "', '" . $r->kode_role . "', '" . $no . "', '" . $nor. "', '" . $rd->nama. "', '" . $r->keterangan. "', '" . $rd->idm. "'" . ')">
+                </div>';
+                // $row[] = '<div class="text-center">
+                //     <input type="checkbox" class="form-control" id="krole'. $no . '_'.$nor.'" '.(($akses_menu) ? 'checked' : '' ).' name="krole[]" value="'.$r->kode_role.'" onclick="changeAkses(' . "'" . $akses_menu->id . "', '" . $r->kode_role . "', '" . $no . "', '" . $nor. "', '" . $rd->nama. "', '" . $r->keterangan. "', '" . $rd->idm. "'" . ')">
+                // </div>';
+                $nor++;
+            }
+            $data[] = $row;
+            $no++;
+        }
+
+        // Prepare the output in JSON format
+        $output = [
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $this->M_menu_list->count_all(),
+            "recordsFiltered" => $this->M_menu_list->count_filtered(),
+            "data" => $data,
+        ];
+
+        // Send the output to the view
+        echo json_encode($output);
+    }
+
+    // change menu
+    public function changeMenu() {
+        $id_akses = $this->input->get('id_akses');
+        $kdrole = $this->input->get('kdrole');
+        $idmenu = $this->input->get('idmenu');
+
+        $cek_menu = $this->M_global->getData('akses_menu', ['kode_role' => $kdrole, 'id_menu' => $idmenu]);
+
+        if($cek_menu) {
+            $cek = $this->M_global->delData('akses_menu', ['kode_role' => $kdrole, 'id_menu' => $idmenu]);
+        } else {
+            $cek = $this->M_global->insertData('akses_menu', ['kode_role' => $kdrole, 'id_menu' => $idmenu]);
+        }
+
+        if($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
 }

@@ -300,7 +300,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <?php
                         // ambil menu dari table m_menu kemudian tampung ke variable $menu
-                        $menu = $this->db->get('m_menu')->result();
+                        $menu = $this->db->query("SELECT m.* FROM m_menu m WHERE m.id IN (SELECT id_menu FROM akses_menu WHERE kode_role IN (SELECT kode_role FROM user WHERE kode_user = '".$this->session->userdata('kode_user')."')) ORDER BY m.id")->result();
 
                         // loop $menu
                         foreach ($menu as $m) :
