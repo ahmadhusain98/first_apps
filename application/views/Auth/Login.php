@@ -1,4 +1,4 @@
-<div class="login-box" data-aos="fade-down">
+<div class="login-box" data-aos="fade-up">
     <div class="card card-outline card-primary">
         <div class="card-header text-center">
             <a type="button" class="h1"><b><?= $nama_apps ?></b></a>
@@ -49,13 +49,12 @@
         </div>
         <div class="card-footer">
             <p class="mb-1">
-                <a type="button" onclick="getUrl('Auth/repass')">Lupa Sandi?</a>
-                <a class="float-right" href="https://www.instagram.com/downtoup.dev/" title="Instagram" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Instagram"><ion-icon name="logo-instagram" style="font-size: 20px; color: red;"></ion-icon></a>
-                <a class="float-right" href="https://wa.me/0895363260970" title="Whatsapp" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Whatsapp"><ion-icon name="logo-whatsapp" style="font-size: 20px; color: green;"></ion-icon></a>
+                <a type="button" onclick="getUrl('Auth/repass')" class="text-danger font-weight-bold">LUPA SANDI?</a>
             </p>
         </div>
     </div>
 </div>
+<a class="floating text-decoration-none" href="https://wa.me/0895363260970" title="Whatsapp" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Whatsapp" style="text-decoration: none;"><i class="fa-brands fa-3x fa-whatsapp" style="margin-top: 10px;"></i></a>
 
 <script>
     const form = $("#form_login");

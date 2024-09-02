@@ -188,7 +188,7 @@
                                     <td><?= $this->M_global->getData('m_poli', ['kode_poli' => $r->kode_poli])->keterangan ?></td>
                                     <td><?= $this->M_global->getData('dokter', ['kode_dokter' => $r->kode_dokter])->nama ?></td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getDetail('<?= $r->no_trx ?>')"><i class="fa-solid fa-circle-info"></i></button>
+                                        <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getHisPas('<?= $r->no_trx ?>')"><i class="fa-solid fa-circle-info"></i></button>
                                     </td>
                                 </tr>
                             <?php $no++;
@@ -444,6 +444,11 @@
 
     // fungsi lihat detail
     function getDetail(param) {
+        window.open(siteUrl + 'Health/print_pendaftaran/' + param, '_blank');
+    }
+
+    // fungsi lihat detail
+    function getHisPas(param) {
         window.open(siteUrl + 'Health/print_hispas/' + param, '_blank');
     }
 </script>

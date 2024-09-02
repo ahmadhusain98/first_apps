@@ -63,7 +63,7 @@
     <link rel="icon" href="<?= base_url('assets/img/web/') . $web->logo ?>" type="image/ico">
 </head>
 
-<body class="hold-transition login-page" style="background-image: url(<?= base_url() ?>assets/img/web/<?= $web->bg_theme ?>); background-position: center; background-size: cover; backdrop-filter: blur(10px);">
+<body class="hold-transition login-page" style="background-color: #1f232f">
 
 
     <!-- responsive -->
@@ -154,6 +154,19 @@
             text-align: center;
             font-size: 12px;
             line-height: 1.42857;
+        }
+
+        .floating{
+            position:fixed;
+            width:70px;
+            height:70px;
+            bottom:10px;
+            right:10px;
+            background-color:#14a651;
+            color:white;
+            border-radius:50%;
+            text-align:center;
+            box-shadow: 2px 2px 4px #999;
         }
     </style>
 
