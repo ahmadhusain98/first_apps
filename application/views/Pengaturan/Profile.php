@@ -191,6 +191,7 @@ if ($data_user->on_off == 1) {
                                             <?php if ($aktifitas) : ?>
                                                 <br>
                                                 <span class="badge bg-info" type="button" onclick="lihat_aktifitas($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
+                                                <span class="badge bg-warning" type="button" onclick="download_au($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Cetak</span>
                                                 <span class="badge bg-danger float-right">Banyaknya aktifitas : <?= $jum_aktif; ?></span>
                                                 <br>
                                                 <br>
@@ -213,6 +214,7 @@ if ($data_user->on_off == 1) {
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <span class="badge bg-info" type="button" onclick="lihat_aktifitas($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
+                                                        <span class="badge bg-warning" type="button" onclick="download_au($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Cetak</span>
                                                         <span class="badge bg-danger float-right">Banyaknya aktifitas : 0</span>
                                                         <br>
                                                         <br>
@@ -450,5 +452,11 @@ if ($data_user->on_off == 1) {
                 error_proccess();
             }
         })
+    }
+
+    // print
+    function download_au(param) {
+        var param = `?tgl=${param}`
+        window.open(`${siteUrl}Report/activity_user/1${param}`, '_blank');
     }
 </script>

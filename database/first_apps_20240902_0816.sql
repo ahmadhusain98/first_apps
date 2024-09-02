@@ -16,7 +16,7 @@ CREATE TABLE `activity_log` (
   PRIMARY KEY (`id_activity`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `activity_log` (`id_activity`, `kode`, `isi`, `tgl_masuk`, `jam_masuk`, `tgl_keluar`, `jam_keluar`) VALUES (2, 'ahmad.ummgl@gmail.com', 'Login / Logout', '2024-09-01', '20:56:54', '2024-09-01', '19:40:50');
+INSERT INTO `activity_log` (`id_activity`, `kode`, `isi`, `tgl_masuk`, `jam_masuk`, `tgl_keluar`, `jam_keluar`) VALUES (2, 'ahmad.ummgl@gmail.com', 'Login / Logout', '2024-09-02', '07:48:17', '2024-09-01', '23:09:16');
 
 
 #
@@ -34,7 +34,7 @@ CREATE TABLE `activity_user` (
   `kode_cabang` varchar(10) NOT NULL,
   `shift` int NOT NULL,
   PRIMARY KEY (`id_activity`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (1, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-09-01 15:32:11', 'DIY', 2);
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (2, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-01 15:32:45', 'DIY', 2);
@@ -56,6 +56,13 @@ INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (18, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>membayar Kasir</b> dengan kode/inv <b>DIYKWI-2024090100002</b>', 'Pembayaran', '2024-09-01 21:53:13', 'DIY', 3);
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (19, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menghapus Backupan Database first_apps_20240901_1940.sql</b>', 'Pintu Belakang', '2024-09-01 23:02:23', 'DIY', 3);
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (20, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>melakukan Backup Database first_apps_20240901_2302</b>', 'Pintu Belakang', '2024-09-01 23:02:27', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (21, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-09-01 23:02:38', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (22, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-01 23:04:52', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (23, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-09-01 23:09:16', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (24, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-02 07:48:17', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (25, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-02 07:48:17', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (26, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menghapus Backupan Database first_apps_20240901_2302.sql</b>', 'Pintu Belakang', '2024-09-02 08:16:55', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (27, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>melakukan Backup Database first_apps_20240902_0816</b>', 'Pintu Belakang', '2024-09-02 08:16:59', 'DIY', 1);
 
 
 #
@@ -69,7 +76,7 @@ CREATE TABLE `backup_db` (
   `nama` varchar(200) NOT NULL,
   `tgl_backup` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 #
 # TABLE STRUCTURE FOR: barang

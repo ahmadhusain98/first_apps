@@ -197,6 +197,7 @@ class Profile extends CI_Controller
 ?>
             <br>
             <span class="badge bg-info" type="button" onclick="lihat_aktifitas($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
+            <span class="badge bg-warning" type="button" onclick="download_au($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Cetak</span>
             <span class="badge bg-danger float-right">Banyaknya aktifitas : <?= $jum_aktif; ?></span>
             <br>
             <br>
@@ -219,6 +220,7 @@ class Profile extends CI_Controller
             <div class="row">
                 <div class="col-md-12">
                     <span class="badge bg-info" type="button" onclick="lihat_aktifitas($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
+                    <span class="badge bg-warning" type="button" onclick="download_au($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Cetak</span>
                     <span class="badge bg-danger float-right">Banyaknya aktifitas : 0</span>
                     <br>
                     <br>

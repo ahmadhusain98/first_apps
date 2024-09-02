@@ -915,6 +915,95 @@ class Report extends CI_Controller
         cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
     }
 
+    // activity user
+    public function activity_user()
+    {
+        $tgl            = $this->input->get('tgl');
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        // sintak
+        $header         = $this->db->query("SELECT a.* FROM activity_user a WHERE a.waktu LIKE '%$tgl%' LIMIT 1")->row();
+        $user           = $this->M_global->getData('user', ['email' => $header->email]);
+        $role           = $this->M_global->getData('m_role', ['kode_role' => $user->kode_role]);
+        $sintak         = $this->db->query("SELECT a.* FROM activity_user a WHERE a.waktu LIKE '%$tgl%'")->result();
+
+        $body .= '<table style="width: 100%; font-size: 14px;" cellpadding="2px">';
+        $body .= '<tr>
+            <td style="width: 10%;">Email</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 88%;">' . (($header) ? $header->email : '@gmail') . '</td>
+        </tr>
+        <tr>
+            <td style="width: 10%;">Nama</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 88%;">' . (($user) ? $user->nama : 'Undefined') . '</td>
+        </tr>
+        <tr>
+            <td style="width: 10%;">Phone</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 88%;">' . (($user) ? $user->nohp : 'Undefined') . '</td>
+        </tr>
+        <tr>
+            <td style="width: 10%;">Jabatan</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 88%;">' . (($role) ? $role->keterangan : 'Undefined') . '</td>
+        </tr>
+        ';
+        $body .= '</table><br>';
+
+        $body .= '<table style="width: 100%; font-size: 12px;" cellpadding="5px">';
+        $body .= '<thead>
+            <tr>
+                <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+                <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Menu</th>
+                <th style="width: 37%; border: 1px solid black; background-color: #272a3f; color: white;">Kegiatan</th>
+                <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Waktu</th>
+                <th style="width: 10%; border: 1px solid black; background-color: #272a3f; color: white;">Cabang</th>
+                <th style="width: 8%; border: 1px solid black; background-color: #272a3f; color: white;">Shift</th>
+            </tr>
+        </thead>
+        <tbody>';
+
+        if (count($sintak) > 0) {
+            $no = 1;
+            foreach ($sintak as $s) {
+                $body .= '<tr>
+                    <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
+                    <td style="border: 1px solid black;">' . $s->menu . '</td>
+                    <td style="border: 1px solid black;">' . str_replace($header->email, '', $s->kegiatan) . '</td>
+                    <td style="border: 1px solid black;">' . date('d/m/Y H:i:s', strtotime($s->waktu)) . '</td>
+                    <td style="border: 1px solid black; text-align: center;">' . $s->kode_cabang . '</td>
+                    <td style="border: 1px solid black; text-align: center;">' . $s->shift . '</td>
+                </tr>';
+                $no++;
+            }
+        } else {
+            $body .= '<tr>
+                <td colspan="6" style="border: 1px solid black; text-align: center;">Tidak Ada Aktifitas</td>
+            </tr>';
+        }
+
+
+        $body .= '</tbody>
+        </table>';
+
+        $judul = 'Aktifitas User ~ ' . (($header) ? $header->email : '@gmail');
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, 1, $position, $filename, $web_setting);
+    }
+
     // pendaftaran
     public function pendaftaran($param)
     {
