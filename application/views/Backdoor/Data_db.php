@@ -1,8 +1,11 @@
 <div class="row mb-3">
     <div class="col-md-6">
-        <button class="btn btn-primary" onclick="backup()"><i class="fa-solid fa-cloud-arrow-down"></i> Klik Untuk Backup Database</button>
+        <button type="button" class="btn btn-danger" onclick="getUrl('Backdoor')"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
     </div>
     <div class="col-md-6">
+        <div class="float-right">
+            <button class="btn btn-primary" onclick="backup()"><i class="fa-solid fa-cloud-arrow-down"></i> Backup Database</button>
+        </div>
         <!-- masih error saat upload table m_menu -->
         <!-- <div class="float-right">
             <form id="form_db" method="post">
@@ -48,11 +51,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
-</div>
-<div class="row mb-3">
-    <div class="col-md-12">
-        <button type="button" class="btn btn-danger" onclick="getUrl('Backdoor')"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
     </div>
 </div>
 

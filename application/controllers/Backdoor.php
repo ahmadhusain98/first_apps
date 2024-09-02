@@ -19,14 +19,14 @@ class Backdoor extends CI_Controller
         'ONLY_FULL_GROUP_BY', '')");
 
         if (!empty($this->session->userdata("email"))) { // jika session email masih ada
-            
+
             $id_menu = $this->M_global->getData('m_menu', ['url' => 'Backdoor'])->id;
 
             // ambil isi data berdasarkan email session dari table user, kemudian tampung ke variable $user
             $user = $this->M_global->getData("user", ["email" => $this->session->userdata("email")]);
 
             $cek_akses_menu = $this->M_global->getData('akses_menu', ['id_menu' => $id_menu, 'kode_role' => $user->kode_role]);
-            if($cek_akses_menu) {
+            if ($cek_akses_menu) {
                 // tampung data ke variable data public
                 $this->data = [
                     'nama'      => $user->nama,
@@ -41,7 +41,6 @@ class Backdoor extends CI_Controller
                 // kirimkan kembali ke Auth
                 redirect('Where');
             }
-
         } else { // selain itu
             // kirimkan kembali ke Auth
             redirect('Auth');
@@ -340,7 +339,8 @@ class Backdoor extends CI_Controller
     }
 
     // list akses user
-    public function akses_user_list() {
+    public function akses_user_list()
+    {
         $this->load->model("M_user_list");
         // Retrieve data from the model
         $list = $this->M_user_list->get_datatables();
@@ -356,9 +356,9 @@ class Backdoor extends CI_Controller
             $row[] = $no;
             $row[] = $rd->kode_user . ' ~ ' . $rd->nama;
             $nor = 1;
-            foreach($role AS $r) {
+            foreach ($role as $r) {
                 $row[] = '<div class="text-center">
-                    <input type="checkbox" class="form-control" id="krole'. $no . '_'.$nor.'" '.(($r->kode_role == $rd->kode_role) ? 'checked' : '' ).' name="krole[]" value="'.$r->kode_role.'" onclick="changeRole(' . "'" . $rd->kode_user . "', '" . $r->kode_role . "', '" . $no . "', '" . $nor. "', '" . $rd->nama. "', '" . $r->keterangan. "'" . ')">
+                    <input type="checkbox" class="form-control" id="krole' . $no . '_' . $nor . '" ' . (($r->kode_role == $rd->kode_role) ? 'checked' : '') . ' name="krole[]" value="' . $r->kode_role . '" onclick="changeRole(' . "'" . $rd->kode_user . "', '" . $r->kode_role . "', '" . $no . "', '" . $nor . "', '" . $rd->nama . "', '" . $r->keterangan . "'" . ')">
                 </div>';
                 $nor++;
             }
@@ -379,13 +379,14 @@ class Backdoor extends CI_Controller
     }
 
     // change akses
-    public function changeAkses() {
+    public function changeAkses()
+    {
         $kode_user = $this->input->get('kduser');
         $kode_role = $this->input->get('kdrole');
 
         $cek = $this->M_global->updateData('user', ['kode_role' => $kode_role], ['kode_user' => $kode_user]);
 
-        if($cek) {
+        if ($cek) {
             echo json_encode(['status' => 1]);
         } else {
             echo json_encode(['status' => 0]);
@@ -416,7 +417,8 @@ class Backdoor extends CI_Controller
     }
 
     // list akses menu
-    public function akses_menu_list() {
+    public function akses_menu_list()
+    {
         $this->load->model("M_menu_list");
         // Retrieve data from the model
         $list = $this->M_menu_list->get_datatables();
@@ -432,16 +434,13 @@ class Backdoor extends CI_Controller
             $row[] = $no;
             $row[] = $rd->nama;
             $nor = 1;
-            foreach($role AS $r) {
+            foreach ($role as $r) {
                 $menu_akses = $this->db->query("SELECT * FROM akses_menu WHERE kode_role = '$r->kode_role' AND id_menu = '$rd->idm' LIMIT 1")->row();
 
                 $akses = ($menu_akses) ? $menu_akses->id : '0';
                 $row[] = '<div class="text-center">
-                    <input type="checkbox" class="form-control" id="krole'. $no . '_'.$nor.'" '.(($akses > 0) ? 'checked' : '' ).' name="krole[]" value="'.$r->kode_role.'" onclick="changeAkses(' . "'" . $rd->idm . "', '" . $r->kode_role . "', '" . $no . "', '" . $nor. "', '" . $rd->nama. "', '" . $r->keterangan. "', '" . $rd->idm. "'" . ')">
+                    <input type="checkbox" class="form-control" id="krole' . $no . '_' . $nor . '" ' . (($akses > 0) ? 'checked' : '') . ' name="krole[]" value="' . $r->kode_role . '" onclick="changeAkses(' . "'" . $rd->idm . "', '" . $r->kode_role . "', '" . $no . "', '" . $nor . "', '" . $rd->nama . "', '" . $r->keterangan . "', '" . $rd->idm . "'" . ')">
                 </div>';
-                // $row[] = '<div class="text-center">
-                //     <input type="checkbox" class="form-control" id="krole'. $no . '_'.$nor.'" '.(($akses_menu) ? 'checked' : '' ).' name="krole[]" value="'.$r->kode_role.'" onclick="changeAkses(' . "'" . $akses_menu->id . "', '" . $r->kode_role . "', '" . $no . "', '" . $nor. "', '" . $rd->nama. "', '" . $r->keterangan. "', '" . $rd->idm. "'" . ')">
-                // </div>';
                 $nor++;
             }
             $data[] = $row;
@@ -461,20 +460,115 @@ class Backdoor extends CI_Controller
     }
 
     // change menu
-    public function changeMenu() {
-        $id_akses = $this->input->get('id_akses');
+    public function changeMenu()
+    {
         $kdrole = $this->input->get('kdrole');
         $idmenu = $this->input->get('idmenu');
 
         $cek_menu = $this->M_global->getData('akses_menu', ['kode_role' => $kdrole, 'id_menu' => $idmenu]);
 
-        if($cek_menu) {
+        if ($cek_menu) {
             $cek = $this->M_global->delData('akses_menu', ['kode_role' => $kdrole, 'id_menu' => $idmenu]);
         } else {
             $cek = $this->M_global->insertData('akses_menu', ['kode_role' => $kdrole, 'id_menu' => $idmenu]);
         }
 
-        if($cek) {
+        if ($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // cabang akses page
+    public function cabang_akses()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'             => 'Pintasan',
+            'nama_apps'         => $web_setting->nama,
+            'page'              => 'Backdoor',
+            'web'               => $web_setting,
+            'web_version'       => $web_version->version,
+            'kunjungan_poli'    => $this->db->query("SELECT p.keterangan AS poli, COUNT(boh.kode_poli) AS jumlah FROM pembayaran buy JOIN barang_out_header boh ON buy.inv_jual = boh.invoice JOIN m_poli p ON boh.kode_poli = p.kode_poli GROUP BY boh.kode_poli")->result(),
+            'cabang'            => $this->M_global->getResult('cabang'),
+            'list_data'         => 'Backdoor/akses_cabang_list/',
+            'param1'            => null,
+        ];
+
+        $this->template->load('Template/Content', 'Backdoor/Akses_cabang', $parameter);
+    }
+
+    // list akses cabang
+    public function akses_cabang_list()
+    {
+        $this->load->model("M_cabang_list");
+        // Retrieve data from the model
+        $list = $this->M_cabang_list->get_datatables();
+
+        $sess_cabang = $this->session->userdata('cabang');
+
+        $data = [];
+        $no = $_POST['start'] + 1;
+
+        // Loop through the list to populate the data array
+        foreach ($list as $rd) {
+            $user = $this->M_global->getData('user', ['kode_user' => $rd->kode_user]);
+            if ($user->on_off > 0) {
+                $sess_email = $user->email;
+            } else {
+                $sess_email = '';
+            }
+            $cabang       = $this->M_global->getResult('cabang');
+
+            $row = [];
+            $row[] = $no;
+            $row[] = $rd->nama;
+            $nor = 1;
+            foreach ($cabang as $c) {
+                $cabang_akses = $this->db->query("SELECT * FROM cabang_user WHERE kode_cabang = '$c->kode_cabang' AND email = '$rd->email' LIMIT 1")->row();
+
+                $akses = ($cabang_akses) ? $cabang_akses->id : '0';
+                $row[] = '<div class="text-center">
+                    <input type="checkbox" class="form-control" ' . (($sess_email == $rd->email) ? (($sess_cabang == $c->kode_cabang) ? 'disabled' : '') : '') . ' id="kcabang' . $no . '_' . $nor . '" ' . (($akses > 0) ? 'checked' : '') . ' name="kcabang[]" value="' . $c->kode_cabang . '" onclick="changeAkses(' . "'" . $rd->email . "', '" . $c->kode_cabang . "', '" . $no . "', '" . $nor . "', '" . $rd->nama . "', '" . $c->cabang . "', '" . $rd->email . "'" . ')">
+                </div>';
+                $nor++;
+            }
+            $data[] = $row;
+            $no++;
+        }
+
+        // Prepare the output in JSON format
+        $output = [
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $this->M_cabang_list->count_all(),
+            "recordsFiltered" => $this->M_cabang_list->count_filtered(),
+            "data" => $data,
+        ];
+
+        // Send the output to the view
+        echo json_encode($output);
+    }
+
+    // change cabang
+    public function changeCabang()
+    {
+        $email = $this->input->get('email');
+        $kode_cabang = $this->input->get('kcabang');
+
+        $cek_cabang = $this->M_global->getData('cabang_user', ['kode_cabang' => $kode_cabang, 'email' => $email]);
+
+        if ($cek_cabang) {
+            $cek = $this->M_global->delData('cabang_user', ['kode_cabang' => $kode_cabang, 'email' => $email]);
+        } else {
+            $cek = $this->M_global->insertData('cabang_user', ['kode_cabang' => $kode_cabang, 'email' => $email]);
+        }
+
+        if ($cek) {
             echo json_encode(['status' => 1]);
         } else {
             echo json_encode(['status' => 0]);

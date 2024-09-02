@@ -52,6 +52,16 @@
             </div>
         </div>
     </div>
+    <div class="col-lg-4 col-4" type="button" onclick="getUrl('Backdoor/cabang_akses')">
+        <div class="small-box bg-dark" style="height: 20vh;">
+            <div class="inner">
+                <h4>Pengaturan Akses Cabang</h4>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-building"></i>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>

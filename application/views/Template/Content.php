@@ -231,7 +231,10 @@
 
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
-                    <?php $sintak = $this->db->query("SELECT * FROM barang_out_header WHERE status_jual = 0 ORDER BY id DESC LIMIT 10")->result(); ?>
+                    <?php
+                    $cabang = $this->session->userdata('cabang');
+                    $sintak = $this->db->query("SELECT * FROM barang_out_header WHERE kode_cabang = '$cabang' AND status_jual = 0 ORDER BY id DESC LIMIT 10")->result();
+                    ?>
                     <a class="nav-link" data-toggle="dropdown" type="button">
                         <i class="fa-regular fa-bell"></i>&nbsp;&nbsp;Notifikasi&nbsp;&nbsp;
                         <?php if (count($sintak) > 0) : ?>
@@ -300,7 +303,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <?php
                         // ambil menu dari table m_menu kemudian tampung ke variable $menu
-                        $menu = $this->db->query("SELECT m.* FROM m_menu m WHERE m.id IN (SELECT id_menu FROM akses_menu WHERE kode_role IN (SELECT kode_role FROM user WHERE kode_user = '".$this->session->userdata('kode_user')."')) ORDER BY m.id")->result();
+                        $menu = $this->db->query("SELECT m.* FROM m_menu m WHERE m.id IN (SELECT id_menu FROM akses_menu WHERE kode_role IN (SELECT kode_role FROM user WHERE kode_user = '" . $this->session->userdata('kode_user') . "')) ORDER BY m.id")->result();
 
                         // loop $menu
                         foreach ($menu as $m) :

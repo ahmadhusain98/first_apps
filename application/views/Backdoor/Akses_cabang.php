@@ -6,7 +6,7 @@ echo _lock_so();
 <form method="post" id="form_barang_in">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Menu</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Cabang</span>
         </div>
     </div>
     <br>
@@ -23,16 +23,16 @@ echo _lock_so();
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tableAksesMenu" width="100%" style="border-radius: 10px;">
+                <table class="table table-hover table-bordered" id="tableAksesCabang" width="100%" style="border-radius: 10px;">
                     <thead>
                         <tr class="text-center">
                             <th rowspan="2" width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
-                            <th rowspan="2" width="25%">Menu</th>
-                            <th colspan="<?= count($role) ?>" width="70%">Akses</th>
+                            <th rowspan="2" width="25%">User</th>
+                            <th colspan="<?= count($cabang) ?>" width="70%">Akses</th>
                         </tr>
                         <tr class="text-center">
-                            <?php foreach ($role as $r) : ?>
-                                <th><?= $r->keterangan ?></td>
+                            <?php foreach ($cabang as $c) : ?>
+                                <th><?= $c->inisial_cabang ?></td>
                                 <?php endforeach ?>
                         </tr>
                     </thead>
@@ -43,14 +43,14 @@ echo _lock_so();
 </form>
 
 <script>
-    var table = $('#tableAksesMenu');
+    var table = $('#tableAksesCabang');
 
     // change role
-    function changeAkses(id_akses, kdrole, no, nor, nmenu, nrole, idmenu) {
-        // console.log(id_akses + ' - ' + kdrole + ' - ' + no + ' - ' + nor + ' - ' + nmenu + ' - ' + nrole + ' - ' + idmenu);
+    function changeAkses(email, kcabang, no, nor, ncabang, cabang, email) {
+        // console.log(email + ' - ' + kcabang + ' - ' + no + ' - ' + nor + ' - ' + ncabang + ' - ' + cabang + ' - ' + email);
         Swal.fire({
             title: "Kamu yakin?",
-            html: "Menu <b>" + nmenu + "</b> untuk akses <b style='color: red;'>" + nrole + "</>!",
+            html: "User <b>" + email + "</b> untuk akses <b style='color: red;'>" + cabang + "</>!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -62,19 +62,18 @@ echo _lock_so();
 
                 // jalankan fungsi
                 $.ajax({
-                    url: siteUrl + 'Backdoor/changeMenu/?id_akses=' + id_akses + '&kdrole=' + kdrole + '&idmenu=' + idmenu,
+                    url: siteUrl + 'Backdoor/changeCabang/?email=' + email + '&kcabang=' + kcabang,
                     type: 'POST',
                     dataType: 'JSON',
                     success: function(result) { // jika fungsi berjalan dengan baik
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
-                            Swal.fire("User " + nmenu, "Berhasil diubah aksesnya!", "success").then(() => {
+                            Swal.fire("User " + ncabang, "Berhasil diubah aksesnya!", "success").then(() => {
                                 reloadTable();
-                                getUrl('Backdoor/menu_akses');
                             });
                         } else { // selain itu
 
-                            Swal.fire("User " + nmenu, "Gagal diubah aksesnya!, silahkan dicoba kembali", "info");
+                            Swal.fire("User " + ncabang, "Gagal diubah aksesnya!, silahkan dicoba kembali", "info");
                         }
                     },
                     error: function(result) { // jika fungsi error

@@ -11,9 +11,11 @@ echo _lock_so();
     </div>
     <br>
     <div class="row mb-3">
-        <div class="col-md-12 col-12">
+        <div class="col-md-6 col-12">
+            <button type="button" class="btn btn-danger" onclick="getUrl('Backdoor')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+        </div>
+        <div class="col-md-6 col-12">
             <div class="float-right">
-                <button type="button" class="btn btn-danger" onclick="getUrl('Backdoor')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
                 <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
             </div>
         </div>
@@ -29,9 +31,9 @@ echo _lock_so();
                             <th colspan="<?= count($role) ?>" width="70%">Akses</th>
                         </tr>
                         <tr class="text-center">
-                            <?php foreach($role as $r) : ?>
+                            <?php foreach ($role as $r) : ?>
                                 <th><?= $r->keterangan ?></td>
-                            <?php endforeach ?>
+                                <?php endforeach ?>
                         </tr>
                     </thead>
                 </table>
@@ -48,7 +50,7 @@ echo _lock_so();
     function changeRole(kduser, kdrole, no, nor, nuser, nrole) {
         Swal.fire({
             title: "Kamu yakin?",
-            html: "Ubah <b>"+nuser+"</b> menjadi <b style='color: red;'>"+nrole+"</>!",
+            html: "Ubah <b>" + nuser + "</b> menjadi <b style='color: red;'>" + nrole + "</>!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -60,18 +62,18 @@ echo _lock_so();
 
                 // jalankan fungsi
                 $.ajax({
-                    url: siteUrl + 'Backdoor/changeAkses/?kduser=' + kduser + '&kdrole='+kdrole,
+                    url: siteUrl + 'Backdoor/changeAkses/?kduser=' + kduser + '&kdrole=' + kdrole,
                     type: 'POST',
                     dataType: 'JSON',
                     success: function(result) { // jika fungsi berjalan dengan baik
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
-                            Swal.fire("User "+nuser, "Berhasil diubah aksesnya!", "success").then(() => {
+                            Swal.fire("User " + nuser, "Berhasil diubah aksesnya!", "success").then(() => {
                                 reloadTable();
                             });
                         } else { // selain itu
 
-                            Swal.fire("User "+nuser, "Gagal diubah aksesnya!, silahkan dicoba kembali", "info");
+                            Swal.fire("User " + nuser, "Gagal diubah aksesnya!, silahkan dicoba kembali", "info");
                         }
                     },
                     error: function(result) { // jika fungsi error
@@ -79,10 +81,10 @@ echo _lock_so();
                         error_proccess();
                     }
                 });
-            } else if(result.dismiss == 'cancel') {
-                document.getElementById('krole'+no+'_'+nor).checked = false
+            } else if (result.dismiss == 'cancel') {
+                document.getElementById('krole' + no + '_' + nor).checked = false
             } else {
-                document.getElementById('krole'+no+'_'+nor).checked = false
+                document.getElementById('krole' + no + '_' + nor).checked = false
             }
         });
     }
