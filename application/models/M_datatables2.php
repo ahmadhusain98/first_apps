@@ -24,8 +24,7 @@ class M_datatables2 extends CI_Model
         $this->db->select($columns);
         $this->db->from($table);
 
-        if ((($this->uri->segment(1) == 'Kasir') && ($this->uri->segment(2) == 'deposit_um'))) {
-        } else {
+        if ((($this->uri->segment(1) != 'Kasir') && ($this->uri->segment(2) != 'deposit_um'))) {
             $this->db->where(['kode_cabang' => $this->session->userdata('cabang')]);
         }
 
@@ -79,8 +78,13 @@ class M_datatables2 extends CI_Model
 
     public function count_all($table, $columns, $order_arr, $order, $order2, $condition_param1, $type, $month, $year, $param2, $condition_param2)
     {
+
         $this->db->select($columns);
         $this->db->from($table);
+
+        if ((($this->uri->segment(1) != 'Kasir') && ($this->uri->segment(2) != 'deposit_um'))) {
+            $this->db->where(['kode_cabang' => $this->session->userdata('cabang')]);
+        }
 
         $add_condition = $this->uri->segment(1) == 'Marketing' ? ' <= ' : '';
 

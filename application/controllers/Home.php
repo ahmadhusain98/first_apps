@@ -45,6 +45,14 @@ class Home extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
+        $sess_cabang = $this->session->userdata('cabang');
+
+        $now = date('Y-m-d');
+
+        $header_out = $this->db->query("SELECT * FROM barang_out_header WHERE kode_cabang = '$sess_cabang' AND tgl_jual LIKE '%$now%' AND status_jual = 1")->result();
+        $header_bayar = $this->db->query("SELECT * FROM pembayaran WHERE kode_cabang = '$sess_cabang' AND tgl_pembayaran LIKE '%$now%' AND approved = 1")->result();
+        $header_daftar = $this->db->query("SELECT * FROM pendaftaran WHERE kode_cabang = '$sess_cabang' AND tgl_daftar LIKE '%$now%' AND status_trx != 2")->result();
+
         $parameter = [
             $this->data,
             'judul'             => 'Selamat Datang',
@@ -52,9 +60,11 @@ class Home extends CI_Controller
             'page'              => 'Beranda',
             'web'               => $web_setting,
             'web_version'       => $web_version->version,
-            'kunjungan_poli'    => $this->db->query("SELECT p.keterangan AS poli, COUNT(boh.kode_poli) AS jumlah FROM pembayaran buy JOIN barang_out_header boh ON buy.inv_jual = boh.invoice JOIN m_poli p ON boh.kode_poli = p.kode_poli GROUP BY boh.kode_poli")->result(),
-            'jumlah_beli'       => count($this->M_global->getResult('barang_out_header')),
-            'jumlah_member'     => count($this->M_global->getResult('member')),
+            'kunjungan_poli'    => $this->db->query("SELECT p.keterangan AS poli, COUNT(boh.kode_poli) AS jumlah FROM pembayaran buy JOIN barang_out_header boh ON buy.inv_jual = boh.invoice JOIN m_poli p ON boh.kode_poli = p.kode_poli WHERE buy.kode_cabang = '$sess_cabang' AND buy.tgl_pembayaran LIKE '%$now%' AND buy.approved = 1 GROUP BY boh.kode_poli")->result(),
+            'jumlah_beli'       => count($header_out),
+            'jumlah_bayar'      => count($header_bayar),
+            'jumlah_member'     => count($this->db->get_where('member', ['kode_member != ' => 'U00001'])->result()),
+            'jumlah_daftar'     => count($header_daftar),
         ];
 
         $this->template->load('Template/Content', 'Home/Dashboard', $parameter);
