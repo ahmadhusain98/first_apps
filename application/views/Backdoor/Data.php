@@ -1,6 +1,6 @@
 <div class="row mb-1">
     <div class="col-lg-4 col-4" type="button" onclick="empty_trx()">
-        <div class="small-box bg-info" style="height: 20vh;">
+        <div class="small-box bg-warning" style="height: 20vh;">
             <div class="inner">
                 <h4>Empty Transaksi</h4>
             </div>
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="col-lg-4 col-4" type="button" onclick="empty_all()">
-        <div class="small-box bg-warning" style="height: 20vh;">
+        <div class="small-box bg-danger" style="height: 20vh;">
             <div class="inner">
                 <h4>Empty Database</h4>
             </div>
@@ -35,7 +35,7 @@
     <div class="col-lg-4 col-4" type="button" onclick="getUrl('Backdoor/user_akses')">
         <div class="small-box bg-secondary" style="height: 20vh;">
             <div class="inner">
-                <h4>Pengaturan Akses User</h4>
+                <h4>Akses User</h4>
             </div>
             <div class="icon">
                 <i class="fa-solid fa-users-gear"></i>
@@ -45,7 +45,7 @@
     <div class="col-lg-4 col-4" type="button" onclick="getUrl('Backdoor/menu_akses')">
         <div class="small-box bg-light" style="height: 20vh;">
             <div class="inner">
-                <h4>Pengaturan Akses Menu</h4>
+                <h4>Akses Menu</h4>
             </div>
             <div class="icon">
                 <i class="fa-solid fa-user-gear"></i>
@@ -53,9 +53,9 @@
         </div>
     </div>
     <div class="col-lg-4 col-4" type="button" onclick="getUrl('Backdoor/cabang_akses')">
-        <div class="small-box bg-dark" style="height: 20vh;">
+        <div class="small-box bg-info" style="height: 20vh;">
             <div class="inner">
-                <h4>Pengaturan Akses Cabang</h4>
+                <h4>Akses Cabang</h4>
             </div>
             <div class="icon">
                 <i class="fa-solid fa-building"></i>
