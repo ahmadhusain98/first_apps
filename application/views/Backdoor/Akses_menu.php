@@ -48,7 +48,7 @@ echo _lock_so();
         // console.log(id_akses + ' - ' + kdrole + ' - ' + no + ' - ' + nor + ' - ' + nmenu + ' - ' + nrole + ' - ' + idmenu);
         Swal.fire({
             title: "Kamu yakin?",
-            html: "Ubah <b>"+nmenu+"</b> menjadi <b style='color: red;'>"+nrole+"</>!",
+            html: "Menu <b>"+nmenu+"</b> untuk akses <b style='color: red;'>"+nrole+"</>!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",

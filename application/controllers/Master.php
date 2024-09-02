@@ -13,21 +13,29 @@ class Master extends CI_Controller
         $this->load->model("M_auth");
 
         if (!empty($this->session->userdata("email"))) { // jika session email masih ada
+            $id_menu = $this->M_global->getData('m_menu', ['url' => 'Master'])->id;
+
             // ambil isi data berdasarkan email session dari table user, kemudian tampung ke variable $user
             $user = $this->M_global->getData("user", ["email" => $this->session->userdata("email")]);
 
-            // tampung data ke variable data public
-            $this->data = [
-                'nama'      => $user->nama,
-                'email'     => $user->email,
-                'kode_role' => $user->kode_role,
-                'actived'   => $user->actived,
-                'foto'      => $user->foto,
-                'shift'     => $this->session->userdata('shift'),
-                'menu'      => 'Master',
-            ];
-
-            $this->load->model('M_barang');
+            $cek_akses_menu = $this->M_global->getData('akses_menu', ['id_menu' => $id_menu, 'kode_role' => $user->kode_role]);
+            if($cek_akses_menu) {
+                // tampung data ke variable data public
+                $this->data = [
+                    'nama'      => $user->nama,
+                    'email'     => $user->email,
+                    'kode_role' => $user->kode_role,
+                    'actived'   => $user->actived,
+                    'foto'      => $user->foto,
+                    'shift'     => $this->session->userdata('shift'),
+                    'menu'      => 'Master',
+                ];
+    
+                $this->load->model('M_barang');
+            } else {
+                // kirimkan kembali ke Auth
+                redirect('Home');
+            }
         } else { // selain itu
             // kirimkan kembali ke Auth
             redirect('Auth');
