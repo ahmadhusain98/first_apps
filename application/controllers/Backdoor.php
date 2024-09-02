@@ -20,7 +20,7 @@ class Backdoor extends CI_Controller
 
         if (!empty($this->session->userdata("email"))) { // jika session email masih ada
             
-            $id_menu = $this->M_global->getData('m_menu', ['url' => 'Master'])->id;
+            $id_menu = $this->M_global->getData('m_menu', ['url' => 'Backdoor'])->id;
 
             // ambil isi data berdasarkan email session dari table user, kemudian tampung ke variable $user
             $user = $this->M_global->getData("user", ["email" => $this->session->userdata("email")]);
