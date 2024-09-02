@@ -13,14 +13,14 @@ class Health extends CI_Controller
         $this->load->model("M_auth");
 
         if (!empty($this->session->userdata("email"))) { // jika session email masih ada
-            
+
             $id_menu = $this->M_global->getData('m_menu', ['url' => 'Health'])->id;
 
             // ambil isi data berdasarkan email session dari table user, kemudian tampung ke variable $user
             $user = $this->M_global->getData("user", ["email" => $this->session->userdata("email")]);
 
             $cek_akses_menu = $this->M_global->getData('akses_menu', ['id_menu' => $id_menu, 'kode_role' => $user->kode_role]);
-            if($cek_akses_menu) {
+            if ($cek_akses_menu) {
                 // tampung data ke variable data public
                 $this->data = [
                     'nama'      => $user->nama,
@@ -35,7 +35,6 @@ class Health extends CI_Controller
                 // kirimkan kembali ke Auth
                 redirect('Home');
             }
-
         } else { // selain itu
             // kirimkan kembali ke Auth
             redirect('Auth');
@@ -936,7 +935,11 @@ class Health extends CI_Controller
         if ($member->status_regist < 1) {
             echo json_encode(['status' => 1]);
         } else {
-            echo json_encode(['status' => 0, "kode_member" => $kode_member]);
+            $last_regist = $member->last_regist;
+            $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $last_regist]);
+
+            $cabang = $this->M_global->getData('cabang', ['kode_cabang' => $pendaftaran->kode_cabang]);
+            echo json_encode(['status' => 0, "kode_member" => $kode_member, "cabang" => $cabang->inisial_cabang, "tgl" => date('d-m-Y', strtotime($pendaftaran->tgl_daftar))]);
         }
     }
 

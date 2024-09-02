@@ -288,7 +288,7 @@
                     } else { // selain itu
                         btnSimpan.attr('disabled', false);
 
-                        Swal.fire("Member", "Dengan ID <b>" + result.kode_member + "</b> sudah terdaftar!, silahkan selesaikan dahulu", "info");
+                        Swal.fire("Member " + result.kode_member, "Sudah terdaftar di cabang <b>" + result.cabang + "</b> pada tanggal <b>" + result.tgl + "</b><br>Silahkan <b>hubungi cabang terkait</b> untuk diselesaikan!", "info");
                     }
                 },
                 error: function(result) { // jika fungsi error
