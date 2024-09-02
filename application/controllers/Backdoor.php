@@ -343,16 +343,17 @@ class Backdoor extends CI_Controller
             $role       = $this->M_global->getResult('m_role');
 
             $row = [];
-            $row[] = $no++;
+            $row[] = $no;
             $row[] = $rd->kode_user . ' ~ ' . $rd->nama;
             $nor = 1;
             foreach($role AS $r) {
                 $row[] = '<div class="text-center">
-                    <input type="checkbox" class="form-control" id="krole'.$nor.'" '.(($r->kode_role == $rd->kode_role) ? 'checked' : '' ).' name="krole[]" value="'.$r->kode_role.'" onclick="changeRole(' . "'" . $rd->kode_user . "', '" . $r->kode_role . "', '" . $nor . "'" . ')">
+                    <input type="checkbox" class="form-control" id="krole'. $no . '_'.$nor.'" '.(($r->kode_role == $rd->kode_role) ? 'checked' : '' ).' name="krole[]" value="'.$r->kode_role.'" onclick="changeRole(' . "'" . $rd->kode_user . "', '" . $r->kode_role . "', '" . $no . "', '" . $nor. "', '" . $rd->nama. "', '" . $r->keterangan. "'" . ')">
                 </div>';
                 $nor++;
             }
             $data[] = $row;
+            $no++;
         }
 
         // Prepare the output in JSON format
@@ -365,5 +366,19 @@ class Backdoor extends CI_Controller
 
         // Send the output to the view
         echo json_encode($output);
+    }
+
+    // change akses
+    public function changeAkses() {
+        $kode_user = $this->input->get('kduser');
+        $kode_role = $this->input->get('kdrole');
+
+        $cek = $this->M_global->updateData('user', ['kode_role' => $kode_role], ['kode_user' => $kode_user]);
+
+        if($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
     }
 }

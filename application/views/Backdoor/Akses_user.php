@@ -44,6 +44,45 @@ echo _lock_so();
     var table = $('#tableAksesUser');
 
     // change role
-    function changeRole(kduser, kdrole, nor) {
+    function changeRole(kduser, kdrole, no, nor, nuser, nrole) {
+        Swal.fire({
+            title: "Kamu yakin?",
+            html: "Ubah <b>"+nuser+"</b> menjadi <b style='color: red;'>"+nrole+"</>!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, ubah!",
+            cancelButtonText: "Tidak!"
+        }).then((result) => {
+            if (result.isConfirmed) { // jika yakin
+
+                // jalankan fungsi
+                $.ajax({
+                    url: siteUrl + 'Backdoor/changeAkses/?kduser=' + kduser + '&kdrole='+kdrole,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    success: function(result) { // jika fungsi berjalan dengan baik
+
+                        if (result.status == 1) { // jika mendapatkan hasil 1
+                            Swal.fire("User "+nuser, "Berhasil diubah aksesnya!", "success").then(() => {
+                                reloadTable();
+                            });
+                        } else { // selain itu
+
+                            Swal.fire("User "+nuser, "Gagal diubah aksesnya!, silahkan dicoba kembali", "info");
+                        }
+                    },
+                    error: function(result) { // jika fungsi error
+
+                        error_proccess();
+                    }
+                });
+            } else if(result.dismiss == 'cancel') {
+                document.getElementById('krole'+no+'_'+nor).checked = false
+            } else {
+                document.getElementById('krole'+no+'_'+nor).checked = false
+            }
+        });
     }
 </script>

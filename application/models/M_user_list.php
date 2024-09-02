@@ -22,6 +22,7 @@ class M_user_list extends CI_Model
         $this->db->select($this->kolom);
         $this->db->from($this->table . ' AS u');
         $this->db->join('m_role r', 'r.kode_role = u.kode_role');
+        $this->db->order_by('u.kode_user', 'asc');
 
         $i = 0;
 
