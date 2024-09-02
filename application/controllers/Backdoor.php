@@ -305,4 +305,65 @@ class Backdoor extends CI_Controller
             echo json_encode(['status' => 0]);
         }
     }
+
+    // user akses page
+    public function user_akses()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'             => 'Pintasan',
+            'nama_apps'         => $web_setting->nama,
+            'page'              => 'Backdoor',
+            'web'               => $web_setting,
+            'web_version'       => $web_version->version,
+            'kunjungan_poli'    => $this->db->query("SELECT p.keterangan AS poli, COUNT(boh.kode_poli) AS jumlah FROM pembayaran buy JOIN barang_out_header boh ON buy.inv_jual = boh.invoice JOIN m_poli p ON boh.kode_poli = p.kode_poli GROUP BY boh.kode_poli")->result(),
+            'role'              => $this->M_global->getResult('m_role'),
+            'list_data'         => 'Backdoor/akses_user_list/',
+            'param1'            => null,
+        ];
+
+        $this->template->load('Template/Content', 'Backdoor/Akses_user', $parameter);
+    }
+
+    // list akses user
+    public function akses_user_list() {
+        $this->load->model("M_user_list");
+        // Retrieve data from the model
+        $list = $this->M_user_list->get_datatables();
+
+        $data = [];
+        $no = $_POST['start'] + 1;
+
+        // Loop through the list to populate the data array
+        foreach ($list as $rd) {
+            $role       = $this->M_global->getResult('m_role');
+
+            $row = [];
+            $row[] = $no++;
+            $row[] = $rd->kode_user . ' ~ ' . $rd->nama;
+            $nor = 1;
+            foreach($role AS $r) {
+                $row[] = '<div class="text-center">
+                    <input type="checkbox" class="form-control" id="krole'.$nor.'" '.(($r->kode_role == $rd->kode_role) ? 'checked' : '' ).' name="krole[]" value="'.$r->kode_role.'" onclick="changeRole(' . "'" . $rd->kode_user . "', '" . $r->kode_role . "', '" . $nor . "'" . ')">
+                </div>';
+                $nor++;
+            }
+            $data[] = $row;
+        }
+
+        // Prepare the output in JSON format
+        $output = [
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $this->M_user_list->count_all(),
+            "recordsFiltered" => $this->M_user_list->count_filtered(),
+            "data" => $data,
+        ];
+
+        // Send the output to the view
+        echo json_encode($output);
+    }
 }

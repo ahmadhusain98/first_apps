@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row mb-1">
     <div class="col-lg-4 col-4" type="button" onclick="empty_trx()">
         <div class="small-box bg-info" style="height: 20vh;">
             <div class="inner">
@@ -26,6 +26,19 @@
             </div>
             <div class="icon">
                 <i class="fa-solid fa-database"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-1">
+    <div class="col-lg-4 col-4" type="button" onclick="getUrl('Backdoor/user_akses')">
+        <div class="small-box bg-secondary" style="height: 20vh;">
+            <div class="inner">
+                <h4>Pengaturan Akses User</h4>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-users-gear"></i>
             </div>
         </div>
     </div>
