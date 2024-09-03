@@ -33,7 +33,7 @@ class Transaksi extends CI_Controller
                 ];
             } else {
                 // kirimkan kembali ke Auth
-                redirect('Home');
+                redirect('Where');
             }
 
         } else { // selain itu

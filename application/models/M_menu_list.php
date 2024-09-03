@@ -6,7 +6,7 @@ class M_menu_list extends CI_Model
     private $table = 'm_menu';
     private $order = ['m.id AS idm', 'm.url', 'm.icon', 'm.nama'];
     private $kolom = ['m.id AS idm', 'm.url', 'm.icon', 'm.nama'];
-    private $search = ['m.id AS idm', 'm.url', 'm.icon', 'm.nama'];
+    private $search = ['m.id', 'm.url', 'm.icon', 'm.nama'];
 
     public function __construct()
     {

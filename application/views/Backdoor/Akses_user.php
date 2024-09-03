@@ -70,6 +70,7 @@ echo _lock_so();
                         if (result.status == 1) { // jika mendapatkan hasil 1
                             Swal.fire("User " + nuser, "Berhasil diubah aksesnya!", "success").then(() => {
                                 reloadTable();
+                                getUrl('Backdoor/user_akses');
                             });
                         } else { // selain itu
 

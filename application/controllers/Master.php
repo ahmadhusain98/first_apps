@@ -34,7 +34,7 @@ class Master extends CI_Controller
                 $this->load->model('M_barang');
             } else {
                 // kirimkan kembali ke Auth
-                redirect('Home');
+                redirect('Where');
             }
         } else { // selain itu
             // kirimkan kembali ke Auth
