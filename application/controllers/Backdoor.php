@@ -381,12 +381,28 @@ class Backdoor extends CI_Controller
     // change akses
     public function changeAkses()
     {
-        $kode_user = $this->input->get('kduser');
-        $kode_role = $this->input->get('kdrole');
+        $kode_user    = $this->input->get('kduser');
+        $kode_role    = $this->input->get('kdrole');
 
-        $cek = $this->M_global->updateData('user', ['kode_role' => $kode_role], ['kode_user' => $kode_user]);
+        $role         = $this->M_global->getData('m_role', ['kode_role' => $kode_role]);
+        $cek          = $this->M_global->updateData('user', ['kode_role' => $kode_role], ['kode_user' => $kode_user]);
 
         if ($cek) {
+            $sess       = $this->session->userdata('email');
+            $cabang     = $this->session->userdata('init_cabang');
+            $shift      = $this->session->userdata('shift');
+
+            $aktifitas = [
+                'email'         => $sess,
+                'kegiatan'      => $sess . " Telah <b>mengubah Akses User " . $kode_user . " untuk Role " . $role->keterangan . "</b>",
+                'menu'          => 'Pintu Belakang',
+                'waktu'         => date('Y-m-d H:i:s'),
+                'kode_cabang'   => $cabang,
+                'shift'         => $shift,
+            ];
+
+            $this->db->insert("activity_user", $aktifitas);
+
             echo json_encode(['status' => 1]);
         } else {
             echo json_encode(['status' => 0]);
@@ -462,9 +478,11 @@ class Backdoor extends CI_Controller
     // change menu
     public function changeMenu()
     {
-        $kdrole = $this->input->get('kdrole');
-        $idmenu = $this->input->get('idmenu');
+        $kdrole   = $this->input->get('kdrole');
+        $idmenu   = $this->input->get('idmenu');
 
+        $menu     = $this->M_global->getData('m_menu', ['id' => $idmenu]);
+        $role     = $this->M_global->getData('m_role', ['kode_role' => $kdrole]);
         $cek_menu = $this->M_global->getData('akses_menu', ['kode_role' => $kdrole, 'id_menu' => $idmenu]);
 
         if ($cek_menu) {
@@ -474,6 +492,21 @@ class Backdoor extends CI_Controller
         }
 
         if ($cek) {
+            $sess       = $this->session->userdata('email');
+            $cabang     = $this->session->userdata('init_cabang');
+            $shift      = $this->session->userdata('shift');
+
+            $aktifitas = [
+                'email'         => $sess,
+                'kegiatan'      => $sess . " Telah <b>mengubah Akses Menu " . $menu->nama . " untuk Role " . $role->keterangan . "</b>",
+                'menu'          => 'Pintu Belakang',
+                'waktu'         => date('Y-m-d H:i:s'),
+                'kode_cabang'   => $cabang,
+                'shift'         => $shift,
+            ];
+
+            $this->db->insert("activity_user", $aktifitas);
+
             echo json_encode(['status' => 1]);
         } else {
             echo json_encode(['status' => 0]);
@@ -557,10 +590,12 @@ class Backdoor extends CI_Controller
     // change cabang
     public function changeCabang()
     {
-        $email = $this->input->get('email');
-        $kode_cabang = $this->input->get('kcabang');
+        $email          = $this->input->get('email');
+        $kode_cabang    = $this->input->get('kcabang');
 
-        $cek_cabang = $this->M_global->getData('cabang_user', ['kode_cabang' => $kode_cabang, 'email' => $email]);
+        $cabangx        = $this->M_global->getData('cabang', ['kode_cabang' => $kode_cabang]);
+        $userx          = $this->M_global->getData('user', ['email' => $email]);
+        $cek_cabang     = $this->M_global->getData('cabang_user', ['kode_cabang' => $kode_cabang, 'email' => $email]);
 
         if ($cek_cabang) {
             $cek = $this->M_global->delData('cabang_user', ['kode_cabang' => $kode_cabang, 'email' => $email]);
@@ -569,6 +604,21 @@ class Backdoor extends CI_Controller
         }
 
         if ($cek) {
+            $sess       = $this->session->userdata('email');
+            $cabang     = $this->session->userdata('init_cabang');
+            $shift      = $this->session->userdata('shift');
+
+            $aktifitas = [
+                'email'         => $sess,
+                'kegiatan'      => $sess . " Telah <b>mengubah Akses Cabang " . $cabangx->cabang . " untuk User " . $userx->nama . "</b>",
+                'menu'          => 'Pintu Belakang',
+                'waktu'         => date('Y-m-d H:i:s'),
+                'kode_cabang'   => $cabang,
+                'shift'         => $shift,
+            ];
+
+            $this->db->insert("activity_user", $aktifitas);
+
             echo json_encode(['status' => 1]);
         } else {
             echo json_encode(['status' => 0]);

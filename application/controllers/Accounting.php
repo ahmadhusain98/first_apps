@@ -312,6 +312,8 @@ class Accounting extends CI_Controller
         ];
 
         if($cek) {
+            aktifitas_user_transaksi('Accounting', 'menghapus Deposit Kas/Bank', $token);
+
             echo json_encode(['status' => 1]);
         } else {
             echo json_encode(['status' => 0]);
@@ -368,11 +370,15 @@ class Accounting extends CI_Controller
                 $this->M_global->updateData('deposit_kas', $isi, ['token' => $token]),
                 $this->M_global->delData('bayar_kas_card', ['token_deposit' => $token]),
             ];
+
+            aktifitas_user_transaksi('Accounting', 'mengubah Deposit Kas/Bank', $token);
         } else {
             $cek = [
                 $this->M_global->insertData('deposit_kas', $isi),
                 $this->db->query("UPDATE kas_utama SET masuk = masuk + '$total', sisa = sisa + '$total' WHERE kode_cabang = '$cabang'"),
             ];
+
+            aktifitas_user_transaksi('Accounting', 'menambahkan Deposit Kas/Bank', $token);
         }
         
 
