@@ -401,6 +401,7 @@
 
                     Swal.fire("Deposit Kas/Bank", "Berhasil " + message, "success").then(() => {
                         // question_cetak(result.token);
+                        getUrl('Accounting/deposit_kas');
                     });
                 } else { // selain itu
 

@@ -68,4 +68,42 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     function ubah(tkn) {
         getUrl('Accounting/form_deposit_kas/' + tkn);
     }
+
+    function hapus(tkn) {
+        Swal.fire({
+            title: "Kamu yakin?",
+            text: "Data yang dihapus tidak bisa dikembalikan!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, hapus!",
+            cancelButtonText: "Tidak!"
+        }).then((result) => {
+            if (result.isConfirmed) { // jika yakin
+
+                // jalankan fungsi
+                $.ajax({
+                    url: siteUrl + 'Accounting/delDepositKas/' + tkn,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    success: function(result) { // jika fungsi berjalan dengan baik
+
+                        if (result.status == 1) { // jika mendapatkan hasil 1
+                            Swal.fire("Deposit Kas/Bank", "Berhasil di hapus!", "success").then(() => {
+                                reloadTable();
+                            });
+                        } else { // selain itu
+
+                            Swal.fire("Deposit Kas/Bank", "Gagal di hapus!, silahkan dicoba kembali", "info");
+                        }
+                    },
+                    error: function(result) { // jika fungsi error
+
+                        error_proccess();
+                    }
+                });
+            }
+        });
+    }
 </script>

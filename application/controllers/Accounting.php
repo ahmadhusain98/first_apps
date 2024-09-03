@@ -298,6 +298,25 @@ class Accounting extends CI_Controller
         $this->template->load('Template/Content', 'Accounting/Form_deposit', $parameter);
     }
 
+    public function delDepositKas($token) {
+        $kas_utama      = $this->M_global->getData('kas_utama', ['id' => 1]);
+        $deposit_kas    = $this->M_global->getData('deposit_kas', ['token' => $token]);
+        $total          = $deposit_kas->total;
+
+        $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama->masuk - $deposit_kas->total)], ['id' => 1]);
+            
+        $cek = [
+            $this->M_global->delData('deposit_kas', ['token' => $token]),
+            $this->M_global->delData('bayar_kas_card', ['token_deposit' => $token]),
+        ];
+
+        if($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
+
     public function deposit_kas_proses($param)
     {
         $cabang = $this->session->userdata('cabang');
@@ -331,14 +350,30 @@ class Accounting extends CI_Controller
             'kode_user' => $this->session->userdata('kode_user'),
         ];
 
+        $kas_utama = $this->M_global->getData('kas_utama', ['id' => 1]);
+
         if ($param == 2) {
+            $depo_kas = $this->M_global->getData('deposit_kas', ['token' => $token]);
+            
+            // update1
+            $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama->masuk - $depo_kas->total)], ['id' => 1]);
+            
+            // update2
+            $kas_utama2 = $this->M_global->getData('kas_utama', ['id' => 1]);
+            $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama2->masuk + $total)], ['id' => 1]);
+
             $cek = [
                 $this->M_global->updateData('deposit_kas', $isi, ['token' => $token]),
                 $this->M_global->delData('bayar_kas_card', ['token_deposit' => $token]),
             ];
         } else {
-            $cek = $this->M_global->insertData('deposit_kas', $isi);
+            $cek = [
+                $this->M_global->insertData('deposit_kas', $isi),
+            ];
+
+            $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama->masuk + $total), 'last_no' => $token], ['id' => 1]);
         }
+        
 
         if ($cek) {
             if ($jenis_pembayaran > 0) {
