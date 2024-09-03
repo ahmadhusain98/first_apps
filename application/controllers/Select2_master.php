@@ -207,4 +207,11 @@ class Select2_master extends CI_Controller
         $key = $this->input->post('searchTerm');
         echo json_encode($this->M_select2->getBarang($key));
     }
+
+    // master Kas Bank
+    function dataKasBank()
+    {
+        $key = $this->input->post('searchTerm');
+        echo json_encode($this->M_select2->getKasBank($key));
+    }
 }

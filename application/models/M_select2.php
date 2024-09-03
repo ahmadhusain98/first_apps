@@ -442,4 +442,32 @@ class M_select2 extends CI_Model
 
         return $sintak;
     }
+
+    // fungsi kas bank
+    function getKasBank($key)
+    {
+        $kode_cabang = $this->session->userdata('cabang');
+
+        $limit = ' LIMIT 20';
+
+        if (!empty($key)) {
+            $add_sintak = ' AND (id LIKE "%' . $key . '%" OR text LIKE "%' . $key . '%") ORDER BY indek ASC';
+        } else {
+            $add_sintak = ' ORDER BY indek ASC';
+        }
+
+        $sintak = $this->db->query(
+            'SELECT id, text FROM (
+                SELECT kode_kas AS id, "** KAS UTAMA **" AS text, kode_cabang AS cabang, 0 AS indek
+                FROM kas_utama
+
+                UNION ALL
+
+                SELECT kode_kas_bank AS id, nama AS text, kode_cabang AS cabang, id AS indek
+                FROM kas_bank
+            ) AS kas WHERE cabang = "' . $kode_cabang . '" ' . $add_sintak . $limit
+        )->result();
+
+        return $sintak;
+    }
 }

@@ -916,8 +916,43 @@
         initailizeSelect2_jual_for_retur();
         initailizeSelect2_promo(min_buy = '0');
         initailizeSelect2_barang();
+        initailizeSelect2_kas_bank();
 
         // fungsi
+        function initailizeSelect2_kas_bank() {
+            $(".select2_kas_bank").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Barang',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataKasBank',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
         function initailizeSelect2_barang() {
             $(".select2_barang").select2({
                 allowClear: true,

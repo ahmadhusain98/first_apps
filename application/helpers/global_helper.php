@@ -442,6 +442,24 @@ function _invoice($cabang)
     return $invoice;
 }
 
+function _invoiceMutasiKas($cabang)
+{
+    $CI           = &get_instance();
+
+    $now          = date('Y-m-d');
+
+    $lastNumber   = $CI->db->query('SELECT * FROM mutasi_kas WHERE tgl_mutasi = "' . $now . '" AND kode_cabang = "' . $cabang . '" ORDER BY id DESC LIMIT 1')->row();
+    $number       = 1;
+    if ($lastNumber) {
+        $number   = $CI->db->query('SELECT * FROM mutasi_kas WHERE tgl_mutasi = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
+        $invoice  = $CI->session->userdata('init_cabang') . 'MKB-' . date('Ymd') . sprintf("%05d", $number);
+    } else {
+        $number   = 0;
+        $invoice  = $CI->session->userdata('init_cabang') . 'MKB-' . date('Ymd') . "00001";
+    }
+    return $invoice;
+}
+
 function _noPiutang($cabang)
 {
     $CI           = &get_instance();

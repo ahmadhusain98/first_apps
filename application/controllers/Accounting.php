@@ -133,7 +133,7 @@ class Accounting extends CI_Controller
             $row[]  = $rd->referensi;
             $row[]  = date('d/m/Y', strtotime($rd->tanggal_bayar)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_bayar));
             $row[]  = $this->M_global->getData('m_supplier', ['kode_supplier' => $supplier])->nama;
-            $row[]  = $this->M_global->getData('m_gudang', ['kode_gudang' => $gudang])->nama;
+            $row[]  = (($rd->jumlah > 0) ? '<span class="badge badge-warning">Hutang</span>' : '<span class="badge badge-info">Piutang</span>');
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->jumlah) . '</span>';
             $row[]  = '<div class="text-center">' . (($rd->status > 0) ? '<span class="badge badge-success">Terbayarkan</span>' : '<span class="badge badge-danger">Belum dibayar</span>') . '</div>';
             $row[]  = '<div class="text-center">
@@ -158,6 +158,9 @@ class Accounting extends CI_Controller
     public function piutang_bayar()
     {
         $piutang_no = $this->input->get('inv');
+
+        $piutang = $this->M_global->getData('piutang', ['piutang_no' => $piutang_no]);
+        $jumlah = $piutang->jumlah;
 
         $cek = $this->M_global->updateData('piutang', ['status' => 1, "tanggal_bayar" => date('Y-m-d'), "jam_bayar" => date('H:i:s')], ['piutang_no' => $piutang_no]);
 
@@ -298,20 +301,21 @@ class Accounting extends CI_Controller
         $this->template->load('Template/Content', 'Accounting/Form_deposit', $parameter);
     }
 
-    public function delDepositKas($token) {
+    public function delDepositKas($token)
+    {
         $cabang         = $this->session->userdata('cabang');
         $kas_utama      = $this->M_global->getData('kas_utama', ['kode_cabang' => $cabang]);
         $deposit_kas    = $this->M_global->getData('deposit_kas', ['token' => $token]);
         $total          = $deposit_kas->total;
 
         $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama->masuk - $deposit_kas->total), 'sisa' => ($kas_utama->sisa - $deposit_kas->total)], ['kode_cabang' => $cabang]);
-            
+
         $cek = [
             $this->M_global->delData('deposit_kas', ['token' => $token]),
             $this->M_global->delData('bayar_kas_card', ['token_deposit' => $token]),
         ];
 
-        if($cek) {
+        if ($cek) {
             aktifitas_user_transaksi('Accounting', 'menghapus Deposit Kas/Bank', $token);
 
             echo json_encode(['status' => 1]);
@@ -359,10 +363,10 @@ class Accounting extends CI_Controller
 
         if ($param == 2) {
             $depo_kas = $this->M_global->getData('deposit_kas', ['token' => $token]);
-            
+
             // update1
             $this->db->query("UPDATE kas_utama SET masuk = masuk - '$depo_kas->total', sisa = sisa - '$depo_kas->total' WHERE kode_cabang = '$cabang'");
-            
+
             // update2
             $this->db->query("UPDATE kas_utama SET masuk = masuk + '$total', sisa = sisa + '$total' WHERE kode_cabang = '$cabang'");
 
@@ -380,7 +384,7 @@ class Accounting extends CI_Controller
 
             aktifitas_user_transaksi('Accounting', 'menambahkan Deposit Kas/Bank', $token);
         }
-        
+
 
         if ($cek) {
             if ($jenis_pembayaran > 0) {
@@ -419,6 +423,246 @@ class Accounting extends CI_Controller
             }
 
             echo json_encode(['status' => 1, 'token' => $token]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // mutasi_kas page
+    public function mutasi_kas()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Accounting',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Mutasi',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'piutang_num'   => $this->M_global->getDataResult('piutang', ['kode_cabang' => $this->session->userdata('cabang')]),
+            'list_data'     => 'Accounting/mutasi_kas_list/',
+            'param1'        => '',
+        ];
+
+        $this->template->load('Template/Content', 'Accounting/Mutasi_kas', $parameter);
+    }
+
+    // fungsi list mutasi_kas_list
+    public function mutasi_kas_list($param1 = 1, $param2 = '')
+    {
+        // parameter untuk list table
+        $table            = 'mutasi_kas';
+        $colum            = ['id', 'kode_cabang', 'invoice', 'tgl_mutasi', 'jam_mutasi', 'dari', 'menuju', 'saldo_dari', 'saldo_menuju', 'total', 'kode_user', 'status', 'tgl_confirm', 'jam_confirm', 'user_confirm'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['tgl_mutasi' => 'desc'];
+        $kondisi_param2   = '';
+        $kondisi_param1   = 'tgl_mutasi';
+
+        // kondisi role
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $confirmed        = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->confirmed;
+
+        // table server side tampung kedalam variable $list
+        $dat    = explode("~", $param1);
+
+        if ($dat[0] == 1) {
+            $bulan        = date('m');
+            $tahun        = date('Y');
+            $type         = 1;
+        } else {
+            $bulan        = date('Y-m-d', strtotime($dat[1]));
+            $tahun        = date('Y-m-d', strtotime($dat[2]));
+            $type         = 2;
+        }
+
+        $list             = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2);
+
+        $data             = [];
+        $no               = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($updated > 0) {
+                $upd_diss = _lock_button();
+            } else {
+                $upd_diss = 'disabled';
+            }
+
+            if ($deleted > 0) {
+                $del_diss = _lock_button();
+            } else {
+                $del_diss = 'disabled';
+            }
+
+            if ($confirmed > 0) {
+                $confirm_diss =  _lock_button();
+            } else {
+                $confirm_diss = 'disabled';
+            }
+
+            $kas1 = $this->M_global->getData('kas_bank', ['kode_kas_bank' => $rd->dari]);
+            if ($kas1) {
+                $dari_kas = $kas1->nama;
+            } else {
+                $dari_kas = '** KAS UTAMA **';
+            }
+
+            $kas2 = $this->M_global->getData('kas_bank', ['kode_kas_bank' => $rd->menuju]);
+            if ($kas2) {
+                $menuju_kas = $kas2->nama;
+            } else {
+                $menuju_kas = '** KAS UTAMA **';
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->invoice . '<br>' . (($rd->status > 0) ? '<span class="badge badge-primary">Acc</span>' : '<span class="badge badge-danger">Belum di Acc</span>');
+            $row[]  = date('d/m/Y', strtotime($rd->tgl_mutasi)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_mutasi));
+            $row[]  = $dari_kas . '<br>Rp. ' . number_format($rd->saldo_dari);
+            $row[]  = $menuju_kas . '<br>Rp. ' . number_format($rd->saldo_menuju);
+            $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
+            $row[]  = (($rd->status == 0) ? '<span class="badge badge-info">Belum di ACC</span>' : '<span class="badge badge-success">Sudah di ACC</span>');
+
+            if ($rd->status < 1) {
+                $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-primary" title="ACC" onclick="valided(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><i class="fa-regular fa-circle-check"></i></button>';
+            } else {
+                $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><i class="fa-regular fa-circle-check"></i></button>';
+            }
+
+            $row[]  = '<div class="text-center">
+                ' . $accept . '
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-warning" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>';
+
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables2->count_all($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2),
+            "recordsFiltered" => $this->M_datatables2->count_filtered($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    // form form_mutasi_kas page
+    public function form_mutasi_kas($param, $param2 = '')
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        if ($param == '0') {
+            $data_mutasi     = null;
+        } else {
+            $data_mutasi     = $this->M_global->getData('mutasi_kas', ['invoice' => $param]);
+        }
+
+        $parameter = [
+            $this->data,
+            'judul'             => 'Accounting',
+            'nama_apps'         => $web_setting->nama,
+            'page'              => 'Kas/Bank Mutasi',
+            'web'               => $web_setting,
+            'web_version'       => $web_version->version,
+            'list_data'         => '',
+            'data_mutasi'       => $data_mutasi,
+            'param2'            => $param2,
+        ];
+
+        $this->template->load('Template/Content', 'Accounting/Form_mutasi_kas', $parameter);
+    }
+
+    public function getSaldo($kode)
+    {
+        $kas_utama = $this->M_global->getData('kas_utama', ['kode_kas' => $kode]);
+
+        if ($kas_utama) {
+            $kas = $kas_utama;
+            $nama = 'KAS UTAMA';
+        } else {
+            $kas = $this->M_global->getData('kas_second', ['kode_kas' => $kode]);
+            if ($kas) {
+                $kas_bank = $this->M_global->getData('kas_bank', ['kode_kas_bank' => $kode]);
+                $nama = $kas_bank->nama;
+            } else {
+                $nama = 'Tidak Ada';
+            }
+        }
+
+        if ($kas) {
+            echo json_encode(['status' => 1, 'nama' => $nama, 'saldo' => $kas->sisa]);
+        } else {
+            echo json_encode(['status' => 0, 'nama' => $nama, 'saldo' => 0]);
+        }
+    }
+
+    public function mutasi_proses($param)
+    {
+        $kode_cabang    = $this->session->userdata('cabang');
+
+        if ($param == 1) {
+            $invoice    = _invoiceMutasiKas($kode_cabang);
+        } else {
+            $invoice    = $this->input->post('invoice');
+        }
+
+        $tgl_mutasi     = date('Y-m-d', strtotime($this->input->post('tgl_mutasi')));
+        $jam_mutasi     = date('H:i:s', strtotime($this->input->post('jam_mutasi')));
+        $dari           = $this->input->post('dari');
+        $saldo_dari     = str_replace(',', '', $this->input->post('saldo_dari'));
+        $menuju         = $this->input->post('menuju');
+        $saldo_menuju   = str_replace(',', '', $this->input->post('saldo_menuju'));
+
+        $isi = [
+            'kode_cabang'   => $kode_cabang,
+            'invoice'       => $invoice,
+            'tgl_mutasi'    => $tgl_mutasi,
+            'jam_mutasi'    => $jam_mutasi,
+            'dari'          => $dari,
+            'saldo_dari'    => $saldo_dari,
+            'menuju'        => $menuju,
+            'saldo_menuju'  => $saldo_menuju,
+            'total'         => $saldo_menuju,
+            'kode_user'     => $this->session->userdata('kode_user'),
+            'status'        => 0,
+        ];
+
+        if ($param == 1) {
+            $cek = $this->M_global->insertData('mutasi_kas', $isi);
+
+            aktifitas_user_transaksi('Accounting', 'menambahkan Mutasi Kas & Bank', $invoice);
+        } else {
+            $cek = $this->M_global->updateData('mutasi_kas', $isi, ['invoice' => $invoice]);
+
+            aktifitas_user_transaksi('Accounting', 'mengubah Mutasi Kas & Bank', $invoice);
+        }
+
+        if ($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    public function delMutasiKas($invoice)
+    {
+        $cek = $this->M_global->delData('mutasi_kas', ['invoice' => $invoice]);
+
+        if ($cek) {
+            aktifitas_user_transaksi('Accounting', 'menghapus Mutasi Kas & Bank', $invoice);
+
+            echo json_encode(['status' => 1]);
         } else {
             echo json_encode(['status' => 0]);
         }

@@ -24,15 +24,15 @@
         </div>
     </div>
     <div class="col-lg-3 col-6">
-        <div class="small-box bg-danger">
+        <div class="small-box bg-primary">
             <div class="inner">
-                <h3><?= $jumlah_daftar ?></h3>
-                <p>Member Terdaftar Hari Ini</p>
+                <h3>Rp. <?= number_format($saldo_kas - $hutang) ?></h3>
+                <p>Keuntungan</p>
             </div>
             <div class="icon">
-                <i class="ion ion-pie-graph"></i>
+                <i class="fa-solid fa-landmark"></i>
             </div>
-            <a href="#" class="small-box-footer">Info Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+            <a type="button" class="small-box-footer">&ensp;</a>
         </div>
     </div>
     <div class="col-lg-3 col-6">
@@ -42,16 +42,12 @@
                 <p>Saldo Kas/Bank</p>
             </div>
             <div class="icon">
-                <i class="fa-solid fa-landmark"></i>
+                <i class="fa-solid fa-scale-balanced"></i>
             </div>
-            <a type="button" onclick="getUrl('Health/daftar')" class="small-box-footer">Info Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+            <a type="button" class="small-box-footer">&ensp;</a>
         </div>
     </div>
 </div>
-
-<!-- <?php foreach ($kunjungan_poli as $ku) : ?>
-    <?= $ku->jumlah . ' - ' . $ku->poli . '<br>'; ?>
-<?php endforeach ?> -->
 
 <div class="row">
     <div class="col-lg-6 col-6">
@@ -59,6 +55,30 @@
             <div class="inner">
                 <canvas id="poli"></canvas>
             </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3><?= number_format($piutang) ?></h3>
+                <p>Piutang</p>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-scale-unbalanced-flip"></i>
+            </div>
+            <a type="button" class="small-box-footer">&ensp;</a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>Rp. <?= number_format($hutang) ?></h3>
+                <p>Hutang</p>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-scale-unbalanced"></i>
+            </div>
+            <a type="button" class="small-box-footer">&ensp;</a>
         </div>
     </div>
 </div>
