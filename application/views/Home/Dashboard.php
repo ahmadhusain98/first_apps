@@ -24,18 +24,6 @@
         </div>
     </div>
     <div class="col-lg-3 col-6">
-        <div class="small-box bg-warning">
-            <div class="inner">
-                <h3><?= $jumlah_member ?></h3>
-                <p>Member Dalam Sistem</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-person-add"></i>
-            </div>
-            <a type="button" onclick="getUrl('Health/daftar')" class="small-box-footer">Info Lanjut <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-    </div>
-    <div class="col-lg-3 col-6">
         <div class="small-box bg-danger">
             <div class="inner">
                 <h3><?= $jumlah_daftar ?></h3>
@@ -45,6 +33,18 @@
                 <i class="ion ion-pie-graph"></i>
             </div>
             <a href="#" class="small-box-footer">Info Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-light">
+            <div class="inner">
+                <h3>Rp. <?= number_format($saldo_kas) ?></h3>
+                <p>Saldo Kas/Bank</p>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-landmark"></i>
+            </div>
+            <a type="button" onclick="getUrl('Health/daftar')" class="small-box-footer">Info Lanjut <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
 </div>

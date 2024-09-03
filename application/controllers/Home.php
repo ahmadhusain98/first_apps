@@ -63,7 +63,7 @@ class Home extends CI_Controller
             'kunjungan_poli'    => $this->db->query("SELECT p.keterangan AS poli, COUNT(boh.kode_poli) AS jumlah FROM pembayaran buy JOIN barang_out_header boh ON buy.inv_jual = boh.invoice JOIN m_poli p ON boh.kode_poli = p.kode_poli WHERE buy.kode_cabang = '$sess_cabang' AND buy.tgl_pembayaran LIKE '%$now%' AND buy.approved = 1 GROUP BY boh.kode_poli")->result(),
             'jumlah_beli'       => count($header_out),
             'jumlah_bayar'      => count($header_bayar),
-            'jumlah_member'     => count($this->db->get_where('member', ['kode_member != ' => 'U00001'])->result()),
+            'saldo_kas'         => $this->M_global->getData('kas_utama', ['kode_cabang' => $sess_cabang])->sisa,
             'jumlah_daftar'     => count($header_daftar),
         ];
 

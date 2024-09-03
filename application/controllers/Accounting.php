@@ -304,7 +304,7 @@ class Accounting extends CI_Controller
         $deposit_kas    = $this->M_global->getData('deposit_kas', ['token' => $token]);
         $total          = $deposit_kas->total;
 
-        $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama->masuk - $deposit_kas->total)], ['kode_cabang' => $cabang]);
+        $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama->masuk - $deposit_kas->total), 'sisa' => ($kas_utama->sisa - $deposit_kas->total)], ['kode_cabang' => $cabang]);
             
         $cek = [
             $this->M_global->delData('deposit_kas', ['token' => $token]),
@@ -320,48 +320,49 @@ class Accounting extends CI_Controller
 
     public function deposit_kas_proses($param)
     {
-        $cabang = $this->session->userdata('cabang');
+        $cabang             = $this->session->userdata('cabang');
+        $where_kas_utama    = ['kode_cabang' => $cabang];
+
         if ($param == 2) {
             $token = $this->input->post('token');
         } else {
             $token = tokenKasir(30);
         }
 
-        $tgl_masuk = $this->input->post('tgl_masuk');
-        $jam_masuk = $this->input->post('jam_masuk');
-        $jenis_pembayaran = $this->input->post('jenis_pembayaran');
-        $total = str_replace(',', '', $this->input->post('total'));
-        $cash = str_replace(',', '', $this->input->post('cash'));
-        $card = str_replace(',', '', $this->input->post('card'));
-        $kode_bank = $this->input->post('kode_bank');
-        $tipe_bank = $this->input->post('tipe_bank');
-        $no_card = $this->input->post('no_card');
-        $approval = $this->input->post('approval');
-        $jumlah = $this->input->post('jumlah_card');
+        $tgl_masuk          = $this->input->post('tgl_masuk');
+        $jam_masuk          = $this->input->post('jam_masuk');
+        $jenis_pembayaran   = $this->input->post('jenis_pembayaran');
+        $total              = str_replace(',', '', $this->input->post('total'));
+        $cash               = str_replace(',', '', $this->input->post('cash'));
+        $card               = str_replace(',', '', $this->input->post('card'));
+        $kode_bank          = $this->input->post('kode_bank');
+        $tipe_bank          = $this->input->post('tipe_bank');
+        $no_card            = $this->input->post('no_card');
+        $approval           = $this->input->post('approval');
+        $jumlah             = $this->input->post('jumlah_card');
 
         $isi = [
-            'kode_cabang' => $cabang,
-            'token' => $token,
-            'tgl_masuk' => $tgl_masuk,
-            'jam_masuk' => $jam_masuk,
-            'total' => $total,
-            'cash' => $cash,
-            'card' => $card,
-            'jenis_pembayaran' => $jenis_pembayaran,
-            'kode_user' => $this->session->userdata('kode_user'),
+            'kode_cabang'       => $cabang,
+            'token'             => $token,
+            'tgl_masuk'         => $tgl_masuk,
+            'jam_masuk'         => $jam_masuk,
+            'total'             => $total,
+            'cash'              => $cash,
+            'card'              => $card,
+            'jenis_pembayaran'  => $jenis_pembayaran,
+            'kode_user'         => $this->session->userdata('kode_user'),
         ];
 
-        $kas_utama      = $this->M_global->getData('kas_utama', ['kode_cabang' => $cabang]);
+        $kas_utama          = $this->M_global->getData('kas_utama', $where_kas_utama);
 
         if ($param == 2) {
             $depo_kas = $this->M_global->getData('deposit_kas', ['token' => $token]);
             
             // update1
-            $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama->masuk - $depo_kas->total)], ['kode_cabang' => $cabang]);
+            $this->db->query("UPDATE kas_utama SET masuk = masuk - '$depo_kas->total', sisa = sisa - '$depo_kas->total' WHERE kode_cabang = '$cabang'");
             
             // update2
-            $kas_utama2 = $this->M_global->getData('kas_utama', ['kode_cabang' => $cabang]);
-            $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama2->masuk + $total)], ['kode_cabang' => $cabang]);
+            $this->db->query("UPDATE kas_utama SET masuk = masuk + '$total', sisa = sisa + '$total' WHERE kode_cabang = '$cabang'");
 
             $cek = [
                 $this->M_global->updateData('deposit_kas', $isi, ['token' => $token]),
@@ -370,9 +371,8 @@ class Accounting extends CI_Controller
         } else {
             $cek = [
                 $this->M_global->insertData('deposit_kas', $isi),
+                $this->db->query("UPDATE kas_utama SET masuk = masuk + '$total', sisa = sisa + '$total' WHERE kode_cabang = '$cabang'"),
             ];
-
-            $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama->masuk + $total), 'last_no' => $token], ['kode_cabang' => $cabang]);
         }
         
 
