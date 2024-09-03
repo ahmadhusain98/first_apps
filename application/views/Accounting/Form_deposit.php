@@ -218,6 +218,7 @@
     const form = $('#form_pembayaran')
 
     <?php if (!empty($data_pembayaran)) : ?>
+        cek_cc(<?= $data_pembayaran->jenis_pembayaran ?>)
     <?php else : ?>
         cek_cash.attr('checked', true);
         fortableCard.hide();
