@@ -299,11 +299,12 @@ class Accounting extends CI_Controller
     }
 
     public function delDepositKas($token) {
-        $kas_utama      = $this->M_global->getData('kas_utama', ['id' => 1]);
+        $cabang         = $this->session->userdata('cabang');
+        $kas_utama      = $this->M_global->getData('kas_utama', ['kode_cabang' => $cabang]);
         $deposit_kas    = $this->M_global->getData('deposit_kas', ['token' => $token]);
         $total          = $deposit_kas->total;
 
-        $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama->masuk - $deposit_kas->total)], ['id' => 1]);
+        $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama->masuk - $deposit_kas->total)], ['kode_cabang' => $cabang]);
             
         $cek = [
             $this->M_global->delData('deposit_kas', ['token' => $token]),
@@ -350,17 +351,17 @@ class Accounting extends CI_Controller
             'kode_user' => $this->session->userdata('kode_user'),
         ];
 
-        $kas_utama = $this->M_global->getData('kas_utama', ['id' => 1]);
+        $kas_utama      = $this->M_global->getData('kas_utama', ['kode_cabang' => $cabang]);
 
         if ($param == 2) {
             $depo_kas = $this->M_global->getData('deposit_kas', ['token' => $token]);
             
             // update1
-            $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama->masuk - $depo_kas->total)], ['id' => 1]);
+            $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama->masuk - $depo_kas->total)], ['kode_cabang' => $cabang]);
             
             // update2
-            $kas_utama2 = $this->M_global->getData('kas_utama', ['id' => 1]);
-            $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama2->masuk + $total)], ['id' => 1]);
+            $kas_utama2 = $this->M_global->getData('kas_utama', ['kode_cabang' => $cabang]);
+            $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama2->masuk + $total)], ['kode_cabang' => $cabang]);
 
             $cek = [
                 $this->M_global->updateData('deposit_kas', $isi, ['token' => $token]),
@@ -371,7 +372,7 @@ class Accounting extends CI_Controller
                 $this->M_global->insertData('deposit_kas', $isi),
             ];
 
-            $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama->masuk + $total), 'last_no' => $token], ['id' => 1]);
+            $this->M_global->updateData('kas_utama', ['masuk' => ($kas_utama->masuk + $total), 'last_no' => $token], ['kode_cabang' => $cabang]);
         }
         
 
