@@ -2,6 +2,8 @@
     <div class="card card-outline card-primary">
         <div class="card-header text-center">
             <a type="button" class="h1"><b><?= $nama_apps ?></b></a>
+            <br>
+            <div class="h5"><?= $web_version_all->nama ?></div>
         </div>
         <div class="card-body">
             <p class="login-box-msg">Form Masuk</p>

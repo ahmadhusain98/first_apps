@@ -322,6 +322,7 @@ class Auth extends CI_Controller
                         'shift'         => $shift,
                         'cabang'        => $cabang,
                         'init_cabang'   => $init_cabang,
+                        'web_id'        => 1,
                     ];
 
                     // buatkan session baru untuk masuk ke sistem
@@ -374,10 +375,11 @@ class Auth extends CI_Controller
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
         $parameter = [
-            'judul'         => 'Atur Ulang Sandi',
-            'nama_apps'     => $web_setting->nama,
-            'web_version'   => $web_version->version,
-            'web'           => $web_setting,
+            'judul'             => 'Atur Ulang Sandi',
+            'nama_apps'         => $web_setting->nama,
+            'web_version'       => $web_version->version,
+            'web_version_all'   => $web_version,
+            'web'               => $web_setting,
         ];
 
         $this->template->load('Template/Auth', 'Auth/Repass', $parameter);
@@ -454,36 +456,5 @@ class Auth extends CI_Controller
 
         // arahkan ke auth
         redirect('Auth');
-    }
-
-    // celan db
-    public function clean_db()
-    {
-        $sintak = [
-            $this->db->query("TRUNCATE TABLE barang_in_header"),
-            $this->db->query("TRUNCATE TABLE barang_in_detail"),
-            $this->db->query("TRUNCATE TABLE barang_in_retur_header"),
-            $this->db->query("TRUNCATE TABLE barang_in_retur_detail"),
-            $this->db->query("TRUNCATE TABLE barang_out_header"),
-            $this->db->query("TRUNCATE TABLE barang_out_detail"),
-            $this->db->query("TRUNCATE TABLE barang_out_retur_header"),
-            $this->db->query("TRUNCATE TABLE barang_out_retur_detail"),
-            $this->db->query("TRUNCATE TABLE barang_stok"),
-            $this->db->query("TRUNCATE TABLE bayar_card_detail"),
-            $this->db->query("TRUNCATE TABLE bayar_um_card_detail"),
-            $this->db->query("TRUNCATE TABLE cart_header"),
-            $this->db->query("TRUNCATE TABLE cart_detail"),
-            $this->db->query("TRUNCATE TABLE cart_promo"),
-            $this->db->query("TRUNCATE TABLE pembayaran"),
-            $this->db->query("TRUNCATE TABLE pembayaran_uangmuka"),
-            $this->db->query("TRUNCATE TABLE pendaftaran"),
-            $this->db->query("TRUNCATE TABLE uang_muka"),
-        ];
-
-        if ($sintak) {
-            echo json_encode(['status' => 1]);
-        } else {
-            echo json_encode(['status' => 0]);
-        }
     }
 }

@@ -164,6 +164,7 @@
     // }
 
     $master_cabang = $this->M_global->getData('cabang', ["kode_cabang" => $this->session->userdata('cabang')]);
+    $version_web = $this->M_global->getData('web_version', ["id_web" => $this->session->userdata('web_id')]);
 
     $tgl1 = strtotime(date('Y-m-d'));
     $tgl2 = strtotime($master_cabang->aktif_sampai);
@@ -450,7 +451,7 @@
             <div class="float-right d-none d-sm-inline-block">
                 <b>Version</b> <?= $web_version ?> <button type="button" class="btn btn-danger btn-xs" onclick="clean_db()">Kosongkan Transaksi</button>
             </div> -->
-            <strong>Masa Aktif Cabang: <span class="text-danger"><?= number_format($aktif_cabang) ?></span> Hari</strong>
+            <?= $version_web->version ?>. <strong>Masa Aktif Cabang: <span class="text-danger"><?= number_format($aktif_cabang) ?></span> Hari</strong>
             <div class="float-right d-none d-sm-inline-block">
                 <span type="button" class="nav-link" id="time"></span>
             </div>

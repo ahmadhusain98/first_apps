@@ -41,11 +41,12 @@ class Home extends CI_Controller
     // home page
     public function index()
     {
+        $sess_cabang = $this->session->userdata('cabang');
+        $sess_web = $this->session->userdata('web_id');
+
         // website config
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
-        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
-
-        $sess_cabang = $this->session->userdata('cabang');
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $sess_web]);
 
         $now = date('Y-m-d');
 
