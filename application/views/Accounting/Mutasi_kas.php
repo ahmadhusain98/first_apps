@@ -108,4 +108,51 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
             }
         });
     }
+
+    // fungsi acc/unacc
+    function valided(invoice, param) {
+        if (param == 0) {
+            var pesan = "Mutasi Kas & Bank ini akan di re-acc!";
+            var pesan2 = "di re-acc!";
+        } else {
+            var pesan = "Mutasi Kas & Bank ini akan diacc!";
+            var pesan2 = "diacc!";
+        }
+        // ajukan pertanyaaan
+        Swal.fire({
+            title: "Kamu yakin?",
+            text: pesan,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, " + pesan2,
+            cancelButtonText: "Tidak!"
+        }).then((result) => {
+            if (result.isConfirmed) { // jika yakin
+
+                // jalankan fungsi
+                $.ajax({
+                    url: siteUrl + 'Accounting/acc_mutasi/' + invoice + '/' + param,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    success: function(result) { // jika fungsi berjalan dengan baik
+
+                        if (result.status == 1) { // jika mendapatkan hasil 1
+                            Swal.fire("Mutasi Kas & Bank", "Berhasil " + pesan2, "success").then(() => {
+                                reloadTable();
+                            });
+                        } else { // selain itu
+
+                            Swal.fire("Mutasi Kas & Bank", "Gagal " + pesan2 + ", silahkan dicoba kembali", "info");
+                        }
+                    },
+                    error: function(result) { // jika fungsi error
+
+                        error_proccess();
+                    }
+                });
+            }
+        });
+    }
 </script>

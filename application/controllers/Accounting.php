@@ -488,13 +488,21 @@ class Accounting extends CI_Controller
         // loop $list
         foreach ($list as $rd) {
             if ($updated > 0) {
-                $upd_diss = _lock_button();
+                if($rd->status > 0) {
+                    $upd_diss = 'disabled';
+                } else {
+                    $upd_diss = _lock_button();
+                }
             } else {
                 $upd_diss = 'disabled';
             }
 
             if ($deleted > 0) {
-                $del_diss = _lock_button();
+                if($rd->status > 0) {
+                    $del_diss = 'disabled';
+                } else {
+                    $del_diss = _lock_button();
+                }
             } else {
                 $del_diss = 'disabled';
             }
@@ -531,7 +539,7 @@ class Accounting extends CI_Controller
             if ($rd->status < 1) {
                 $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-primary" title="ACC" onclick="valided(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><i class="fa-regular fa-circle-check"></i></button>';
             } else {
-                $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><i class="fa-regular fa-circle-check"></i></button>';
+                $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><i class="fa-solid fa-check-to-slot"></i></button>';
             }
 
             $row[]  = '<div class="text-center">
@@ -664,6 +672,73 @@ class Accounting extends CI_Controller
 
             echo json_encode(['status' => 1]);
         } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    public function acc_mutasi($invoice, $acc) {
+        
+        $kode_cabang = $this->session->userdata('cabang');
+        // header barang by invoice
+        $header = $this->M_global->getData('mutasi_kas', ['invoice' => $invoice, 'kode_cabang' => $kode_cabang]);
+
+        if ($acc == 0) { // jika acc = 0
+            aktifitas_user_transaksi('Accounting', 'Reject Mutasi Kas & Bank', $invoice);
+
+            // cek dari
+            $cek_dari = $this->M_global->getData('kas_utama', ['kode_kas' => $header->dari, 'kode_cabang' => $kode_cabang]);
+
+            if($cek_dari) {
+                $this->db->query("UPDATE kas_utama SET keluar = keluar - '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+            } else {
+                $this->db->query("UPDATE kas_second SET keluar = keluar - '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+            }
+
+            // cek menuju
+            $cek_menuju = $this->M_global->getData('kas_utama', ['kode_kas' => $header->menuju]);
+
+            if($cek_menuju) {
+                $this->db->query("UPDATE kas_utama SET masuk = masuk - '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+            } else {
+                $this->db->query("UPDATE kas_second SET masuk = masuk - '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+            }
+
+            // update is_valid jadi 0
+            $cek = [
+                $this->M_global->updateData('mutasi_kas', ['status' => 0, 'tgl_confirm' => null, 'jam_confirm' => null, 'user_confirm' => null], ['invoice' => $invoice]),
+            ];
+        } else { // selain itu
+            aktifitas_user_transaksi('Accounting', 'Confirm Mutasi Kas & Bank', $invoice);
+
+            // cek dari
+            $cek_dari = $this->M_global->getData('kas_utama', ['kode_kas' => $header->dari, 'kode_cabang' => $kode_cabang]);
+
+            if($cek_dari) {
+                $this->db->query("UPDATE kas_utama SET keluar = keluar + '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+            } else {
+                $this->db->query("UPDATE kas_second SET keluar = keluar + '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+            }
+
+            // cek menuju
+            $cek_menuju = $this->M_global->getData('kas_utama', ['kode_kas' => $header->menuju]);
+
+            if($cek_menuju) {
+                $this->db->query("UPDATE kas_utama SET masuk = masuk + '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+            } else {
+                $this->db->query("UPDATE kas_second SET masuk = masuk + '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+            }
+
+            // update is_valid jadi 1
+            $cek = [
+                $this->M_global->updateData('mutasi_kas', ['status' => 1, 'tgl_confirm' => date('Y-m-d'), 'jam_confirm' => date('H:i:s'), 'user_confirm' => $this->session->userdata('kode_user')], ['invoice' => $invoice]),
+            ];
+        }
+
+        if ($cek) { // jika fungsi cek berjalan
+            // kirim status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirim status 0 ke view
             echo json_encode(['status' => 0]);
         }
     }
