@@ -2,6 +2,8 @@
 VENDOR
 ###################
 LINK : https://drive.google.com/file/d/1uiw_qQ5H5KZOPORM36l0OjDUIoFZzfuX/view?usp=drive_link
+&&
+JANGAN LUPA ADD FOLDER FILE DI ASSETS, DAN ADD FOLDER PDF DI FILE
 
 ###################
 What is CodeIgniter
