@@ -435,6 +435,8 @@ class Accounting extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
+        $kode_cabang = $this->session->userdata('cabang');
+
         $parameter = [
             $this->data,
             'judul'         => 'Accounting',
@@ -445,6 +447,8 @@ class Accounting extends CI_Controller
             'piutang_num'   => $this->M_global->getDataResult('piutang', ['kode_cabang' => $this->session->userdata('cabang')]),
             'list_data'     => 'Accounting/mutasi_kas_list/',
             'param1'        => '',
+            'saldo_utama'   => $this->db->query("SELECT SUM(sisa) AS saldo FROM kas_utama WHERE kode_cabang = '$kode_cabang'")->row()->saldo,
+            'saldo_second'  => $this->db->query("SELECT SUM(sisa) AS saldo FROM kas_second WHERE kode_cabang = '$kode_cabang'")->row()->saldo,
         ];
 
         $this->template->load('Template/Content', 'Accounting/Mutasi_kas', $parameter);
@@ -488,7 +492,7 @@ class Accounting extends CI_Controller
         // loop $list
         foreach ($list as $rd) {
             if ($updated > 0) {
-                if($rd->status > 0) {
+                if ($rd->status > 0) {
                     $upd_diss = 'disabled';
                 } else {
                     $upd_diss = _lock_button();
@@ -498,7 +502,7 @@ class Accounting extends CI_Controller
             }
 
             if ($deleted > 0) {
-                if($rd->status > 0) {
+                if ($rd->status > 0) {
                     $del_diss = 'disabled';
                 } else {
                     $del_diss = _lock_button();
@@ -529,7 +533,7 @@ class Accounting extends CI_Controller
 
             $row    = [];
             $row[]  = $no++;
-            $row[]  = $rd->invoice . '<br>' . (($rd->status > 0) ? '<span class="badge badge-primary">Acc</span>' : '<span class="badge badge-danger">Belum di Acc</span>');
+            $row[]  = $rd->invoice;
             $row[]  = date('d/m/Y', strtotime($rd->tgl_mutasi)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_mutasi));
             $row[]  = $dari_kas . '<br>Rp. ' . number_format($rd->saldo_dari);
             $row[]  = $menuju_kas . '<br>Rp. ' . number_format($rd->saldo_menuju);
@@ -676,8 +680,9 @@ class Accounting extends CI_Controller
         }
     }
 
-    public function acc_mutasi($invoice, $acc) {
-        
+    public function acc_mutasi($invoice, $acc)
+    {
+
         $kode_cabang = $this->session->userdata('cabang');
         // header barang by invoice
         $header = $this->M_global->getData('mutasi_kas', ['invoice' => $invoice, 'kode_cabang' => $kode_cabang]);
@@ -688,19 +693,19 @@ class Accounting extends CI_Controller
             // cek dari
             $cek_dari = $this->M_global->getData('kas_utama', ['kode_kas' => $header->dari, 'kode_cabang' => $kode_cabang]);
 
-            if($cek_dari) {
-                $this->db->query("UPDATE kas_utama SET keluar = keluar - '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+            if ($cek_dari) {
+                $this->db->query("UPDATE kas_utama SET keluar = keluar - '$header->total', sisa = sisa + '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
             } else {
-                $this->db->query("UPDATE kas_second SET keluar = keluar - '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+                $this->db->query("UPDATE kas_second SET keluar = keluar - '$header->total', sisa = sisa + '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
             }
 
             // cek menuju
             $cek_menuju = $this->M_global->getData('kas_utama', ['kode_kas' => $header->menuju]);
 
-            if($cek_menuju) {
-                $this->db->query("UPDATE kas_utama SET masuk = masuk - '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+            if ($cek_menuju) {
+                $this->db->query("UPDATE kas_utama SET masuk = masuk - '$header->total', sisa = sisa - '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->menuju' AND kode_cabang = '$kode_cabang'");
             } else {
-                $this->db->query("UPDATE kas_second SET masuk = masuk - '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+                $this->db->query("UPDATE kas_second SET masuk = masuk - '$header->total', sisa = sisa - '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->menuju' AND kode_cabang = '$kode_cabang'");
             }
 
             // update is_valid jadi 0
@@ -713,19 +718,19 @@ class Accounting extends CI_Controller
             // cek dari
             $cek_dari = $this->M_global->getData('kas_utama', ['kode_kas' => $header->dari, 'kode_cabang' => $kode_cabang]);
 
-            if($cek_dari) {
-                $this->db->query("UPDATE kas_utama SET keluar = keluar + '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+            if ($cek_dari) {
+                $this->db->query("UPDATE kas_utama SET keluar = keluar + '$header->total', sisa = sisa - '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
             } else {
-                $this->db->query("UPDATE kas_second SET keluar = keluar + '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+                $this->db->query("UPDATE kas_second SET keluar = keluar + '$header->total', sisa = sisa - '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
             }
 
             // cek menuju
             $cek_menuju = $this->M_global->getData('kas_utama', ['kode_kas' => $header->menuju]);
 
-            if($cek_menuju) {
-                $this->db->query("UPDATE kas_utama SET masuk = masuk + '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+            if ($cek_menuju) {
+                $this->db->query("UPDATE kas_utama SET masuk = masuk + '$header->total', sisa = sisa + '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->menuju' AND kode_cabang = '$kode_cabang'");
             } else {
-                $this->db->query("UPDATE kas_second SET masuk = masuk + '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->dari' AND kode_cabang = '$kode_cabang'");
+                $this->db->query("UPDATE kas_second SET masuk = masuk + '$header->total', sisa = sisa + '$header->total', last_no = '$invoice' WHERE kode_kas = '$header->menuju' AND kode_cabang = '$kode_cabang'");
             }
 
             // update is_valid jadi 1

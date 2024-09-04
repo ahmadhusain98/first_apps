@@ -2,6 +2,31 @@
 $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->created;
 ?>
 
+<div class="row mb-3">
+    <div class="col-lg-6 col-6">
+        <div class="small-box bg-light">
+            <div class="inner">
+                <h3>Rp. <?= number_format($saldo_utama) ?></h3>
+                <p>Saldo Kas/Bank Utama</p>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-scale-balanced"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-6">
+        <div class="small-box bg-dark">
+            <div class="inner">
+                <h3>Rp. <?= number_format($saldo_second) ?></h3>
+                <p>Saldo Kas/Bank Second</p>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-scale-balanced"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
 <form method="post" id="form_piutang">
     <div class="row">
         <div class="col-md-12">
@@ -93,7 +118,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
                             Swal.fire("Mutasi Kas & Bank", "Berhasil di hapus!", "success").then(() => {
-                                reloadTable();
+                                getUrl('Accounting/mutasi_kas');
                             });
                         } else { // selain itu
 
@@ -140,7 +165,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
                             Swal.fire("Mutasi Kas & Bank", "Berhasil " + pesan2, "success").then(() => {
-                                reloadTable();
+                                getUrl('Accounting/mutasi_kas');
                             });
                         } else { // selain itu
 

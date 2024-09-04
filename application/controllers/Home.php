@@ -54,6 +54,11 @@ class Home extends CI_Controller
         $header_bayar = $this->db->query("SELECT * FROM pembayaran WHERE kode_cabang = '$sess_cabang' AND tgl_pembayaran LIKE '%$now%' AND approved = 1")->result();
         $header_daftar = $this->db->query("SELECT * FROM pendaftaran WHERE kode_cabang = '$sess_cabang' AND tgl_daftar LIKE '%$now%' AND status_trx != 2")->result();
 
+        $saldo_utama = $this->M_global->getData('kas_utama', ['kode_cabang' => $sess_cabang])->sisa;
+        $saldo_second = $this->db->query("SELECT SUM(sisa) AS saldo FROM kas_second WHERE kode_cabang = '$sess_cabang'")->row()->saldo;
+
+        $saldo = $saldo_utama + $saldo_second;
+
         $parameter = [
             $this->data,
             'judul'             => 'Selamat Datang',
@@ -64,7 +69,7 @@ class Home extends CI_Controller
             'kunjungan_poli'    => $this->db->query("SELECT p.keterangan AS poli, COUNT(boh.kode_poli) AS jumlah FROM pembayaran buy JOIN barang_out_header boh ON buy.inv_jual = boh.invoice JOIN m_poli p ON boh.kode_poli = p.kode_poli WHERE buy.kode_cabang = '$sess_cabang' AND buy.tgl_pembayaran LIKE '%$now%' AND buy.approved = 1 GROUP BY boh.kode_poli")->result(),
             'jumlah_beli'       => count($header_out),
             'jumlah_bayar'      => count($header_bayar),
-            'saldo_kas'         => $this->M_global->getData('kas_utama', ['kode_cabang' => $sess_cabang])->sisa,
+            'saldo_kas'         => $saldo,
             'jumlah_daftar'     => count($header_daftar),
             'hutang'            => $this->db->query("SELECT SUM(jumlah) AS hutang FROM piutang WHERE kode_cabang = '$sess_cabang' AND jumlah > 0")->row()->hutang,
             'piutang'           => $this->db->query("SELECT SUM(jumlah) AS piutang FROM piutang WHERE kode_cabang = '$sess_cabang' AND jumlah < 0")->row()->piutang,
