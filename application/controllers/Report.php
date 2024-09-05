@@ -1141,6 +1141,25 @@ class Report extends CI_Controller
             JOIN barang b ON d.kode_barang = b.kode_barang
             JOIN member s ON h.kode_member = s.kode_member
             WHERE h.status_jual = 1
+
+            UNION ALL
+
+            SELECT
+            CONCAT(DATE_FORMAT(h.tgl_retur, '%d/%m/%Y'), ' ~ ', h.jam_retur) AS record_date,
+            h.invoice,
+            CONCAT('Retur Penjualan ~ ', s.nama) AS keterangan,
+            d.qty_konversi AS masuk,
+            0 AS keluar,
+            h.tgl_retur AS tgl,
+            h.jam_retur AS jam,
+            d.kode_barang,
+            h.kode_cabang AS kode_cabang,
+            h.kode_gudang
+            FROM barang_out_retur_header h
+            JOIN barang_out_retur_detail d ON h.invoice = d.invoice
+            JOIN barang b ON d.kode_barang = b.kode_barang
+            JOIN member s ON h.kode_member = s.kode_member
+            WHERE h.is_valid = 1
         ) AS semua WHERE kode_barang = '$kode_barang' AND kode_gudang = '$kode_gudang' AND kode_cabang = '$kode_cabang' ORDER BY tgl, jam ASC")->result();
 
         $barang = $this->M_global->getData('barang', ['kode_barang' => $kode_barang]);

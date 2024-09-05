@@ -6,48 +6,58 @@ echo _lock_so();
 <form method="post" id="form_barang_out_retur">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Daftar Retur Penjualan</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Retur Penjualan</span>
         </div>
     </div>
     <br>
     <div class="row">
-        <div class="col-md-4 col-12">
+        <div class="col-md-3 col-12">
             <select name="kode_gudang" id="kode_gudang" class="select2_gudang_int" data-placeholder="~ Pilih Gudang" onchange="getGudang(this.value)"></select>
         </div>
-        <div class="col-md-4 col-12">
+        <div class="col-md-5 col-12">
             <div class="row">
-                <div class="col-md-4 col-4">
+                <div class="col-md-4 col-4 mb-3">
                     <input type="date" name="dari" id="dari" class="form-control" value="<?= date('Y-m-d') ?>">
                 </div>
-                <div class="col-md-4 col-4">
+                <div class="col-md-4 col-4 mb-3">
                     <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
                 </div>
-                <div class="col-md-4 col-4">
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="filter($('#kode_gudang').val())" title="Filter" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom"><ion-icon name="filter-outline"></ion-icon> Filter</button>
+                <div class="col-md-4 col-4 mb-3">
+                    <button type="button" class="btn btn-light" onclick="filter($('#kode_gudang').val())"><i class="fa-solid fa-sort"></i>&nbsp;&nbsp;Filter</button>
                 </div>
             </div>
         </div>
         <div class="col-md-4 col-12">
-            <div class="btn-group btn-group-sm float-right" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-primary" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
-                <button type="button" class="btn btn-success" onclick="getUrl('Transaksi/form_barang_out_retur/0')" <?= (($created > 0) ? _lock_button() : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+            <div class="float-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" onclick="preview('barang_out_retur')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="print('barang_out_retur')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="excel('barang_out_retur')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                <button type="button" class="btn btn-success" onclick="getUrl('Transaksi/form_barang_out_retur/0')" <?= (($created == 1) ? _lock_button() : 'disabled') ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
             </div>
         </div>
     </div>
-    <br>
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tableBarangOutRetur" width="100%">
+                <table class="table table-hover table-bordered" id="tableBarangOutRetur" width="100%" style="border-radius: 10px;">
                     <thead>
                         <tr class="text-center">
-                            <th width="5%" class="bg-primary">#</th>
-                            <th width="25%" class="bg-primary">Invoice</th>
-                            <th class="bg-primary">Invoice Jual</th>
-                            <th width="15%" class="bg-primary">Tgl/Jam Jual</th>
-                            <th width="15%" class="bg-primary">Gudang</th>
-                            <th width="15%" class="bg-primary">Total</th>
-                            <th width="10%" class="bg-primary">Aksi</th>
+                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                            <th width="15%">Invoice</th>
+                            <th width="15%">Tgl/Jam Retur</th>
+                            <th width="15%">Pembeli</th>
+                            <th width="10%">Gudang</th>
+                            <th width="10%">Peretur</th>
+                            <th width="10%">Total</th>
+                            <th width="20%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                         </tr>
                     </thead>
                 </table>
@@ -64,6 +74,11 @@ echo _lock_so();
     function ubah(invoice) {
         // jalankan fungsi
         getUrl('Transaksi/form_barang_out_retur/' + invoice);
+    }
+
+    // fungsi cetak
+    function cetak(x, y) {
+        printsingle('Transaksi/single_print_bout_ret/' + x + '/' + y);
     }
 
     // fungsi hapus berdasarkan invoice

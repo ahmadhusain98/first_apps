@@ -32,7 +32,7 @@
                         <input type="text" class="form-control" placeholder="Otomatis" id="invoice" name="invoice" value="<?= (!empty($data_barang_in_retur) ? $data_barang_in_retur->invoice : '') ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <ion-icon name="id-card-outline"></ion-icon>
+                                <i class="fa-solid fa-file-invoice"></i>
                             </div>
                         </div>
                     </div>
@@ -45,7 +45,7 @@
                                 <input type="date" title="Tgl Retur" class="form-control" placeholder="Tgl Retur" id="tgl_retur" name="tgl_retur" value="<?= (!empty($data_barang_in_retur) ? date('Y-m-d', strtotime($data_barang_in_retur->tgl_retur)) : date('Y-m-d')) ?>" readonly>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <ion-icon name="today-outline"></ion-icon>
+                                        <i class="fa-solid fa-calendar-day"></i>
                                     </div>
                                 </div>
                             </div>
@@ -55,7 +55,7 @@
                                 <input type="time" title="Jam Retur" class="form-control" placeholder="Jam Retur" id="jam_retur" name="jam_retur" value="<?= (!empty($data_barang_in_retur) ? date('H:i:s', strtotime($data_barang_in_retur->jam_retur)) : date('H:i:s')) ?>" readonly>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <ion-icon name="time-outline"></ion-icon>
+                                        <i class="fa-regular fa-clock"></i>
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +98,7 @@
                         <input type="text" class="form-control" placeholder="Otomatis" id="surat_jalan" name="surat_jalan" value="<?= (!empty($data_barang_in_retur) ? $data_barang_in_retur->surat_jalan : '') ?>">
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <ion-icon name="barcode-outline"></ion-icon>
+                                <i class="fa-regular fa-comment-dots"></i>
                             </div>
                         </div>
                     </div>
@@ -109,7 +109,7 @@
                         <input type="text" class="form-control" placeholder="Otomatis" id="no_faktur" name="no_faktur" value="<?= (!empty($data_barang_in_retur) ? $data_barang_in_retur->no_faktur : '') ?>">
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <ion-icon name="pricetag-outline"></ion-icon>
+                                <i class="fa-regular fa-comment-dots"></i>
                             </div>
                         </div>
                     </div>
@@ -122,7 +122,7 @@
                         <textarea name="alasan" id="alasan" class="form-control"><?= (!empty($data_barang_in_retur) ? $data_barang_in_retur->alasan : '') ?></textarea>
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <ion-icon name="barcode-outline"></ion-icon>
+                                <i class="fa-regular fa-message"></i>
                             </div>
                         </div>
                     </div>
@@ -676,7 +676,7 @@
                                     <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(value.harga)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
                                 </td>
                                 <td>
-                                    <input type="text" id="qty_in${x}" name="qty_in[]" value="${formatRpNoId(value.qty_po)}" class="form-control text-right" onchange="hitung_dpr('${x}'); formatRp(this.value, 'qty_in${x}')">
+                                    <input type="text" id="qty_in${x}" name="qty_in[]" value="${formatRpNoId(value.qty_po)}" class="form-control text-right" onchange="hitung_qty('${x}'); formatRp(this.value, 'qty_in${x}')">
                                 </td>
                                 <td>
                                     <input type="text" id="discpr_in${x}" name="discpr_in[]" value="${formatRpNoId(value.discpr)}" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">

@@ -931,20 +931,22 @@ function _invoiceChart($user)
     return $invoice;
 }
 
-function _invoiceRetur()
+function _invoiceRetur($cabang)
 {
     $CI           = &get_instance();
 
+    $init_cabang = $CI->session->userdata('init_cabang');
+
     $now          = date('Y-m-d');
 
-    $lastNumber   = $CI->db->query('SELECT * FROM barang_out_retur_header WHERE tgl_retur = "' . $now . '" ORDER BY id DESC LIMIT 1')->row();
+    $lastNumber   = $CI->db->query('SELECT * FROM barang_out_retur_header WHERE kode_cabang = "' . $cabang . '" AND tgl_retur = "' . $now . '" ORDER BY id DESC LIMIT 1')->row();
     $number       = 1;
     if ($lastNumber) {
-        $number   = $CI->db->query('SELECT * FROM barang_out_retur_header WHERE tgl_retur = "' . $now . '"')->num_rows() + 1;
-        $invoice  = 'RTJ~' . date('dmY') . sprintf("%05d", $number);
+        $number   = $CI->db->query('SELECT * FROM barang_out_retur_header WHERE kode_cabang = "' . $cabang . '" AND tgl_retur = "' . $now . '"')->num_rows() + 1;
+        $invoice  = $init_cabang . 'TRJ-' . date('Ymd') . sprintf("%05d", $number);
     } else {
         $number   = 0;
-        $invoice  = 'RTJ~' . date('dmY') . "00001";
+        $invoice  = $init_cabang . 'TRJ-' . date('Ymd') . "00001";
     }
     return $invoice;
 }
@@ -953,35 +955,39 @@ function hitungStokReturJualIn($detail, $kode_gudang, $invoice)
 {
     $CI   = &get_instance();
 
+    $kode_cabang = $CI->session->userdata('cabang');
+
     $date = date('Y-m-d');
     $time = date('H:i:s');
     $user = $CI->session->userdata('kode_user');
 
     foreach ($detail as $d) {
-        $cek = $CI->M_global->jumDataRow('barang_stok', ['kode_gudang' => $kode_gudang, 'kode_barang' => $d->kode_barang]);
+        $cek = $CI->M_global->jumDataRow('barang_stok', ['kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang, 'kode_barang' => $d->kode_barang]);
 
         if ($cek < 1) {
             $isi_stok = [
                 'kode_barang'   => $d->kode_barang,
+                'kode_cabang'   => $kode_cabang,
                 'kode_gudang'   => $kode_gudang,
-                'masuk'         => 0 - $d->qty,
-                'akhir'         => 0 - $d->qty,
+                'keluar'        => $d->qty_konversi,
+                'masuk'         => 0 - $d->qty_konversi,
+                'akhir'         => 0 - $d->qty_konversi,
                 'last_tgl_trx'  => $date,
                 'last_jam_trx'  => $time,
                 'last_no_trx'   => $invoice,
                 'last_user'     => $user,
             ];
 
-            $CI->M_global->insertData('barang_stock', $isi_stok);
+            $CI->M_global->insertData('barang_stok', $isi_stok);
         } else {
             $CI->db->query("UPDATE barang_stok SET 
-            masuk = masuk - $d->qty, 
-            akhir = akhir - $d->qty, 
-            last_tgl_trx = '$date', 
-            last_jam_trx = '$time',
-            last_no_trx = '$invoice',
-            last_user = '$user' 
-            WHERE kode_barang = '$d->kode_barang' AND kode_gudang = '$kode_gudang'");
+            masuk           = masuk - $d->qty_konversi, 
+            akhir           = akhir - $d->qty_konversi, 
+            last_tgl_trx    = '$date', 
+            last_jam_trx    = '$time',
+            last_no_trx     = '$invoice',
+            last_user       = '$user' 
+            WHERE kode_barang = '$d->kode_barang' AND kode_gudang = '$kode_gudang' AND kode_cabang = '$kode_cabang'");
         }
     }
 }
@@ -993,16 +999,18 @@ function hitungStokReturJualOut($detail, $kode_gudang, $invoice)
     $date = date('Y-m-d');
     $time = date('H:i:s');
     $user = $CI->session->userdata('kode_user');
+    $kode_cabang = $CI->session->userdata('cabang');
 
     foreach ($detail as $d) {
-        $cek = $CI->M_global->jumDataRow('barang_stok', ['kode_gudang' => $kode_gudang, 'kode_barang' => $d->kode_barang]);
+        $cek = $CI->M_global->jumDataRow('barang_stok', ['kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang, 'kode_barang' => $d->kode_barang]);
 
         if ($cek < 1) {
             $isi_stok = [
                 'kode_barang'   => $d->kode_barang,
+                'kode_cabang'   => $kode_cabang,
                 'kode_gudang'   => $kode_gudang,
-                'masuk'         => $d->qty,
-                'akhir'         => $d->qty,
+                'masuk'         => $d->qty_konversi,
+                'akhir'         => $d->qty_konversi,
                 'last_tgl_trx'  => $date,
                 'last_jam_trx'  => $time,
                 'last_no_trx'   => $invoice,
@@ -1012,13 +1020,13 @@ function hitungStokReturJualOut($detail, $kode_gudang, $invoice)
             $CI->M_global->insertData('barang_stock', $isi_stok);
         } else {
             $CI->db->query("UPDATE barang_stok SET 
-            masuk = masuk + $d->qty, 
-            akhir = akhir + $d->qty, 
+            masuk = masuk + $d->qty_konversi, 
+            akhir = akhir + $d->qty_konversi, 
             last_tgl_trx = '$date', 
             last_jam_trx = '$time',
             last_no_trx = '$invoice',
             last_user = '$user' 
-            WHERE kode_barang = '$d->kode_barang' AND kode_gudang = '$kode_gudang'");
+            WHERE kode_barang = '$d->kode_barang' AND kode_gudang = '$kode_gudang' AND kode_cabang = '$kode_cabang'");
         }
     }
 }

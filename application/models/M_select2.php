@@ -403,7 +403,7 @@ class M_select2 extends CI_Model
             $add_sintak = ' ORDER BY bo.invoice ASC';
         }
 
-        $sintak = $this->db->query('SELECT bo.invoice AS id, CONCAT(bo.invoice, " ~ Tgl/Jam: ", bo.tgl_jual, "/", bo.jam_jual, " | Total: Rp.", FORMAT(bo.total, 2)) AS text FROM barang_out_header bo JOIN member m ON bo.kode_member = m.kode_member WHERE bo.status_jual = 1 AND tgl_jual = "' . $now . '" ' . $add_sintak . $limit)->result();
+        $sintak = $this->db->query('SELECT bo.invoice AS id, CONCAT(bo.invoice, " ~ Tgl/Jam: ", bo.tgl_jual, "/", bo.jam_jual, " | Total: Rp.", FORMAT(bo.total, 0)) AS text FROM barang_out_header bo JOIN member m ON bo.kode_member = m.kode_member WHERE bo.status_jual = 1 ' . $add_sintak . $limit)->result();
 
         return $sintak;
     }
