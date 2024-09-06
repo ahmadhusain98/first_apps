@@ -26,7 +26,7 @@
     <div class="col-lg-3 col-6">
         <div class="small-box bg-primary">
             <div class="inner">
-                <h3>Rp. <?= number_format($saldo_kas - $hutang) ?></h3>
+                <h3>Rp. <?= number_format($saldo_kas - (($hutang->hutang > 0) ? $hutang->hutang : 0)) ?></h3>
                 <p>Keuntungan</p>
             </div>
             <div class="icon">
@@ -60,7 +60,7 @@
     <div class="col-lg-3 col-6">
         <div class="small-box bg-warning">
             <div class="inner">
-                <h3><?= number_format($piutang) ?></h3>
+                <h3>Rp. <?= number_format(($piutang->piutang > 0) ? $piutang->piutang : 0) ?></h3>
                 <p>Piutang</p>
             </div>
             <div class="icon">
@@ -72,7 +72,7 @@
     <div class="col-lg-3 col-6">
         <div class="small-box bg-danger">
             <div class="inner">
-                <h3>Rp. <?= number_format($hutang) ?></h3>
+                <h3>Rp. <?= ($hutang->hutang > 0) ? number_format($hutang->hutang) : 0 ?></h3>
                 <p>Hutang</p>
             </div>
             <div class="icon">

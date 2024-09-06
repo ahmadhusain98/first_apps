@@ -98,6 +98,8 @@ class Backdoor extends CI_Controller
 
             // piutang
             $this->db->query("TRUNCATE TABLE piutang"),
+            $this->db->query("TRUNCATE TABLE kas_utama"),
+            $this->db->query("TRUNCATE TABLE kas_second"),
 
             // retur pembelian
             $this->db->query("TRUNCATE TABLE barang_in_retur_header"),
