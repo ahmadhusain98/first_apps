@@ -154,19 +154,23 @@ function _kodeKategori()
     return $kode_user;
 }
 
-function _kodeTarif()
+function _kodeTarif($jenis)
 {
     $CI         = &get_instance();
 
-    $inisial    = "TRF";
-    $lastNumber = $CI->db->query('SELECT * FROM m_tarif ORDER BY kode_tarif DESC LIMIT 1')->row();
+    if ($jenis == 1) {
+        $inisial    = "TRF-S";
+    } else {
+        $inisial    = "TRF-P";
+    }
+    $lastNumber = $CI->db->query('SELECT * FROM m_tarif WHERE jenis = "' . $jenis . '" ORDER BY kode_tarif DESC LIMIT 1')->row();
     $number     = 1;
     if ($lastNumber) {
-        $number       = count($CI->db->query('SELECT * FROM m_tarif')->result()) + 1;
-        $kode_user    = $inisial . sprintf("%07d", $number);
+        $number       = count($CI->db->query('SELECT * FROM m_tarif WHERE jenis = "' . $jenis . '"')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%05d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $inisial . "0000001";
+        $kode_user    = $inisial . "00001";
     }
     return $kode_user;
 }
