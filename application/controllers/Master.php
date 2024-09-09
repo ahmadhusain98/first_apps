@@ -19,7 +19,7 @@ class Master extends CI_Controller
             $user = $this->M_global->getData("user", ["email" => $this->session->userdata("email")]);
 
             $cek_akses_menu = $this->M_global->getData('akses_menu', ['id_menu' => $id_menu, 'kode_role' => $user->kode_role]);
-            if($cek_akses_menu) {
+            if ($cek_akses_menu) {
                 // tampung data ke variable data public
                 $this->data = [
                     'nama'      => $user->nama,
@@ -30,7 +30,7 @@ class Master extends CI_Controller
                     'shift'     => $this->session->userdata('shift'),
                     'menu'      => 'Master',
                 ];
-    
+
                 $this->load->model('M_barang');
             } else {
                 // kirimkan kembali ke Auth
@@ -3614,6 +3614,212 @@ class Master extends CI_Controller
             echo json_encode(['status' => 1]);
         } else { // selain itu
             // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // ############################################################################################################################################################################
+
+    /**
+     * Master Tarif Single
+     */
+
+    // single page
+    public function tin_single()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Master',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Tindakan Single',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => 'Master/tin_single_list',
+            'param1'        => '',
+        ];
+
+        $this->template->load('Template/Content', 'Master/Tarif/Single', $parameter);
+    }
+
+    // fungsi list single
+    public function tin_single_list($param1 = '1')
+    {
+        $this->load->model('M_tarif');
+
+        // kondisi role
+        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+
+        if ($updated > 0) {
+            $upd_diss = '';
+        } else {
+            $upd_diss = 'disabled';
+        }
+
+        if ($deleted > 0) {
+            $del_diss = '';
+        } else {
+            $del_diss = 'disabled';
+        }
+
+        $list = $this->M_tarif->get_datatables($param1);
+
+        $data = [];
+        $no = $_POST['start'] + 1;
+
+        // Loop through the list to populate the data array
+        foreach ($list as $rd) {
+            $row = [];
+            $row[] = $no++;
+            $row[] = $rd->kode_tarif;
+            $row[] = $rd->nama;
+            $row[] = 'Rp. <div class="float-right">' . number_format($rd->jasa_rs) . '</div>';
+            $row[] = 'Rp. <div class="float-right">' . number_format($rd->jasa_dokter) . '</div>';
+            $row[] = 'Rp. <div class="float-right">' . number_format($rd->jasa_pelayanan) . '</div>';
+            $row[] = 'Rp. <div class="float-right">' . number_format($rd->jasa_poli) . '</div>';
+            $row[] = '<div class="text-center">
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_tarif . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_tarif . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // Prepare the output in JSON format
+        $output = [
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $this->M_tarif->count_all($param1),
+            "recordsFiltered" => $this->M_tarif->count_filtered($param1),
+            "data" => $data,
+        ];
+
+        // Send the output to the view
+        echo json_encode($output);
+    }
+
+    // form tin_single page
+    public function form_tin_single($param)
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        if ($param != '0') {
+            $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $param]);
+            $single_jasa = $this->M_global->getDataResult('tarif_jasa', ['kode_tarif' => $param]);
+        } else {
+            $tarif = null;
+            $single_jasa = null;
+        }
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Master',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Tarif Single',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => '',
+            'tarif'         => $tarif,
+            'single_jasa'   => $single_jasa,
+        ];
+
+        $this->template->load('Template/Content', 'Master/Tarif/Form_single', $parameter);
+    }
+
+    public function add_kategori_tarif()
+    {
+        $kode_kategori = _kodeKategoriTarif();
+        $keterangan = $this->input->post('keterangan_kategori');
+
+        $cek = $this->M_global->insertData('kategori_tarif', ['kode_kategori' => $kode_kategori, 'keterangan' => $keterangan]);
+
+        if ($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    public function tin_single_proses($param)
+    {
+        if ($param == 1) {
+            $kode_tarif = _kodeTarif();
+        } else {
+            $kode_tarif = $this->input->post('kodeTarif');
+        }
+
+        $nama           = $this->input->post('nama');
+        $kategori       = $this->input->post('kategori');
+        $jenis          = 1;
+
+        $kode_cabang    = $this->input->post('kode_cabang');
+        $jasa_rs        = $this->input->post('jasa_rs');
+        $jasa_dokter    = $this->input->post('jasa_dokter');
+        $jasa_pelayanan = $this->input->post('jasa_pelayanan');
+        $jasa_poli      = $this->input->post('jasa_poli');
+
+        $isi = [
+            'kode_tarif'    => $kode_tarif,
+            'nama'          => $nama,
+            'kategori'      => $kategori,
+            'jenis'         => $jenis,
+        ];
+
+        if (isset($kode_cabang)) {
+            $jum = count($kode_cabang);
+
+            if ($param == 1) {
+                $cek = $this->M_global->insertData('m_tarif', $isi, ['kode_tarif' => $kode_tarif]);
+            } else {
+                $cek = [
+                    $this->M_global->delData('tarif_jasa', ['kode_tarif' => $kode_tarif]),
+                    $this->M_global->updateData('m_tarif', $isi, ['kode_tarif' => $kode_tarif]),
+                ];
+            }
+
+            if ($cek) {
+                for ($x = 0; $x <= ($jum - 1); $x++) {
+                    $_kode_cabang       = $kode_cabang[$x];
+                    $_jasa_rs           = str_replace(',', '', $jasa_rs[$x]);
+                    $_jasa_dokter       = str_replace(',', '', $jasa_dokter[$x]);
+                    $_jasa_pelayanan    = str_replace(',', '', $jasa_pelayanan[$x]);
+                    $_jasa_poli         = str_replace(',', '', $jasa_poli[$x]);
+
+                    $detail = [
+                        'kode_tarif'        => $kode_tarif,
+                        'kode_cabang'       => $_kode_cabang,
+                        'jasa_rs'           => $_jasa_rs,
+                        'jasa_dokter'       => $_jasa_dokter,
+                        'jasa_pelayanan'    => $_jasa_pelayanan,
+                        'jasa_poli'         => $_jasa_poli,
+                    ];
+
+                    $this->M_global->insertData('tarif_jasa', $detail);
+                }
+
+                echo json_encode(['status' => 1]);
+            } else {
+                echo json_encode(['status' => 0]);
+            }
+        } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    public function delTarifSingle($kode_tarif)
+    {
+        $cek = [
+            $this->M_global->delData('tarif_jasa', ['kode_tarif' => $kode_tarif]),
+            $this->M_global->delData('m_tarif', ['kode_tarif' => $kode_tarif]),
+        ];
+
+        if ($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
             echo json_encode(['status' => 0]);
         }
     }

@@ -154,6 +154,23 @@ function _kodeKategori()
     return $kode_user;
 }
 
+function _kodeTarif()
+{
+    $CI         = &get_instance();
+
+    $inisial    = "TRF";
+    $lastNumber = $CI->db->query('SELECT * FROM m_tarif ORDER BY kode_tarif DESC LIMIT 1')->row();
+    $number     = 1;
+    if ($lastNumber) {
+        $number       = count($CI->db->query('SELECT * FROM m_tarif')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%07d", $number);
+    } else {
+        $number       = 0;
+        $kode_user    = $inisial . "0000001";
+    }
+    return $kode_user;
+}
+
 function _kodePoli()
 {
     $CI               = &get_instance();
@@ -1391,4 +1408,20 @@ function _drop_db()
     }
 
     return $query;
+}
+
+function _kodeKategoriTarif()
+{
+    $CI           = &get_instance();
+
+    $lastNumber   = $CI->db->query('SELECT * FROM kategori_tarif ORDER BY id DESC LIMIT 1')->row();
+    $number       = 1;
+    if ($lastNumber) {
+        $number   = $CI->db->query('SELECT * FROM kategori_tarif')->num_rows() + 1;
+        $kode  = 'KATTR' . sprintf("%05d", $number);
+    } else {
+        $number   = 0;
+        $kode  = 'KATTR' . "00001";
+    }
+    return $kode;
 }

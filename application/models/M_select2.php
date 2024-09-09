@@ -21,6 +21,21 @@ class M_select2 extends CI_Model
         return $sintak;
     }
 
+    function getAllCabang($key)
+    {
+        $limit = ' LIMIT 50';
+
+        if (!empty($key)) {
+            $add_sintak = ' WHERE (c.kode_cabang LIKE "%' . $key . '%" OR c.cabang LIKE "%' . $key . '%") ORDER BY c.cabang ASC';
+        } else {
+            $add_sintak = ' ORDER BY c.cabang ASC';
+        }
+
+        $sintak = $this->db->query('SELECT c.kode_cabang AS id, c.cabang AS text FROM cabang c ' . $add_sintak . $limit)->result();
+
+        return $sintak;
+    }
+
     // fungsi kategori
     function getKategori($key)
     {
@@ -466,6 +481,24 @@ class M_select2 extends CI_Model
                 SELECT kode_kas_bank AS id, nama AS text, kode_cabang AS cabang, id AS indek
                 FROM kas_bank
             ) AS kas WHERE cabang = "' . $kode_cabang . '" ' . $add_sintak . $limit
+        )->result();
+
+        return $sintak;
+    }
+
+    // fungsi kategori tarif
+    function dataKatTarif($key)
+    {
+        $limit = ' LIMIT 20';
+
+        if (!empty($key)) {
+            $add_sintak = ' WHERE (kode_kategori LIKE "%' . $key . '%" OR keterangan LIKE "%' . $key . '%") ORDER BY keterangan ASC';
+        } else {
+            $add_sintak = ' ORDER BY keterangan ASC';
+        }
+
+        $sintak = $this->db->query(
+            'SELECT kode_kategori AS id, (keterangan) AS text FROM kategori_tarif ' . $add_sintak . $limit
         )->result();
 
         return $sintak;

@@ -73,7 +73,7 @@
         }
 
         .select2-container .select2-selection--single {
-            height: 35px !important;
+            height: 39px !important;
         }
 
         .select2-selection__arrow {
@@ -918,8 +918,83 @@
         initailizeSelect2_promo(min_buy = '0');
         initailizeSelect2_barang();
         initailizeSelect2_kas_bank();
+        initailizeSelect2_kategori_tarif();
+        initailizeSelect2_all_cabang();
 
         // fungsi
+        function initailizeSelect2_all_cabang() {
+            if (param == '' || param == null || param == 'null') { // jika parameter kosong/ null
+                // jalankan fungsi select2_default
+                select2_default('select2_all_cabang');
+            } else { // selain itu
+                // jalan fungsi select2 asli
+                $(".select2_all_cabang").select2({
+                    allowClear: true,
+                    multiple: false,
+                    placeholder: '~ Pilih Cabang',
+                    dropdownAutoWidth: true,
+                    width: '100%',
+                    language: {
+                        inputTooShort: function() {
+                            return 'Ketikan Nomor minimal 1 huruf';
+                        }
+                    },
+                    ajax: {
+                        url: siteUrl + 'Select2_master/dataAllCabang/',
+                        type: 'POST',
+                        dataType: 'JSON',
+                        delay: 100,
+                        data: function(result) {
+                            return {
+                                searchTerm: result.term
+                            };
+                        },
+
+                        processResults: function(result) {
+                            return {
+                                results: result
+                            };
+                        },
+                        cache: true
+                    }
+                });
+            }
+        }
+
+        function initailizeSelect2_kategori_tarif() {
+            $(".select2_kategori_tarif").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Barang',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataKatTarif',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
         function initailizeSelect2_kas_bank() {
             $(".select2_kas_bank").select2({
                 allowClear: true,
