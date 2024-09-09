@@ -3738,6 +3738,7 @@ class Master extends CI_Controller
         $cek = $this->M_global->insertData('kategori_tarif', ['kode_kategori' => $kode_kategori, 'keterangan' => $keterangan]);
 
         if ($cek) {
+            aktifitas_user('Master Tarif (Kategori)', 'menambahkan Kategori Tarif', $kode_kategori, $keterangan);
             echo json_encode(['status' => 1]);
         } else {
             echo json_encode(['status' => 0]);
@@ -3773,8 +3774,10 @@ class Master extends CI_Controller
             $jum = count($kode_cabang);
 
             if ($param == 1) {
+                aktifitas_user('Master Tarif Single', 'menambahkan Tarif Single', $kode_tarif, $nama);
                 $cek = $this->M_global->insertData('m_tarif', $isi, ['kode_tarif' => $kode_tarif]);
             } else {
+                aktifitas_user('Master Tarif Single', 'mengubah Tarif Single', $kode_tarif, $this->M_global->getData('m_tarif', ['kode_tarif' => $kode_tarif])->nama);
                 $cek = [
                     $this->M_global->delData('tarif_jasa', ['kode_tarif' => $kode_tarif]),
                     $this->M_global->updateData('m_tarif', $isi, ['kode_tarif' => $kode_tarif]),
@@ -3812,6 +3815,8 @@ class Master extends CI_Controller
 
     public function delTarifSingle($kode_tarif)
     {
+        aktifitas_user('Master Tarif Single', 'hapus Tarif Single', $kode_tarif, $this->M_global->getData('m_tarif', ['kode_tarif' => $kode_tarif])->nama);
+
         $cek = [
             $this->M_global->delData('tarif_jasa', ['kode_tarif' => $kode_tarif]),
             $this->M_global->delData('m_tarif', ['kode_tarif' => $kode_tarif]),
@@ -3990,8 +3995,12 @@ class Master extends CI_Controller
             $jum = count($kode_cabang);
 
             if ($param == 1) {
+                aktifitas_user('Master Tarif Paket', 'menambahkan Tarif Paket', $kode_tarif, $nama);
+
                 $cek = $this->M_global->insertData('m_tarif', $isi, ['kode_tarif' => $kode_tarif]);
             } else {
+                aktifitas_user('Master Tarif Paket', 'mengubah Tarif Paket', $kode_tarif, $this->M_global->getData('m_tarif', ['kode_tarif' => $kode_tarif])->nama);
+
                 $cek = [
                     $this->M_global->delData('tarif_paket', ['kode_tarif' => $kode_tarif]),
                     $this->M_global->updateData('m_tarif', $isi, ['kode_tarif' => $kode_tarif]),
@@ -4031,6 +4040,8 @@ class Master extends CI_Controller
 
     public function delTarifPaket($kode_tarif)
     {
+        aktifitas_user('Master Tarif Paket', 'hapus Tarif Paket', $kode_tarif, $this->M_global->getData('m_tarif', ['kode_tarif' => $kode_tarif])->nama);
+
         $cek = [
             $this->M_global->delData('tarif_paket', ['kode_tarif' => $kode_tarif]),
             $this->M_global->delData('m_tarif', ['kode_tarif' => $kode_tarif]),
