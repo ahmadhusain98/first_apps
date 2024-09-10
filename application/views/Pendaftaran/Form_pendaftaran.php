@@ -148,10 +148,11 @@
                         </tr>
                     </thead>
                     <tbody id="bodyTarifPaket">
-                        <?php if(!empty($pasien_paket)) : ?>
-                            <?php $no = 1; foreach($pasien_paket as $pp) : 
-                            $paket = $this->M_global->getData('m_tarif', ['kode_tarif' => $pp->kode_tarif]);
-                                ?>
+                        <?php if (!empty($pasien_paket)) : ?>
+                            <?php $no = 1;
+                            foreach ($pasien_paket as $pp) :
+                                $paket = $this->M_global->getData('m_tarif', ['kode_tarif' => $pp->kode_tarif]);
+                            ?>
                                 <tr id="rowPaket<?= $no ?>">
                                     <td>
                                         <button type="button" class="btn btn-danger" onclick="hapusTindakan('<?= $no ?>')">
@@ -159,7 +160,7 @@
                                         </button>
                                     </td>
                                     <td>
-                                        <select name="kode_tarif[]" id="kode_tarif<?= $no ?>" class="form-control select2_tarif_paket" data-placeholder="Pilih Tindakan" onchange="getKunjungan(this.value, <?= $no ?>)">
+                                        <select name="kode_tarif[]" id="kode_tarif<?= $no ?>" class="form-control select2_tarif_paket" data-placeholder="~ Pilih Tindakan" onchange="getKunjungan(this.value, <?= $no ?>)">
                                             <option value="<?= $pp->kode_tarif ?>"><?= $paket->nama; ?></option>
                                         </select>
                                     </td>
@@ -167,7 +168,8 @@
                                         <input type="text" name="kunjungan[]" id="kunjungan<?= $no ?>" class="form-control text-center" readonly value="<?= $pp->kunjungan ?>">
                                     </td>
                                 </tr>
-                            <?php $no++; endforeach; ?>
+                            <?php $no++;
+                            endforeach; ?>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -276,7 +278,7 @@
                 </button>
             </td>
             <td>
-                <select name="kode_tarif[]" id="kode_tarif${row}" class="form-control select2_tarif_paket" data-placeholder="Pilih Tindakan" onchange="getKunjungan(this.value, ${row})"></select>
+                <select name="kode_tarif[]" id="kode_tarif${row}" class="form-control select2_tarif_paket" data-placeholder="~ Pilih Tindakan" onchange="getKunjungan(this.value, ${row})"></select>
             </td>
             <td>
                 <input type="text" name="kunjungan[]" id="kunjungan${row}" class="form-control text-center" readonly>
@@ -291,21 +293,22 @@
     }
 
     function getKunjungan(kdtf, i) {
-        if(!kdtf || kdtf === null) {
+        if (!kdtf || kdtf === null) {
             return
         }
 
         var kdmbr = $('#kode_member').val();
 
         $.ajax({
-            url: siteUrl+'Health/getPaket/'+kdtf+'/'+kdmbr,
+            url: siteUrl + 'Health/getPaket/' + kdtf + '/' + kdmbr,
             type: 'POST',
             dataType: 'JSON',
             success: function(result) {
-                if(result.status == 1) {
-                    $('#kunjungan'+i).val(result.kunjungan);
+                if (result.status == 1) {
+                    $('#kunjungan' + i).val(result.kunjungan);
                 }
-            }, error: function(result) {
+            },
+            error: function(result) {
                 error_proccess();
             }
         });
