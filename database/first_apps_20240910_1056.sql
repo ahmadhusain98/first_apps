@@ -35,7 +35,7 @@ CREATE TABLE `activity_user` (
   `kode_cabang` varchar(10) NOT NULL,
   `shift` int NOT NULL,
   PRIMARY KEY (`id_activity`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (1, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-09-06 00:01:17', 'DIY', 3);
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (2, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-06 00:01:23', 'DIY', 3);
@@ -92,6 +92,11 @@ INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (53, 'shali@gmail.com', 'shali@gmail.com Telah <b>mengubah Tarif Single Test Bhp</b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-10 10:45:14', 'DIY', 1);
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (54, 'shali@gmail.com', 'shali@gmail.com Telah <b>menghapus Backupan Database first_apps_20240909_2148.sql</b>', 'Pintu Belakang', '2024-09-10 10:45:35', 'DIY', 1);
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (55, 'shali@gmail.com', 'shali@gmail.com Telah <b>melakukan Backup Database first_apps_20240910_1045</b>', 'Pintu Belakang', '2024-09-10 10:45:51', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (56, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Tarif Paket Test Paket</b> dengan kode/inv <b>TRF-P00003</b>', 'Master Tarif Paket', '2024-09-10 10:55:16', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (57, 'shali@gmail.com', 'shali@gmail.com Telah <b>hapus Tarif Paket Test Paket</b> dengan kode/inv <b>TRF-P00003</b>', 'Master Tarif Paket', '2024-09-10 10:55:34', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (58, 'shali@gmail.com', 'shali@gmail.com Telah <b>hapus Tarif Single Test Bhp</b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-10 10:56:05', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (59, 'shali@gmail.com', 'shali@gmail.com Telah <b>menghapus Backupan Database first_apps_20240910_1045.sql</b>', 'Pintu Belakang', '2024-09-10 10:56:20', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (60, 'shali@gmail.com', 'shali@gmail.com Telah <b>melakukan Backup Database first_apps_20240910_1056</b>', 'Pintu Belakang', '2024-09-10 10:56:22', 'DIY', 1);
 
 
 #
@@ -145,7 +150,7 @@ CREATE TABLE `backup_db` (
   `nama` varchar(200) NOT NULL,
   `tgl_backup` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 #
 # TABLE STRUCTURE FOR: barang
@@ -8952,11 +8957,10 @@ CREATE TABLE `m_tarif` (
   `kategori` varchar(10) NOT NULL,
   `jenis` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `m_tarif` (`id`, `kode_tarif`, `nama`, `kategori`, `jenis`) VALUES (1, 'TRF-P00001', 'Dokter Pribadi', 'KATTR00002', 2);
 INSERT INTO `m_tarif` (`id`, `kode_tarif`, `nama`, `kategori`, `jenis`) VALUES (5, 'TRF-P00002', 'Perawat Pribadi', 'KATTR00002', 2);
-INSERT INTO `m_tarif` (`id`, `kode_tarif`, `nama`, `kategori`, `jenis`) VALUES (10, 'TRF-S00001', 'Test Bhp', 'KATTR00001', 1);
 
 
 #
@@ -9335,9 +9339,6 @@ CREATE TABLE `tarif_jasa` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `tarif_jasa` (`id`, `kode_cabang`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (17, 'CAB0000002', 'TRF-S00001', '20000.00', '0.00', '0.00', '100000.00');
-
-
 #
 # TABLE STRUCTURE FOR: tarif_paket
 #
@@ -9354,7 +9355,7 @@ CREATE TABLE `tarif_paket` (
   `jasa_pelayanan` decimal(20,2) NOT NULL DEFAULT '0.00',
   `jasa_poli` decimal(20,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (4, 'CAB0000002', 1, 'TRF-P00002', '30000.00', '0.00', '50000.00', '0.00');
 INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (5, 'CAB0000002', 2, 'TRF-P00002', '30000.00', '0.00', '50000.00', '0.00');
@@ -9367,6 +9368,24 @@ INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa
 INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (12, 'CAB0000002', 2, 'TRF-P00001', '50000.00', '20000.00', '0.00', '20000.00');
 INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (13, 'CAB0000002', 3, 'TRF-P00001', '50000.00', '20000.00', '0.00', '20000.00');
 
+
+#
+# TABLE STRUCTURE FOR: tarif_paket_bhp
+#
+
+DROP TABLE IF EXISTS `tarif_paket_bhp`;
+
+CREATE TABLE `tarif_paket_bhp` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `kode_tarif` varchar(10) NOT NULL,
+  `kode_barang` varchar(10) NOT NULL,
+  `kode_satuan` varchar(10) NOT NULL,
+  `harga` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `qty` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `qty_konversi` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `jumlah` decimal(20,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 #
 # TABLE STRUCTURE FOR: tarif_single_bhp
@@ -9385,9 +9404,6 @@ CREATE TABLE `tarif_single_bhp` (
   `jumlah` decimal(20,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-INSERT INTO `tarif_single_bhp` (`id`, `kode_tarif`, `kode_barang`, `kode_satuan`, `harga`, `qty_konversi`, `qty`, `jumlah`) VALUES (4, 'TRF-S00001', 'DIY~P00001', 'SAT0000006', '12000.00', '20.00', '5.00', '60000.00');
-
 
 #
 # TABLE STRUCTURE FOR: tipe_bank
