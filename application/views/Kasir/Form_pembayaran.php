@@ -48,21 +48,37 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <label for=""><?= (($param2) ? 'Returan' : 'Penjualan'); ?><sup class="text-danger">**</sup></label>
-                    <div class="input-group mb-3">
-                        <?php if ($param2) {
-                            $select2_penjualan = 'select2_penjualan_retur';
-                        } else {
-                            $select2_penjualan = 'select2_penjualan';
-                        } ?>
-                        <select name="inv_jual" id="inv_jual" class="form-control <?= $select2_penjualan ?>" data-placeholder="~ Pilih Penjualan" onchange="cekJual(this.value, '<?= (($param2) ? $param2 : '') ?>')">
-                            <?php
-                            if (!empty($data_pembayaran)) :
-                                $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $data_pembayaran->no_trx]);
-                                echo '<option value="' . $data_pembayaran->inv_jual . '">' . $data_pembayaran->inv_jual . ' ~ Kode Member: ' . $pendaftaran->kode_member . ' | Nama Member: ' . $this->M_global->getData('member', ['kode_member' => $pendaftaran->kode_member])->nama . '</option>';
-                            endif;
-                            ?>
-                        </select>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Pendaftaran<sup class="text-danger">**</sup></label>
+                            <div class="input-group mb-3">
+                                <select name="no_trx" id="no_trx" class="form-control select2_terdaftar" data-placeholder="Pilih Pendaftaran" onchange="getPendaftaran(this.value)">
+                                    <?php if(!empty($data_pembayaran)) : 
+                                    $daftar = $this->M_global->getData('pendaftaran', ['no_trx' => $data_pembayaran->no_trx]);
+                                        ?>
+                                        <option value="<?= $data_pembayaran->no_trx ?>"><?= $data_pembayaran->no_trx.' | Nama: '.$this->M_global->getData('member', ['kode_member' => $data_pembayaran->kode_member])->nama . ' | Tgl/Jam: '.$daftar->tgl_daftar.'/'.$daftar->jam_daftar.' | Poli/Dokter: '.$this->M_global->getData('m_poli', ['kode_poli' => $daftar->kode_poli])->keterangan.'/'.$this->M_global->getData('dokter', ['kode_dokter' => $daftar->kode_dokter])->nama ?></option>
+                                    <?php endif; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for=""><?= (($param2) ? 'Returan' : 'Penjualan'); ?></label>
+                            <div class="input-group mb-3">
+                                <?php if ($param2) {
+                                    $select2_penjualan = 'select2_penjualan_retur';
+                                } else {
+                                    $select2_penjualan = 'select2_penjualan';
+                                } ?>
+                                <select name="inv_jual" id="inv_jual" class="form-control <?= $select2_penjualan ?>" data-placeholder="~ Pilih Penjualan" onchange="cekJual(this.value, '<?= (($param2) ? $param2 : '') ?>')">
+                                    <?php
+                                    if (!empty($data_pembayaran)) :
+                                        $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $data_pembayaran->no_trx]);
+                                        echo '<option value="' . $data_pembayaran->inv_jual . '">' . $data_pembayaran->inv_jual . ' ~ Kode Member: ' . $pendaftaran->kode_member . ' | Nama Member: ' . $this->M_global->getData('member', ['kode_member' => $pendaftaran->kode_member])->nama . '</option>';
+                                    endif;
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -145,6 +161,50 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Tindakan Paket</span>
+        </div>
+    </div>
+    <br>
+    <input type="hidden" name="sumPaket" id="sumPaket" value="0">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered" width="100%" style="border-radius: 10px;">
+                    <thead>
+                        <tr class="text-center">
+                            <th width="60%">Paket</th>
+                            <th width="20%">Kunjungan</th>
+                            <th width="20%">Harga</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyPaket">
+                        <?php if(!empty($tarif_paket)) : ?>
+                            <?php $nop = 1; foreach($tarif_paket as $tp) : 
+                                $m_tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $tp->kode_tarif]);
+                                $tarif = $this->M_global->getData('tarif_paket', ['kode_tarif' => $tp->kode_tarif, 'kunjungan' => $tp->kunjungan]);
+                                ?>
+                                <tr id="rowPaket<?= $nop ?>">
+                                    <td>
+                                        <input type="hidden" name="kode_tarif[]" id="kode_tarif<?= $nop ?>" value="<?= $tp->kode_tarif ?>">
+                                        <input type="text" class="form-control" readonly name="kode_tarifx[]" id="kode_tarifx<?= $nop ?>" value="<?= $m_tarif->nama ?>">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control text-center" readonly name="kunjungan[]" id="kunjungan<?= $nop ?>" value="<?= $tp->kunjungan ?>">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control text-right" readonly name="harga[]" id="harga<?= $nop ?>" value="<?= number_format($tarif->jasa_rs + $tarif->jasa_dokter + $tarif->jasa_pelayanan + $tarif->jasa_poli) ?>">
+                                    </td>
+                                </tr>
+                            <?php $nop++; endforeach; ?>
+                        <?php endif ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -341,10 +401,11 @@
     var fortableCard = $('#fortableCard');
     var fortableCash = $('#fortableCash');
     var bodyCard = $('#bodyBayarCard');
-
+    
     const btnSimpan = $('#btnSimpan');
     const form = $('#form_pembayaran');
     const forJual = $('#forJual');
+    const bodyPaket = $('#bodyPaket');
 
     <?php if ($param2) : ?>
         forJual.hide();
@@ -441,57 +502,114 @@
 
     // fungsi hitung promo
     function hitung_promo() {
+        var sumPaket = parseFloat(($('#sumPaket').val()).replaceAll(',', ''));
         var totju = parseFloat((total_jual.val()).replaceAll(',', ''));
         var discpr_prom = parseFloat((potongan_promo.val()).replaceAll(',', ''));
 
-        var new_total_jual = totju - (totju * (discpr_prom / 100));
+        var new_total_jual = (totju + sumPaket) - ((totju + sumPaket) * (discpr_prom / 100));
 
         total_jual.val(formatRpNoId(new_total_jual));
         $('#total_kurang').val(formatRpNoId((0 - new_total_jual)));
     }
 
-    // fungsi cek jual
-    function cekJual(x, cek_retur) {
-        if (x == '' || x == null) { // jika x kosong/ null
-            return Swal.fire("Data Penjualan", "Form sudah dipilih?", "question");
+    function getPendaftaran(notrx) {
+        if(!notrx || notrx === null) {
+            return
         }
 
-        <?php if ($param2) : ?>
-            var cek_retur = 1;
-        <?php else : ?>
-            var cek_retur = 0;
-        <?php endif ?>
+        cekPaket(notrx);
+    }
 
-        // jalankan fungsi
+    // fungsi cek jual
+    function cekJual(x, cek_retur) {
+        var sumPaket = Number($('#sumPaket').val());
+
+        if (x == '' || x == null) { // jika x kosong/ null
+            total_jual.val(formatRpNoId(sumPaket));
+            $('#total_kurang').val(formatRpNoId((0 - sumPaket)));
+
+            initailizeSelect2_promo(sumPaket);
+        } else {
+            <?php if ($param2) : ?>
+                var cek_retur = 1;
+            <?php else : ?>
+                var cek_retur = 0;
+            <?php endif ?>
+    
+            // jalankan fungsi
+            $.ajax({
+                url: siteUrl + 'Kasir/getInfoJual/' + x + '/' + cek_retur,
+                type: 'POST',
+                dataType: 'JSON',
+                success: function(result) { // jika fungsi berjalan dengan baik
+                    if (result.status == 0) { // jika mendapatkan respon 0
+                        if (result[1].kode_member == 'U00001') {} else {
+                            Swal.fire("Total Penjualan", "Tidak ditemukan!, coba lagi", "info");
+                        }
+                    } else { // selain itu
+                        total_jual.val(formatRpNoId((Number(result[0].total) + sumPaket)));
+                        $('#total_kurang').val(formatRpNoId((0 - (Number(result[0].total) + sumPaket))));
+    
+                        kode_promo.attr('disabled', false);
+    
+                        initailizeSelect2_promo((Number(result[0].total) + sumPaket));
+    
+                        if (result[1].kode_member == 'U00001') {
+                            $('.not_umum').hide();
+                        } else {
+                            // ambil uangmuka
+                            $('.not_umum').show();
+                            get_um(result[0].kode_member, cek_retur);
+                        }
+                    }
+                },
+                error: function(result) { // jika fungsi error
+                    btnSimpan.attr('disabled', false);
+    
+                    error_proccess();
+                }
+            });
+        }
+
+    }
+
+    function cekPaket(notrx) {
         $.ajax({
-            url: siteUrl + 'Kasir/getInfoJual/' + x + '/' + cek_retur,
+            url: siteUrl + 'Kasir/getPaket/' + notrx,
             type: 'POST',
             dataType: 'JSON',
             success: function(result) { // jika fungsi berjalan dengan baik
-                if (result.status == 0) { // jika mendapatkan respon 0
-                    if (result[1].kode_member == 'U00001') {} else {
-                        Swal.fire("Total Penjualan", "Tidak ditemukan!, coba lagi", "info");
-                    }
-                } else { // selain itu
-                    total_jual.val(formatRpNoId(result[0].total));
-                    $('#total_kurang').val(formatRpNoId((0 - result[0].total)));
+                if (result[0]['status'] == 1) { // jika mendapatkan respon 1
+                    var sumPaket = 0;
+                    var row = 1;
+                    $.each(result[1], function( index, value ) {
+                        sumPaket += value.harga;
 
-                    kode_promo.attr('disabled', false);
+                        bodyPaket.append(`<tr id="rowPaket${row}">
+                            <td>
+                                <input type="hidden" name="kode_tarif[]" id="kode_tarif${row}" value="${value.kode_tarif}">
+                                <input type="text" class="form-control" readonly name="kode_tarifx[]" id="kode_tarifx${row}" value="${value.nama_tarif}">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control text-center" readonly name="kunjungan[]" id="kunjungan${row}" value="${value.kunjungan}">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control text-right" readonly name="harga[]" id="harga${row}" value="${formatRpNoId(value.harga)}">
+                            </td>
+                        </tr>`);
+                        row++;
 
-                    initailizeSelect2_promo(result[0].total);
-
-                    if (result[1].kode_member == 'U00001') {
-                        $('.not_umum').hide();
-                    } else {
-                        // ambil uangmuka
-                        $('.not_umum').show();
-                        get_um(result[0].kode_member, cek_retur);
-                    }
+                    });
+                } else {
+                    var sumPaket = 0;
                 }
+
+                $('#sumPaket').val(sumPaket);
+
+                $('#inv_jual').html(`<option value="${result[0]['invoice']}">${result[0]['invoice']}</option>`);
+                cekJual(result[0]['invoice'], '');
             },
             error: function(result) { // jika fungsi error
-                btnSimpan.attr('disabled', false);
-
                 error_proccess();
             }
         });
@@ -660,11 +778,11 @@
     function save() {
         btnSimpan.attr('disabled', true);
 
-        if (inv_jual.val() == '' || inv_jual.val() == null) { // jika inv_jual null/ kosong
-            btnSimpan.attr('disabled', false);
+        // if (inv_jual.val() == '' || inv_jual.val() == null) { // jika inv_jual null/ kosong
+        //     btnSimpan.attr('disabled', false);
 
-            return Swal.fire("Penjualan", "Form sudah dipilih?", "question");
-        }
+        //     return Swal.fire("Penjualan", "Form sudah dipilih?", "question");
+        // }
 
         if (invoice.val() == '' || invoice.val() == null) { // jika invoice null/ kosong
             // isi param = 1

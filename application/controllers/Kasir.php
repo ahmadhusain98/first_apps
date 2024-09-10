@@ -407,13 +407,16 @@ class Kasir extends CI_Controller
         if ($cek_retur) {
             $kasir = $this->M_global->updateData('barang_out_retur_header', ['status_retur' => 0], ['invoice' => $pembayaran->inv_jual]);
         } else {
-            $kasir = $this->M_global->updateData('barang_out_header', ['status_jual' => 0], ['invoice' => $pembayaran->inv_jual]);
+            if($jual) {
+                $kasir = $this->M_global->updateData('barang_out_header', ['status_jual' => 0], ['invoice' => $pembayaran->inv_jual]);
+            }
         }
 
         $cek = [
             $kasir,
             $this->M_global->delData('pembayaran', ['token_pembayaran' => $token_pembayaran]),
-            $this->M_global->delData('bayar_card_detail', ['token_pembayaran' => $token_pembayaran])
+            $this->M_global->delData('bayar_card_detail', ['token_pembayaran' => $token_pembayaran]),
+            $this->M_global->updateData('tarif_paket_pasien', ['status' => 0], ['no_trx' => $pembayaran->no_trx]),
         ];
 
         if ($cek) {
@@ -434,15 +437,19 @@ class Kasir extends CI_Controller
             $pembayaran     = null;
             $riwayat        = null;
             $bayar_detail   = null;
+            $tarif_paket    = null;
         } else {
             $bayar_detail   = $this->M_global->getDataResult('bayar_card_detail', ['token_pembayaran' => $param]);
             $pembayaran     = $this->M_global->getData('pembayaran', ['token_pembayaran' => $param]);
             $pendaftaran    = $this->M_global->getData('pendaftaran', ['no_trx' => $pembayaran->no_trx]);
             if (!empty($pendaftaran)) {
+                $tarif_paket    = $this->M_global->getDataResult('tarif_paket_pasien', ['no_trx' => $pendaftaran->no_trx]);
+                
                 $kode_member    = $pendaftaran->kode_member;
-
+                
                 $riwayat        = $this->M_global->getDataResult('pendaftaran', ['kode_member' => $kode_member]);
             } else {
+                $tarif_paket    = null;
                 $riwayat        = null;
             }
         }
@@ -457,12 +464,33 @@ class Kasir extends CI_Controller
             'list_data'         => '',
             'data_pembayaran'   => $pembayaran,
             'bayar_detail'      => $bayar_detail,
+            'tarif_paket'       => $tarif_paket,
             'riwayat'           => $riwayat,
             'param2'            => $param2,
             'role'              => $this->M_global->getResult('m_role'),
         ];
 
         $this->template->load('Template/Content', 'Kasir/Form_pembayaran', $parameter);
+    }
+
+    public function getPaket($no_trx) {
+        $kode_cabang = $this->session->userdata('cabang');
+        $tarif = $this->M_global->getDataResult('tarif_paket_pasien', ['no_trx' => $no_trx]);
+        $jual = $this->M_global->getData('barang_out_header', ['no_trx' => $no_trx]);
+
+        $data = [];
+        foreach($tarif as $t) {
+            $m_tarif = $this->M_global->getData('tarif_paket', ['kode_tarif' => $t->kode_tarif, 'kunjungan' => $t->kunjungan, 'kode_cabang' => $kode_cabang]);
+            $m_tarif2 = $this->M_global->getData('m_tarif', ['kode_tarif' => $t->kode_tarif]);
+            $data[] = [
+                'kode_tarif' => $m_tarif->kode_tarif,
+                'nama_tarif' => $m_tarif2->nama,
+                'kunjungan' => $t->kunjungan,
+                'harga' => ($m_tarif->jasa_rs + $m_tarif->jasa_dokter + $m_tarif->jasa_pelayanan + $m_tarif->jasa_poli),
+            ];
+        }
+
+        echo json_encode([['status' => 1, 'invoice' => $jual->invoice], $data]);
     }
 
     // fungsi get Info
@@ -523,6 +551,11 @@ class Kasir extends CI_Controller
         $kode_promo             = $this->input->post('kode_promo');
         $cek_um                 = $this->input->post('cek_um');
         $discpr_promo           = str_replace(',', '', $this->input->post('potongan_promo'));
+        $sumPaket               = str_replace(',', '', $this->input->post('sumPaket'));
+
+        $kode_tarif             = $this->input->post('kode_tarif');
+        $kunjungan              = $this->input->post('kunjungan');
+        $harga                  = $this->input->post('harga');
 
         if ($cek_retur > 0) { // jika cek retur ada/ 1
             // notrx null
@@ -562,6 +595,7 @@ class Kasir extends CI_Controller
             'no_trx'            => $no_trx,
             'tgl_pembayaran'    => $tgl_pembayaran,
             'jam_pembayaran'    => $jam_pembayaran,
+            'paket'             => $sumPaket,
             'total'             => $total,
             'kode_user'         => $kode_user,
             'um_keluar'         => $um_keluar,
@@ -595,6 +629,14 @@ class Kasir extends CI_Controller
                     $this->M_global->insertData('pembayaran', $isi_pembayaran),
                     $update_um,
                 ];
+                
+                if(isset($kode_tarif)) {
+                    $jumPaket = count($kode_tarif);
+
+                    for($x = 0; $x <= ($jumPaket - 1); $x++) {
+                        $this->M_global->updateData('tarif_paket_pasien', ['status' => 1], ['no_trx' => $no_trx, 'kode_tarif' => $kode_tarif[$x], 'kunjungan' => $kunjungan[$x]]);
+                    }
+                }
             } else {
 
                 $cek = [
@@ -603,6 +645,15 @@ class Kasir extends CI_Controller
             }
         } else { // selain itu
             if ($cek_retur < 1) {
+                if(isset($kode_tarif)) {
+                    $this->M_global->updateData('tarif_paket_pasien', ['status' => 0], ['no_trx' => $no_trx]);
+
+                    $jumPaket = count($kode_tarif);
+
+                    for($x = 0; $x <= ($jumPaket - 1); $x++) {
+                        $this->M_global->updateData('tarif_paket_pasien', ['status' => 1], ['no_trx' => $no_trx, 'kode_tarif' => $kode_tarif[$x], 'kunjungan' => $kunjungan[$x]]);
+                    }
+                }
 
                 $um_awal = $this->M_global->getData('pembayaran', ['invoice' => $invoice]);
                 $total_awal = $um_awal->kembalian;

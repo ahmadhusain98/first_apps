@@ -920,8 +920,78 @@
         initailizeSelect2_kas_bank();
         initailizeSelect2_kategori_tarif();
         initailizeSelect2_all_cabang();
+        initailizeSelect2_tarif_paket();
+        initailizeSelect2_terdaftar();
 
         // fungsi
+        function initailizeSelect2_terdaftar() {
+            // jalan fungsi select2 asli
+            $(".select2_terdaftar").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Cabang',
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 1 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataTerdaftar/',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_tarif_paket() {
+            // jalan fungsi select2 asli
+            $(".select2_tarif_paket").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Cabang',
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 1 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataTarifPaket/',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
         function initailizeSelect2_all_cabang() {
             if (param == '' || param == null || param == 'null') { // jika parameter kosong/ null
                 // jalankan fungsi select2_default

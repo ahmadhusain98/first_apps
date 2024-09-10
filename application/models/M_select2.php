@@ -36,6 +36,37 @@ class M_select2 extends CI_Model
         return $sintak;
     }
 
+    function getTarifPaket($key)
+    {
+        $limit = ' LIMIT 50';
+
+        if (!empty($key)) {
+            $add_sintak = ' AND (m.kode_tarif LIKE "%' . $key . '%" OR m.nama LIKE "%' . $key . '%") ORDER BY m.nama ASC';
+        } else {
+            $add_sintak = ' ORDER BY m.nama ASC';
+        }
+
+        $sintak = $this->db->query('SELECT m.kode_tarif AS id, m.nama AS text FROM m_tarif m WHERE m.jenis = 2 ' . $add_sintak . $limit)->result();
+
+        return $sintak;
+    }
+
+    function getTerdaftar($key)
+    {
+        $kode_cabang = $this->session->userdata('cabang');
+        $limit = ' LIMIT 50';
+
+        if (!empty($key)) {
+            $add_sintak = ' AND (p.no_trx LIKE "%' . $key . '%" OR m.nama LIKE "%' . $key . '%" OR pol.keterangan LIKE "%' . $key . '%" OR dok.nama LIKE "%' . $key . '%") ORDER BY p.id DESC';
+        } else {
+            $add_sintak = ' ORDER BY p.id DESC';
+        }
+
+        $sintak = $this->db->query('SELECT p.no_trx AS id, CONCAT(p.no_trx, " | Nama: ", m.nama, " | Tgl/Jam: ", p.tgl_daftar, "/", p.jam_daftar, " | Poli/Dokter: ", pol.keterangan, "/", dok.nama) AS text FROM pendaftaran p JOIN member m ON p.kode_member = m.kode_member JOIN m_poli pol ON pol.kode_poli = p.kode_poli JOIN dokter dok ON dok.kode_dokter = p.kode_dokter WHERE p.kode_cabang = "'.$kode_cabang.'" ' . $add_sintak . $limit)->result();
+
+        return $sintak;
+    }
+
     // fungsi kategori
     function getKategori($key)
     {

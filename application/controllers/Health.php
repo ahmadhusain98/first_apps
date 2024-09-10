@@ -596,15 +596,17 @@ class Health extends CI_Controller
     // fungsi cetak histori
     public function print_hispas($no_trx)
     {
+        $kode_cabang          = $this->session->userdata('cabang');
         $web_setting          = $this->M_global->getData('web_setting', ['id' => 1]);
 
-        $position             = 'L'; // cek posisi l/p
+        $position             = 'P'; // cek posisi l/p
 
         // body cetakan
         $body                 = '';
         $body                 .= '<br><br>'; // beri jarak antara kop dengan body
 
         $pendaftaran          = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+        $tarif_paket_pasien   = $this->M_global->getDataResult('tarif_paket_pasien', ['no_trx' => $no_trx]);
         $pembayaran           = $this->M_global->getData('pembayaran', ['no_trx' => $no_trx]);
         $barang_out_header    = $this->M_global->getData('barang_out_header', ['invoice' => $pembayaran->inv_jual]);
         $barang_out_detail    = $this->M_global->getDataResult('barang_out_detail', ['invoice' => $pembayaran->inv_jual]);
@@ -677,9 +679,50 @@ class Health extends CI_Controller
 
         $body .= '<table style="width: 100%; font-size: 18px;" autosize="1">
             <tr>
+                <td><span style="background-color: #0e1d2e; color: white; margin: 10px 10px; text-align: center; border-radius: 5px;">~ Tarif Paket #' . $pembayaran->no_trx . ' / ' . $this->M_global->getData('user', ['kode_user' => $pendaftaran->kode_user])->nama . ' / ' . date('d-m-Y', strtotime($pendaftaran->tgl_daftar)) . ' - ' . date('H:i:s', strtotime($pendaftaran->jam_daftar)) . '</span></td>
+            </tr>
+        </table>';
+
+        $body .= '<table style="width: 100%; font-size: 14px;" autosize="1" cellpadding="5px">
+            <thead>
+                <tr style="background-color: #0e1d2e;">
+                    <th style="color: white; width: 5%;">No</th>
+                    <th style="color: white; width: 55%;">Tindakan</th>
+                    <th style="color: white; width: 20%;">Kunjungan</th>
+                    <th style="color: white; width: 20%;">Harga</th>
+                </tr>
+            </thead>
+            <tbody>';
+        $totalPaket = 0;
+        $nop = 1;
+        foreach($tarif_paket_pasien as $tpp) {
+            $paket = $this->M_global->getData('tarif_paket', ['kode_tarif' => $tpp->kode_tarif, 'kunjungan' => $tpp->kunjungan, 'kode_cabang' => $kode_cabang]);
+            $body .= '<tr>
+                <td style="border: 1px solid black; text-align: right;">' . $nop++ . '</td>
+                <td style="border: 1px solid black; ">' . $this->M_global->getData('m_tarif', ['kode_tarif' => $tpp->kode_tarif])->nama . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . number_format($tpp->kunjungan) . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . number_format(($paket->jasa_rs + $paket->jasa_dokter + $paket->jasa_pelayanan + $paket->jasa_poli)) . '</td>
+            </tr>';
+
+            $totalPaket += ($paket->jasa_rs + $paket->jasa_dokter + $paket->jasa_pelayanan + $paket->jasa_poli);
+        }
+        $body .= '</tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" style="text-align: right;">Total: Rp. </td>
+                <td style="text-align: right;">' . number_format($totalPaket) . '</td>
+            </tr>
+        </tfoot>
+        </table>';
+
+        $body .= '<br>';
+
+        $body .= '<table style="width: 100%; font-size: 18px;" autosize="1">
+            <tr>
                 <td><span style="background-color: #0e1d2e; color: white; margin: 10px 10px; text-align: center; border-radius: 5px;">~ Pembelian #' . $pembayaran->inv_jual . ' / ' . $this->M_global->getData('user', ['kode_user' => $barang_out_header->kode_user])->nama . ' / ' . date('d-m-Y', strtotime($barang_out_header->tgl_jual)) . ' - ' . date('H:i:s', strtotime($barang_out_header->jam_jual)) . '</span></td>
             </tr>
         </table>';
+
 
         $body .= '<table style="width: 100%; font-size: 14px;" autosize="1" cellpadding="5px">
             <thead>
@@ -896,17 +939,19 @@ class Health extends CI_Controller
     public function form_pendaftaran($param)
     {
         // website config
-        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
-        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+        $web_setting              = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version              = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
         if ($param != '0') {
-            $pendaftaran    = $this->M_global->getData('pendaftaran', ['no_trx' => $param]);
-            $kode_member    = $pendaftaran->kode_member;
+            $pendaftaran          = $this->M_global->getData('pendaftaran', ['no_trx' => $param]);
+            $kode_member          = $pendaftaran->kode_member;
 
-            $riwayat        = $this->M_global->getDataResult('pendaftaran', ['kode_member' => $kode_member]);
+            $riwayat              = $this->M_global->getDataResult('pendaftaran', ['kode_member' => $kode_member]);
+            $tarif_paket_pasien   = $this->M_global->getDataResult('tarif_paket_pasien', ['no_trx' => $param]);
         } else {
-            $pendaftaran    = null;
-            $riwayat        = null;
+            $pendaftaran          = null;
+            $riwayat              = null;
+            $tarif_paket_pasien   = null;
         }
 
         $parameter = [
@@ -920,9 +965,16 @@ class Health extends CI_Controller
             'data_pendaftaran'  => $pendaftaran,
             'riwayat'           => $riwayat,
             'role'              => $this->M_global->getResult('m_role'),
+            'pasien_paket'      => $tarif_paket_pasien,
         ];
 
         $this->template->load('Template/Content', 'Pendaftaran/Form_pendaftaran', $parameter);
+    }
+
+    public function getPaket($kode_tarif, $kode_member) {
+        $tarif = $this->db->query("SELECT * FROM tarif_paket_pasien WHERE kode_tarif = '$kode_tarif' AND status = 1 AND kode_member = '$kode_member'")->result();
+
+        echo json_encode(['status' => 1, 'kunjungan' => (count($tarif) + 1)]);
     }
 
     // fungsi cek member terdaftar/ tidak
@@ -947,27 +999,30 @@ class Health extends CI_Controller
     public function pendaftaran_proses($param)
     {
         // variable
-        $kode_user    = $this->session->userdata('kode_user');
-        $shift        = $this->session->userdata('shift');
-        $kode_cabang  = $this->session->userdata('cabang');
+        $kode_user        = $this->session->userdata('kode_user');
+        $shift            = $this->session->userdata('shift');
+        $kode_cabang      = $this->session->userdata('cabang');
 
-        $kode_poli    = $this->input->post('kode_poli');
-        $tgl_daftar   = date('Y-m-d');
+        $kode_poli        = $this->input->post('kode_poli');
+        $tgl_daftar       = date('Y-m-d');
 
         if ($param == 1) { // jika param = 1
             // buat kode baru
-            $no_trx         = _kodeTrx($kode_poli, $kode_cabang);
-            $no_antrian     = _noAntrian($kode_poli, $kode_cabang, $tgl_daftar);
+            $no_trx       = _kodeTrx($kode_poli, $kode_cabang);
+            $no_antrian   = _noAntrian($kode_poli, $kode_cabang, $tgl_daftar);
         } else { // selain itu
             // ambil dari inputan
-            $no_trx         = $this->input->post('no_trx');
-            $no_antrian     = $this->input->post('no_antrian');
+            $no_trx       = $this->input->post('no_trx');
+            $no_antrian   = $this->input->post('no_antrian');
         }
 
-        $jam_daftar   = date('H:i:s');
-        $kode_member  = $this->input->post('kode_member');
-        $kode_dokter  = $this->input->post('kode_dokter');
-        $kode_ruang   = $this->input->post('kode_ruang');
+        $jam_daftar       = date('H:i:s');
+        $kode_member      = $this->input->post('kode_member');
+        $kode_dokter      = $this->input->post('kode_dokter');
+        $kode_ruang       = $this->input->post('kode_ruang');
+
+        $kode_tarif       = $this->input->post('kode_tarif');
+        $kunjungan        = $this->input->post('kunjungan');
 
         // jika ada last antrian + 1, jika tidak ada 0 + 1
 
@@ -989,6 +1044,7 @@ class Health extends CI_Controller
             'shift'         => $shift,
         ];
 
+
         if ($param == 1) { // jika param = 1
             aktifitas_user_transaksi('Pendaftaran', 'mendaftarkan Member ' . $kode_member, $no_trx);
 
@@ -1000,7 +1056,26 @@ class Health extends CI_Controller
         } else { // selain itu
             aktifitas_user_transaksi('Pendaftaran', 'mengubah Pendaftaran Member ' . $kode_member, $no_trx);
             // lakukan fungsi ubah ke table pendaftaran
-            $cek = $this->M_global->updateData('pendaftaran', $isi, ['no_trx' => $no_trx]);
+            $cek = [
+                $this->M_global->updateData('pendaftaran', $isi, ['no_trx' => $no_trx]),
+                $this->M_global->delData('tarif_paket_pasien', ['no_trx' => $no_trx]),
+            ];
+        }
+
+        if(isset($kode_tarif)) {
+            $jumPaket = count($kode_tarif);
+
+            for($z = 0; $z <= ($jumPaket - 1); $z++) {
+                $paket = [
+                    'no_trx'        => $no_trx,
+                    'kode_tarif'    => $kode_tarif[$z],
+                    'kode_member'   => $kode_member,
+                    'status'        => 0,
+                    'kunjungan'     => $kunjungan[$z],
+                ];
+
+                $this->M_global->insertData('tarif_paket_pasien', $paket);
+            }
         }
 
         if ($cek) { // jika fungsi berjalan
@@ -1022,6 +1097,7 @@ class Health extends CI_Controller
         $cek = [
             $this->M_global->updateData('pendaftaran', ['status_trx' => 2, 'tgl_keluar' => date('Y-m-d'), 'jam_keluar' => date('H:i:s')], ['no_trx' => $no_trx]),
             $this->M_global->updateData('member', ['status_regist' => 0], ['last_regist' => $no_trx]),
+            $this->M_global->updateData('tarif_paket_pasien', ['status' => 2], ['no_trx' => $no_trx]),
         ];
 
         if ($cek) { // jika fungsi berjalan
@@ -1041,7 +1117,10 @@ class Health extends CI_Controller
 
         aktifitas_user_transaksi('Pendaftaran', 'menghapus Pendaftaran Member ' . $member->kode_member, $no_trx);
 
-        $cek = $this->M_global->delData('pendaftaran', ['no_trx' => $no_trx]);
+        $cek = [
+            $this->M_global->delData('pendaftaran', ['no_trx' => $no_trx]),
+            $this->M_global->delData('tarif_paket_pasien', ['no_trx' => $no_trx]),
+        ];
 
         if ($cek) { // jika fungsi berjalan
             // kirimkan status 1 ke view

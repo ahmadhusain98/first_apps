@@ -6,9 +6,9 @@
     </div>
     <br>
     <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-6">
+        <div class="col-md-6">
+            <div class="row mb-3">
+                <div class="col-md-12">
                     <label for="">No. Pendaftaran</label>
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" placeholder="Otomatis" id="no_trx" name="no_trx" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_trx : '') ?>" readonly>
@@ -19,20 +19,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <label for="">No. Antrian</label>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Otomatis" id="no_antrian" name="no_antrian" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_antrian : '') ?>" readonly>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <i class="fa-solid fa-hourglass"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <label for="">Member <sup class="text-danger">**</sup></label>
                     <div class="row mb-3">
                         <div class="col-md-8">
@@ -50,22 +37,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <label for="">Poli <sup class="text-danger">**</sup></label>
-                    <div class="input-group mb-3">
-                        <select name="kode_poli" id="kode_poli" class="form-control select2_poli" data-placeholder="~ Pilih Poli" onchange="getDokter(this.value)">
-                            <?php
-                            if (!empty($data_pendaftaran)) :
-                                $poli = $this->M_global->getData('m_poli', ['kode_poli' => $data_pendaftaran->kode_poli]);
-                                echo '<option value="' . $poli->kode_poli . '">' . $poli->kode_poli . ' ~ ' . $poli->keterangan . '</option>';
-                            endif;
-                            ?>
-                        </select>
-                    </div>
-                </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
+            <div class="row mb-3">
+                <div class="col-md-12">
                     <label for="">Tgl/Jam Daftar <sup class="text-danger">**</sup></label>
                     <div class="row">
                         <div class="col-md-6">
@@ -90,6 +64,47 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="">No. Antrian</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Otomatis" id="no_antrian" name="no_antrian" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_antrian : '') ?>" readonly>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <i class="fa-solid fa-hourglass"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="">Ruangan/Bed <sup class="text-danger">**</sup></label>
+                    <div class="input-group mb-3">
+                        <select name="kode_ruang" id="kode_ruang" class="form-control select2_ruang" data-placeholder="~ Pilih Ruang">
+                            <?php
+                            if (!empty($data_pendaftaran)) :
+                                $ruang = $this->M_global->getData('m_ruang', ['kode_ruang' => $data_pendaftaran->kode_ruang]);
+                                echo '<option value="' . $ruang->kode_ruang . '">' . $ruang->kode_ruang . ' ~ ' . $ruang->keterangan . '</option>';
+                            endif;
+                            ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="">Poli <sup class="text-danger">**</sup></label>
+                    <div class="input-group mb-3">
+                        <select name="kode_poli" id="kode_poli" class="form-control select2_poli" data-placeholder="~ Pilih Poli" onchange="getDokter(this.value)">
+                            <?php
+                            if (!empty($data_pendaftaran)) :
+                                $poli = $this->M_global->getData('m_poli', ['kode_poli' => $data_pendaftaran->kode_poli]);
+                                echo '<option value="' . $poli->kode_poli . '">' . $poli->kode_poli . ' ~ ' . $poli->keterangan . '</option>';
+                            endif;
+                            ?>
+                        </select>
+                    </div>
+                </div>
                 <div class="col-md-6">
                     <label for="">Dokter Poli <sup class="text-danger">**</sup></label>
                     <div class="input-group mb-3">
@@ -106,22 +121,6 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label for="">Ruangan/Bed <sup class="text-danger">**</sup></label>
-                    <div class="input-group mb-3">
-                        <select name="kode_ruang" id="kode_ruang" class="form-control select2_ruang" data-placeholder="~ Pilih Ruang">
-                            <?php
-                            if (!empty($data_pendaftaran)) :
-                                $ruang = $this->M_global->getData('m_ruang', ['kode_ruang' => $data_pendaftaran->kode_ruang]);
-                                echo '<option value="' . $ruang->kode_ruang . '">' . $ruang->kode_ruang . ' ~ ' . $ruang->keterangan . '</option>';
-                            endif;
-                            ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6"></div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
                     <button type="button" class="btn btn-danger" onclick="getUrl('Health/pendaftaran')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
                 </div>
                 <div class="col-md-6">
@@ -135,6 +134,45 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-md-6">
+            <label for="">Tarif Paket</label>
+            <div class="table-responsive">
+                <input type="hidden" name="jumPaket" id="jumPaket" value="<?= ((!empty($pasien_paket)) ? count($pasien_paket) : 0) ?>">
+                <table class="table table-striped table-bordered" id="tableTarifPaket" width="100%" style="border-raidus: 10px;">
+                    <thead>
+                        <tr class="text-center">
+                            <th width="5%">Hapus</th>
+                            <th width="85%">Tindakan</th>
+                            <th width="10%">Kunjungan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTarifPaket">
+                        <?php if(!empty($pasien_paket)) : ?>
+                            <?php $no = 1; foreach($pasien_paket as $pp) : 
+                            $paket = $this->M_global->getData('m_tarif', ['kode_tarif' => $pp->kode_tarif]);
+                                ?>
+                                <tr id="rowPaket<?= $no ?>">
+                                    <td>
+                                        <button type="button" class="btn btn-danger" onclick="hapusTindakan('<?= $no ?>')">
+                                            <i class="fa-solid fa-delete-left"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <select name="kode_tarif[]" id="kode_tarif<?= $no ?>" class="form-control select2_tarif_paket" data-placeholder="Pilih Tindakan" onchange="getKunjungan(this.value, <?= $no ?>)">
+                                            <option value="<?= $pp->kode_tarif ?>"><?= $paket->nama; ?></option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="kunjungan[]" id="kunjungan<?= $no ?>" class="form-control text-center" readonly value="<?= $pp->kunjungan ?>">
+                                    </td>
+                                </tr>
+                            <?php $no++; endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="tambahTarifPaket()" id="btnTambahPaket" <?= ((!empty($pasien_paket) ? (((count($pasien_paket) > 0) ? '' : 'disabled')) : 'disabled')) ?>><i class="fa-solid fa-folder-plus"></i> Tambah Tarif Paket</button>
         </div>
     </div>
     <hr>
@@ -172,12 +210,15 @@
                                         if ($r->status_trx == 0) {
                                             $cek_status = 'success';
                                             $message_status = 'Open';
+                                            $btndis = 'disabled';
                                         } else if ($r->status_trx == 2) {
                                             $cek_status = 'warning';
                                             $message_status = 'Cancel';
+                                            $btndis = '';
                                         } else {
                                             $cek_status = 'danger';
                                             $message_status = 'Close';
+                                            $btndis = '';
                                         }
                                         ?>
                                         <span class="badge badge-<?= $cek_status ?>"><?= $message_status ?></span>
@@ -188,7 +229,7 @@
                                     <td><?= $this->M_global->getData('m_poli', ['kode_poli' => $r->kode_poli])->keterangan ?></td>
                                     <td><?= $this->M_global->getData('dokter', ['kode_dokter' => $r->kode_dokter])->nama ?></td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getHisPas('<?= $r->no_trx ?>')"><i class="fa-solid fa-circle-info"></i></button>
+                                        <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getHisPas('<?= $r->no_trx ?>')" <?= $btndis ?>><i class="fa-solid fa-circle-info"></i></button>
                                     </td>
                                 </tr>
                             <?php $no++;
@@ -209,16 +250,66 @@
     // variable
     var table = $('#tableRiwayat');
     var body = $('#bodyRiwayat');
+    var bodyPaket = $('#bodyTarifPaket');
     var no_trx = $('#no_trx');
     var kode_member = $('#kode_member');
     var kode_poli = $('#kode_poli');
     var kode_dokter = $('#kode_dokter');
     var kode_ruang = $('#kode_ruang');
+    const btnTambahPaket = $('#btnTambahPaket');
 
     const form = $('#form_pendaftaran');
     const btnSimpan = $('#btnSimpan');
 
     $('#btnUMember').attr('disabled', true);
+
+    function tambahTarifPaket() {
+        var jum = Number($('#jumPaket').val());
+        var row = jum + 1;
+
+        $('#jumPaket').val(row);
+
+        bodyPaket.append(`<tr id="rowPaket${row}">
+            <td>
+                <button type="button" class="btn btn-danger" onclick="hapusTindakan(${row})">
+                    <i class="fa-solid fa-delete-left"></i>
+                </button>
+            </td>
+            <td>
+                <select name="kode_tarif[]" id="kode_tarif${row}" class="form-control select2_tarif_paket" data-placeholder="Pilih Tindakan" onchange="getKunjungan(this.value, ${row})"></select>
+            </td>
+            <td>
+                <input type="text" name="kunjungan[]" id="kunjungan${row}" class="form-control text-center" readonly>
+            </td>
+        </tr>`);
+
+        initailizeSelect2_tarif_paket();
+    }
+
+    function hapusTindakan(i) {
+        $('#rowPaket' + i).remove();
+    }
+
+    function getKunjungan(kdtf, i) {
+        if(!kdtf || kdtf === null) {
+            return
+        }
+
+        var kdmbr = $('#kode_member').val();
+
+        $.ajax({
+            url: siteUrl+'Health/getPaket/'+kdtf+'/'+kdmbr,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(result) {
+                if(result.status == 1) {
+                    $('#kunjungan'+i).val(result.kunjungan);
+                }
+            }, error: function(result) {
+                error_proccess();
+            }
+        });
+    }
 
     // fungsi get dokter berdasarkan kode poli
     function getDokter(kode_poli) {
@@ -317,7 +408,6 @@
             data: $('#form_pendaftaran').serialize(),
             dataType: "JSON",
             success: function(result) { // jika fungsi berjalan dengan baik
-                console.log(result);
                 btnSimpan.attr('disabled', false);
 
                 if (result.status == 1) { // jika mendapatkan respon 1
@@ -366,6 +456,8 @@
             return body.empty();
         }
 
+        btnTambahPaket.attr('disabled', false);
+
         $('#btnUMember').attr('disabled', false);
         // kosongkan body
         body.empty();
@@ -391,12 +483,18 @@
                     if (value.status_trx == 0) {
                         var cek_color = 'success';
                         var message = 'Open';
+
+                        var btndis = 'disabled';
                     } else if (value.status_trx == 2) {
                         var cek_color = 'warning';
                         var message = 'Cancel';
+
+                        var btndis = '';
                     } else {
                         var cek_color = 'danger';
                         var message = 'Close';
+
+                        var btndis = '';
                     }
 
                     // tampilkan ke bodyRiwayat
@@ -409,7 +507,7 @@
                         <td>${value.nama_poli}</td>
                         <td>${value.nama_dokter}</td>
                         <td class="text-center">
-                            <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getHisPas('${value.no_trx}')"><i class="fa-solid fa-circle-info"></i></button>
+                            <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getHisPas('${value.no_trx}')" ${btndis}><i class="fa-solid fa-circle-info"></i></button>
                         </td>
                     </tr>`);
                     no++;
@@ -440,6 +538,8 @@
         $('#kode_poli').val('').change();
         $('#kode_dokter').val('').change();
         $('#kode_ruang').val('').change();
+        bodyPaket.empty();
+        body.empty();
     }
 
     // fungsi lihat detail
