@@ -21,19 +21,22 @@ class M_tarif extends CI_Model
 
         $this->db->select($this->kolom);
         $this->db->from($this->table . ' AS m');
-        if ($param == 1) {
-            $this->db->join('tarif_jasa tj', 'tj.kode_tarif = m.kode_tarif');
-        } else {
-            $this->db->join('tarif_paket tj', 'tj.kode_tarif = m.kode_tarif');
+
+        if (!empty($param)) {
+            if ($param == 1) {
+                $this->db->join('tarif_jasa tj', 'tj.kode_tarif = m.kode_tarif');
+            } else {
+                $this->db->join('tarif_paket tj', 'tj.kode_tarif = m.kode_tarif');
+            }
         }
+
         $this->db->group_by('tj.kode_tarif');
 
         $this->db->where("m.jenis", $param);
         $this->db->where("tj.kode_cabang", $this->session->userdata("cabang"));
 
-        if (!empty($param)) {
-            // $this->db->where('bs.kode_gudang', $param);
-        }
+        $this->db->order_by('id', 'asc');
+
 
         $i = 0;
 
@@ -82,15 +85,21 @@ class M_tarif extends CI_Model
 
         $this->db->select($this->kolom);
         $this->db->from($this->table . ' AS m');
-        $this->db->join('tarif_jasa tj', 'tj.kode_tarif = m.kode_tarif');
+
+        if (!empty($param)) {
+            if ($param == 1) {
+                $this->db->join('tarif_jasa tj', 'tj.kode_tarif = m.kode_tarif');
+            } else {
+                $this->db->join('tarif_paket tj', 'tj.kode_tarif = m.kode_tarif');
+            }
+        }
+
         $this->db->group_by('tj.kode_tarif');
 
         $this->db->where("m.jenis", $param);
         $this->db->where("tj.kode_cabang", $this->session->userdata("cabang"));
 
-        if (!empty($param)) {
-            // $this->db->where('bs.kode_gudang', $param);
-        }
+        $this->db->order_by('id', 'asc');
 
         return $this->db->count_all_results();
     }

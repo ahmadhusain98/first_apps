@@ -3708,11 +3708,13 @@ class Master extends CI_Controller
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
         if ($param != '0') {
-            $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $param]);
-            $single_jasa = $this->M_global->getDataResult('tarif_jasa', ['kode_tarif' => $param]);
+            $tarif          = $this->M_global->getData('m_tarif', ['kode_tarif' => $param]);
+            $single_jasa    = $this->M_global->getDataResult('tarif_jasa', ['kode_tarif' => $param]);
+            $single_bhp     = $this->M_global->getDataResult('tarif_single_bhp', ['kode_tarif' => $param]);
         } else {
-            $tarif = null;
-            $single_jasa = null;
+            $tarif          = null;
+            $single_jasa    = null;
+            $single_bhp     = null;
         }
 
         $parameter = [
@@ -3725,6 +3727,7 @@ class Master extends CI_Controller
             'list_data'     => '',
             'tarif'         => $tarif,
             'single_jasa'   => $single_jasa,
+            'single_bhp'    => $single_bhp,
         ];
 
         $this->template->load('Template/Content', 'Master/Tarif/Form_single', $parameter);

@@ -110,16 +110,16 @@
                                                     <input type="text" name="kunjungan[]" id="kunjungan<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->kunjungan) ?>">
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="jasa_rs[]" id="jasa_rs<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_rs) ?>">
+                                                    <input type="text" name="jasa_rs[]" id="jasa_rs<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_rs) ?>" onkeyup="formatRp(this.value, 'jasa_rs<?= $no ?>');">
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="jasa_dokter[]" id="jasa_dokter<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_dokter) ?>">
+                                                    <input type="text" name="jasa_dokter[]" id="jasa_dokter<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_dokter) ?>" onkeyup="formatRp(this.value, 'jasa_dokter<?= $no ?>');">
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="jasa_pelayanan[]" id="jasa_pelayanan<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_pelayanan) ?>">
+                                                    <input type="text" name="jasa_pelayanan[]" id="jasa_pelayanan<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_pelayanan) ?>" onkeyup="formatRp(this.value, 'jasa_pelayanan<?= $no ?>');">
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="jasa_poli[]" id="jasa_poli<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_poli) ?>">
+                                                    <input type="text" name="jasa_poli[]" id="jasa_poli<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_poli) ?>" onkeyup="formatRp(this.value, 'jasa_poli<?= $no ?>');">
                                                 </td>
                                             </tr>
                                         <?php $no++;
@@ -136,16 +136,16 @@
                                                 <input type="text" name="kunjungan[]" id="kunjungan1" class="form-control text-right" value="">
                                             </td>
                                             <td>
-                                                <input type="text" name="jasa_rs[]" id="jasa_rs1" class="form-control text-right" value="0">
+                                                <input type="text" name="jasa_rs[]" id="jasa_rs1" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_rs1');">
                                             </td>
                                             <td>
-                                                <input type="text" name="jasa_dokter[]" id="jasa_dokter1" class="form-control text-right" value="0">
+                                                <input type="text" name="jasa_dokter[]" id="jasa_dokter1" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_dokter1');">
                                             </td>
                                             <td>
-                                                <input type="text" name="jasa_pelayanan[]" id="jasa_pelayanan1" class="form-control text-right" value="0">
+                                                <input type="text" name="jasa_pelayanan[]" id="jasa_pelayanan1" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_pelayanan1');">
                                             </td>
                                             <td>
-                                                <input type="text" name="jasa_poli[]" id="jasa_poli1" class="form-control text-right" value="0">
+                                                <input type="text" name="jasa_poli[]" id="jasa_poli1" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_poli1');">
                                             </td>
                                         </tr>
                                     <?php endif; ?>
@@ -262,16 +262,16 @@
                 <input type="text" name="kunjungan[]" id="kunjungan${row}" class="form-control text-right" value="">
             </td>
             <td>
-                <input type="text" name="jasa_rs[]" id="jasa_rs${row}" class="form-control text-right" value="0">
+                <input type="text" name="jasa_rs[]" id="jasa_rs${row}" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_rs${row}');">
             </td>
             <td>
-                <input type="text" name="jasa_dokter[]" id="jasa_dokter${row}" class="form-control text-right" value="0">
+                <input type="text" name="jasa_dokter[]" id="jasa_dokter${row}" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_dokter${row}');">
             </td>
             <td>
-                <input type="text" name="jasa_pelayanan[]" id="jasa_pelayanan${row}" class="form-control text-right" value="0">
+                <input type="text" name="jasa_pelayanan[]" id="jasa_pelayanan${row}" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_pelayanan${row}');">
             </td>
             <td>
-                <input type="text" name="jasa_poli[]" id="jasa_poli${row}" class="form-control text-right" value="0">
+                <input type="text" name="jasa_poli[]" id="jasa_poli${row}" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_poli${row}');">
             </td>
         </tr>`);
 
