@@ -497,6 +497,9 @@
     // fungsi getBarang
     function getBarang(brg, i) {
         var qty = ($('#qty' + i).val()).replaceAll(',', '');
+        $('#kode_satuan' + i).empty();
+        $('#harga' + i).val(0);
+        $('#jumlah' + i).val(0);
         // jalankan fungsi
         $.ajax({
             url: siteUrl + 'Transaksi/getBarang/' + brg,
