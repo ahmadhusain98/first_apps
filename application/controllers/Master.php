@@ -3766,6 +3766,12 @@ class Master extends CI_Controller
         $jasa_pelayanan = $this->input->post('jasa_pelayanan');
         $jasa_poli      = $this->input->post('jasa_poli');
 
+        $kode_barang    = $this->input->post('kode_barang');
+        $kode_satuan    = $this->input->post('kode_satuan');
+        $harga          = $this->input->post('harga');
+        $qty            = $this->input->post('qty');
+        $jumlah         = $this->input->post('jumlah');
+
         $isi = [
             'kode_tarif'    => $kode_tarif,
             'nama'          => $nama,
@@ -3775,6 +3781,7 @@ class Master extends CI_Controller
 
         if (isset($kode_cabang)) {
             $jum = count($kode_cabang);
+            $jumBhp = count($kode_barang);
 
             if ($param == 1) {
                 aktifitas_user('Master Tarif Single', 'menambahkan Tarif Single', $kode_tarif, $nama);
@@ -3782,12 +3789,14 @@ class Master extends CI_Controller
             } else {
                 aktifitas_user('Master Tarif Single', 'mengubah Tarif Single', $kode_tarif, $this->M_global->getData('m_tarif', ['kode_tarif' => $kode_tarif])->nama);
                 $cek = [
+                    $this->M_global->delData('tarif_single_bhp', ['kode_tarif' => $kode_tarif]),
                     $this->M_global->delData('tarif_jasa', ['kode_tarif' => $kode_tarif]),
                     $this->M_global->updateData('m_tarif', $isi, ['kode_tarif' => $kode_tarif]),
                 ];
             }
 
             if ($cek) {
+                // JASA
                 for ($x = 0; $x <= ($jum - 1); $x++) {
                     $_kode_cabang       = $kode_cabang[$x];
                     $_jasa_rs           = str_replace(',', '', $jasa_rs[$x]);
@@ -3807,6 +3816,41 @@ class Master extends CI_Controller
                     $this->M_global->insertData('tarif_jasa', $detail);
                 }
 
+                // BHP
+                for ($z = 0; $z <= ($jumBhp - 1); $z++) {
+                    $_kode_barang   = $kode_barang[$z];
+                    $_kode_satuan   = $kode_satuan[$z];
+                    $_qty           = str_replace(',', '', $qty[$z]);
+                    $_harga         = str_replace(',', '', $harga[$z]);
+                    $_jumlah        = str_replace(',', '', $jumlah[$z]);
+
+                    $barang1        = $this->M_global->getData('barang', ['kode_barang' => $_kode_barang, 'kode_satuan' => $_kode_satuan]);
+                    $barang2        = $this->M_global->getData('barang', ['kode_barang' => $_kode_barang, 'kode_satuan2' => $_kode_satuan]);
+                    $barang3        = $this->M_global->getData('barang', ['kode_barang' => $_kode_barang, 'kode_satuan3' => $_kode_satuan]);
+
+                    if ($barang1) {
+                        $qty_satuan = 1;
+                    } else if ($barang2) {
+                        $qty_satuan = $barang2->qty_satuan2;
+                    } else {
+                        $qty_satuan = $barang3->qty_satuan3;
+                    }
+
+                    $qty_konversi   = $_qty * $qty_satuan;
+
+                    $detail_bhp = [
+                        'kode_tarif'        => $kode_tarif,
+                        'kode_barang'       => $_kode_barang,
+                        'kode_satuan'       => $_kode_satuan,
+                        'qty_konversi'      => $qty_konversi,
+                        'qty'               => $_qty,
+                        'harga'             => $_harga,
+                        'jumlah'            => $_jumlah,
+                    ];
+
+                    $this->M_global->insertData('tarif_single_bhp', $detail_bhp);
+                }
+
                 echo json_encode(['status' => 1]);
             } else {
                 echo json_encode(['status' => 0]);
@@ -3821,6 +3865,7 @@ class Master extends CI_Controller
         aktifitas_user('Master Tarif Single', 'hapus Tarif Single', $kode_tarif, $this->M_global->getData('m_tarif', ['kode_tarif' => $kode_tarif])->nama);
 
         $cek = [
+            $this->M_global->delData('tarif_single_bhp', ['kode_tarif' => $kode_tarif]),
             $this->M_global->delData('tarif_jasa', ['kode_tarif' => $kode_tarif]),
             $this->M_global->delData('m_tarif', ['kode_tarif' => $kode_tarif]),
         ];

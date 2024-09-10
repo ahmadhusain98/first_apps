@@ -183,7 +183,8 @@
                                                 </thead>
                                                 <tbody id="bodyBhp">
                                                     <?php if (!empty($single_bhp)) : ?>
-                                                        <?php $nobhp = 1;
+                                                        <?php 
+                                                        $nobhp = 1;
                                                         foreach ($single_bhp as $sbhp) :
                                                             $barang = $this->M_global->getData('barang', ['kode_barang' => $sbhp->kode_barang]);
 
@@ -196,46 +197,55 @@
                                                                         'keterangan' => $satuanDetail->keterangan,
                                                                     ];
                                                                 } else {
-                                                                    $satuan[] = '';
+                                                                    $satuan[] = [
+                                                                        'kode_satuan' => '',
+                                                                        'keterangan' => '~ Pilih Satuan'
+                                                                    ];
                                                                 }
                                                             }
-                                                        ?>
-                                                            <tr id="rowBhp<?= $nobhp ?>">
+                                                            ?>
+                                                            <tr id="rowBhp<?= htmlspecialchars($nobhp) ?>">
                                                                 <td class="text-center">
-                                                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $nobhp ?>" onclick="hapusBarang('<?= $nobhp ?>')"><i class="fa-solid fa-delete-left"></i></button>
+                                                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= htmlspecialchars($nobhp) ?>" onclick="hapusBarang('<?= htmlspecialchars($nobhp) ?>')">
+                                                                        <i class="fa-solid fa-delete-left"></i>
+                                                                    </button>
                                                                 </td>
                                                                 <td>
-                                                                    <select name="kode_barang[]" id="kode_barang<?= $nobhp ?>" class="form-control select2_barang" data-placeholder="~ Pilih Barang">
-                                                                        <option value="<?= $sbhp->kode_barang ?>"><?= $barang->nama ?></option>
+                                                                    <select name="kode_barang[]" id="kode_barang<?= htmlspecialchars($nobhp) ?>" class="form-control select2_barang" data-placeholder="~ Pilih Barang" onchange="getBarang(this.value, '<?= htmlspecialchars($nobhp) ?>')">
+                                                                        <option value="<?= htmlspecialchars($sbhp->kode_barang) ?>"><?= htmlspecialchars($barang->nama) ?></option>
                                                                     </select>
                                                                 </td>
                                                                 <td>
-                                                                    <select name="kode_satuan[]" id="kode_satuan<?= $nobhp ?>" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, <?= $nobhp ?>)">
+                                                                    <select name="kode_satuan[]" id="kode_satuan<?= htmlspecialchars($nobhp) ?>" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, <?= htmlspecialchars($nobhp) ?>)">
                                                                         <option value="">~ Pilih Satuan</option>
                                                                         <?php foreach ($satuan as $s) : ?>
-                                                                            <option value="<?= $s['kode_satuan'] ?>" <?= (($sbhp->kode_satuan == $s['kode_satuan']) ? 'selected' : '') ?>><?= $s['keterangan'] ?></option>
+                                                                            <option value="<?= htmlspecialchars($s['kode_satuan']) ?>" <?= ($sbhp->kode_satuan == $s['kode_satuan'] ? 'selected' : '') ?>>
+                                                                                <?= htmlspecialchars($s['keterangan']) ?>
+                                                                            </option>
                                                                         <?php endforeach; ?>
                                                                     </select>
                                                                 </td>
                                                                 <td>
-                                                                    <input type="text" id="harga<?= $nobhp ?>" name="harga[]" value="<?= number_format($sbhp->harga) ?>" class="form-control text-right" readonly>
+                                                                    <input type="text" id="harga<?= htmlspecialchars($nobhp) ?>" name="harga[]" value="<?= htmlspecialchars(number_format($sbhp->harga)) ?>" class="form-control text-right" readonly>
                                                                 </td>
                                                                 <td>
-                                                                    <input type="text" id="qty<?= $nobhp ?>" name="qty[]" value="<?= number_format($sbhp->qty) ?>" class="form-control text-right" onchange="hitung_st('<?= $nobhp ?>'); formatRp(this.value, 'qty<?= $nobhp ?>')">
+                                                                    <input type="text" id="qty<?= htmlspecialchars($nobhp) ?>" name="qty[]" value="<?= htmlspecialchars(number_format($sbhp->qty)) ?>" class="form-control text-right" onchange="hitung_st('<?= htmlspecialchars($nobhp) ?>'); formatRp(this.value, 'qty<?= htmlspecialchars($nobhp) ?>')">
                                                                 </td>
                                                                 <td class="text-right">
-                                                                    <input type="text" id="jumlah<?= $nobhp ?>" name="jumlah[]" value="<?= number_format($sbhp->jumlah) ?>" class="form-control text-right" readonly>
+                                                                    <input type="text" id="jumlah<?= htmlspecialchars($nobhp) ?>" name="jumlah[]" value="<?= htmlspecialchars(number_format($sbhp->jumlah)) ?>" class="form-control text-right" readonly>
                                                                 </td>
                                                             </tr>
-                                                        <?php $no++;
-                                                        endforeach; ?>
+                                                        <?php 
+                                                            $nobhp++;
+                                                        endforeach; 
+                                                        ?>
                                                     <?php else : ?>
                                                         <tr id="rowBhp1">
                                                             <td class="text-center">
                                                                 <button class="btn btn-sm btn-danger" type="button" id="btnHapus1" onclick="hapusBarang('1')"><i class="fa-solid fa-delete-left"></i></button>
                                                             </td>
                                                             <td>
-                                                                <select name="kode_barang[]" id="kode_barang1" class="form-control select2_barang" data-placeholder="~ Pilih Barang"></select>
+                                                                <select name="kode_barang[]" id="kode_barang1" class="form-control select2_barang" data-placeholder="~ Pilih Barang" onchange="getBarang(this.value, '1')"></select>
                                                             </td>
                                                             <td>
                                                                 <select name="kode_satuan[]" id="kode_satuan1" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, 1)">
@@ -326,7 +336,7 @@
     const btn_tab_jasa = $('#btn-tab-jasa');
     const btn_tab_bhp = $('#btn-tab-bhp');
 
-    tabs(2);
+    tabs(1);
 
     function tabs(param) {
         if (param == 1) {
@@ -431,7 +441,7 @@
                 <button class="btn btn-sm btn-danger" type="button" id="btnHapus${row}" onclick="hapusBarang('${row}')"><i class="fa-solid fa-delete-left"></i></button>
             </td>
             <td>
-                <select name="kode_barang[]" id="kode_barang${row}" class="form-control select2_barang" data-placeholder="~ Pilih Barang"></select>
+                <select name="kode_barang[]" id="kode_barang${row}" class="form-control select2_barang" data-placeholder="~ Pilih Barang" onchange="getBarang(this.value, '${row}')"></select>
             </td>
             <td>
                 <select name="kode_satuan[]" id="kode_satuan${row}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${row})">
@@ -473,6 +483,76 @@
         $('#jumBhp').val(0);
         bodyBhp.empty();
         tambah_bhp();
+    }
+
+    // fungsi getBarang
+    function getBarang(brg, i) {
+        var qty = ($('#qty' + i).val()).replaceAll(',', '');
+        // jalankan fungsi
+        $.ajax({
+            url: siteUrl + 'Transaksi/getBarang/' + brg,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(result) { // jika fungsi berjalan
+                $('#harga'+i).val(formatRpNoId(result[0].hna));
+                $('#jumlah'+i).val(formatRpNoId(result[0].hna * qty));
+
+                // each satuan
+                $.each(result[1], function(index, value) {
+                    $('#kode_satuan' + i).append(`<option value="${value.kode_satuan}">${value.keterangan}</option>`)
+                });
+            },
+            error: function(result) { // jika fungsi error
+
+                // jalankan notifikasi error
+                error_proccess();
+            }
+        });
+    }
+
+    // fungsi ubah satuan untuk ubah harga
+    function ubahSatuan(param, id) {
+        var kode_barang = $('#kode_barang' + id).val();
+        var kode_satuan = $('#kode_satuan' + id).val();
+
+        if (!param || param === null) {
+            error_proccess();
+            return; // Add return to stop further execution
+        }
+
+        $.ajax({
+            url: siteUrl + 'Transaksi/getSatuan/' + param + '/' + kode_barang,
+            type: "POST",
+            data: form_tarif.serialize(),
+            dataType: "JSON",
+            success: function(result) {
+                var qty_satuan = Number(result.qty_satuan);
+                var hna_master = Number(result.hna);
+                var qty = Number($('#qty' + id).val().replaceAll(',', ''));
+
+                if (isNaN(qty)) qty = 0; // Ensure qty is valid
+
+                var newHarga = hna_master * qty_satuan;
+                $('#harga' + id).val(formatRpNoId(newHarga));
+
+                hitung_st(id);
+            },
+            error: function(result) {
+                error_proccess();
+            }
+        });
+    }
+
+    // perhitungan row
+    function hitung_st(x) {
+        var harga = ($('#harga' + x).val()).replaceAll(',', '');
+        var qty = ($('#qty' + x).val()).replaceAll(',', '');
+
+        // buat rumus jumlah
+        var st_awal = (harga * qty);
+
+        // tampilkan hasil ke dalam format koma
+        $('#jumlah' + x).val(formatRpNoId(st_awal));
     }
 
     function save() {

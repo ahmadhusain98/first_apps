@@ -17,7 +17,7 @@ CREATE TABLE `activity_log` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `activity_log` (`id_activity`, `kode`, `isi`, `tgl_masuk`, `jam_masuk`, `tgl_keluar`, `jam_keluar`) VALUES (2, 'ahmad.ummgl@gmail.com', 'Login / Logout', '2024-09-10', '07:06:38', '2024-09-09', '23:26:56');
-INSERT INTO `activity_log` (`id_activity`, `kode`, `isi`, `tgl_masuk`, `jam_masuk`, `tgl_keluar`, `jam_keluar`) VALUES (3, 'shali@gmail.com', 'Login / Logout', '2024-09-03', '14:06:32', '2024-09-03', '14:06:26');
+INSERT INTO `activity_log` (`id_activity`, `kode`, `isi`, `tgl_masuk`, `jam_masuk`, `tgl_keluar`, `jam_keluar`) VALUES (3, 'shali@gmail.com', 'Login / Logout', '2024-09-10', '10:19:09', '2024-09-03', '14:06:26');
 
 
 #
@@ -35,7 +35,7 @@ CREATE TABLE `activity_user` (
   `kode_cabang` varchar(10) NOT NULL,
   `shift` int NOT NULL,
   PRIMARY KEY (`id_activity`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (1, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-09-06 00:01:17', 'DIY', 3);
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (2, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-06 00:01:23', 'DIY', 3);
@@ -78,6 +78,20 @@ INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (39, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menambahkan Tarif Paket Perawat Pribadi</b> dengan kode/inv <b>TRF-P00002</b>', 'Master Tarif Paket', '2024-09-10 07:09:24', 'DIY', 1);
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (40, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mengubah Tarif Paket Dokter Pribadi</b> dengan kode/inv <b>TRF-P00001</b>', 'Master Tarif Paket', '2024-09-10 07:17:15', 'DIY', 1);
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (41, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>melakukan Backup Database first_apps_20240910_0836</b>', 'Pintu Belakang', '2024-09-10 08:36:39', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (42, 'shali@gmail.com', 'shali@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-10 10:19:09', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (43, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Tarif Single Test</b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-10 10:34:02', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (44, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Tarif Single Test</b> dengan kode/inv <b>TRF-S00002</b>', 'Master Tarif Single', '2024-09-10 10:34:35', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (45, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Tarif Single Test</b> dengan kode/inv <b>TRF-S00003</b>', 'Master Tarif Single', '2024-09-10 10:34:59', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (46, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Tarif Single Test</b> dengan kode/inv <b>TRF-S00004</b>', 'Master Tarif Single', '2024-09-10 10:35:39', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (47, 'shali@gmail.com', 'shali@gmail.com Telah <b>hapus Tarif Single Test</b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-10 10:35:47', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (48, 'shali@gmail.com', 'shali@gmail.com Telah <b>hapus Tarif Single Test</b> dengan kode/inv <b>TRF-S00002</b>', 'Master Tarif Single', '2024-09-10 10:35:49', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (49, 'shali@gmail.com', 'shali@gmail.com Telah <b>hapus Tarif Single Test</b> dengan kode/inv <b>TRF-S00003</b>', 'Master Tarif Single', '2024-09-10 10:35:50', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (50, 'shali@gmail.com', 'shali@gmail.com Telah <b>hapus Tarif Single Test</b> dengan kode/inv <b>TRF-S00004</b>', 'Master Tarif Single', '2024-09-10 10:37:22', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (51, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Tarif Single Test Bhp</b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-10 10:37:48', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (52, 'shali@gmail.com', 'shali@gmail.com Telah <b>mengubah Tarif Single Test Bhp</b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-10 10:44:41', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (53, 'shali@gmail.com', 'shali@gmail.com Telah <b>mengubah Tarif Single Test Bhp</b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-10 10:45:14', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (54, 'shali@gmail.com', 'shali@gmail.com Telah <b>menghapus Backupan Database first_apps_20240909_2148.sql</b>', 'Pintu Belakang', '2024-09-10 10:45:35', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (55, 'shali@gmail.com', 'shali@gmail.com Telah <b>melakukan Backup Database first_apps_20240910_1045</b>', 'Pintu Belakang', '2024-09-10 10:45:51', 'DIY', 1);
 
 
 #
@@ -132,9 +146,6 @@ CREATE TABLE `backup_db` (
   `tgl_backup` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-INSERT INTO `backup_db` (`id`, `nama`, `tgl_backup`) VALUES (18, 'first_apps_20240909_2148.sql', '2024-09-09 21:48:46');
-
 
 #
 # TABLE STRUCTURE FOR: barang
@@ -8941,10 +8952,11 @@ CREATE TABLE `m_tarif` (
   `kategori` varchar(10) NOT NULL,
   `jenis` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `m_tarif` (`id`, `kode_tarif`, `nama`, `kategori`, `jenis`) VALUES (1, 'TRF-P00001', 'Dokter Pribadi', 'KATTR00002', 2);
 INSERT INTO `m_tarif` (`id`, `kode_tarif`, `nama`, `kategori`, `jenis`) VALUES (5, 'TRF-P00002', 'Perawat Pribadi', 'KATTR00002', 2);
+INSERT INTO `m_tarif` (`id`, `kode_tarif`, `nama`, `kategori`, `jenis`) VALUES (10, 'TRF-S00001', 'Test Bhp', 'KATTR00001', 1);
 
 
 #
@@ -9321,7 +9333,10 @@ CREATE TABLE `tarif_jasa` (
   `jasa_pelayanan` decimal(20,2) NOT NULL DEFAULT '0.00',
   `jasa_poli` decimal(20,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `tarif_jasa` (`id`, `kode_cabang`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (17, 'CAB0000002', 'TRF-S00001', '20000.00', '0.00', '0.00', '100000.00');
+
 
 #
 # TABLE STRUCTURE FOR: tarif_paket
@@ -9365,10 +9380,14 @@ CREATE TABLE `tarif_single_bhp` (
   `kode_barang` varchar(10) NOT NULL,
   `kode_satuan` varchar(10) NOT NULL,
   `harga` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `qty_konversi` decimal(20,2) NOT NULL DEFAULT '0.00',
   `qty` decimal(20,2) NOT NULL DEFAULT '0.00',
   `jumlah` decimal(20,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `tarif_single_bhp` (`id`, `kode_tarif`, `kode_barang`, `kode_satuan`, `harga`, `qty_konversi`, `qty`, `jumlah`) VALUES (4, 'TRF-S00001', 'DIY~P00001', 'SAT0000006', '12000.00', '20.00', '5.00', '60000.00');
+
 
 #
 # TABLE STRUCTURE FOR: tipe_bank
