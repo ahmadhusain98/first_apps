@@ -16,7 +16,7 @@ CREATE TABLE `activity_log` (
   PRIMARY KEY (`id_activity`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `activity_log` (`id_activity`, `kode`, `isi`, `tgl_masuk`, `jam_masuk`, `tgl_keluar`, `jam_keluar`) VALUES (2, 'ahmad.ummgl@gmail.com', 'Login / Logout', '2024-09-10', '07:06:38', '2024-09-09', '23:26:56');
+INSERT INTO `activity_log` (`id_activity`, `kode`, `isi`, `tgl_masuk`, `jam_masuk`, `tgl_keluar`, `jam_keluar`) VALUES (2, 'ahmad.ummgl@gmail.com', 'Login / Logout', '2024-09-10', '18:55:35', '2024-09-10', '18:55:11');
 INSERT INTO `activity_log` (`id_activity`, `kode`, `isi`, `tgl_masuk`, `jam_masuk`, `tgl_keluar`, `jam_keluar`) VALUES (3, 'shali@gmail.com', 'Login / Logout', '2024-09-10', '12:41:15', '2024-09-10', '11:00:38');
 
 
@@ -35,78 +35,33 @@ CREATE TABLE `activity_user` (
   `kode_cabang` varchar(10) NOT NULL,
   `shift` int NOT NULL,
   PRIMARY KEY (`id_activity`)
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (1, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-09-06 00:01:17', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (2, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-06 00:01:23', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (3, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menambahkan Terima Barang</b> dengan kode/inv <b>DIYTPB-2024090600001</b>', 'Transaksi Masuk', '2024-09-06 00:02:12', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (4, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Terima Barang</b> dengan kode/inv <b>DIYTPB-2024090600001</b>', 'Transaksi Masuk', '2024-09-06 00:02:22', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (5, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menjual Barang</b> dengan kode/inv <b>DIYTJB-2024090600001</b>', 'Transaksi Keluar', '2024-09-06 00:03:12', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (6, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>membayar Kasir</b> dengan kode/inv <b>DIYKWI-2024090600001</b>', 'Pembayaran', '2024-09-06 00:03:43', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (7, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menambahkan Retur Penjualan</b> dengan kode/inv <b>DIYTRJ-2024090600001</b>', 'Transaksi Keluar', '2024-09-06 00:04:34', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (8, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Retur Penjualan</b> dengan kode/inv <b>DIYTRJ-2024090600001</b>', 'Transaksi Keluar', '2024-09-06 00:05:05', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (9, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Reject Retur Penjualan</b> dengan kode/inv <b>DIYTRJ-2024090600001</b>', 'Transaksi Keluar', '2024-09-06 00:13:49', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (10, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mengubah Retur Penjualan</b> dengan kode/inv <b>DIYTRJ-2024090600001</b>', 'Transaksi Keluar', '2024-09-06 00:13:55', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (11, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Retur Penjualan</b> dengan kode/inv <b>DIYTRJ-2024090600001</b>', 'Transaksi Keluar', '2024-09-06 00:14:12', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (12, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Reject Retur Penjualan</b> dengan kode/inv <b>DIYTRJ-2024090600001</b>', 'Transaksi Keluar', '2024-09-06 00:15:22', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (13, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mengubah Retur Penjualan</b> dengan kode/inv <b>DIYTRJ-2024090600001</b>', 'Transaksi Keluar', '2024-09-06 00:15:52', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (14, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Retur Penjualan</b> dengan kode/inv <b>DIYTRJ-2024090600001</b>', 'Transaksi Keluar', '2024-09-06 00:15:57', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (15, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Reject Retur Penjualan</b> dengan kode/inv <b>DIYTRJ-2024090600001</b>', 'Transaksi Keluar', '2024-09-06 00:16:21', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (16, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Retur Penjualan</b> dengan kode/inv <b>DIYTRJ-2024090600001</b>', 'Transaksi Keluar', '2024-09-06 00:17:31', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (17, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>melakukan Backup Database first_apps_20240906_0018</b>', 'Pintu Belakang', '2024-09-06 00:18:39', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (18, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menghapus Backupan Database first_apps_20240903_1155.sql</b>', 'Pintu Belakang', '2024-09-06 00:18:48', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (19, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menghapus Backupan Database first_apps_20240903_1406.sql</b>', 'Pintu Belakang', '2024-09-06 00:18:52', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (20, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menghapus Backupan Database first_apps_20240904_0123.sql</b>', 'Pintu Belakang', '2024-09-06 00:18:55', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (21, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-09-06 00:20:15', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (22, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-06 18:25:29', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (23, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-08 15:57:13', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (24, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-08 20:08:37', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (25, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-09-08 20:19:30', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (26, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-09 20:28:28', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (27, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menghapus Backupan Database first_apps_20240906_0018.sql</b>', 'Pintu Belakang', '2024-09-09 21:48:27', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (28, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>melakukan Backup Database first_apps_20240909_2148</b>', 'Pintu Belakang', '2024-09-09 21:48:45', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (29, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-09-09 22:37:37', 'DIY', 3);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (30, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-09 23:14:16', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (31, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menambahkan Tarif Single </b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-09 23:19:00', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (32, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menambahkan Tarif Single </b> dengan kode/inv <b>TRF-S00002</b>', 'Master Tarif Single', '2024-09-09 23:19:08', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (33, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menambahkan Tarif Single Injeksi</b> dengan kode/inv <b>TRF-S00003</b>', 'Master Tarif Single', '2024-09-09 23:20:14', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (34, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>hapus Tarif Single Injeksi</b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-09 23:20:44', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (35, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>hapus Tarif Single Injeksi</b> dengan kode/inv <b>TRF-S00002</b>', 'Master Tarif Single', '2024-09-09 23:20:47', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (36, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>hapus Tarif Single Injeksi</b> dengan kode/inv <b>TRF-S00003</b>', 'Master Tarif Single', '2024-09-09 23:20:50', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (37, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-09-09 23:26:56', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (38, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-10 07:06:38', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (39, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menambahkan Tarif Paket Perawat Pribadi</b> dengan kode/inv <b>TRF-P00002</b>', 'Master Tarif Paket', '2024-09-10 07:09:24', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (40, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mengubah Tarif Paket Dokter Pribadi</b> dengan kode/inv <b>TRF-P00001</b>', 'Master Tarif Paket', '2024-09-10 07:17:15', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (41, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>melakukan Backup Database first_apps_20240910_0836</b>', 'Pintu Belakang', '2024-09-10 08:36:39', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (42, 'shali@gmail.com', 'shali@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-10 10:19:09', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (43, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Tarif Single Test</b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-10 10:34:02', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (44, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Tarif Single Test</b> dengan kode/inv <b>TRF-S00002</b>', 'Master Tarif Single', '2024-09-10 10:34:35', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (45, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Tarif Single Test</b> dengan kode/inv <b>TRF-S00003</b>', 'Master Tarif Single', '2024-09-10 10:34:59', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (46, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Tarif Single Test</b> dengan kode/inv <b>TRF-S00004</b>', 'Master Tarif Single', '2024-09-10 10:35:39', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (47, 'shali@gmail.com', 'shali@gmail.com Telah <b>hapus Tarif Single Test</b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-10 10:35:47', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (48, 'shali@gmail.com', 'shali@gmail.com Telah <b>hapus Tarif Single Test</b> dengan kode/inv <b>TRF-S00002</b>', 'Master Tarif Single', '2024-09-10 10:35:49', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (49, 'shali@gmail.com', 'shali@gmail.com Telah <b>hapus Tarif Single Test</b> dengan kode/inv <b>TRF-S00003</b>', 'Master Tarif Single', '2024-09-10 10:35:50', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (50, 'shali@gmail.com', 'shali@gmail.com Telah <b>hapus Tarif Single Test</b> dengan kode/inv <b>TRF-S00004</b>', 'Master Tarif Single', '2024-09-10 10:37:22', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (51, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Tarif Single Test Bhp</b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-10 10:37:48', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (52, 'shali@gmail.com', 'shali@gmail.com Telah <b>mengubah Tarif Single Test Bhp</b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-10 10:44:41', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (53, 'shali@gmail.com', 'shali@gmail.com Telah <b>mengubah Tarif Single Test Bhp</b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-10 10:45:14', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (54, 'shali@gmail.com', 'shali@gmail.com Telah <b>menghapus Backupan Database first_apps_20240909_2148.sql</b>', 'Pintu Belakang', '2024-09-10 10:45:35', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (55, 'shali@gmail.com', 'shali@gmail.com Telah <b>melakukan Backup Database first_apps_20240910_1045</b>', 'Pintu Belakang', '2024-09-10 10:45:51', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (56, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Tarif Paket Test Paket</b> dengan kode/inv <b>TRF-P00003</b>', 'Master Tarif Paket', '2024-09-10 10:55:16', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (57, 'shali@gmail.com', 'shali@gmail.com Telah <b>hapus Tarif Paket Test Paket</b> dengan kode/inv <b>TRF-P00003</b>', 'Master Tarif Paket', '2024-09-10 10:55:34', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (58, 'shali@gmail.com', 'shali@gmail.com Telah <b>hapus Tarif Single Test Bhp</b> dengan kode/inv <b>TRF-S00001</b>', 'Master Tarif Single', '2024-09-10 10:56:05', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (59, 'shali@gmail.com', 'shali@gmail.com Telah <b>menghapus Backupan Database first_apps_20240910_1045.sql</b>', 'Pintu Belakang', '2024-09-10 10:56:20', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (60, 'shali@gmail.com', 'shali@gmail.com Telah <b>melakukan Backup Database first_apps_20240910_1056</b>', 'Pintu Belakang', '2024-09-10 10:56:22', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (61, 'shali@gmail.com', 'shali@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-09-10 11:00:38', 'DIY', 1);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (62, 'shali@gmail.com', 'shali@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-10 12:41:15', 'DIY', 2);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (63, 'shali@gmail.com', 'shali@gmail.com Telah <b>mendaftarkan Member A00001</b> dengan kode/inv <b>DIYPKU-2024091000001</b>', 'Pendaftaran', '2024-09-10 13:50:44', 'DIY', 2);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (64, 'shali@gmail.com', 'shali@gmail.com Telah <b>menjual Barang</b> dengan kode/inv <b>DIYTJB-2024091000001</b>', 'Transaksi Keluar', '2024-09-10 14:49:36', 'DIY', 2);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (65, 'shali@gmail.com', 'shali@gmail.com Telah <b>membayar Kasir</b> dengan kode/inv <b>DIYKWI-2024091000001</b>', 'Pembayaran', '2024-09-10 15:14:55', 'DIY', 2);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (66, 'shali@gmail.com', 'shali@gmail.com Telah <b>membayar Kasir</b> dengan kode/inv <b>DIYKWI-2024091000001</b>', 'Pembayaran', '2024-09-10 15:18:43', 'DIY', 2);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (67, 'shali@gmail.com', 'shali@gmail.com Telah <b>membayar Kasir</b> dengan kode/inv <b>DIYKWI-2024091000001</b>', 'Pembayaran', '2024-09-10 15:19:21', 'DIY', 2);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (68, 'shali@gmail.com', 'shali@gmail.com Telah <b>membayar Kasir</b> dengan kode/inv <b>DIYKWI-2024091000001</b>', 'Pembayaran', '2024-09-10 15:31:57', 'DIY', 2);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (69, 'shali@gmail.com', 'shali@gmail.com Telah <b>menghapus Backupan Database first_apps_20240910_1056.sql</b>', 'Pintu Belakang', '2024-09-10 15:47:07', 'DIY', 2);
-INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (70, 'shali@gmail.com', 'shali@gmail.com Telah <b>melakukan Backup Database first_apps_20240910_1547</b>', 'Pintu Belakang', '2024-09-10 15:47:10', 'DIY', 2);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (1, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Meninggalkan Sistem</b>', 'Logout', '2024-09-10 18:55:11', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (2, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com <b>Masuk Sistem</b>', 'Login', '2024-09-10 18:55:35', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (3, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menambahkan Terima Barang</b> dengan kode/inv <b>DIYTPB-2024091000001</b>', 'Transaksi Masuk', '2024-09-10 18:56:26', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (4, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>Confirm Terima Barang</b> dengan kode/inv <b>DIYTPB-2024091000001</b>', 'Transaksi Masuk', '2024-09-10 18:56:34', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (5, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mendaftarkan Member A00001</b> dengan kode/inv <b>DIYPKU-2024091000001</b>', 'Pendaftaran', '2024-09-10 18:57:49', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (6, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>menjual Barang</b> dengan kode/inv <b>DIYTJB-2024091000001</b>', 'Transaksi Keluar', '2024-09-10 18:58:41', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (7, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>membayar Kasir</b> dengan kode/inv <b>DIYKWI-2024091000001</b>', 'Pembayaran', '2024-09-10 18:59:26', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (8, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mengubah Tarif Paket Dokter Pribadi</b> dengan kode/inv <b>TRF-P00001</b>', 'Master Tarif Paket', '2024-09-10 19:06:09', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (9, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mengubah Tarif Paket Dokter Pribadi</b> dengan kode/inv <b>TRF-P00001</b>', 'Master Tarif Paket', '2024-09-10 19:06:19', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (10, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mengubah Tarif Paket Dokter Pribadi</b> dengan kode/inv <b>TRF-P00001</b>', 'Master Tarif Paket', '2024-09-10 19:07:38', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (11, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mendaftarkan Member A00001</b> dengan kode/inv <b>DIYPTH-2024091000001</b>', 'Pendaftaran', '2024-09-10 19:08:51', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (12, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>membayar Kasir</b> dengan kode/inv <b>DIYKWI-2024091000002</b>', 'Pembayaran', '2024-09-10 19:09:59', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (13, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mendaftarkan Member A00001</b> dengan kode/inv <b>DIYPKU-2024091000002</b>', 'Pendaftaran', '2024-09-10 19:10:56', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (14, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>membayar Kasir</b> dengan kode/inv <b>DIYKWI-2024091000003</b>', 'Pembayaran', '2024-09-10 19:11:33', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (15, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mendaftarkan Member A00001</b> dengan kode/inv <b>DIYPKU-2024091000003</b>', 'Pendaftaran', '2024-09-10 19:19:17', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (16, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>membayar Kasir</b> dengan kode/inv <b>DIYKWI-2024091000004</b>', 'Pembayaran', '2024-09-10 19:19:48', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (17, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mendaftarkan Member A00001</b> dengan kode/inv <b>DIYPKU-2024091000004</b>', 'Pendaftaran', '2024-09-10 19:21:04', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (18, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>membayar Kasir</b> dengan kode/inv <b>DIYKWI-2024091000005</b>', 'Pembayaran', '2024-09-10 19:21:35', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (19, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mendaftarkan Member A00001</b> dengan kode/inv <b>DIYPKU-2024091000005</b>', 'Pendaftaran', '2024-09-10 19:40:22', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (20, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>membayar Kasir</b> dengan kode/inv <b>DIYKWI-2024091000006</b>', 'Pembayaran', '2024-09-10 19:40:53', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (21, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mendaftarkan Member A00001</b> dengan kode/inv <b>DIYPTH-2024091000002</b>', 'Pendaftaran', '2024-09-10 19:41:51', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (22, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>membayar Kasir</b> dengan kode/inv <b>DIYKWI-2024091000007</b>', 'Pembayaran', '2024-09-10 19:42:18', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (23, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>mendaftarkan Member A00001</b> dengan kode/inv <b>DIYPUM-2024091000001</b>', 'Pendaftaran', '2024-09-10 19:43:03', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (24, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>membayar Kasir</b> dengan kode/inv <b>DIYKWI-2024091000008</b>', 'Pembayaran', '2024-09-10 19:43:32', 'DIY', 3);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (25, 'ahmad.ummgl@gmail.com', 'ahmad.ummgl@gmail.com Telah <b>melakukan Backup Database first_apps_20240910_1947</b>', 'Pintu Belakang', '2024-09-10 19:47:23', 'DIY', 3);
 
 
 #
@@ -236,8 +191,8 @@ CREATE TABLE `barang_in_detail` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `barang_in_detail` (`id`, `invoice`, `kode_barang`, `kode_satuan`, `qty_konversi`, `harga`, `qty`, `qty_retur`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES (1, 'DIYTPB-2024090600001', 'DIY~P00001', 'SAT0000006', '400.00', '12000.00', '100.00', '0.00', '0.00', '0.00', '1.00', '132000.00', '1200000.00');
-INSERT INTO `barang_in_detail` (`id`, `invoice`, `kode_barang`, `kode_satuan`, `qty_konversi`, `harga`, `qty`, `qty_retur`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES (2, 'DIYTPB-2024090600001', 'DIY~S00001', 'SAT0000005', '1600.00', '96000.00', '100.00', '0.00', '5.00', '480000.00', '1.00', '1003200.00', '9120000.00');
+INSERT INTO `barang_in_detail` (`id`, `invoice`, `kode_barang`, `kode_satuan`, `qty_konversi`, `harga`, `qty`, `qty_retur`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES (1, 'DIYTPB-2024091000001', 'DIY~S00001', 'SAT0000005', '1600.00', '96000.00', '100.00', '0.00', '0.00', '0.00', '0.00', '0.00', '9600000.00');
+INSERT INTO `barang_in_detail` (`id`, `invoice`, `kode_barang`, `kode_satuan`, `qty_konversi`, `harga`, `qty`, `qty_retur`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES (2, 'DIYTPB-2024091000001', 'DIY~P00001', 'SAT0000006', '400.00', '12000.00', '100.00', '0.00', '0.00', '0.00', '0.00', '0.00', '1200000.00');
 
 
 #
@@ -272,7 +227,7 @@ CREATE TABLE `barang_in_header` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `barang_in_header` (`id`, `kode_cabang`, `invoice`, `invoice_po`, `tgl_beli`, `jam_beli`, `kode_supplier`, `kode_gudang`, `surat_jalan`, `no_faktur`, `pajak`, `diskon`, `subtotal`, `total`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `is_valid`, `tgl_valid`, `jam_valid`) VALUES (1, 'CAB0000002', 'DIYTPB-2024090600001', NULL, '2024-09-06', '00:01:40', 'SUP0000001', 'GUD0000001', 'NSJ~DIY0609202400001', 'NSF~DIY0609202400001', '1135200.00', '480000.00', '10800000.00', '11935200.00', 'A00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-09-06', '00:02:22');
+INSERT INTO `barang_in_header` (`id`, `kode_cabang`, `invoice`, `invoice_po`, `tgl_beli`, `jam_beli`, `kode_supplier`, `kode_gudang`, `surat_jalan`, `no_faktur`, `pajak`, `diskon`, `subtotal`, `total`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `is_valid`, `tgl_valid`, `jam_valid`) VALUES (1, 'CAB0000002', 'DIYTPB-2024091000001', NULL, '2024-09-10', '18:55:59', 'SUP0000001', 'GUD0000001', 'NSJ~DIY1009202400001', 'NSF~DIY1009202400001', '0.00', '0.00', '10800000.00', '10800000.00', 'A00001', 0, '0000-00-00', '00:00:00', '', 1, '2024-09-10', '18:56:34');
 
 
 #
@@ -371,10 +326,9 @@ CREATE TABLE `barang_out_detail` (
   `pajakrp` decimal(20,2) NOT NULL DEFAULT '0.00',
   `jumlah` decimal(20,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `barang_out_detail` (`id`, `invoice`, `kode_barang`, `harga`, `kode_satuan`, `qty_konversi`, `qty`, `qty_retur`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES (1, 'DIYTJB-2024090600001', 'DIY~S00001', '8000.00', 'SAT0000003', '5.00', '5.00', '0.00', '0.00', '0.00', '0.00', '0.00', '40000.00');
-INSERT INTO `barang_out_detail` (`id`, `invoice`, `kode_barang`, `harga`, `kode_satuan`, `qty_konversi`, `qty`, `qty_retur`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES (2, 'DIYTJB-2024091000001', 'DIY~S00001', '8000.00', 'SAT0000003', '2.00', '2.00', '0.00', '0.00', '0.00', '0.00', '0.00', '16000.00');
+INSERT INTO `barang_out_detail` (`id`, `invoice`, `kode_barang`, `harga`, `kode_satuan`, `qty_konversi`, `qty`, `qty_retur`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES (1, 'DIYTJB-2024091000001', 'DIY~S00001', '8000.00', 'SAT0000003', '5.00', '5.00', '0.00', '0.00', '0.00', '0.00', '0.00', '40000.00');
 
 
 #
@@ -406,10 +360,9 @@ CREATE TABLE `barang_out_header` (
   `jam_batal` time DEFAULT NULL,
   `user_batal` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `barang_out_header` (`id`, `kode_cabang`, `invoice`, `no_trx`, `kode_member`, `alamat`, `kode_dokter`, `kode_poli`, `tgl_jual`, `jam_jual`, `status_jual`, `kode_gudang`, `pajak`, `diskon`, `subtotal`, `total`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`) VALUES (1, 'CAB0000002', 'DIYTJB-2024090600001', NULL, 'U00001', '', NULL, NULL, '2024-09-06', '00:02:44', 1, 'GUD0000001', '0.00', '0.00', '40000.00', '40000.00', 'A00001', 0, NULL, NULL, NULL);
-INSERT INTO `barang_out_header` (`id`, `kode_cabang`, `invoice`, `no_trx`, `kode_member`, `alamat`, `kode_dokter`, `kode_poli`, `tgl_jual`, `jam_jual`, `status_jual`, `kode_gudang`, `pajak`, `diskon`, `subtotal`, `total`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`) VALUES (2, 'CAB0000002', 'DIYTJB-2024091000001', 'DIYPKU-2024091000001', 'A00001', 'Prov.Jawa Barat, Kab.KAB. BOGOR, Kec.Sukamakmur, Ds.sukamakur, (POS: 56812), RT.3/RW.3', 'S00001', 'POL0000002', '2024-09-10', '14:49:19', 1, 'GUD0000001', '0.00', '0.00', '16000.00', '16000.00', 'S00001', 0, NULL, NULL, NULL);
+INSERT INTO `barang_out_header` (`id`, `kode_cabang`, `invoice`, `no_trx`, `kode_member`, `alamat`, `kode_dokter`, `kode_poli`, `tgl_jual`, `jam_jual`, `status_jual`, `kode_gudang`, `pajak`, `diskon`, `subtotal`, `total`, `kode_user`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`) VALUES (1, 'CAB0000002', 'DIYTJB-2024091000001', 'DIYPKU-2024091000001', 'A00001', 'Prov.Jawa Barat, Kab.KAB. BOGOR, Kec.Sukamakmur, Ds.sukamakur, (POS: 56812), RT.3/RW.3', 'S00001', 'POL0000002', '2024-09-10', '18:58:24', 1, 'GUD0000001', '0.00', '0.00', '40000.00', '40000.00', 'A00001', 0, NULL, NULL, NULL);
 
 
 #
@@ -432,10 +385,7 @@ CREATE TABLE `barang_out_retur_detail` (
   `pajakrp` decimal(20,2) NOT NULL DEFAULT '0.00',
   `jumlah` decimal(20,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-INSERT INTO `barang_out_retur_detail` (`id`, `invoice`, `kode_barang`, `harga`, `kode_satuan`, `qty_konversi`, `qty`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES (3, 'DIYTRJ-2024090600001', 'DIY~S00001', '8000.00', 'SAT0000003', '3.00', '3.00', '0.00', '0.00', '0.00', '0.00', '24000.00');
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 #
 # TABLE STRUCTURE FOR: barang_out_retur_header
@@ -466,10 +416,7 @@ CREATE TABLE `barang_out_retur_header` (
   `jam_valid` time DEFAULT NULL,
   `kode_member` varchar(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-INSERT INTO `barang_out_retur_header` (`id`, `invoice`, `invoice_jual`, `tgl_retur`, `jam_retur`, `kode_gudang`, `pajak`, `diskon`, `subtotal`, `total`, `kode_user`, `alasan`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `kode_cabang`, `is_valid`, `tgl_valid`, `jam_valid`, `kode_member`) VALUES (1, 'DIYTRJ-2024090600001', 'DIYTJB-2024090600001', '2024-09-06', '00:04:20', 'GUD0000001', '0.00', '0.00', '24000.00', '24000.00', 'A00001', 'salah beli', 0, NULL, NULL, '', 'CAB0000002', 1, '2024-09-06', '00:17:31', 'U00001');
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 #
 # TABLE STRUCTURE FOR: barang_po_in_detail
@@ -561,8 +508,8 @@ CREATE TABLE `barang_stok` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `barang_stok` (`id`, `kode_cabang`, `kode_barang`, `kode_gudang`, `masuk`, `keluar`, `so`, `penyesuaian`, `akhir`, `last_tgl_trx`, `last_jam_trx`, `last_no_trx`, `last_user`) VALUES (1, 'CAB0000002', 'DIY~P00001', 'GUD0000001', '400.00', '0.00', '0.00', '0.00', '400.00', '2024-09-06', '00:02:22', 'DIYTPB-2024090600001', 'A00001');
-INSERT INTO `barang_stok` (`id`, `kode_cabang`, `kode_barang`, `kode_gudang`, `masuk`, `keluar`, `so`, `penyesuaian`, `akhir`, `last_tgl_trx`, `last_jam_trx`, `last_no_trx`, `last_user`) VALUES (2, 'CAB0000002', 'DIY~S00001', 'GUD0000001', '1603.00', '7.00', '0.00', '0.00', '1596.00', '2024-09-10', '14:49:36', 'DIYTJB-2024091000001', 'S00001');
+INSERT INTO `barang_stok` (`id`, `kode_cabang`, `kode_barang`, `kode_gudang`, `masuk`, `keluar`, `so`, `penyesuaian`, `akhir`, `last_tgl_trx`, `last_jam_trx`, `last_no_trx`, `last_user`) VALUES (1, 'CAB0000002', 'DIY~S00001', 'GUD0000001', '1600.00', '5.00', '0.00', '0.00', '1595.00', '2024-09-10', '18:58:41', 'DIYTJB-2024091000001', 'A00001');
+INSERT INTO `barang_stok` (`id`, `kode_cabang`, `kode_barang`, `kode_gudang`, `masuk`, `keluar`, `so`, `penyesuaian`, `akhir`, `last_tgl_trx`, `last_jam_trx`, `last_no_trx`, `last_user`) VALUES (2, 'CAB0000002', 'DIY~P00001', 'GUD0000001', '400.00', '0.00', '0.00', '0.00', '400.00', '2024-09-10', '18:56:34', 'DIYTPB-2024091000001', 'A00001');
 
 
 #
@@ -580,9 +527,9 @@ CREATE TABLE `bayar_card_detail` (
   `approval` varchar(6) NOT NULL,
   `jumlah` decimal(20,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `bayar_card_detail` (`id`, `token_pembayaran`, `kode_bank`, `kode_tipe`, `no_card`, `approval`, `jumlah`) VALUES (4, 'kjkiOaY2eP6EsVHI9LoY6hC3N3Tvfj', 'B000000002', 'TB0000001', '123', '456', '400000.00');
+INSERT INTO `bayar_card_detail` (`id`, `token_pembayaran`, `kode_bank`, `kode_tipe`, `no_card`, `approval`, `jumlah`) VALUES (1, 'F4DmjZ7cD0WvVEYDR81pfsetBxNk9y', 'B000000005', 'TB0000003', '123', '123', '500000.00');
 
 
 #
@@ -1382,11 +1329,7 @@ CREATE TABLE `kas_second` (
   `sisa` decimal(20,2) NOT NULL DEFAULT '0.00',
   `last_no` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-INSERT INTO `kas_second` (`id`, `kode_cabang`, `kode_kas`, `masuk`, `keluar`, `sisa`, `last_no`) VALUES (1, 'CAB0000002', 'DIYKB00001', '0.00', '0.00', '0.00', '');
-INSERT INTO `kas_second` (`id`, `kode_cabang`, `kode_kas`, `masuk`, `keluar`, `sisa`, `last_no`) VALUES (2, 'CAB0000002', 'DIYKB00002', '2000000.00', '0.00', '2000000.00', 'DIYMKB-2024090400001');
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 #
 # TABLE STRUCTURE FOR: kas_utama
@@ -1403,11 +1346,7 @@ CREATE TABLE `kas_utama` (
   `sisa` decimal(20,2) DEFAULT '0.00',
   `last_no` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-INSERT INTO `kas_utama` (`id`, `kode_cabang`, `kode_kas`, `masuk`, `keluar`, `sisa`, `last_no`) VALUES (1, 'CAB0000001', 'DEF_KAS001', '0.00', '0.00', '0.00', NULL);
-INSERT INTO `kas_utama` (`id`, `kode_cabang`, `kode_kas`, `masuk`, `keluar`, `sisa`, `last_no`) VALUES (2, 'CAB0000002', 'DEF_KAS002', '12000000.00', '2000000.00', '10000000.00', 'DIYMKB-2024090400001');
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 #
 # TABLE STRUCTURE FOR: kategori_tarif
@@ -9018,7 +8957,7 @@ CREATE TABLE `member` (
 
 INSERT INTO `member` (`id`, `kode_member`, `nama`, `email`, `password`, `secondpass`, `nohp`, `pendidikan`, `pekerjaan`, `agama`, `provinsi`, `kabupaten`, `kecamatan`, `desa`, `kodepos`, `rt`, `rw`, `nik`, `jkel`, `foto`, `tmp_lahir`, `tgl_lahir`, `kode_role`, `joined`, `on_off`, `last_regist`, `status_regist`, `actived`) VALUES (1, 'U00001', 'UMUM', 'umum@gmail.com', 'adfab9c56b8b16d6c067f8d3cff8818e', 'umum', '123', 'PEN0000004', 'PEK0000001', 'AGM0000001', 32, 3201, 320109, '-', '000000', 1, 1, '0000000000000000', 'P', 'pria.png', '-', '1990-01-01', 'R0005', '2024-05-07 17:12:15', 0, '', 0, 1);
 INSERT INTO `member` (`id`, `kode_member`, `nama`, `email`, `password`, `secondpass`, `nohp`, `pendidikan`, `pekerjaan`, `agama`, `provinsi`, `kabupaten`, `kecamatan`, `desa`, `kodepos`, `rt`, `rw`, `nik`, `jkel`, `foto`, `tmp_lahir`, `tgl_lahir`, `kode_role`, `joined`, `on_off`, `last_regist`, `status_regist`, `actived`) VALUES (2, 'S00001', 'Shali', 'shalil@gmail.com', '5e8607e54e817635b727ca3400561f90', 'shali', '0895363260971', 'PEN0000008', 'PEK0000008', 'AGM0000001', 32, 3201, 320109, 'Sukamakmur', '56812', 3, 3, '3201090205980007', 'W', 'wanit.png', 'Temanggung', '1998-07-04', 'R0005', '2024-05-10 15:40:00', 0, '', 0, 1);
-INSERT INTO `member` (`id`, `kode_member`, `nama`, `email`, `password`, `secondpass`, `nohp`, `pendidikan`, `pekerjaan`, `agama`, `provinsi`, `kabupaten`, `kecamatan`, `desa`, `kodepos`, `rt`, `rw`, `nik`, `jkel`, `foto`, `tmp_lahir`, `tgl_lahir`, `kode_role`, `joined`, `on_off`, `last_regist`, `status_regist`, `actived`) VALUES (3, 'A00001', 'Ahmad Husain', 'ahmad.husain.ardiansyah11@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '1234', '0895363260970', 'PEN0000004', 'PEK0000001', 'AGM0000001', 32, 3201, 320109, 'sukamakur', '56812', 3, 3, '3201090205980006', 'P', 'pria.png', 'Jakarta', '1998-05-02', 'R0005', '2024-05-07 17:12:15', 0, 'DIYPKU-2024091000001', 0, 1);
+INSERT INTO `member` (`id`, `kode_member`, `nama`, `email`, `password`, `secondpass`, `nohp`, `pendidikan`, `pekerjaan`, `agama`, `provinsi`, `kabupaten`, `kecamatan`, `desa`, `kodepos`, `rt`, `rw`, `nik`, `jkel`, `foto`, `tmp_lahir`, `tgl_lahir`, `kode_role`, `joined`, `on_off`, `last_regist`, `status_regist`, `actived`) VALUES (3, 'A00001', 'Ahmad Husain', 'ahmad.husain.ardiansyah11@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '1234', '0895363260970', 'PEN0000004', 'PEK0000001', 'AGM0000001', 32, 3201, 320109, 'sukamakur', '56812', 3, 3, '3201090205980006', 'P', 'pria.png', 'Jakarta', '1998-05-02', 'R0005', '2024-05-07 17:12:15', 0, 'DIYPUM-2024091000001', 0, 1);
 INSERT INTO `member` (`id`, `kode_member`, `nama`, `email`, `password`, `secondpass`, `nohp`, `pendidikan`, `pekerjaan`, `agama`, `provinsi`, `kabupaten`, `kecamatan`, `desa`, `kodepos`, `rt`, `rw`, `nik`, `jkel`, `foto`, `tmp_lahir`, `tgl_lahir`, `kode_role`, `joined`, `on_off`, `last_regist`, `status_regist`, `actived`) VALUES (5, 'T00001', 'Tukiyem', 'tukiyem@gmail.com', 'c2a35f9df794a446bcd7c6e8aa704a71', 'tukiyem', '1234', 'PEN0000003', 'PEK0000001', 'AGM0000001', 32, 3202, 320208, 'Jampang', '51233', 4, 4, '3202080101990005', 'W', 'wanit.png', 'Sukabumi', '1980-01-01', 'R0005', '2024-05-12 11:35:25', 0, '', 0, 1);
 
 
@@ -9101,10 +9040,16 @@ CREATE TABLE `pembayaran` (
   `um_masuk` decimal(20,2) DEFAULT '0.00',
   `um_keluar` decimal(20,2) DEFAULT '0.00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `pembayaran` (`id`, `kode_cabang`, `token_pembayaran`, `approved`, `invoice`, `inv_jual`, `no_trx`, `tgl_pembayaran`, `jam_pembayaran`, `paket`, `total`, `kembalian`, `kode_user`, `jenis_pembayaran`, `cash`, `card`, `kode_promo`, `discpr_promo`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `cek_um`, `um_masuk`, `um_keluar`) VALUES (1, 'CAB0000002', 'h9f9I6RuesMwc0nFDhoGUvlNvfi0WV', 1, 'DIYKWI-2024090600001', 'DIYTJB-2024090600001', NULL, '2024-09-06', '00:03:30', '0.00', '40000.00', '0.00', 'A00001', 0, '40000.00', '0.00', NULL, '0.00', 0, NULL, NULL, '', 0, '0.00', '0.00');
-INSERT INTO `pembayaran` (`id`, `kode_cabang`, `token_pembayaran`, `approved`, `invoice`, `inv_jual`, `no_trx`, `tgl_pembayaran`, `jam_pembayaran`, `paket`, `total`, `kembalian`, `kode_user`, `jenis_pembayaran`, `cash`, `card`, `kode_promo`, `discpr_promo`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `cek_um`, `um_masuk`, `um_keluar`) VALUES (4, 'CAB0000002', 'kjkiOaY2eP6EsVHI9LoY6hC3N3Tvfj', 1, 'DIYKWI-2024091000001', 'DIYTJB-2024091000001', 'DIYPKU-2024091000001', '2024-09-10', '15:14:21', '0.00', '500000.00', '194000.00', 'S00001', 2, '100000.00', '400000.00', '', '0.00', 1, '2024-09-10', '15:23:26', 'S00001', 1, '194000.00', '0.00');
+INSERT INTO `pembayaran` (`id`, `kode_cabang`, `token_pembayaran`, `approved`, `invoice`, `inv_jual`, `no_trx`, `tgl_pembayaran`, `jam_pembayaran`, `paket`, `total`, `kembalian`, `kode_user`, `jenis_pembayaran`, `cash`, `card`, `kode_promo`, `discpr_promo`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `cek_um`, `um_masuk`, `um_keluar`) VALUES (1, 'CAB0000002', 'F4DmjZ7cD0WvVEYDR81pfsetBxNk9y', 1, 'DIYKWI-2024091000001', 'DIYTJB-2024091000001', 'DIYPKU-2024091000001', '2024-09-10', '18:58:54', '210000.00', '500000.00', '250000.00', 'A00001', 1, '0.00', '500000.00', NULL, '0.00', 0, NULL, NULL, '', 1, '250000.00', '0.00');
+INSERT INTO `pembayaran` (`id`, `kode_cabang`, `token_pembayaran`, `approved`, `invoice`, `inv_jual`, `no_trx`, `tgl_pembayaran`, `jam_pembayaran`, `paket`, `total`, `kembalian`, `kode_user`, `jenis_pembayaran`, `cash`, `card`, `kode_promo`, `discpr_promo`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `cek_um`, `um_masuk`, `um_keluar`) VALUES (2, 'CAB0000002', 'dHJHNSIOVqt0fGKQcsS7P8NWRbLOlC', 1, 'DIYKWI-2024091000002', '', 'DIYPTH-2024091000001', '2024-09-10', '19:09:36', '90000.00', '90000.00', '0.00', 'A00001', 0, '0.00', '0.00', NULL, '0.00', 0, NULL, NULL, '', 0, '0.00', '90000.00');
+INSERT INTO `pembayaran` (`id`, `kode_cabang`, `token_pembayaran`, `approved`, `invoice`, `inv_jual`, `no_trx`, `tgl_pembayaran`, `jam_pembayaran`, `paket`, `total`, `kembalian`, `kode_user`, `jenis_pembayaran`, `cash`, `card`, `kode_promo`, `discpr_promo`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `cek_um`, `um_masuk`, `um_keluar`) VALUES (3, 'CAB0000002', 'D9HDGtvttdFLUz7LWrMG0jpNwUpvvp', 1, 'DIYKWI-2024091000003', '', 'DIYPKU-2024091000002', '2024-09-10', '19:11:08', '210000.00', '300000.00', '90000.00', 'A00001', 0, '300000.00', '0.00', NULL, '0.00', 0, NULL, NULL, '', 1, '90000.00', '0.00');
+INSERT INTO `pembayaran` (`id`, `kode_cabang`, `token_pembayaran`, `approved`, `invoice`, `inv_jual`, `no_trx`, `tgl_pembayaran`, `jam_pembayaran`, `paket`, `total`, `kembalian`, `kode_user`, `jenis_pembayaran`, `cash`, `card`, `kode_promo`, `discpr_promo`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `cek_um`, `um_masuk`, `um_keluar`) VALUES (4, 'CAB0000002', 'RUnsh2pFgcgMHOpuPYxFFaqy1L9TZw', 1, 'DIYKWI-2024091000004', '', 'DIYPKU-2024091000003', '2024-09-10', '19:19:32', '170000.00', '200000.00', '30000.00', 'A00001', 0, '200000.00', '0.00', NULL, '0.00', 0, NULL, NULL, '', 1, '30000.00', '0.00');
+INSERT INTO `pembayaran` (`id`, `kode_cabang`, `token_pembayaran`, `approved`, `invoice`, `inv_jual`, `no_trx`, `tgl_pembayaran`, `jam_pembayaran`, `paket`, `total`, `kembalian`, `kode_user`, `jenis_pembayaran`, `cash`, `card`, `kode_promo`, `discpr_promo`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `cek_um`, `um_masuk`, `um_keluar`) VALUES (5, 'CAB0000002', 'wupSp72M00sPLBb0altl1FkvdgHser', 1, 'DIYKWI-2024091000005', '', 'DIYPKU-2024091000004', '2024-09-10', '19:21:17', '290000.00', '300000.00', '10000.00', 'A00001', 0, '300000.00', '0.00', NULL, '0.00', 0, NULL, NULL, '', 0, '10000.00', '0.00');
+INSERT INTO `pembayaran` (`id`, `kode_cabang`, `token_pembayaran`, `approved`, `invoice`, `inv_jual`, `no_trx`, `tgl_pembayaran`, `jam_pembayaran`, `paket`, `total`, `kembalian`, `kode_user`, `jenis_pembayaran`, `cash`, `card`, `kode_promo`, `discpr_promo`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `cek_um`, `um_masuk`, `um_keluar`) VALUES (6, 'CAB0000002', '07piBNKWaxD0a15xxEsr0bxzbPX6Hb', 1, 'DIYKWI-2024091000006', '', 'DIYPKU-2024091000005', '2024-09-10', '19:40:36', '170000.00', '200000.00', '30000.00', 'A00001', 0, '200000.00', '0.00', NULL, '0.00', 0, NULL, NULL, '', 1, '30000.00', '0.00');
+INSERT INTO `pembayaran` (`id`, `kode_cabang`, `token_pembayaran`, `approved`, `invoice`, `inv_jual`, `no_trx`, `tgl_pembayaran`, `jam_pembayaran`, `paket`, `total`, `kembalian`, `kode_user`, `jenis_pembayaran`, `cash`, `card`, `kode_promo`, `discpr_promo`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `cek_um`, `um_masuk`, `um_keluar`) VALUES (7, 'CAB0000002', 'aPMvYOzEAfpdKYCLIvPcuokOx9tdF7', 1, 'DIYKWI-2024091000007', '', 'DIYPTH-2024091000002', '2024-09-10', '19:42:04', '290000.00', '300000.00', '10000.00', 'A00001', 0, '300000.00', '0.00', NULL, '0.00', 0, NULL, NULL, '', 1, '10000.00', '0.00');
+INSERT INTO `pembayaran` (`id`, `kode_cabang`, `token_pembayaran`, `approved`, `invoice`, `inv_jual`, `no_trx`, `tgl_pembayaran`, `jam_pembayaran`, `paket`, `total`, `kembalian`, `kode_user`, `jenis_pembayaran`, `cash`, `card`, `kode_promo`, `discpr_promo`, `batal`, `tgl_batal`, `jam_batal`, `user_batal`, `cek_um`, `um_masuk`, `um_keluar`) VALUES (8, 'CAB0000002', 'M1w8UhJTPdGB9IAFiYwXJEUsTaf32Q', 1, 'DIYKWI-2024091000008', '', 'DIYPUM-2024091000001', '2024-09-10', '19:43:17', '170000.00', '200000.00', '30000.00', 'A00001', 0, '200000.00', '0.00', NULL, '0.00', 0, NULL, NULL, '', 1, '30000.00', '0.00');
 
 
 #
@@ -9150,9 +9095,16 @@ CREATE TABLE `pendaftaran` (
   `kode_user` varchar(10) NOT NULL,
   `shift` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `pendaftaran` (`id`, `kode_cabang`, `no_trx`, `tgl_daftar`, `jam_daftar`, `kode_member`, `kode_poli`, `kode_dokter`, `no_antrian`, `tgl_keluar`, `jam_keluar`, `status_trx`, `kode_ruang`, `kode_user`, `shift`) VALUES (1, 'CAB0000002', 'DIYPKU-2024091000001', '2024-09-10', '13:50:44', 'A00001', 'POL0000002', 'S00001', 'K00001', '2024-09-10', '15:14:21', 1, 'RG0000001', 'S00001', 2);
+INSERT INTO `pendaftaran` (`id`, `kode_cabang`, `no_trx`, `tgl_daftar`, `jam_daftar`, `kode_member`, `kode_poli`, `kode_dokter`, `no_antrian`, `tgl_keluar`, `jam_keluar`, `status_trx`, `kode_ruang`, `kode_user`, `shift`) VALUES (1, 'CAB0000002', 'DIYPKU-2024091000001', '2024-09-10', '18:57:49', 'A00001', 'POL0000002', 'S00001', 'K00001', '2024-09-10', '18:58:54', 1, 'RG0000001', 'A00001', 3);
+INSERT INTO `pendaftaran` (`id`, `kode_cabang`, `no_trx`, `tgl_daftar`, `jam_daftar`, `kode_member`, `kode_poli`, `kode_dokter`, `no_antrian`, `tgl_keluar`, `jam_keluar`, `status_trx`, `kode_ruang`, `kode_user`, `shift`) VALUES (2, 'CAB0000002', 'DIYPTH-2024091000001', '2024-09-10', '19:08:51', 'A00001', 'POL0000005', 'E00001', 'T00001', '2024-09-10', '19:09:36', 1, 'RG0000002', 'A00001', 3);
+INSERT INTO `pendaftaran` (`id`, `kode_cabang`, `no_trx`, `tgl_daftar`, `jam_daftar`, `kode_member`, `kode_poli`, `kode_dokter`, `no_antrian`, `tgl_keluar`, `jam_keluar`, `status_trx`, `kode_ruang`, `kode_user`, `shift`) VALUES (3, 'CAB0000002', 'DIYPKU-2024091000002', '2024-09-10', '19:10:56', 'A00001', 'POL0000002', 'S00001', 'K00002', '2024-09-10', '19:11:08', 1, 'RG0000001', 'A00001', 3);
+INSERT INTO `pendaftaran` (`id`, `kode_cabang`, `no_trx`, `tgl_daftar`, `jam_daftar`, `kode_member`, `kode_poli`, `kode_dokter`, `no_antrian`, `tgl_keluar`, `jam_keluar`, `status_trx`, `kode_ruang`, `kode_user`, `shift`) VALUES (4, 'CAB0000002', 'DIYPKU-2024091000003', '2024-09-10', '19:19:17', 'A00001', 'POL0000002', 'S00001', 'K00003', '2024-09-10', '19:19:32', 1, 'RG0000002', 'A00001', 3);
+INSERT INTO `pendaftaran` (`id`, `kode_cabang`, `no_trx`, `tgl_daftar`, `jam_daftar`, `kode_member`, `kode_poli`, `kode_dokter`, `no_antrian`, `tgl_keluar`, `jam_keluar`, `status_trx`, `kode_ruang`, `kode_user`, `shift`) VALUES (5, 'CAB0000002', 'DIYPKU-2024091000004', '2024-09-10', '19:21:04', 'A00001', 'POL0000002', 'S00001', 'K00004', '2024-09-10', '19:21:17', 1, 'RG0000001', 'A00001', 3);
+INSERT INTO `pendaftaran` (`id`, `kode_cabang`, `no_trx`, `tgl_daftar`, `jam_daftar`, `kode_member`, `kode_poli`, `kode_dokter`, `no_antrian`, `tgl_keluar`, `jam_keluar`, `status_trx`, `kode_ruang`, `kode_user`, `shift`) VALUES (6, 'CAB0000002', 'DIYPKU-2024091000005', '2024-09-10', '19:40:22', 'A00001', 'POL0000002', 'S00001', 'K00005', '2024-09-10', '19:40:36', 1, 'RG0000001', 'A00001', 3);
+INSERT INTO `pendaftaran` (`id`, `kode_cabang`, `no_trx`, `tgl_daftar`, `jam_daftar`, `kode_member`, `kode_poli`, `kode_dokter`, `no_antrian`, `tgl_keluar`, `jam_keluar`, `status_trx`, `kode_ruang`, `kode_user`, `shift`) VALUES (7, 'CAB0000002', 'DIYPTH-2024091000002', '2024-09-10', '19:41:51', 'A00001', 'POL0000005', 'E00001', 'T00002', '2024-09-10', '19:42:04', 1, 'RG0000001', 'A00001', 3);
+INSERT INTO `pendaftaran` (`id`, `kode_cabang`, `no_trx`, `tgl_daftar`, `jam_daftar`, `kode_member`, `kode_poli`, `kode_dokter`, `no_antrian`, `tgl_keluar`, `jam_keluar`, `status_trx`, `kode_ruang`, `kode_user`, `shift`) VALUES (8, 'CAB0000002', 'DIYPUM-2024091000001', '2024-09-10', '19:43:03', 'A00001', 'POL0000001', 'E00001', 'U00001', '2024-09-10', '19:43:17', 1, 'RG0000001', 'A00001', 3);
 
 
 #
@@ -9261,7 +9213,7 @@ CREATE TABLE `piutang` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `piutang` (`id`, `kode_cabang`, `piutang_no`, `tanggal`, `jam`, `referensi`, `jumlah`, `status`, `tanggal_bayar`, `jam_bayar`) VALUES (1, 'CAB0000002', 'DIYPUT-2024090600001', '2024-09-06', '00:01:40', 'DIYTPB-2024090600001', '11935200.00', 0, NULL, NULL);
+INSERT INTO `piutang` (`id`, `kode_cabang`, `piutang_no`, `tanggal`, `jam`, `referensi`, `jumlah`, `status`, `tanggal_bayar`, `jam_bayar`) VALUES (1, 'CAB0000002', 'DIYPUT-2024091000001', '2024-09-10', '18:55:59', 'DIYTPB-2024091000001', '10800000.00', 0, NULL, NULL);
 
 
 #
@@ -9375,7 +9327,7 @@ CREATE TABLE `tarif_paket` (
   `jasa_pelayanan` decimal(20,2) NOT NULL DEFAULT '0.00',
   `jasa_poli` decimal(20,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (4, 'CAB0000002', 1, 'TRF-P00002', '30000.00', '0.00', '50000.00', '0.00');
 INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (5, 'CAB0000002', 2, 'TRF-P00002', '30000.00', '0.00', '50000.00', '0.00');
@@ -9384,9 +9336,8 @@ INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa
 INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (8, 'CAB0000002', 5, 'TRF-P00002', '30000.00', '0.00', '50000.00', '0.00');
 INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (9, 'CAB0000002', 6, 'TRF-P00002', '30000.00', '0.00', '50000.00', '0.00');
 INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (10, 'CAB0000002', 7, 'TRF-P00002', '30000.00', '0.00', '50000.00', '0.00');
-INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (11, 'CAB0000002', 1, 'TRF-P00001', '50000.00', '100000.00', '20000.00', '40000.00');
-INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (12, 'CAB0000002', 2, 'TRF-P00001', '50000.00', '20000.00', '0.00', '20000.00');
-INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (13, 'CAB0000002', 3, 'TRF-P00001', '50000.00', '20000.00', '0.00', '20000.00');
+INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (19, 'CAB0000002', 1, 'TRF-P00001', '50000.00', '100000.00', '20000.00', '40000.00');
+INSERT INTO `tarif_paket` (`id`, `kode_cabang`, `kunjungan`, `kode_tarif`, `jasa_rs`, `jasa_dokter`, `jasa_pelayanan`, `jasa_poli`) VALUES (20, 'CAB0000002', 2, 'TRF-P00001', '50000.00', '20000.00', '0.00', '20000.00');
 
 
 #
@@ -9421,10 +9372,21 @@ CREATE TABLE `tarif_paket_pasien` (
   `status` int NOT NULL,
   `kunjungan` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `tarif_paket_pasien` (`id`, `no_trx`, `kode_tarif`, `kode_member`, `status`, `kunjungan`) VALUES (1, 'DIYPKU-2024091000001', 'TRF-P00001', 'A00001', 1, 1);
-INSERT INTO `tarif_paket_pasien` (`id`, `no_trx`, `kode_tarif`, `kode_member`, `status`, `kunjungan`) VALUES (2, 'DIYPKU-2024091000001', 'TRF-P00002', 'A00001', 1, 1);
+INSERT INTO `tarif_paket_pasien` (`id`, `no_trx`, `kode_tarif`, `kode_member`, `status`, `kunjungan`) VALUES (2, 'DIYPTH-2024091000001', 'TRF-P00001', 'A00001', 1, 2);
+INSERT INTO `tarif_paket_pasien` (`id`, `no_trx`, `kode_tarif`, `kode_member`, `status`, `kunjungan`) VALUES (3, 'DIYPKU-2024091000002', 'TRF-P00001', 'A00001', 1, 1);
+INSERT INTO `tarif_paket_pasien` (`id`, `no_trx`, `kode_tarif`, `kode_member`, `status`, `kunjungan`) VALUES (4, 'DIYPKU-2024091000003', 'TRF-P00001', 'A00001', 1, 2);
+INSERT INTO `tarif_paket_pasien` (`id`, `no_trx`, `kode_tarif`, `kode_member`, `status`, `kunjungan`) VALUES (5, 'DIYPKU-2024091000003', 'TRF-P00002', 'A00001', 1, 1);
+INSERT INTO `tarif_paket_pasien` (`id`, `no_trx`, `kode_tarif`, `kode_member`, `status`, `kunjungan`) VALUES (6, 'DIYPKU-2024091000004', 'TRF-P00001', 'A00001', 1, 1);
+INSERT INTO `tarif_paket_pasien` (`id`, `no_trx`, `kode_tarif`, `kode_member`, `status`, `kunjungan`) VALUES (7, 'DIYPKU-2024091000004', 'TRF-P00002', 'A00001', 1, 2);
+INSERT INTO `tarif_paket_pasien` (`id`, `no_trx`, `kode_tarif`, `kode_member`, `status`, `kunjungan`) VALUES (8, 'DIYPKU-2024091000005', 'TRF-P00001', 'A00001', 1, 2);
+INSERT INTO `tarif_paket_pasien` (`id`, `no_trx`, `kode_tarif`, `kode_member`, `status`, `kunjungan`) VALUES (9, 'DIYPKU-2024091000005', 'TRF-P00002', 'A00001', 1, 3);
+INSERT INTO `tarif_paket_pasien` (`id`, `no_trx`, `kode_tarif`, `kode_member`, `status`, `kunjungan`) VALUES (10, 'DIYPTH-2024091000002', 'TRF-P00001', 'A00001', 1, 1);
+INSERT INTO `tarif_paket_pasien` (`id`, `no_trx`, `kode_tarif`, `kode_member`, `status`, `kunjungan`) VALUES (11, 'DIYPTH-2024091000002', 'TRF-P00002', 'A00001', 1, 4);
+INSERT INTO `tarif_paket_pasien` (`id`, `no_trx`, `kode_tarif`, `kode_member`, `status`, `kunjungan`) VALUES (12, 'DIYPUM-2024091000001', 'TRF-P00001', 'A00001', 1, 2);
+INSERT INTO `tarif_paket_pasien` (`id`, `no_trx`, `kode_tarif`, `kode_member`, `status`, `kunjungan`) VALUES (13, 'DIYPUM-2024091000001', 'TRF-P00002', 'A00001', 1, 5);
 
 
 #
@@ -9482,7 +9444,7 @@ CREATE TABLE `uang_muka` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `uang_muka` (`id`, `last_tgl`, `last_jam`, `last_invoice`, `kode_member`, `uang_masuk`, `uang_keluar`, `uang_sisa`) VALUES (1, '2024-09-10', '15:14:21', 'DIYKWI-2024091000001', 'A00001', '194000.00', '0.00', '194000.00');
+INSERT INTO `uang_muka` (`id`, `last_tgl`, `last_jam`, `last_invoice`, `kode_member`, `uang_masuk`, `uang_keluar`, `uang_sisa`) VALUES (1, '2024-09-10', '19:43:17', 'DIYKWI-2024091000008', 'A00001', '440000.00', '90000.00', '350000.00');
 
 
 #

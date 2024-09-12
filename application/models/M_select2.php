@@ -62,7 +62,7 @@ class M_select2 extends CI_Model
             $add_sintak = ' ORDER BY p.id DESC';
         }
 
-        $sintak = $this->db->query('SELECT p.no_trx AS id, CONCAT(p.no_trx, " | Nama: ", m.nama, " | Tgl/Jam: ", p.tgl_daftar, "/", p.jam_daftar, " | Poli/Dokter: ", pol.keterangan, "/", dok.nama) AS text FROM pendaftaran p JOIN member m ON p.kode_member = m.kode_member JOIN m_poli pol ON pol.kode_poli = p.kode_poli JOIN dokter dok ON dok.kode_dokter = p.kode_dokter WHERE p.kode_cabang = "'.$kode_cabang.'" ' . $add_sintak . $limit)->result();
+        $sintak = $this->db->query('SELECT p.no_trx AS id, CONCAT(p.no_trx, " | Nama: ", m.nama, " | Tgl/Jam: ", p.tgl_daftar, "/", p.jam_daftar, " | Poli/Dokter: ", pol.keterangan, "/", dok.nama) AS text FROM pendaftaran p JOIN member m ON p.kode_member = m.kode_member JOIN m_poli pol ON pol.kode_poli = p.kode_poli JOIN dokter dok ON dok.kode_dokter = p.kode_dokter WHERE p.kode_cabang = "' . $kode_cabang . '" AND p.status_trx = 0 ' . $add_sintak . $limit)->result();
 
         return $sintak;
     }

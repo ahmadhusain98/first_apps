@@ -683,96 +683,101 @@ class Health extends CI_Controller
             </tr>
         </table>';
 
-        $body .= '<table style="width: 100%; font-size: 14px;" autosize="1" cellpadding="5px">
-            <thead>
-                <tr style="background-color: #0e1d2e;">
-                    <th style="color: white; width: 5%;">No</th>
-                    <th style="color: white; width: 55%;">Tindakan</th>
-                    <th style="color: white; width: 20%;">Kunjungan</th>
-                    <th style="color: white; width: 20%;">Harga</th>
+        if ($tarif_paket_pasien) {
+            $body .= '<table style="width: 100%; font-size: 14px;" autosize="1" cellpadding="5px">
+                <thead>
+                    <tr style="background-color: #0e1d2e;">
+                        <th style="color: white; width: 5%;">No</th>
+                        <th style="color: white; width: 55%;">Tindakan</th>
+                        <th style="color: white; width: 20%;">Kunjungan</th>
+                        <th style="color: white; width: 20%;">Harga</th>
+                    </tr>
+                </thead>
+                <tbody>';
+            $totalPaket = 0;
+            $nop = 1;
+            foreach ($tarif_paket_pasien as $tpp) {
+                $paket = $this->M_global->getData('tarif_paket', ['kode_tarif' => $tpp->kode_tarif, 'kunjungan' => $tpp->kunjungan, 'kode_cabang' => $kode_cabang]);
+                $body .= '<tr>
+                    <td style="border: 1px solid black; text-align: right;">' . $nop++ . '</td>
+                    <td style="border: 1px solid black; ">' . $this->M_global->getData('m_tarif', ['kode_tarif' => $tpp->kode_tarif])->nama . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . number_format($tpp->kunjungan) . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . number_format(($paket->jasa_rs + $paket->jasa_dokter + $paket->jasa_pelayanan + $paket->jasa_poli)) . '</td>
+                </tr>';
+
+                $totalPaket += ($paket->jasa_rs + $paket->jasa_dokter + $paket->jasa_pelayanan + $paket->jasa_poli);
+            }
+            $body .= '</tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align: right;">Total: Rp. </td>
+                    <td style="text-align: right;">' . number_format($totalPaket) . '</td>
                 </tr>
-            </thead>
-            <tbody>';
-        $totalPaket = 0;
-        $nop = 1;
-        foreach($tarif_paket_pasien as $tpp) {
-            $paket = $this->M_global->getData('tarif_paket', ['kode_tarif' => $tpp->kode_tarif, 'kunjungan' => $tpp->kunjungan, 'kode_cabang' => $kode_cabang]);
-            $body .= '<tr>
-                <td style="border: 1px solid black; text-align: right;">' . $nop++ . '</td>
-                <td style="border: 1px solid black; ">' . $this->M_global->getData('m_tarif', ['kode_tarif' => $tpp->kode_tarif])->nama . '</td>
-                <td style="border: 1px solid black; text-align: right;">' . number_format($tpp->kunjungan) . '</td>
-                <td style="border: 1px solid black; text-align: right;">' . number_format(($paket->jasa_rs + $paket->jasa_dokter + $paket->jasa_pelayanan + $paket->jasa_poli)) . '</td>
-            </tr>';
+            </tfoot>
+            </table>';
 
-            $totalPaket += ($paket->jasa_rs + $paket->jasa_dokter + $paket->jasa_pelayanan + $paket->jasa_poli);
+            $body .= '<br>';
         }
-        $body .= '</tbody>
-        <tfoot>
-            <tr>
-                <td colspan="3" style="text-align: right;">Total: Rp. </td>
-                <td style="text-align: right;">' . number_format($totalPaket) . '</td>
-            </tr>
-        </tfoot>
-        </table>';
 
-        $body .= '<br>';
+        if ($barang_out_header) {
 
-        $body .= '<table style="width: 100%; font-size: 18px;" autosize="1">
-            <tr>
-                <td><span style="background-color: #0e1d2e; color: white; margin: 10px 10px; text-align: center; border-radius: 5px;">~ Pembelian #' . $pembayaran->inv_jual . ' / ' . $this->M_global->getData('user', ['kode_user' => $barang_out_header->kode_user])->nama . ' / ' . date('d-m-Y', strtotime($barang_out_header->tgl_jual)) . ' - ' . date('H:i:s', strtotime($barang_out_header->jam_jual)) . '</span></td>
-            </tr>
-        </table>';
-
-
-        $body .= '<table style="width: 100%; font-size: 14px;" autosize="1" cellpadding="5px">
-            <thead>
-                <tr style="background-color: #0e1d2e;">
-                    <th style="color: white; width: 5%;">No</th>
-                    <th style="color: white; width: 35%;">Barang</th>
-                    <th style="color: white; width: 10%;">Satuan</th>
-                    <th style="color: white; width: 10%;">Harga</th>
-                    <th style="color: white; width: 10%;">Qty</th>
-                    <th style="color: white; width: 10%;">Diskon</th>
-                    <th style="color: white; width: 10%;">Pajak</th>
-                    <th style="color: white; width: 10%;">Jumlah</th>
+            $body .= '<table style="width: 100%; font-size: 18px;" autosize="1">
+                <tr>
+                    <td><span style="background-color: #0e1d2e; color: white; margin: 10px 10px; text-align: center; border-radius: 5px;">~ Pembelian #' . $pembayaran->inv_jual . ' / ' . $this->M_global->getData('user', ['kode_user' => $barang_out_header->kode_user])->nama . ' / ' . date('d-m-Y', strtotime($barang_out_header->tgl_jual)) . ' - ' . date('H:i:s', strtotime($barang_out_header->jam_jual)) . '</span></td>
                 </tr>
-            </thead>
-            <tbody>';
-        $no = 1;
-        foreach ($barang_out_detail as $bd) {
-            $body .= '<tr>
-                <td style="border: 1px solid black; text-align: right;">' . $no++ . '</td>
-                <td style="border: 1px solid black; ">' . $bd->kode_barang . ' ~ ' . $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang])->nama . '</td>
-                <td style="border: 1px solid black; ">' . $this->M_global->getData('m_satuan', ['kode_satuan' => $bd->kode_satuan])->keterangan . '</td>
-                <td style="border: 1px solid black; text-align: right;">' . number_format($bd->harga) . '</td>
-                <td style="border: 1px solid black; text-align: right;">' . number_format($bd->qty) . '</td>
-                <td style="border: 1px solid black; text-align: right;">' . number_format($bd->discrp) . '</td>
-                <td style="border: 1px solid black; text-align: right;">' . number_format($bd->pajakrp) . '</td>
-                <td style="border: 1px solid black; text-align: right;">' . number_format($bd->jumlah) . '</td>
-            </tr>';
-        }
-        $body .= '</tbody>
-        <tfoot>
-            <tr>
-                <td colspan="7" style="text-align: right;">Subtotal: Rp. </td>
-                <td style="text-align: right;">' . number_format($barang_out_header->subtotal) . '</td>
-            </tr>
-            <tr>
-                <td colspan="7" style="text-align: right;">Diskon: Rp. </td>
-                <td style="text-align: right;">' . number_format($barang_out_header->diskon) . '</td>
-            </tr>
-            <tr>
-                <td colspan="7" style="text-align: right;">Pajak: Rp. </td>
-                <td style="text-align: right;">' . number_format($barang_out_header->pajak) . '</td>
-            </tr>
-            <tr>
-                <td colspan="7" style="text-align: right;">Total: Rp. </td>
-                <td style="text-align: right;">' . number_format($barang_out_header->total) . '</td>
-            </tr>
-        </tfoot>
-        </table>';
+            </table>';
 
-        $body .= '<br>';
+
+            $body .= '<table style="width: 100%; font-size: 14px;" autosize="1" cellpadding="5px">
+                <thead>
+                    <tr style="background-color: #0e1d2e;">
+                        <th style="color: white; width: 5%;">No</th>
+                        <th style="color: white; width: 35%;">Barang</th>
+                        <th style="color: white; width: 10%;">Satuan</th>
+                        <th style="color: white; width: 10%;">Harga</th>
+                        <th style="color: white; width: 10%;">Qty</th>
+                        <th style="color: white; width: 10%;">Diskon</th>
+                        <th style="color: white; width: 10%;">Pajak</th>
+                        <th style="color: white; width: 10%;">Jumlah</th>
+                    </tr>
+                </thead>
+                <tbody>';
+            $no = 1;
+            foreach ($barang_out_detail as $bd) {
+                $body .= '<tr>
+                    <td style="border: 1px solid black; text-align: right;">' . $no++ . '</td>
+                    <td style="border: 1px solid black; ">' . $bd->kode_barang . ' ~ ' . $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang])->nama . '</td>
+                    <td style="border: 1px solid black; ">' . $this->M_global->getData('m_satuan', ['kode_satuan' => $bd->kode_satuan])->keterangan . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . number_format($bd->harga) . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . number_format($bd->qty) . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . number_format($bd->discrp) . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . number_format($bd->pajakrp) . '</td>
+                    <td style="border: 1px solid black; text-align: right;">' . number_format($bd->jumlah) . '</td>
+                </tr>';
+            }
+            $body .= '</tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7" style="text-align: right;">Subtotal: Rp. </td>
+                    <td style="text-align: right;">' . number_format($barang_out_header->subtotal) . '</td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="text-align: right;">Diskon: Rp. </td>
+                    <td style="text-align: right;">' . number_format($barang_out_header->diskon) . '</td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="text-align: right;">Pajak: Rp. </td>
+                    <td style="text-align: right;">' . number_format($barang_out_header->pajak) . '</td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="text-align: right;">Total: Rp. </td>
+                    <td style="text-align: right;">' . number_format($barang_out_header->total) . '</td>
+                </tr>
+            </tfoot>
+            </table>';
+
+            $body .= '<br>';
+        }
 
         $body .= '<table style="width: 100%; font-size: 18px;" autosize="1">
             <tr>
@@ -971,10 +976,19 @@ class Health extends CI_Controller
         $this->template->load('Template/Content', 'Pendaftaran/Form_pendaftaran', $parameter);
     }
 
-    public function getPaket($kode_tarif, $kode_member) {
-        $tarif = $this->db->query("SELECT * FROM tarif_paket_pasien WHERE kode_tarif = '$kode_tarif' AND status = 1 AND kode_member = '$kode_member'")->result();
+    public function getPaket($kode_tarif, $kode_member)
+    {
+        $kode_cabang = $this->session->userdata('cabang');
+        $paket = $this->M_global->getDataResult('tarif_paket', ['kode_tarif' => $kode_tarif, 'kode_cabang' => $kode_cabang]);
+        $tarif = $this->db->query("SELECT * FROM tarif_paket_pasien WHERE kode_tarif = '$kode_tarif' AND status = 1 AND kode_member = '$kode_member' ORDER BY id DESC LIMIT 1")->row();
 
-        echo json_encode(['status' => 1, 'kunjungan' => (count($tarif) + 1)]);
+        if ($tarif->kunjungan >= (count($paket))) {
+            $new_kunjungan = 1;
+        } else {
+            $new_kunjungan = (int)$tarif->kunjungan + 1;
+        }
+
+        echo json_encode(['status' => 1, 'kunjungan' => $new_kunjungan]);
     }
 
     // fungsi cek member terdaftar/ tidak
@@ -1062,10 +1076,10 @@ class Health extends CI_Controller
             ];
         }
 
-        if(isset($kode_tarif)) {
+        if (isset($kode_tarif)) {
             $jumPaket = count($kode_tarif);
 
-            for($z = 0; $z <= ($jumPaket - 1); $z++) {
+            for ($z = 0; $z <= ($jumPaket - 1); $z++) {
                 $paket = [
                     'no_trx'        => $no_trx,
                     'kode_tarif'    => $kode_tarif[$z],
