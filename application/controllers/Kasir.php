@@ -479,6 +479,7 @@ class Kasir extends CI_Controller
         $cek = [
             $kasir,
             $this->M_global->delData('pembayaran', ['token_pembayaran' => $token_pembayaran]),
+            $this->M_global->delData('pembayaran_tarif_single', ['token_pembayaran' => $token_pembayaran]),
             $this->M_global->delData('bayar_card_detail', ['token_pembayaran' => $token_pembayaran]),
             $this->M_global->updateData('tarif_paket_pasien', ['status' => 0], ['no_trx' => $pembayaran->no_trx]),
         ];
@@ -512,9 +513,11 @@ class Kasir extends CI_Controller
                 $kode_member    = $pendaftaran->kode_member;
 
                 $riwayat        = $this->M_global->getDataResult('pendaftaran', ['kode_member' => $kode_member]);
+                $single_tarif   = $this->M_global->getDataResult('pembayaran_tarif_single', ['token_pembayaran' => $param]);
             } else {
                 $tarif_paket    = null;
                 $riwayat        = null;
+                $single_tarif   = null;
             }
         }
 
@@ -530,11 +533,30 @@ class Kasir extends CI_Controller
             'bayar_detail'      => $bayar_detail,
             'tarif_paket'       => $tarif_paket,
             'riwayat'           => $riwayat,
+            'single_tarif'      => $single_tarif,
             'param2'            => $param2,
             'role'              => $this->M_global->getResult('m_role'),
         ];
 
         $this->template->load('Template/Content', 'Kasir/Form_pembayaran', $parameter);
+    }
+
+    public function getTarifSingle($kode_tarif)
+    {
+        $kode_cabang = $this->session->userdata('cabang');
+
+        $tarif = $this->db->query("SELECT m.kode_tarif, m.nama, tj.jasa_rs, tj.jasa_dokter, tj.jasa_pelayanan, tj.jasa_poli FROM m_tarif m JOIN tarif_jasa tj USING(kode_tarif) WHERE tj.kode_cabang = '$kode_cabang' AND m.jenis = 1 AND m.kode_tarif = '$kode_tarif'")->row();
+
+        $data = [
+            'status'            => 1,
+            'jasa_rs'           => $tarif->jasa_rs,
+            'jasa_dokter'       => $tarif->jasa_dokter,
+            'jasa_pelayanan'    => $tarif->jasa_pelayanan,
+            'jasa_poli'         => $tarif->jasa_poli,
+            'jasa_total'        => ($tarif->jasa_rs + $tarif->jasa_dokter + $tarif->jasa_pelayanan + $tarif->jasa_poli),
+        ];
+
+        echo json_encode($data);
     }
 
     public function getPaket($no_trx)
@@ -601,7 +623,7 @@ class Kasir extends CI_Controller
     }
 
     // fungsi proses insert/update
-    public function kasir_proses($param, $cek_retur)
+    public function kasir_proses($param)
     {
         $kode_cabang            = $this->session->userdata('cabang');
 
@@ -624,31 +646,34 @@ class Kasir extends CI_Controller
         $kode_promo             = $this->input->post('kode_promo');
         $cek_um                 = $this->input->post('cek_um');
         $discpr_promo           = str_replace(',', '', $this->input->post('potongan_promo'));
-        $sumPaket               = str_replace(',', '', $this->input->post('sumPaket'));
+        $paket                  = str_replace(',', '', $this->input->post('sumPaket'));
+        $jual                   = str_replace(',', '', $this->input->post('sumJual'));
+        $single                 = str_replace(',', '', $this->input->post('sumTarif'));
+        $disc_single            = str_replace(',', '', $this->input->post('discTarif'));
 
         $kode_tarif             = $this->input->post('kode_tarif');
         $kunjungan              = $this->input->post('kunjungan');
-        $harga                  = $this->input->post('harga');
 
-        if ($cek_retur > 0) { // jika cek retur ada/ 1
-            // notrx null
-            $no_trx             = null;
+        $kode_tarif_single      = $this->input->post('kode_tarif_single');
+        $harga                  = $this->input->post('jasa_total');
+        $discpr                 = $this->input->post('discpr_tarif');
+        $discrp                 = $this->input->post('discrp_tarif');
+        $jumlah                 = $this->input->post('jumlah_tarif');
+
+        // query barang out header
+        $cek_pendaftaran        = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+        // ambil kode member
+        if ($cek_pendaftaran) { // jika ada di barang out header
+            $kode_member        = $cek_pendaftaran->kode_member;
+            // ambil notrx nya
+            $no_trx             = $cek_pendaftaran->no_trx;
+
+            // update status_trx di pendaftaran menjadi 1
+            $this->M_global->updateData('pendaftaran', ['status_trx' => 1, 'tgl_keluar' => $tgl_pembayaran, 'jam_keluar' => $jam_pembayaran], ['no_trx' => $no_trx]);
         } else { // selain itu
-            // query barang out header
-            $cek_pendaftaran    = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
-            // ambil kode member
-            if ($cek_pendaftaran) { // jika ada di barang out header
-                $kode_member        = $cek_pendaftaran->kode_member;
-                // ambil notrx nya
-                $no_trx         = $cek_pendaftaran->no_trx;
-
-                // update status_trx di pendaftaran menjadi 1
-                $this->M_global->updateData('pendaftaran', ['status_trx' => 1, 'tgl_keluar' => $tgl_pembayaran, 'jam_keluar' => $jam_pembayaran], ['no_trx' => $no_trx]);
-            } else { // selain itu
-                // notrx null
-                $kode_member    = null;
-                $no_trx         = null;
-            }
+            // notrx null
+            $kode_member        = null;
+            $no_trx             = null;
         }
 
         // variable card
@@ -669,7 +694,10 @@ class Kasir extends CI_Controller
             'no_trx'            => $no_trx,
             'tgl_pembayaran'    => $tgl_pembayaran,
             'jam_pembayaran'    => $jam_pembayaran,
-            'paket'             => $sumPaket,
+            'paket'             => $paket,
+            'single'            => $single,
+            'jual'              => $jual,
+            'disc_single'       => $disc_single,
             'total'             => $total,
             'kode_user'         => $kode_user,
             'um_keluar'         => $um_keluar,
@@ -685,60 +713,51 @@ class Kasir extends CI_Controller
 
         if ($param == 1) { // jika param = 1
             // insert ke pembayaran
-            if ($cek_retur < 1) {
+            $update_um = $this->db->query("UPDATE uang_muka SET 
+                last_tgl = '$tgl_pembayaran', 
+                last_jam = '$jam_pembayaran', 
+                last_invoice = '$invoice', 
+                uang_keluar = uang_keluar + '$um_keluar', 
+                uang_sisa = uang_sisa - '$um_keluar' 
+            WHERE kode_member = '$kode_member'");
 
-                $update_um = $this->db->query("UPDATE uang_muka SET 
-                    last_tgl = '$tgl_pembayaran', 
-                    last_jam = '$jam_pembayaran', 
-                    last_invoice = '$invoice', 
-                    uang_keluar = uang_keluar + '$um_keluar', 
-                    uang_sisa = uang_sisa - '$um_keluar' 
-                WHERE kode_member = '$kode_member'");
+            if ($cek_um == 1) {
+                updateUangMukaIn($kode_member, $invoice, $tgl_pembayaran, $jam_pembayaran, $kembalian);
+            }
 
-                if ($cek_um == 1) {
-                    updateUangMukaIn($kode_member, $invoice, $tgl_pembayaran, $jam_pembayaran, $kembalian);
+            $cek = [
+                $this->M_global->insertData('pembayaran', $isi_pembayaran),
+                $update_um,
+            ];
+
+            if (isset($kode_tarif)) {
+                $jumPaket = count($kode_tarif);
+
+                for ($x = 0; $x <= ($jumPaket - 1); $x++) {
+                    $this->M_global->updateData('tarif_paket_pasien', ['status' => 1], ['no_trx' => $no_trx, 'kode_tarif' => $kode_tarif[$x], 'kunjungan' => $kunjungan[$x]]);
                 }
-
-                $cek = [
-                    $this->M_global->insertData('pembayaran', $isi_pembayaran),
-                    $update_um,
-                ];
-
-                if (isset($kode_tarif)) {
-                    $jumPaket = count($kode_tarif);
-
-                    for ($x = 0; $x <= ($jumPaket - 1); $x++) {
-                        $this->M_global->updateData('tarif_paket_pasien', ['status' => 1], ['no_trx' => $no_trx, 'kode_tarif' => $kode_tarif[$x], 'kunjungan' => $kunjungan[$x]]);
-                    }
-                }
-            } else {
-
-                $cek = [
-                    $this->M_global->insertData('pembayaran', $isi_pembayaran),
-                ];
             }
         } else { // selain itu
-            if ($cek_retur < 1) {
-                if (isset($kode_tarif)) {
-                    $this->M_global->updateData('tarif_paket_pasien', ['status' => 0], ['no_trx' => $no_trx]);
+            if (isset($kode_tarif)) {
+                $this->M_global->updateData('tarif_paket_pasien', ['status' => 0], ['no_trx' => $no_trx]);
 
-                    $jumPaket = count($kode_tarif);
+                $jumPaket = count($kode_tarif);
 
-                    for ($x = 0; $x <= ($jumPaket - 1); $x++) {
-                        $this->M_global->updateData('tarif_paket_pasien', ['status' => 1], ['no_trx' => $no_trx, 'kode_tarif' => $kode_tarif[$x], 'kunjungan' => $kunjungan[$x]]);
-                    }
+                for ($x = 0; $x <= ($jumPaket - 1); $x++) {
+                    $this->M_global->updateData('tarif_paket_pasien', ['status' => 1], ['no_trx' => $no_trx, 'kode_tarif' => $kode_tarif[$x], 'kunjungan' => $kunjungan[$x]]);
                 }
-
-                $um_awal = $this->M_global->getData('pembayaran', ['invoice' => $invoice]);
-                $total_awal = $um_awal->kembalian;
-
-                updateUangMukaUpdate($kode_member, $invoice, $tgl_pembayaran, $jam_pembayaran, $kembalian, $total_awal);
             }
+
+            $um_awal = $this->M_global->getData('pembayaran', ['invoice' => $invoice]);
+            $total_awal = $um_awal->kembalian;
+
+            updateUangMukaUpdate($kode_member, $invoice, $tgl_pembayaran, $jam_pembayaran, $kembalian, $total_awal);
 
             // update pembayaran dan hapus cardnya
             $cek = [
                 $this->M_global->updateData('pembayaran', $isi_pembayaran, ['token_pembayaran' => $token_pembayaran]),
-                $this->M_global->delData('bayar_card_detail', ['token_pembayaran' => $token_pembayaran])
+                $this->M_global->delData('bayar_card_detail', ['token_pembayaran' => $token_pembayaran]),
+                $this->M_global->delData('pembayaran_tarif_single', ['token_pembayaran' => $token_pembayaran]),
             ];
         }
 
@@ -777,31 +796,43 @@ class Kasir extends CI_Controller
                 }
             }
 
-            if ($cek_retur < 1) { // jika tidak ada returan/ 0
-                aktifitas_user_transaksi('Pembayaran', 'membayar Kasir', $invoice);
+            if (isset($kode_tarif_single)) {
+                $jumTarif = count($kode_tarif_single);
 
-                // update barang_out_header dan member
-                $this->M_global->updateData(
-                    'barang_out_header',
-                    ['status_jual' => 1],
-                    ['invoice' => $inv_jual]
-                );
+                for ($y = 0; $y <= ($jumTarif - 1); $y++) {
+                    $kode_single    = $kode_tarif_single[$y];
+                    $harga_single   = str_replace(',', '', $harga[$y]);
+                    $discpr_single  = str_replace(',', '', $discpr[$y]);
+                    $discrp_single  = str_replace(',', '', $discrp[$y]);
+                    $jumlah_single  = str_replace(',', '', $jumlah[$y]);
 
-                $this->M_global->updateData(
-                    'member',
-                    ['status_regist' => 0],
-                    ['kode_member' => $kode_member]
-                );
-            } else { // selain itu
-                aktifitas_user_transaksi('Pembayaran Retur', 'membayar Retur Kasir', $inv_jual);
+                    $data_tarif = [
+                        'token_pembayaran'  => $token_pembayaran,
+                        'kode_tarif'        => $kode_single,
+                        'harga'             => $harga_single,
+                        'discpr'            => $discpr_single,
+                        'discrp'            => $discrp_single,
+                        'jumlah'            => $jumlah_single,
+                    ];
 
-                // update barang_out_retur_header
-                $this->M_global->updateData(
-                    'barang_out_retur_header',
-                    ['status_retur' => 1],
-                    ['invoice' => $inv_jual]
-                );
+                    $this->M_global->insertData('pembayaran_tarif_single', $data_tarif);
+                }
             }
+
+            aktifitas_user_transaksi('Pembayaran', 'membayar Kasir', $invoice);
+
+            // update barang_out_header dan member
+            $this->M_global->updateData(
+                'barang_out_header',
+                ['status_jual' => 1],
+                ['invoice' => $inv_jual]
+            );
+
+            $this->M_global->updateData(
+                'member',
+                ['status_regist' => 0],
+                ['kode_member' => $kode_member]
+            );
 
             $this->print_kwitansi($token_pembayaran, 1);
 

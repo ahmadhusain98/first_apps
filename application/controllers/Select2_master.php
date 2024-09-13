@@ -46,6 +46,12 @@ class Select2_master extends CI_Controller
         echo json_encode($this->M_select2->getAllCabang($key));
     }
 
+    function dataTarifSingle()
+    {
+        $key = $this->input->post('searchTerm');
+        echo json_encode($this->M_select2->getTarifSingle($key));
+    }
+
     function dataTarifPaket()
     {
         $key = $this->input->post('searchTerm');

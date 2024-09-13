@@ -921,6 +921,7 @@
         initailizeSelect2_kategori_tarif();
         initailizeSelect2_all_cabang();
         initailizeSelect2_tarif_paket();
+        initailizeSelect2_tarif_single();
         initailizeSelect2_terdaftar();
 
         // fungsi
@@ -939,6 +940,40 @@
                 },
                 ajax: {
                     url: siteUrl + 'Select2_master/dataTerdaftar/',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_tarif_single() {
+            // jalan fungsi select2 asli
+            $(".select2_tarif_single").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Cabang',
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 1 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataTarifSingle/',
                     type: 'POST',
                     dataType: 'JSON',
                     delay: 100,

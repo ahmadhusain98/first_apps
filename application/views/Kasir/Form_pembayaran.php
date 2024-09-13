@@ -15,7 +15,7 @@
                         <input type="text" class="form-control" placeholder="Otomatis" id="invoice" name="invoice" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->invoice : '') ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <ion-icon name="id-card-outline"></ion-icon>
+                                <i class="fa-solid fa-receipt"></i>
                             </div>
                         </div>
                     </div>
@@ -28,7 +28,7 @@
                                 <input type="date" class="form-control" placeholder="Tgl Pembayaran" id="tgl_pembayaran" name="tgl_pembayaran" value="<?= (!empty($data_pembayaran) ? date('Y-m-d', strtotime($data_pembayaran->tgl_pembayaran)) : date('Y-m-d')) ?>" readonly>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <ion-icon name="calendar-number-outline"></ion-icon>
+                                        <i class="fa-solid fa-calendar"></i>
                                     </div>
                                 </div>
                             </div>
@@ -38,7 +38,7 @@
                                 <input type="time" class="form-control" placeholder="Jam Pembayaran" id="jam_pembayaran" name="jam_pembayaran" value="<?= (!empty($data_pembayaran) ? date('H:i:s', strtotime($data_pembayaran->jam_pembayaran)) : date('H:i:s')) ?>" readonly>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <ion-icon name="time-outline"></ion-icon>
+                                        <i class="fa-solid fa-clock"></i>
                                     </div>
                                 </div>
                             </div>
@@ -56,7 +56,7 @@
                                     <?php if (!empty($data_pembayaran)) :
                                         $daftar = $this->M_global->getData('pendaftaran', ['no_trx' => $data_pembayaran->no_trx]);
                                     ?>
-                                        <option value="<?= $data_pembayaran->no_trx ?>"><?= $data_pembayaran->no_trx . ' | Nama: ' . $this->M_global->getData('member', ['kode_member' => $data_pembayaran->kode_member])->nama . ' | Tgl/Jam: ' . $daftar->tgl_daftar . '/' . $daftar->jam_daftar . ' | Poli/Dokter: ' . $this->M_global->getData('m_poli', ['kode_poli' => $daftar->kode_poli])->keterangan . '/' . $this->M_global->getData('dokter', ['kode_dokter' => $daftar->kode_dokter])->nama ?></option>
+                                        <option value="<?= $data_pembayaran->no_trx ?>"><?= $data_pembayaran->no_trx . ' | Tgl/Jam: ' . $daftar->tgl_daftar . '/' . $daftar->jam_daftar . ' | Poli/Dokter: ' . $this->M_global->getData('m_poli', ['kode_poli' => $daftar->kode_poli])->keterangan . '/' . $this->M_global->getData('dokter', ['kode_dokter' => $daftar->kode_dokter])->nama ?></option>
                                     <?php endif; ?>
                                 </select>
                             </div>
@@ -90,7 +90,7 @@
                                 <div class="col-md-6 col-6">
                                     <input type="checkbox" id="cek_cash" name="cek_cash" class="form-control" onclick="cek_cc(0)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 0) ? 'checked' : '') : '') ?> <?= (($param2) ? 'disabled' : '') ?>>
                                 </div>
-                                <div class="col-md-6 col-6">CASH</div>
+                                <div class="col-md-6 col-6 my-auto">CASH <i class="fa-solid fa-money-bill"></i></div>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -98,7 +98,7 @@
                                 <div class="col-md-6 col-6">
                                     <input type="checkbox" id="cek_card" name="cek_card" class="form-control" onclick="cek_cc(1)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 1) ? 'checked' : '') : '') ?> <?= (($param2) ? 'disabled' : '') ?>>
                                 </div>
-                                <div class="col-md-6 col-6">CARD</div>
+                                <div class="col-md-6 col-6 my-auto">CARD <i class="fa-solid fa-credit-card"></i></div>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -106,7 +106,7 @@
                                 <div class="col-md-6 col-6">
                                     <input type="checkbox" id="cek_cash_card" name="cek_cash_card" class="form-control" onclick="cek_cc(2)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 2) ? 'checked' : '') : '') ?> <?= (($param2) ? 'disabled' : '') ?>>
                                 </div>
-                                <div class="col-md-6 col-6">CASH + CARD</div>
+                                <div class="col-md-6 col-6 my-auto">CASH <i class="fa-solid fa-money-bill"></i><br>CARD <i class="fa-solid fa-credit-card"></i></div>
                             </div>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                         <input type="text" class="form-control text-right" placeholder="Potongan Promo" id="potongan_promo" name="potongan_promo" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->discpr_promo) : '0') ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <ion-icon name="balloon-outline"></ion-icon>
+                                <i class="fa-solid fa-gift"></i>
                             </div>
                         </div>
                     </div>
@@ -140,12 +140,12 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <label for="">Total Yang Harus Dibayar</label>
+                    <label for="">Kasir</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control text-right font-weight-bold" placeholder="Total Harus Bayar" id="total_jual" name="total_jual" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->total - $data_pembayaran->kembalian) : '0') ?>" readonly>
+                        <input type="text" class="form-control font-weight-bold" placeholder="Kasir" id="kasir" name="kasir" value="<?= $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <ion-icon name="cash-outline"></ion-icon>
+                                <i class="fa-solid fa-user"></i>
                             </div>
                         </div>
                     </div>
@@ -156,7 +156,7 @@
                         <input type="text" class="form-control text-right font-weight-bold" placeholder="Kekurangan" id="total_kurang" name="total_kurang" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->kembalian) : '0') ?>" readonly>
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <ion-icon name="cash-outline"></ion-icon>
+                                <i class="fa-solid fa-hand-holding-dollar"></i>
                             </div>
                         </div>
                     </div>
@@ -164,16 +164,102 @@
             </div>
         </div>
     </div>
-    <hr class="forPaket">
-    <div class="row forPaket">
+    <hr>
+    <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Tindakan Paket</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Tindakan Tarif</span>
         </div>
     </div>
-    <br class="forPaket">
-    <input class="forPaket" type="hidden" name="sumPaket" id="sumPaket" value="0">
-    <div class="row forPaket">
-        <div class="col-md-12">
+    <br>
+    <input type="hidden" name="sumJual" id="sumJual" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->jual : 0) ?>">
+    <input type="hidden" name="discTarif" id="discTarif" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->disc_single : 0) ?>">
+    <input type="hidden" name="sumTarif" id="sumTarif" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->single : 0) ?>">
+    <input type="hidden" name="sumPaket" id="sumPaket" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->paket : 0) ?>">
+    <div class="row">
+        <div class="col-md-7 col-12">
+            <input type="hidden" id="forRowTarif" name="forRowTarif" value="<?= (!empty($single_tarif) ? count($single_tarif) : 1) ?>">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered" id="tableTarifSingle" width="100%" style="border-radius: 10px;">
+                    <thead>
+                        <tr class="text-center">
+                            <th width="5%">Hapus</th>
+                            <th width="35%">Tindakan</th>
+                            <th width="15%">Harga</th>
+                            <th width="15%">Disc (%)</th>
+                            <th width="15%">Disc (Rp)</th>
+                            <th width="15%">Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTarif">
+                        <?php if (!empty($single_tarif)) : ?>
+                            <?php $not = 1;
+                            foreach ($single_tarif as $st) :
+                                $tsingle = $this->M_global->getData('m_tarif', ['kode_tarif' => $st->kode_tarif]);
+                            ?>
+                                <tr id="rowTarif<?= $not ?>">
+                                    <td>
+                                        <button type="button" class="btn btn-danger" onclick="hapusTindakanTarif('<?= $not ?>')">
+                                            <i class="fa-solid fa-delete-left"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <select name="kode_tarif_single[]" id="kode_tarif_single<?= $not ?>" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tarif" onchange="getTarifSingle(this.value, '<?= $not ?>')">
+                                            <option value="<?= $st->kode_tarif ?>"><?= $tsingle->nama ?></option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control text-right" name="jasa_total[]" id="jasa_total<?= $not ?>" value="<?= number_format($st->harga) ?>" readonly>
+                                        <input type="hidden" class="form-control text-right" name="jasa_rs[]" id="jasa_rs<?= $not ?>" value="0" readonly>
+                                        <input type="hidden" class="form-control text-right" name="jasa_dokter[]" id="jasa_dokter<?= $not ?>" value="0" readonly>
+                                        <input type="hidden" class="form-control text-right" name="jasa_pelayanan[]" id="jasa_pelayanan<?= $not ?>" value="0" readonly>
+                                        <input type="hidden" class="form-control text-right" name="jasa_poli[]" id="jasa_poli<?= $not ?>" value="0" readonly>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control text-right" name="discpr_tarif[]" id="discpr_tarif<?= $not ?>" value="<?= number_format($st->discpr) ?>" onchange="changediscpr(this.value, '<?= $not ?>')">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control text-right" name="discrp_tarif[]" id="discrp_tarif<?= $not ?>" value="<?= number_format($st->discrp) ?>" onchange="changediscrp(this.value, '<?= $not ?>')">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control text-right" name="jumlah_tarif[]" id="jumlah_tarif<?= $not ?>" value="<?= number_format($st->jumlah) ?>" readonly>
+                                    </td>
+                                </tr>
+                            <?php $not++;
+                            endforeach; ?>
+                        <?php else : ?>
+                            <tr id="rowTarif1">
+                                <td>
+                                    <button type="button" class="btn btn-danger" onclick="hapusTindakanTarif('1')">
+                                        <i class="fa-solid fa-delete-left"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <select name="kode_tarif_single[]" id="kode_tarif_single1" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tarif" onchange="getTarifSingle(this.value, '1')"></select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control text-right" name="jasa_total[]" id="jasa_total1" value="0" readonly>
+                                    <input type="hidden" class="form-control text-right" name="jasa_rs[]" id="jasa_rs1" value="0" readonly>
+                                    <input type="hidden" class="form-control text-right" name="jasa_dokter[]" id="jasa_dokter1" value="0" readonly>
+                                    <input type="hidden" class="form-control text-right" name="jasa_pelayanan[]" id="jasa_pelayanan1" value="0" readonly>
+                                    <input type="hidden" class="form-control text-right" name="jasa_poli[]" id="jasa_poli1" value="0" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control text-right" name="discpr_tarif[]" id="discpr_tarif1" value="0" onchange="changediscpr(this.value, 1)">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control text-right" name="discrp_tarif[]" id="discrp_tarif1" value="0" onchange="changediscrp(this.value, 1)">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control text-right" name="jumlah_tarif[]" id="jumlah_tarif1" value="0" readonly>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="tambahTarif()" id="btnTambahTarif"><i class="fa-solid fa-folder-plus"></i> Tambah Tarif</button>
+        </div>
+        <div class="col-md-5 col-12">
             <div class="table-responsive">
                 <table class="table table-striped table-bordered" width="100%" style="border-radius: 10px;">
                     <thead>
@@ -397,7 +483,6 @@
     var tgl_pembayaran = $('#tgl_pembayaran');
     var jam_pembayaran = $('#jam_pembayaran');
     var inv_jual = $('#inv_jual');
-    var total_jual = $('#total_jual');
     var kode_promo = $('#kode_promo');
     var potongan_promo = $('#potongan_promo');
     var fortableCard = $('#fortableCard');
@@ -408,6 +493,7 @@
     const form = $('#form_pembayaran');
     const forJual = $('#forJual');
     const bodyPaket = $('#bodyPaket');
+    const bodyTarif = $('#bodyTarif');
 
     $('.forPaket').hide();
 
@@ -449,6 +535,10 @@
 
             fortableCash.show(200);
             fortableCard.hide(200);
+
+            $('#card').val(0);
+            $('#bodyBayarCard').empty();
+            hitung_card_all();
         } else if (isi == 1) {
             document.getElementById('cek_card').checked = true;
             document.getElementById('cek_cash').checked = false;
@@ -456,6 +546,9 @@
 
             fortableCash.hide(200);
             fortableCard.show(200);
+
+            $('#cash').val(0);
+            hitung_bayar(0);
         } else {
             document.getElementById('cek_card').checked = false;
             document.getElementById('cek_cash').checked = false;
@@ -506,13 +599,13 @@
 
     // fungsi hitung promo
     function hitung_promo() {
+        var sumTarif = parseFloat(($('#sumTarif').val()).replaceAll(',', ''));
         var sumPaket = parseFloat(($('#sumPaket').val()).replaceAll(',', ''));
-        var totju = parseFloat((total_jual.val()).replaceAll(',', ''));
+        var sumJual = parseFloat(($('#sumJual').val()).replaceAll(',', ''));
         var discpr_prom = parseFloat((potongan_promo.val()).replaceAll(',', ''));
 
-        var new_total_jual = (totju + sumPaket) - ((totju + sumPaket) * (discpr_prom / 100));
+        var new_total_jual = (sumJual + sumPaket + sumTarif) - ((sumJual + sumPaket + sumTarif) * (discpr_prom / 100));
 
-        total_jual.val(formatRpNoId(new_total_jual));
         $('#total_kurang').val(formatRpNoId((0 - new_total_jual)));
     }
 
@@ -526,60 +619,54 @@
 
     // fungsi cek jual
     function cekJual(x, cek_retur) {
-        var sumPaket = Number($('#sumPaket').val());
-
-        if (sumPaket < 1) {
-            $('.forPaket').hide();
-        } else {
-            $('.forPaket').show();
-        }
-
         if (x == '' || x == null) { // jika x kosong/ null
-            total_jual.val(formatRpNoId(sumPaket));
-            $('#total_kurang').val(formatRpNoId((0 - sumPaket)));
-
-            initailizeSelect2_promo(sumPaket);
-        } else {
-            <?php if ($param2) : ?>
-                var cek_retur = 1;
-            <?php else : ?>
-                var cek_retur = 0;
-            <?php endif ?>
-
-            // jalankan fungsi
-            $.ajax({
-                url: siteUrl + 'Kasir/getInfoJual/' + x + '/' + cek_retur,
-                type: 'POST',
-                dataType: 'JSON',
-                success: function(result) { // jika fungsi berjalan dengan baik
-                    if (result.status == 0) { // jika mendapatkan respon 0
-                        if (result[1].kode_member == 'U00001') {} else {
-                            Swal.fire("Total Penjualan", "Tidak ditemukan!, coba lagi", "info");
-                        }
-                    } else { // selain itu
-                        total_jual.val(formatRpNoId((Number(result[0].total) + sumPaket)));
-                        $('#total_kurang').val(formatRpNoId((0 - (Number(result[0].total) + sumPaket))));
-
-                        kode_promo.attr('disabled', false);
-
-                        initailizeSelect2_promo((Number(result[0].total) + sumPaket));
-
-                        if (result[1].kode_member == 'U00001') {
-                            $('.not_umum').hide();
-                        } else {
-                            // ambil uangmuka
-                            $('.not_umum').show();
-                            get_um(result[0].kode_member, cek_retur);
-                        }
-                    }
-                },
-                error: function(result) { // jika fungsi error
-                    btnSimpan.attr('disabled', false);
-
-                    error_proccess();
-                }
-            });
+            return;
         }
+
+        <?php if ($param2) : ?>
+            var cek_retur = 1;
+        <?php else : ?>
+            var cek_retur = 0;
+        <?php endif ?>
+
+        // jalankan fungsi
+        $.ajax({
+            url: siteUrl + 'Kasir/getInfoJual/' + x + '/' + cek_retur,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(result) { // jika fungsi berjalan dengan baik
+                if (result.status == 0) { // jika mendapatkan respon 0
+                    if (result[1].kode_member == 'U00001') {} else {
+                        Swal.fire("Total Penjualan", "Tidak ditemukan!, coba lagi", "info");
+                    }
+
+                    $('#sumJual').val(0);
+
+                    hitung_kurang();
+                } else { // selain itu
+                    $('#sumJual').val(result[0]['total']);
+
+                    hitung_kurang();
+
+                    kode_promo.attr('disabled', false);
+
+                    initailizeSelect2_promo((Number(result[0]['total'])));
+
+                    if (result[1].kode_member == 'U00001') {
+                        $('.not_umum').hide();
+                    } else {
+                        // ambil uangmuka
+                        $('.not_umum').show();
+                        get_um(result[0].kode_member, cek_retur);
+                    }
+                }
+            },
+            error: function(result) { // jika fungsi error
+                btnSimpan.attr('disabled', false);
+
+                error_proccess();
+            }
+        });
     }
 
     function cekPaket(notrx) {
@@ -619,12 +706,10 @@
 
                 $('#sumPaket').val(sumPaket);
 
+                hitung_kurang();
+
                 $('#inv_jual').html(`<option value="${result[0]['invoice']}">${result[0]['invoice']}</option>`);
-                cekJual(result[0]['invoice'], '');
-
-                kode_promo.attr('disabled', false);
-
-                initailizeSelect2_promo((sumPaket));
+                cekJual(result[0]['invoice'], '')
 
                 if (result[0]['kode_member'] == 'U00001') {
                     $('.not_umum').hide();
@@ -638,6 +723,154 @@
                 error_proccess();
             }
         });
+    }
+
+    function tambahTarif() {
+        var jum = Number($('#forRowTarif').val());
+        var row = jum + 1;
+
+        $('#forRowTarif').val(row);
+
+        bodyTarif.append(`<tr id="rowTarif${row}">
+            <td>
+                <button type="button" class="btn btn-danger" onclick="hapusTindakanTarif('${row}')">
+                    <i class="fa-solid fa-delete-left"></i>
+                </button>
+            </td>
+            <td>
+                <select name="kode_tarif_single[]" id="kode_tarif_single${row}" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tarif" onchange="getTarifSingle(this.value, '${row}')"></select>
+            </td>
+            <td>
+                <input type="text" class="form-control text-right" name="jasa_total[]" id="jasa_total${row}" value="0" readonly>
+                <input type="hidden" class="form-control text-right" name="jasa_rs[]" id="jasa_rs${row}" value="0" readonly>
+                <input type="hidden" class="form-control text-right" name="jasa_dokter[]" id="jasa_dokter${row}" value="0" readonly>
+                <input type="hidden" class="form-control text-right" name="jasa_pelayanan[]" id="jasa_pelayanan${row}" value="0" readonly>
+                <input type="hidden" class="form-control text-right" name="jasa_poli[]" id="jasa_poli${row}" value="0" readonly>
+            </td>
+            <td>
+                <input type="text" class="form-control text-right" name="discpr_tarif[]" id="discpr_tarif${row}" value="0" onchange="changediscpr(this.value, '${row}')">
+            </td>
+            <td>
+                <input type="text" class="form-control text-right" name="discrp_tarif[]" id="discrp_tarif${row}" value="0" onchange="changediscrp(this.value, '${row}')">
+            </td>
+            <td>
+                <input type="text" class="form-control text-right" name="jumlah_tarif[]" id="jumlah_tarif${row}" value="0" readonly>
+            </td>
+        </tr>`);
+
+        initailizeSelect2_tarif_single();
+    }
+
+    function hapusTindakanTarif(i) {
+        var jum = Number($('#forRowTarif').val());
+        var row = jum - 1;
+
+        $('#forRowTarif').val(row);
+
+        $('#rowTarif' + i).remove();
+
+        hitung_t();
+    }
+
+    function getTarifSingle(kdtarif, x) {
+        if (!kdtarif || kdtarif == null) {
+            return $('#kode_tarif_single' + x).html(`<option value="">~ Pilih Tarif</option>`)
+        }
+
+        $.ajax({
+            url: siteUrl + 'Kasir/getTarifSingle/' + kdtarif,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(result) {
+                if (result.status == 1) {
+                    $('#jumlah_tarif' + x).val(formatRpNoId(result.jasa_total));
+                    $('#jasa_total' + x).val(formatRpNoId(result.jasa_total));
+                    $('#jasa_rs' + x).val(formatRpNoId(result.jasa_rs));
+                    $('#jasa_dokter' + x).val(formatRpNoId(result.jasa_dokter));
+                    $('#jasa_pelayanan' + x).val(formatRpNoId(result.jasa_pelayanan));
+                    $('#jasa_poli' + x).val(formatRpNoId(result.jasa_poli));
+
+                    hitung_t();
+                } else {
+                    Swal.fire("Tindakan", "Tidak tersedia", "info");
+                }
+            },
+            error: function(result) {
+                error_proccess();
+            }
+        });
+    }
+
+    function changediscpr(discpr, x) {
+        var jasa_total = ($('#jasa_total' + x).val()).replaceAll(',', '');
+
+        if (Number(discpr) > 100) { // jika disc pr > 100
+            // munculkan notifikasi
+            Swal.fire("Diskon (%)", "Maksimal 100%!", "info");
+
+            // identifikasi x = 100
+            var a = 100;
+        } else { // selain itu
+            // identifikasi x = discpr
+            var a = discpr;
+        }
+
+        // buat rumus diskon rp
+        var discrp = jasa_total * (a / 100);
+
+        var jumlah = jasa_total - discrp;
+
+        // tampilkan hasil ke dalam format koma
+        $('#discpr_tarif' + x).val(formatRpNoId(a));
+        $('#discrp_tarif' + x).val(formatRpNoId(discrp));
+        $('#jumlah_tarif' + x).val(formatRpNoId(jumlah));
+
+        hitung_t();
+    }
+
+    // perhitungan diskon rp row
+    function changediscrp(discrp, x) {
+        var jasa_total = ($('#jasa_total' + x).val()).replaceAll(',', '');
+
+        // buat rumus jumlah
+        var jumlah = (jasa_total) - discrp;
+
+        // tampilkan hasil ke dalam format koma
+        $('#discrp_tarif' + x).val(formatRpNoId(discrp));
+        $('#discpr_tarif' + x).val('0');
+
+        $('#jumlah_tarif' + x).val(formatRpNoId(jumlah));
+
+        hitung_t();
+    }
+
+    // perhitungan total;
+    function hitung_t() {
+        var tableBarang = document.getElementById('tableTarifSingle'); // ambil id table detail
+        var rowCount = tableBarang.rows.length; // hitung jumlah rownya
+
+        // buat variable untuk di sum
+        var tjumlah = 0;
+        var tdiskon = 0;
+
+        // lakukan loop
+        for (var i = 1; i < rowCount; i++) {
+            var row = tableBarang.rows[i];
+
+            // ambil data berdasarkan loop
+            var discrp1 = Number((row.cells[4].children[0].value).replace(/[^0-9\.]+/g, ""));
+            var jumlah1 = Number((row.cells[5].children[0].value).replace(/[^0-9\.]+/g, ""));
+
+            // lakukan rumus sum
+            tjumlah += jumlah1;
+            tdiskon += discrp1;
+        }
+
+        // tampilkan hasil ke dalam format koma
+        $('#discTarif').val(tdiskon);
+        $('#sumTarif').val(tjumlah);
+
+        hitung_kurang();
     }
 
     // fungsi ambil uang muka
@@ -761,10 +994,12 @@
 
     // fungsi hitung kurang
     function hitung_kurang() {
-        var total_jual = parseFloat(($('#total_jual').val()).replaceAll(',', ''));
+        var sumTarif = parseFloat(($('#sumTarif').val()).replaceAll(',', ''));
+        var sumPaket = parseFloat(($('#sumPaket').val()).replaceAll(',', ''));
+        var sumJual = parseFloat(($('#sumJual').val()).replaceAll(',', ''));
         var total = parseFloat(($('#total').val()).replaceAll(',', ''));
 
-        var kurang = total - total_jual;
+        var kurang = total - (sumJual + sumTarif + sumPaket);
 
         $('#total_kurang').val(formatRpNoId(kurang));
 
@@ -824,12 +1059,6 @@
     // fungsi proses dengan param
     function proses(param) {
 
-        <?php if ($param2) : ?>
-            var cek_retur = 1;
-        <?php else : ?>
-            var cek_retur = 0;
-        <?php endif ?>
-
         if (param == 1) { // jika param 1 berarti insert/tambah
             var message = 'dibuat!';
         } else { // selain itu berarti update/ubah
@@ -838,7 +1067,7 @@
 
         // jalankan proses dengan param insert/update
         $.ajax({
-            url: siteUrl + 'kasir/kasir_proses/' + param + '/' + cek_retur,
+            url: siteUrl + 'kasir/kasir_proses/' + param,
             type: "POST",
             data: form.serialize(),
             dataType: "JSON",
@@ -847,12 +1076,12 @@
 
                 if (result.status == 1) { // jika mendapatkan respon 1
 
-                    Swal.fire("Pembayaran <?= (($param2) ? 'Retur' : ''); ?>", "Berhasil " + message, "success").then(() => {
+                    Swal.fire("Pembayaran", "Berhasil " + message, "success").then(() => {
                         question_cetak(result.token_pembayaran);
                     });
                 } else { // selain itu
 
-                    Swal.fire("Pembayaran <?= (($param2) ? 'Retur' : ''); ?>", "Gagal " + message + ", silahkan dicoba kembali", "info");
+                    Swal.fire("Pembayaran", "Gagal " + message + ", silahkan dicoba kembali", "info");
                 }
             },
             error: function(result) { // jika fungsi error

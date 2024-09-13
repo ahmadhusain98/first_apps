@@ -36,8 +36,16 @@ class M_select2 extends CI_Model
         return $sintak;
     }
 
-    function getTarifPaket($key)
+    function getTarifSingle($key)
     {
+        $this->db->query("SET SESSION sql_mode = REPLACE(
+            REPLACE(
+                REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY,', ''),
+            ',ONLY_FULL_GROUP_BY', ''),
+        'ONLY_FULL_GROUP_BY', '')");
+
+        $kode_cabang = $this->session->userdata('cabang');
+
         $limit = ' LIMIT 50';
 
         if (!empty($key)) {
@@ -46,7 +54,30 @@ class M_select2 extends CI_Model
             $add_sintak = ' ORDER BY m.nama ASC';
         }
 
-        $sintak = $this->db->query('SELECT m.kode_tarif AS id, m.nama AS text FROM m_tarif m WHERE m.jenis = 2 ' . $add_sintak . $limit)->result();
+        $sintak = $this->db->query('SELECT m.kode_tarif AS id, m.nama AS text FROM m_tarif m JOIN tarif_jasa t ON m.kode_tarif = t.kode_tarif WHERE m.jenis = 1 AND t.kode_cabang = "' . $kode_cabang . '" ' . $add_sintak . $limit)->result();
+
+        return $sintak;
+    }
+
+    function getTarifPaket($key)
+    {
+        $this->db->query("SET SESSION sql_mode = REPLACE(
+            REPLACE(
+                REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY,', ''),
+            ',ONLY_FULL_GROUP_BY', ''),
+        'ONLY_FULL_GROUP_BY', '')");
+
+        $kode_cabang = $this->session->userdata('cabang');
+
+        $limit = ' LIMIT 50';
+
+        if (!empty($key)) {
+            $add_sintak = ' AND (m.kode_tarif LIKE "%' . $key . '%" OR m.nama LIKE "%' . $key . '%") GROUP BY t.kode_tarif ORDER BY m.nama ASC';
+        } else {
+            $add_sintak = ' GROUP BY t.kode_tarif ORDER BY m.nama ASC';
+        }
+
+        $sintak = $this->db->query('SELECT m.kode_tarif AS id, m.nama AS text FROM m_tarif m JOIN tarif_paket t ON m.kode_tarif = t.kode_tarif WHERE t.kode_cabang = "' . $kode_cabang . '" AND m.jenis = 2 ' . $add_sintak . $limit)->result();
 
         return $sintak;
     }

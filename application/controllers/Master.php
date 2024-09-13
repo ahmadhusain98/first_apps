@@ -3781,7 +3781,6 @@ class Master extends CI_Controller
 
         if (isset($kode_cabang)) {
             $jum = count($kode_cabang);
-            $jumBhp = count($kode_barang);
 
             if ($param == 1) {
                 aktifitas_user('Master Tarif Single', 'menambahkan Tarif Single', $kode_tarif, $nama);
@@ -3817,38 +3816,41 @@ class Master extends CI_Controller
                 }
 
                 // BHP
-                for ($z = 0; $z <= ($jumBhp - 1); $z++) {
-                    $_kode_barang   = $kode_barang[$z];
-                    $_kode_satuan   = $kode_satuan[$z];
-                    $_qty           = str_replace(',', '', $qty[$z]);
-                    $_harga         = str_replace(',', '', $harga[$z]);
-                    $_jumlah        = str_replace(',', '', $jumlah[$z]);
-
-                    $barang1        = $this->M_global->getData('barang', ['kode_barang' => $_kode_barang, 'kode_satuan' => $_kode_satuan]);
-                    $barang2        = $this->M_global->getData('barang', ['kode_barang' => $_kode_barang, 'kode_satuan2' => $_kode_satuan]);
-                    $barang3        = $this->M_global->getData('barang', ['kode_barang' => $_kode_barang, 'kode_satuan3' => $_kode_satuan]);
-
-                    if ($barang1) {
-                        $qty_satuan = 1;
-                    } else if ($barang2) {
-                        $qty_satuan = $barang2->qty_satuan2;
-                    } else {
-                        $qty_satuan = $barang3->qty_satuan3;
+                if(isset($kode_barang)) {
+                    $jumBhp = count($kode_barang);
+                    for ($z = 0; $z <= ($jumBhp - 1); $z++) {
+                        $_kode_barang   = $kode_barang[$z];
+                        $_kode_satuan   = $kode_satuan[$z];
+                        $_qty           = str_replace(',', '', $qty[$z]);
+                        $_harga         = str_replace(',', '', $harga[$z]);
+                        $_jumlah        = str_replace(',', '', $jumlah[$z]);
+    
+                        $barang1        = $this->M_global->getData('barang', ['kode_barang' => $_kode_barang, 'kode_satuan' => $_kode_satuan]);
+                        $barang2        = $this->M_global->getData('barang', ['kode_barang' => $_kode_barang, 'kode_satuan2' => $_kode_satuan]);
+                        $barang3        = $this->M_global->getData('barang', ['kode_barang' => $_kode_barang, 'kode_satuan3' => $_kode_satuan]);
+    
+                        if ($barang1) {
+                            $qty_satuan = 1;
+                        } else if ($barang2) {
+                            $qty_satuan = $barang2->qty_satuan2;
+                        } else {
+                            $qty_satuan = $barang3->qty_satuan3;
+                        }
+    
+                        $qty_konversi   = $_qty * $qty_satuan;
+    
+                        $detail_bhp = [
+                            'kode_tarif'        => $kode_tarif,
+                            'kode_barang'       => $_kode_barang,
+                            'kode_satuan'       => $_kode_satuan,
+                            'qty_konversi'      => $qty_konversi,
+                            'qty'               => $_qty,
+                            'harga'             => $_harga,
+                            'jumlah'            => $_jumlah,
+                        ];
+    
+                        $this->M_global->insertData('tarif_single_bhp', $detail_bhp);
                     }
-
-                    $qty_konversi   = $_qty * $qty_satuan;
-
-                    $detail_bhp = [
-                        'kode_tarif'        => $kode_tarif,
-                        'kode_barang'       => $_kode_barang,
-                        'kode_satuan'       => $_kode_satuan,
-                        'qty_konversi'      => $qty_konversi,
-                        'qty'               => $_qty,
-                        'harga'             => $_harga,
-                        'jumlah'            => $_jumlah,
-                    ];
-
-                    $this->M_global->insertData('tarif_single_bhp', $detail_bhp);
                 }
 
                 echo json_encode(['status' => 1]);
