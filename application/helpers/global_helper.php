@@ -180,7 +180,7 @@ function _kodeTarif($jenis)
     } else {
         $inisial    = "TRF-P";
     }
-    $lastNumber = $CI->db->query('SELECT * FROM m_tarif WHERE jenis = "' . $jenis . '" ORDER BY kode_tarif DESC LIMIT 1')->row();
+    $lastNumber = $CI->db->query('SELECT * FROM m_tarif WHERE jenis = "' . $jenis . '" ORDER BY id DESC LIMIT 1')->row();
     $number     = 1;
     if ($lastNumber) {
         $number       = count($CI->db->query('SELECT * FROM m_tarif WHERE jenis = "' . $jenis . '"')->result()) + 1;

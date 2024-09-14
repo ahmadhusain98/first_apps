@@ -125,13 +125,13 @@ function cetak_pdf_small($judul, $body, $cek_param, $position, $filename, $web, 
     } else if ($cek_param == 1) { // jika paramnya 1 maka cetak pdf
         $mpdf->SetTitle($judul); // berikan judul
         $mpdf->SetHTMLHeader($kop); // set kop
-        $mpdf->setAutoBottomMargin = 'pad';
+        $mpdf->setAutoBottomMargin = 'stretch';
         // $mpdf->SetWatermarkText($web->nama, 0.05); // beri watermark dengan transparansi 0.1
         // $mpdf->showWatermarkText = true; // izinkan watermark tampil
         $mpdf->SetWatermarkImage(base_url('assets/img/web/') . $web->watermark, 0.1, [55, 30]);
         $mpdf->showWatermarkImage = true;
         $mpdf->AddPage($position); // isi posisi cetakan L (landscape)/ P (potrait)
-        $mpdf->setAutoTopMargin = 'pad';
+        $mpdf->setAutoTopMargin = 'stretch';
         $mpdf->WriteHTML($body); // body html
         $mpdf->SetFooter($footer); // set footer
         if ($yes < 1) {

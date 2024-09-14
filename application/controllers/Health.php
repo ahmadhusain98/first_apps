@@ -524,7 +524,7 @@ class Health extends CI_Controller
                 <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" onclick="hapus(' . "'" . $rd->no_trx . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
                 <br>
                 <button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="email(' . "'" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-envelope-open-text"></i></button>
-                <a type="button" target="_blank" style="margin-bottom: 5px;" class="btn btn-dark" href="' . site_url("Health/print_pendaftaran/") . $rd->no_trx . '"><i class="fa-solid fa-id-badge"></i></a>
+                <a type="button" target="_blank" style="margin-bottom: 5px;" class="btn btn-dark" href="' . site_url("Health/print_pendaftaran/") . $rd->no_trx . '/0"><i class="fa-solid fa-id-badge"></i></a>
             </div>';
             $data[] = $row;
         }
@@ -817,7 +817,7 @@ class Health extends CI_Controller
     }
 
     // fungsi cetak pendaftaran member
-    public function print_pendaftaran($no_trx)
+    public function print_pendaftaran($no_trx, $yes)
     {
         $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
 
@@ -923,7 +923,7 @@ class Health extends CI_Controller
         ';
         $body .= '</table>';
 
-        cetak_pdf_small($judul, $body, 1, $position, $filename, $web_setting);
+        cetak_pdf_small($judul, $body, 1, $position, $filename, $web_setting, $yes);
     }
 
     // fungsi ambil riwayat
@@ -976,16 +976,26 @@ class Health extends CI_Controller
         $this->template->load('Template/Content', 'Pendaftaran/Form_pendaftaran', $parameter);
     }
 
+    public function getToken($no_trx) {
+        $pembayaran = $this->M_global->getData('pembayaran', ['no_trx' => $no_trx]);
+
+        echo json_encode(['status' => 1, 'token' => $pembayaran->token_pembayaran]);
+    }
+
     public function getPaket($kode_tarif, $kode_member)
     {
         $kode_cabang = $this->session->userdata('cabang');
         $paket = $this->M_global->getDataResult('tarif_paket', ['kode_tarif' => $kode_tarif, 'kode_cabang' => $kode_cabang]);
         $tarif = $this->db->query("SELECT * FROM tarif_paket_pasien WHERE kode_tarif = '$kode_tarif' AND status = 1 AND kode_member = '$kode_member' ORDER BY id DESC LIMIT 1")->row();
 
-        if ($tarif->kunjungan >= (count($paket))) {
-            $new_kunjungan = 1;
+        if(!empty($tarif)) {
+            if ($tarif->kunjungan >= (count($paket))) {
+                $new_kunjungan = 1;
+            } else {
+                $new_kunjungan = (int)$tarif->kunjungan + 1;
+            }
         } else {
-            $new_kunjungan = (int)$tarif->kunjungan + 1;
+            $new_kunjungan = 1;
         }
 
         echo json_encode(['status' => 1, 'kunjungan' => $new_kunjungan]);
@@ -1091,6 +1101,8 @@ class Health extends CI_Controller
                 $this->M_global->insertData('tarif_paket_pasien', $paket);
             }
         }
+
+        $this->print_pendaftaran($no_trx, 1);
 
         if ($cek) { // jika fungsi berjalan
             // kirimkan status 1 ke view
