@@ -747,4 +747,56 @@ class Accounting extends CI_Controller
             echo json_encode(['status' => 0]);
         }
     }
+
+    /**
+     * Saldo Awal Akun
+     * untuk menampilkan, menambahkan, dan mengubah Saldo Awal Akun dalam sistem
+     */
+
+    public function saldo_akun()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Accounting',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Saldo Awal Akun',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => 'Accounting/saldo_akun_list',
+            'param1'        => '',
+        ];
+
+        $this->template->load('Template/Content', 'Accounting/Saldo_awal/Akun', $parameter);
+    }
+
+    // form sa_akun page
+    public function form_sa_akun($param)
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        if ($param != '0') {
+            $supplier = $this->M_global->getData('m_supplier', ['kode_supplier' => $param]);
+        } else {
+            $supplier = null;
+        }
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Accounting',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Saldo Awal Akun',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => '',
+            'supplier'      => $supplier,
+        ];
+
+        $this->template->load('Template/Content', 'Accounting/Saldo_awal/Form_akun', $parameter);
+    }
 }

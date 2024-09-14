@@ -98,6 +98,13 @@ class Select2_master extends CI_Controller
         echo json_encode($this->M_select2->getKabupaten($key, $kode_provinsi));
     }
 
+    // akun select
+    function dataAkunSel($kode_klasifikasi = '')
+    {
+        $key = $this->input->post('searchTerm');
+        echo json_encode($this->M_select2->getAkunSel($key, $kode_klasifikasi));
+    }
+
     // master kecamatan
     function dataKecamatan($kode_kabupaten = '')
     {

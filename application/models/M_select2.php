@@ -162,6 +162,26 @@ class M_select2 extends CI_Model
         return $sintak;
     }
 
+    // fungsi Akun Select
+    function getAkunSel($key, $kode_klasifikasi)
+    {
+        $limit = ' LIMIT 50';
+
+        if ($kode_klasifikasi == null || $kode_klasifikasi == "" || $kode_klasifikasi == "null") {
+            $sintak = $this->db->query('SELECT 0 AS id, "Pilih Klasifikasi" AS text FROM m_akun LIMIT 1')->result();
+        } else {
+            if (!empty($key)) {
+                $add_sintak = ' AND (kode_akun LIKE "%' . $key . '%" OR nama_akun LIKE "%' . $key . '%") ORDER BY nama_akun ASC';
+            } else {
+                $add_sintak = ' ORDER BY nama_akun ASC';
+            }
+
+            $sintak = $this->db->query('SELECT kode_akun AS id, nama_akun AS text FROM m_akun WHERE kode_klasifikasi = "' . $kode_klasifikasi . '" ' . $add_sintak . $limit)->result();
+        }
+
+        return $sintak;
+    }
+
     // fungsi kabupaten
     function getKabupaten($key, $kode_provinsi)
     {

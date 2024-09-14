@@ -53,7 +53,7 @@
                                 <input type="date" title="Tgl Beli" class="form-control" placeholder="Tgl Beli" id="tgl_beli" name="tgl_beli" value="<?= (!empty($data_barang_in) ? date('Y-m-d', strtotime($data_barang_in->tgl_beli)) : date('Y-m-d')) ?>" readonly>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <ion-icon name="today-outline"></ion-icon>
+                                        <i class="fa-regular fa-calendar"></i>
                                     </div>
                                 </div>
                             </div>
@@ -64,7 +64,7 @@
                                 <input type="time" title="Jam Beli" class="form-control" placeholder="Jam Beli" id="jam_beli" name="jam_beli" value="<?= (!empty($data_barang_in) ? date('H:i:s', strtotime($data_barang_in->jam_beli)) : date('H:i:s')) ?>" readonly>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <ion-icon name="time-outline"></ion-icon>
+                                        <i class="fa-regular fa-clock"></i>
                                     </div>
                                 </div>
                             </div>
