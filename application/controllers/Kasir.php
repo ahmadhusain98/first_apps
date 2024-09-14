@@ -600,61 +600,6 @@ class Kasir extends CI_Controller
         $this->template->load('Template/Content', 'Kasir/Form_pembayaran', $parameter);
     }
 
-    // form retur page
-    public function form_retur($param)
-    {
-        // website config
-        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
-        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
-
-        if ($param == '0') {
-            $pembayaran     = null;
-            $riwayat        = null;
-            $bayar_detail   = null;
-            $tarif_paket    = null;
-            $single_tarif   = null;
-            $penjualan      = null;
-        } else {
-            $bayar_detail   = $this->M_global->getDataResult('bayar_card_detail', ['token_pembayaran' => $param]);
-            $pembayaran     = $this->M_global->getData('pembayaran', ['token_pembayaran' => $param]);
-            $pendaftaran    = $this->M_global->getData('pendaftaran', ['no_trx' => $pembayaran->no_trx]);
-            if (!empty($pendaftaran)) {
-                $tarif_paket    = $this->M_global->getDataResult('tarif_paket_pasien', ['no_trx' => $pendaftaran->no_trx]);
-
-                $kode_member    = $pendaftaran->kode_member;
-
-                $riwayat        = $this->M_global->getDataResult('pendaftaran', ['kode_member' => $kode_member]);
-                $single_tarif   = $this->M_global->getDataResult('pembayaran_tarif_single', ['token_pembayaran' => $param]);
-                $penjualan      = $this->db->query("SELECT bo.*, b.nama AS nama_barang, s.keterangan AS nama_satuan FROM barang_out_detail bo JOIN barang b ON b.kode_barang = bo.kode_barang JOIN m_satuan s ON s.kode_satuan = bo.kode_satuan WHERE bo.invoice = '$pembayaran->inv_jual'")->result();
-            } else {
-                $tarif_paket    = null;
-                $riwayat        = null;
-                $single_tarif   = null;
-                $penjualan      = null;
-            }
-        }
-
-        $parameter = [
-            $this->data,
-            'judul'             => 'Pembayaran',
-            'nama_apps'         => $web_setting->nama,
-            'page'              => 'Pembayaran',
-            'web'               => $web_setting,
-            'web_version'       => $web_version->version,
-            'list_data'         => '',
-            'data_pembayaran'   => $pembayaran,
-            'bayar_detail'      => $bayar_detail,
-            'tarif_paket'       => $tarif_paket,
-            'riwayat'           => $riwayat,
-            'single_tarif'      => $single_tarif,
-            'penjualan'         => $penjualan,
-            'param2'            => $param2,
-            'role'              => $this->M_global->getResult('m_role'),
-        ];
-
-        $this->template->load('Template/Content', 'Kasir/Form_pembayaran', $parameter);
-    }
-
     public function getJual($invoice) {
         $barang_out = $this->db->query("SELECT bo.*, b.nama AS nama_barang, s.keterangan AS nama_satuan FROM barang_out_detail bo JOIN barang b ON b.kode_barang = bo.kode_barang JOIN m_satuan s ON s.kode_satuan = bo.kode_satuan WHERE bo.invoice = '$invoice'")->result();
 

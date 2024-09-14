@@ -35,15 +35,9 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                     </ul>
                 </div>
                 <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-money-bill"></i>&nbsp;&nbsp;Pembayaran
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" type="button" onclick="getUrl('Kasir/form_kasir/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-receipt"></i>&nbsp;&nbsp;Penjualan</a></li>
-                        <li><a class="dropdown-item" type="button" onclick="getUrl('Kasir/form_retur/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-file-invoice-dollar"></i>&nbsp;&nbsp;Retur Penjualan</a></li>
-                    </ul>
-                </div>
+                <button type="button" class="btn btn-success" onclick="getUrl('Kasir/form_kasir/0')" <?= (($created > 0) ? '' : 'disabled') ?>>
+                    <i class="fa-solid fa-receipt"></i>&nbsp;&nbsp;Pembayaran
+                </button>
             </div>
         </div>
     </div>
