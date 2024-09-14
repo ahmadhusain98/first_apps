@@ -12,8 +12,8 @@ class MY_Email extends CI_Email
         'charset'       => 'utf-8',
         'protocol'      => 'smtp',
         'smtp_host'     => 'smtp.gmail.com',
-        'smtp_user'     => '',
-        'smtp_pass'     => '',
+        'smtp_user'     => 'myhers.official@gmail.com',
+        'smtp_pass'     => 'gkgf yxav gone uqon',
         'smtp_crypto'   => 'ssl',
         'smtp_port'     => 465,
         'crlf'          => "\r\n",
@@ -37,7 +37,7 @@ class MY_Email extends CI_Email
 
         $this->clear();
         $this->initialize($this->config);
-        $this->from('@gmail.com', $web_setting->nama);
+        $this->from('myhers.official@gmail.com', $web_setting->nama);
         $this->to($to);
         $this->subject($subject);
         $this->message($message);
