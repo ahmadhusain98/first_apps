@@ -223,43 +223,44 @@ class Kasir extends CI_Controller
     // fungsi cetak kwitansi
     public function print_kwitansi($token_pembayaran, $yes)
     {
-        $kode_cabang    = $this->session->userdata('cabang');
-        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+        $kode_cabang          = $this->session->userdata('cabang');
+        $web_setting          = $this->M_global->getData('web_setting', ['id' => 1]);
 
-        $position       = 'P'; // cek posisi l/p
+        $position             = 'P'; // cek posisi l/p
 
         // body cetakan
-        $body           = '';
-        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+        $body                 = '';
+        $body                 .= '<br><br>'; // beri jarak antara kop dengan body
 
-        $pembayaran = $this->M_global->getData('pembayaran', ['token_pembayaran' => $token_pembayaran]);
-        $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $pembayaran->no_trx]);
-        $barang_out_header = $this->M_global->getData('barang_out_header', ['invoice' => $pembayaran->inv_jual]);
-        $barang_out_detail = $this->M_global->getDataResult('barang_out_detail', ['invoice' => $pembayaran->inv_jual]);
-        $tarif_paket_pasien = $this->M_global->getDataResult('tarif_paket_pasien', ['no_trx' => $pembayaran->no_trx]);
-        $member = $this->M_global->getData('member', ['kode_member' => (($pendaftaran) ? $pendaftaran->kode_member : $barang_out_header->kode_member)]);
+        $pembayaran           = $this->M_global->getData('pembayaran', ['token_pembayaran' => $token_pembayaran]);
+        $pendaftaran          = $this->M_global->getData('pendaftaran', ['no_trx' => $pembayaran->no_trx]);
+        $barang_out_header    = $this->M_global->getData('barang_out_header', ['invoice' => $pembayaran->inv_jual]);
+        $barang_out_detail    = $this->M_global->getDataResult('barang_out_detail', ['invoice' => $pembayaran->inv_jual]);
+        $tarif_paket_pasien   = $this->M_global->getDataResult('tarif_paket_pasien', ['no_trx' => $pembayaran->no_trx]);
+        $tarif_single_pasien  = $this->M_global->getDataResult('pembayaran_tarif_single', ['token_pembayaran' => $token_pembayaran]);
+        $member               = $this->M_global->getData('member', ['kode_member' => (($pendaftaran) ? $pendaftaran->kode_member : $barang_out_header->kode_member)]);
 
-        $judul = 'Kwitansi ' . $pembayaran->invoice;
-        $filename = $judul;
+        $judul                = 'Kwitansi ' . $pembayaran->invoice;
+        $filename             = $judul;
 
         if ($pembayaran->approved == 1) {
-            $open = '<input type="checkbox" style="width: 80px;" checked="checked"> Lunas';
-            $close = '<input type="checkbox" style="width: 80px;"> Belum Lunas';
+            $open       = '<input type="checkbox" style="width: 80px;" checked="checked"> Lunas';
+            $close      = '<input type="checkbox" style="width: 80px;"> Belum Lunas';
         } else {
-            $open = '<input type="checkbox" style="width: 80px;"> Lunas';
-            $close = '<input type="checkbox" style="width: 80px;" checked="checked"> Belum Lunas';
+            $open       = '<input type="checkbox" style="width: 80px;"> Lunas';
+            $close      = '<input type="checkbox" style="width: 80px;" checked="checked"> Belum Lunas';
         }
 
         if ($pembayaran->cek_um == 1) {
-            $umopen = '<input type="checkbox" style="width: 80px;" checked="checked"> Uang Muka';
-            $umclose = '<input type="checkbox" style="width: 80px;"> Member';
+            $umopen     = '<input type="checkbox" style="width: 80px;" checked="checked"> Uang Muka';
+            $umclose    = '<input type="checkbox" style="width: 80px;"> Member';
         } else {
             if ((($pendaftaran) ? $pendaftaran->kode_member : $barang_out_header->kode_member) != 'U00001') {
-                $umopen = '<input type="checkbox" style="width: 80px;"> Uang Muka';
-                $umclose = '<input type="checkbox" style="width: 80px;" checked="checked"> Member';
+                $umopen   = '<input type="checkbox" style="width: 80px;"> Uang Muka';
+                $umclose  = '<input type="checkbox" style="width: 80px;" checked="checked"> Member';
             } else {
-                $umopen = '';
-                $umclose = '<input type="checkbox" style="width: 80px;" checked="checked"> Umum';
+                $umopen   = '';
+                $umclose  = '<input type="checkbox" style="width: 80px;" checked="checked"> Umum';
             }
         }
 
@@ -313,85 +314,107 @@ class Kasir extends CI_Controller
 
         $body .= '</table>';
 
-        if ($tarif_paket_pasien) {
-            $body .= '<table style="width: 100%; font-size: 9px;" cellpadding="2px">';
-            $body .= '<tr>
-                <td colspan="3">Tarif Paket</td>
-            </tr>
-            <tr>
-                <td colspan="3"><hr style="margin: 0px;"></td>
-            </tr>';
+        $body .= '<table style="width: 100%; font-size: 9px;" cellpadding="2px">';
 
+        $body .= '<tr>
+            <td style="width: 80%; font-weight: bold;" colspan="3">Tarif Paket</td>
+            <td style="width: 20%; text-align: right; font-weight: bold;">' . (!empty($tarif_paket_pasien) ? number_format($pembayaran->paket) : 0) . '</td>
+        </tr>';
+
+        $body .= '<tr>
+            <td style="width: 100%;" colspan="4"><hr style="margin: 0px;"></td>
+        </tr>';
+
+        if (!empty($tarif_paket_pasien)) {
             foreach ($tarif_paket_pasien as $tpp) {
                 $m_tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $tpp->kode_tarif]);
                 $tarif_paket = $this->M_global->getData('tarif_paket', ['kode_tarif' => $tpp->kode_tarif, 'kunjungan' => $tpp->kunjungan, 'kode_cabang' => $kode_cabang]);
                 $body .= '<tr>
-                    <td style="width: 60%;">' . $m_tarif->kode_tarif . '(' . $m_tarif->nama . ')' . '</td>
+                    <td style="width: 60%;" colspan="2">' . $m_tarif->kode_tarif . ' (' . $m_tarif->nama . ')' . '</td>
                     <td style="text-align: right; width: 20%;">@Kunj ' . number_format($tpp->kunjungan) . '</td>
                     <td style="text-align: right; width: 20%;">' . number_format(($tarif_paket->jasa_rs + $tarif_paket->jasa_dokter + $tarif_paket->jasa_pelayanan + $tarif_paket->jasa_poli)) . '</td>
                 </tr>';
             }
 
             $body .= '<tr>
-                <td colspan="3"><hr style="margin: 0px;"></td>
-            </tr>
-            <tr>
-                <td colspan="2" style="text-align: right; font-weight: bold;">Total :</td>
-                <td style="text-align: right; font-weight: bold;">' . number_format($pembayaran->paket) . '</td>
-            </tr>
-            ';
-
-            $body .= '</table>';
+                <td style="width: 100%;" colspan="4"><hr style="margin: 0px;"></td>
+            </tr>';
         }
 
-        if ($barang_out_header) {
-            $body .= '<table style="width: 100%; font-size: 9px;" cellpadding="2px">';
-            $body .= '<tr>
-                <td colspan="5">Penjualan Obat</td>
-            </tr>
-            <tr>
-                <td colspan="5"><hr style="margin: 0px;"></td>
-            </tr>';
+        $disc_paket = 0;
 
+        $body .= '<tr>
+            <td style="width: 80%; font-weight: bold;" colspan="3">Tarif Single</td>
+            <td style="width: 20%; text-align: right; font-weight: bold;">' . (!empty($tarif_single_pasien) ? number_format($pembayaran->single) : 0) . '</td>
+        </tr>';
+
+        if (!empty($tarif_single_pasien)) {
+            foreach ($tarif_single_pasien as $tsp) {
+                $m_tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $tsp->kode_tarif]);
+                $body .= '<tr>
+                    <td style="width: 40%;">' . $m_tarif->kode_tarif . ' (' . $m_tarif->nama . ')' . '</td>
+                    <td style="text-align: right; width: 20%;">Rp. ' . number_format($tsp->harga) . '</td>
+                    <td style="text-align: right; width: 20%;">Rp. ' . number_format($tsp->discrp) . '</td>
+                    <td style="text-align: right; width: 20%;">Rp. ' . number_format($tsp->jumlah) . '</td>
+                </tr>';
+            }
+
+            $body .= '<tr>
+                <td style="width: 100%;" colspan="4"><hr style="margin: 0px;"></td>
+            </tr>';
+        }
+
+        $disc_single = $pembayaran->disc_single;
+
+        $body .= '<tr>
+            <td style="width: 80%; font-weight: bold;" colspan="3">Penjualan Obat</td>
+            <td style="width: 20%; text-align: right; font-weight: bold;">' . (!empty($pembayaran) ? number_format($pembayaran->jual) : 0) . '</td>
+        </tr>';
+
+        if (!empty($barang_out_header)) {
             foreach ($barang_out_detail as $bod) {
                 $barang = $this->M_global->getData('barang', ['kode_barang' => $bod->kode_barang]);
                 $body .= '<tr>
-                    <td style="width: 50%;" colspan="2">' . $barang->nama . '(' . $this->M_global->getData('m_satuan', ['kode_satuan' => $barang->kode_satuan])->keterangan . ')' . '</td>
-                    <td style="text-align: right; width: 10%;">' . number_format($bod->qty) . ' x</td>
-                    <td style="text-align: right; width: 20%;">@' . number_format($bod->harga) . '</td>
+                    <td style="width: 40%;">' . $barang->nama . '(' . $this->M_global->getData('m_satuan', ['kode_satuan' => $barang->kode_satuan])->keterangan . ')' . '</td>
+                    <td style="text-align: right; width: 20%;">' . number_format($bod->qty) . ' @ ' . number_format($bod->harga) . '</td>
+                    <td style="text-align: right; width: 20%;">' . number_format($bod->discrp) . '</td>
                     <td style="text-align: right; width: 20%;">' . number_format(($bod->jumlah + $bod->discrp)) . '</td>
                 </tr>';
             }
 
             $body .= '<tr>
-                <td colspan="5"><hr style="margin: 0px;"></td>
-            </tr>
-            <tr>
-                <td colspan="4" style="text-align: right;">Jumlah :</td>
-                <td style="text-align: right;">' . number_format((!empty($barang_out_header)) ? ($barang_out_header->subtotal + $barang_out_header->diskon) : 0) . '</td>
-            </tr>
-            <tr>
-                <td colspan="4" style="text-align: right;">Diskon :</td>
-                <td style="text-align: right;">' . number_format(!empty($barang_out_header) ? $barang_out_header->diskon : 0) . '</td>
-            </tr>
-            <tr>
-                <td colspan="4" style="text-align: right;">PPN :</td>
-                <td style="text-align: right;">' . number_format(!empty($barang_out_header) ? $barang_out_header->pajak : 0) . '</td>
-            </tr>
-            <tr>
-                <td colspan="4" style="text-align: right; font-weight: bold;">Total :</td>
-                <td style="text-align: right; font-weight: bold;">' . number_format(!empty($barang_out_header) ? $barang_out_header->total : 0) . '</td>
-            </tr>
-            ';
+                <td style="width: 100%;" colspan="4"><hr style="margin: 0px;"></td>
+            </tr>';
 
-            $body .= '</table>';
+            $disc_jual = $barang_out_header->diskon;
+        } else {
+            $disc_jual = 0;
         }
+
+        $body .= '<tr>
+            <td colspan="3" style="text-align: right;">Jumlah :</td>
+            <td style="text-align: right;">' . number_format(($pembayaran->paket + $pembayaran->single + $pembayaran->jual) + ($disc_paket + $disc_single + $disc_jual)) . '</td>
+        </tr>
+        <tr>
+            <td colspan="3" style="text-align: right;">Diskon :</td>
+            <td style="text-align: right;">' . number_format($disc_paket + $disc_single + $disc_jual) . '</td>
+        </tr>
+        <tr>
+            <td colspan="3" style="text-align: right;">PPN :</td>
+            <td style="text-align: right;">0</td>
+        </tr>
+        <tr>
+            <td colspan="3" style="text-align: right; font-weight: bold;">Total :</td>
+            <td style="text-align: right; font-weight: bold;">' . number_format(($pembayaran->paket + $pembayaran->single + $pembayaran->jual)) . '</td>
+        </tr>';
+
+        $body .= '</table>';
 
         $body .= '<table style="width: 50%; font-size: 9px;" cellpadding="2px">
             <tr>
                 <td style="width: 38%;">Total</td>
                  <td style="width: 2%;">: </td>
-                <td style="text-align: right; width: 60%;">' . number_format($pembayaran->paket + (!empty($barang_out_header) ? $barang_out_header->total : 0)) . '</td>
+                <td style="text-align: right; width: 60%;">' . number_format($pembayaran->paket + $pembayaran->single + $pembayaran->jual) . '</td>
             </tr>
             <tr>
                 <td style="width: 38%;">Pembayaran</td>
