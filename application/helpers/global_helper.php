@@ -120,6 +120,23 @@ function _codeUser($nama)
     return $kode_user;
 }
 
+function _kodeAkun()
+{
+    $CI         = &get_instance();
+
+    $inisial    = "AKN";
+    $lastNumber = $CI->db->query('SELECT * FROM m_akun ORDER BY id DESC LIMIT 1')->row();
+    $number     = 1;
+    if ($lastNumber) {
+        $number       = count($CI->db->query('SELECT * FROM m_akun')->result()) + 1;
+        $kode_akun    = $inisial . sprintf("%07d", $number);
+    } else {
+        $number       = 0;
+        $kode_akun    = $inisial . "0000001";
+    }
+    return $kode_akun;
+}
+
 function _kodeSatuan()
 {
     $CI         = &get_instance();

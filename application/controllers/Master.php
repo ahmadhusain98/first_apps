@@ -3816,7 +3816,7 @@ class Master extends CI_Controller
                 }
 
                 // BHP
-                if(isset($kode_barang)) {
+                if (isset($kode_barang)) {
                     $jumBhp = count($kode_barang);
                     for ($z = 0; $z <= ($jumBhp - 1); $z++) {
                         $_kode_barang   = $kode_barang[$z];
@@ -3824,11 +3824,11 @@ class Master extends CI_Controller
                         $_qty           = str_replace(',', '', $qty[$z]);
                         $_harga         = str_replace(',', '', $harga[$z]);
                         $_jumlah        = str_replace(',', '', $jumlah[$z]);
-    
+
                         $barang1        = $this->M_global->getData('barang', ['kode_barang' => $_kode_barang, 'kode_satuan' => $_kode_satuan]);
                         $barang2        = $this->M_global->getData('barang', ['kode_barang' => $_kode_barang, 'kode_satuan2' => $_kode_satuan]);
                         $barang3        = $this->M_global->getData('barang', ['kode_barang' => $_kode_barang, 'kode_satuan3' => $_kode_satuan]);
-    
+
                         if ($barang1) {
                             $qty_satuan = 1;
                         } else if ($barang2) {
@@ -3836,9 +3836,9 @@ class Master extends CI_Controller
                         } else {
                             $qty_satuan = $barang3->qty_satuan3;
                         }
-    
+
                         $qty_konversi   = $_qty * $qty_satuan;
-    
+
                         $detail_bhp = [
                             'kode_tarif'        => $kode_tarif,
                             'kode_barang'       => $_kode_barang,
@@ -3848,7 +3848,7 @@ class Master extends CI_Controller
                             'harga'             => $_harga,
                             'jumlah'            => $_jumlah,
                         ];
-    
+
                         $this->M_global->insertData('tarif_single_bhp', $detail_bhp);
                     }
                 }
@@ -4152,6 +4152,229 @@ class Master extends CI_Controller
         if ($cek) {
             echo json_encode(['status' => 1]);
         } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    /**
+     * Master Akun
+     * untuk menampilkan, menambahkan, dan mengubah akun dalam sistem
+     */
+
+    // akun page
+    public function akun()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Master',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Akun',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'akun'          => $this->M_global->getResult('m_akun'),
+            'list_data'     => 'Master/akun_list',
+            'param1'        => '',
+        ];
+
+        $this->template->load('Template/Content', 'Master/Umum/Akun', $parameter);
+    }
+
+    // fungsi list akun
+    public function akun_list($param1 = '')
+    {
+        // Parameter untuk list table
+        $table     = 'm_akun';
+        $columns   = ['id', 'kode_akun', 'nama_akun', 'kode_klasifikasi', 'header', 'sub_akun'];
+        $order     = 'id';
+        $order_dir = 'desc';
+        $order_arr = ['id' => 'asc'];
+        $param_condition = '';
+
+        // Kondisi role
+        $role = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']]);
+        $updated = $role->updated;
+        $deleted = $role->deleted;
+
+        $upd_diss = ($updated > 0) ? '' : 'disabled';
+        $del_diss = ($deleted > 0) ? '' : 'disabled';
+
+        // Table server side tampung kedalam variable $list
+        $list = $this->M_datatables->get_datatables(
+            $table,
+            $columns,
+            $order_arr,
+            $order,
+            $order_dir,
+            $param1,
+            $param_condition
+        );
+        $data = [];
+        $no = $_POST['start'] + 1;
+
+        // Loop $list
+        foreach ($list as $rd) {
+            $row = [];
+            $row[] = $no++;
+            $row[] = htmlspecialchars($rd->kode_akun);
+            $row[] = htmlspecialchars($rd->nama_akun);
+            $row[] = htmlspecialchars($this->M_global->getData('klasifikasi_akun', ['kode_klasifikasi' => $rd->kode_klasifikasi])->klasifikasi);
+
+            $sub_akun = ($rd->sub_akun) ? $this->M_global->getData('m_akun', ['kode_akun' => $rd->sub_akun])->nama_akun : 'Root';
+            $row[] = htmlspecialchars($sub_akun);
+
+            if ($deleted > 0) {
+                $sub_akun = $rd->kode_akun;
+
+                // Gunakan parameter binding untuk keamanan
+                $query = $this->db->get('m_akun');
+                $cek_dis = $query->result();
+
+                // Inisialisasi array untuk menyimpan kode akun dari hasil query
+                $cek_akun = [];
+                foreach ($cek_dis as $cd) {
+                    $cek_akun[] = $cd->sub_akun;
+                }
+
+                // Cek apakah kode akun ada dalam array $cek_akun
+                if (in_array($rd->kode_akun, $cek_akun)) {
+                    $del_diss = 'disabled';  // Set to 'disabled' jika $kode_akun ditemukan
+                } else {
+                    $del_diss = '';  // Set to '' (enabled) jika $kode_akun tidak ditemukan
+                }
+            } else {
+                $del_diss = 'disabled';
+            }
+
+            $row[] = '<div class="text-center">
+                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_akun . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_akun . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>';
+
+            $data[] = $row;
+        }
+
+        // Hasil server side
+        $output = [
+            "draw"            => intval($_POST['draw']),
+            "recordsTotal"    => $this->M_datatables->count_all($table, $columns, $order_arr, $order, $order_dir, $param1, $param_condition),
+            "recordsFiltered" => $this->M_datatables->count_filtered($table, $columns, $order_arr, $order, $order_dir, $param1, $param_condition),
+            "data"            => $data,
+        ];
+
+        // Kirimkan ke view
+        echo json_encode($output);
+    }
+
+
+    // fungsi cek akun berdasarkan nama_akun akun
+    public function cekAkun()
+    {
+        // ambil nama_akun inputan
+        $nama_akun = $this->input->post('nama_akun');
+
+        // cek nama_akun pada table m_akun
+        $cek = $this->M_global->jumDataRow('m_akun', ['nama_akun' => $nama_akun]);
+
+        if ($cek < 1) { // jika tidak ada/ kurang dari 1
+            // kirimkan status 1
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi proses simpan/update akun
+    public function akun_proses($param)
+    {
+        // variable
+        $nama_akun          = $this->input->post('nama_akun');
+        $kode_klasifikasi   = $this->input->post('kode_klasifikasi');
+        $sub_akun           = $this->input->post('sub_akun');
+        if (!$sub_akun || $sub_akun == null) {
+            $header         = 1;
+        } else {
+            $header         = 2;
+        }
+
+        if ($param == 1) { // jika parameternya 1
+            // maka buat kode baru
+            $kodeAkun = _kodeAkun();
+        } else { // selain itu
+            // ambil kode dari inputan
+            $kodeAkun = $this->input->post('kodeAkun');
+        }
+
+        // tampung variable kedalam $isi
+        $isi = [
+            'kode_akun'         => $kodeAkun,
+            'nama_akun'         => $nama_akun,
+            'kode_klasifikasi'  => $kode_klasifikasi,
+            'header'            => $header,
+            'sub_akun'          => $sub_akun,
+        ];
+
+        if ($param == 1) { // jika parameternya 1
+            // jalankan fungsi simpan
+            $cek = $this->M_global->insertData('m_akun', $isi);
+
+            $cek_param = 'menambahkan';
+        } else { // selain itu
+            // jalankan fungsi update
+            $cek = $this->M_global->updateData('m_akun', $isi, ['kode_akun' => $kodeAkun]);
+
+            $cek_param = 'mengubah';
+        }
+
+        if ($cek) { // jika fungsi berjalan
+            aktifitas_user(
+                'Master Akun',
+                $cek_param,
+                $kodeAkun,
+                $this->M_global->getData('m_akun', ['kode_akun' => $kodeAkun])->nama_akun
+            );
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi ambil informasi akun berdasarkan kode akun
+    public function getInfoAkun($kode_akun)
+    {
+        // ambil data akun berdasarkan kode_akun
+        $data = $this->db->query("SELECT a.*, (SELECT nama_akun FROM m_akun WHERE kode_akun = a.sub_akun) AS nama_sub, (SELECT klasifikasi FROM klasifikasi_akun WHERE kode_klasifikasi = a.kode_klasifikasi) AS nama_klasifikasi FROM m_akun a WHERE a.kode_akun = '$kode_akun'")->row();
+        // lempar ke view
+        echo json_encode($data);
+    }
+
+    public function subAkun()
+    {
+        $sub_akun = $this->M_global->getResult('m_akun');
+
+        echo json_encode($sub_akun);
+    }
+
+    // fungsi hapus akun berdasarkan kode_akun
+    public function delAkun($kode_akun)
+    {
+        // jalankan fungsi hapus akun berdasarkan kode_akun
+        aktifitas_user('Master Akun', 'menghapus', $kode_akun, $this->M_global->getData('m_akun', ['kode_akun' => $kode_akun])->nama_akun);
+        $cek = $this->M_global->delData('m_akun', ['kode_akun' => $kode_akun]);
+
+        if ($cek) { // jika fungsi berjalan
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
             echo json_encode(['status' => 0]);
         }
     }

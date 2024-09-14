@@ -923,8 +923,43 @@
         initailizeSelect2_tarif_paket();
         initailizeSelect2_tarif_single();
         initailizeSelect2_terdaftar();
+        initailizeSelect2_klasifikasi_akun();
 
         // fungsi
+        function initailizeSelect2_klasifikasi_akun() {
+            // jalan fungsi select2 asli
+            $(".select2_klasifikasi_akun").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Klasifikasi',
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 1 huruf';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataKlasifikasiAkun/',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
         function initailizeSelect2_terdaftar() {
             // jalan fungsi select2 asli
             $(".select2_terdaftar").select2({

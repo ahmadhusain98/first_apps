@@ -114,6 +114,22 @@ class M_select2 extends CI_Model
         return $sintak;
     }
 
+    // fungsi klasifikasi
+    function getKlasifikasiAkun($key)
+    {
+        $limit = ' LIMIT 50';
+
+        if (!empty($key)) {
+            $add_sintak = ' WHERE (klasifikasi LIKE "%' . $key . '%") ORDER BY klasifikasi ASC';
+        } else {
+            $add_sintak = ' ORDER BY klasifikasi ASC';
+        }
+
+        $sintak = $this->db->query('SELECT kode_klasifikasi AS id, klasifikasi AS text FROM klasifikasi_akun ' . $add_sintak . $limit)->result();
+
+        return $sintak;
+    }
+
     // fungsi pajak
     function getPajak($key)
     {
