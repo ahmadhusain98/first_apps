@@ -41,7 +41,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" type="button" onclick="getUrl('Kasir/form_kasir/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-receipt"></i>&nbsp;&nbsp;Penjualan</a></li>
-                        <li><a class="dropdown-item" type="button" onclick="getUrl('Kasir/form_kasir/0/retur')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-file-invoice-dollar"></i>&nbsp;&nbsp;Retur Penjualan</a></li>
+                        <li><a class="dropdown-item" type="button" onclick="getUrl('Kasir/form_retur/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-file-invoice-dollar"></i>&nbsp;&nbsp;Retur Penjualan</a></li>
                     </ul>
                 </div>
             </div>

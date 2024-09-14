@@ -287,26 +287,18 @@ class Kasir extends CI_Controller
         <tr>
             <td style="width: 23%;">Member</td>
             <td style="width: 2%;">:</td>
-            <td style="width: 75%;">' . $member->nama . '</td>
+            <td style="width: 75%;">' . $member->nama . ' ('.$member->jkel.', '.hitung_umur($member->tgl_lahir).')</td>
         </tr>
         <tr>
-            <td style="width: 23%;">Bayar</td>
+            <td style="width: 23%;">Alamat</td>
             <td style="width: 2%;">:</td>
-            <td style="width: 75%;">(Cash: Rp. ' . number_format($pembayaran->cash) . ') @ (Card: Rp. ' . number_format($pembayaran->card) . ')</td>
+            <td style="width: 75%;">'.$this->M_global->getData('m_provinsi', ['kode_provinsi' => $member->provinsi])->provinsi.', '.$this->M_global->getData('kabupaten', ['kode_kabupaten' => $member->kabupaten])->kabupaten.', '.$this->M_global->getData('kecamatan', ['kode_kecamatan' => $member->kecamatan])->kecamatan.'</td>
         </tr>
         <tr>
-            <td style="width: 23%;">Status</td>
-            <td style="width: 2%;">:</td>
-            <td style="width: 75%;">' . $open . '&nbsp;&nbsp;' . $close . '</td>
+            <td style="width: 23%;"></td>
+            <td style="width: 2%;"></td>
+            <td style="width: 75%;">'.$member->desa.' ('.$member->kodepos.'), RT/RW ('.$member->rt.'/'.$member->rw.')</td>
         </tr>';
-
-        if ((($pendaftaran) ? $pendaftaran->kode_member : $barang_out_header->kode_member) != 'U00001') {
-            $body .= '<tr>
-                <td style="width: 23%;">UM Pakai</td>
-                <td style="width: 2%;">:</td>
-                <td style="width: 75%;">Rp. ' . number_format($pembayaran->um_keluar) . '</td>
-            </tr>';
-        }
 
         $body .= '<tr>
             <td style="width: 100%;" colspan="3">&nbsp;</td>
@@ -315,6 +307,8 @@ class Kasir extends CI_Controller
         $body .= '</table>';
 
         $body .= '<table style="width: 100%; font-size: 9px;" cellpadding="2px">';
+
+        $body .= '<tbody>';
 
         $body .= '<tr>
             <td style="width: 80%; font-weight: bold;" colspan="3">Tarif Paket</td>
@@ -353,9 +347,9 @@ class Kasir extends CI_Controller
                 $m_tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $tsp->kode_tarif]);
                 $body .= '<tr>
                     <td style="width: 40%;">' . $m_tarif->kode_tarif . ' (' . $m_tarif->nama . ')' . '</td>
-                    <td style="text-align: right; width: 20%;">Rp. ' . number_format($tsp->harga) . '</td>
-                    <td style="text-align: right; width: 20%;">Rp. ' . number_format($tsp->discrp) . '</td>
-                    <td style="text-align: right; width: 20%;">Rp. ' . number_format($tsp->jumlah) . '</td>
+                    <td style="text-align: right; width: 20%;">' . number_format($tsp->harga) . '</td>
+                    <td style="text-align: right; width: 20%;">' . number_format($tsp->discrp) . '</td>
+                    <td style="text-align: right; width: 20%;">' . number_format($tsp->jumlah) . '</td>
                 </tr>';
             }
 
@@ -391,40 +385,68 @@ class Kasir extends CI_Controller
             $disc_jual = 0;
         }
 
+        $body .= '</tbody>';
+
+        $body .= '</table>';
+
+        $body .= '<page_break>';
+        
+
+        $body .= '<table style="width: 100%; font-size: 9px; padding-top: 35vh;" cellpadding="2px">';
+
         $body .= '<tr>
-            <td colspan="3" style="text-align: right;">Jumlah :</td>
-            <td style="text-align: right;">' . number_format(($pembayaran->paket + $pembayaran->single + $pembayaran->jual) + ($disc_paket + $disc_single + $disc_jual)) . '</td>
-        </tr>
-        <tr>
-            <td colspan="3" style="text-align: right;">Diskon :</td>
-            <td style="text-align: right;">' . number_format($disc_paket + $disc_single + $disc_jual) . '</td>
-        </tr>
-        <tr>
-            <td colspan="3" style="text-align: right;">PPN :</td>
-            <td style="text-align: right;">0</td>
-        </tr>
-        <tr>
-            <td colspan="3" style="text-align: right; font-weight: bold;">Total :</td>
-            <td style="text-align: right; font-weight: bold;">' . number_format(($pembayaran->paket + $pembayaran->single + $pembayaran->jual)) . '</td>
+            <td style="text-align: center;">' . date('d/m/Y') . ' ~ ' . date('H:i:s') . '</td>
         </tr>';
 
         $body .= '</table>';
 
-        $body .= '<table style="width: 50%; font-size: 9px;" cellpadding="2px">
+        $body .= '<table style="width: 100%; font-size: 9px;" cellpadding="2px">';
+
+        $body .= '<tr>
+            <td style="width: 23%;">Invoice</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 75%;">' . $pembayaran->invoice . '</td>
+        </tr>
+        <tr>
+            <td style="width: 23%;">Bayar</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 75%;">(Cash: Rp. ' . number_format($pembayaran->cash) . ') @ (Card: Rp. ' . number_format($pembayaran->card) . ')</td>
+        </tr>
+        <tr>
+            <td style="width: 23%;">Status</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 75%;">' . $open . '&nbsp;&nbsp;' . $close . '</td>
+        </tr>';
+
+        if ((($pendaftaran) ? $pendaftaran->kode_member : $barang_out_header->kode_member) != 'U00001') {
+            $body .= '<tr>
+                <td style="width: 23%;">UM Pakai</td>
+                <td style="width: 2%;">:</td>
+                <td style="width: 75%;">Rp. ' . number_format($pembayaran->um_keluar) . '</td>
+            </tr>';
+        }
+
+        $body .= '<tr>
+            <td style="width: 100%;" colspan="3">&nbsp;</td>
+        </tr>';
+
+        $body .= '</table>';
+
+        $body .= '<table style="width: 50%; font-size: 9px;" cellpadding="2px" autosize="1">
             <tr>
                 <td style="width: 38%;">Total</td>
-                 <td style="width: 2%;">: </td>
-                <td style="text-align: right; width: 60%;">' . number_format($pembayaran->paket + $pembayaran->single + $pembayaran->jual) . '</td>
+                <td style="width: 2%;">: </td>
+                <td style="text-align: right; font-weight: bold; width: 60%;">' . number_format($pembayaran->paket + $pembayaran->single + $pembayaran->jual) . '</td>
             </tr>
             <tr>
                 <td style="width: 38%;">Pembayaran</td>
-                 <td style="width: 2%;">: </td>
-                <td style="text-align: right; width: 60%;">' . number_format($pembayaran->total) . '</td>
+                <td style="width: 2%;">: </td>
+                <td style="text-align: right; font-weight: bold; width: 60%;">' . number_format($pembayaran->total) . '</td>
             </tr>
             <tr>
                 <td style="width: 38%;">Kembalian</td>
-                 <td style="width: 2%;">: </td>
-                <td style="text-align: right; width: 60%;">' . number_format($pembayaran->kembalian) . '</td>
+                <td style="width: 2%;">: </td>
+                <td style="text-align: right; font-weight: bold; width: 60%;">' . number_format($pembayaran->kembalian) . '</td>
             </tr>
             <tr>
                 <td colspan="3">' . $umopen . '&nbsp;&nbsp;' . $umclose . '</td>
@@ -441,12 +463,22 @@ class Kasir extends CI_Controller
         $pembayaran = $this->M_global->getData('pembayaran', ['token_pembayaran' => $token_pembayaran]);
 
         if ($batal == 0) { // jika batal = 0
+            if($pembayaran->cek_um > 0) {
+                $um_masuk = $pembayaran->um_masuk;
+                $this->db->query("UPDATE uang_muka SET uang_masuk = uang_masuk + $um_masuk, uang_sisa = uang_sisa + $um_masuk WHERE last_invoice = '$pembayaran->invoice'");
+            }
+
             // update batal jadi 0
             $cek = [
                 $this->M_global->updateData('pembayaran', ['approved' => 1, 'batal' => 0, 'tgl_batal' => null, 'jam_batal' => null, 'user_batal' => null], ['token_pembayaran' => $token_pembayaran]),
                 $this->M_global->updateData('tarif_paket_pasien', ['status' => 1], ['no_trx' => $pembayaran->no_trx]),
             ];
         } else { // selain itu
+            if($pembayaran->cek_um > 0) {
+                $um_masuk = $pembayaran->um_masuk;
+                $this->db->query("UPDATE uang_muka SET uang_masuk = uang_masuk - $um_masuk, uang_sisa = uang_sisa - $um_masuk WHERE last_invoice = '$pembayaran->invoice'");
+            }
+
             // update batal jadi 1
             $cek = [
                 $this->M_global->updateData('pembayaran', ['approved' => 0, 'batal' => 1, 'tgl_batal' => date('Y-m-d'), 'jam_batal' => date('H:i:s'), 'user_batal' => $user_batal], ['token_pembayaran' => $token_pembayaran]),
@@ -515,7 +547,7 @@ class Kasir extends CI_Controller
     }
 
     // form kasir page
-    public function form_kasir($param, $param2 = '')
+    public function form_kasir($param)
     {
         // website config
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
@@ -526,6 +558,8 @@ class Kasir extends CI_Controller
             $riwayat        = null;
             $bayar_detail   = null;
             $tarif_paket    = null;
+            $single_tarif   = null;
+            $penjualan      = null;
         } else {
             $bayar_detail   = $this->M_global->getDataResult('bayar_card_detail', ['token_pembayaran' => $param]);
             $pembayaran     = $this->M_global->getData('pembayaran', ['token_pembayaran' => $param]);
@@ -537,10 +571,12 @@ class Kasir extends CI_Controller
 
                 $riwayat        = $this->M_global->getDataResult('pendaftaran', ['kode_member' => $kode_member]);
                 $single_tarif   = $this->M_global->getDataResult('pembayaran_tarif_single', ['token_pembayaran' => $param]);
+                $penjualan      = $this->db->query("SELECT bo.*, b.nama AS nama_barang, s.keterangan AS nama_satuan FROM barang_out_detail bo JOIN barang b ON b.kode_barang = bo.kode_barang JOIN m_satuan s ON s.kode_satuan = bo.kode_satuan WHERE bo.invoice = '$pembayaran->inv_jual'")->result();
             } else {
                 $tarif_paket    = null;
                 $riwayat        = null;
                 $single_tarif   = null;
+                $penjualan      = null;
             }
         }
 
@@ -557,11 +593,72 @@ class Kasir extends CI_Controller
             'tarif_paket'       => $tarif_paket,
             'riwayat'           => $riwayat,
             'single_tarif'      => $single_tarif,
+            'penjualan'         => $penjualan,
+            'role'              => $this->M_global->getResult('m_role'),
+        ];
+
+        $this->template->load('Template/Content', 'Kasir/Form_pembayaran', $parameter);
+    }
+
+    // form retur page
+    public function form_retur($param)
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        if ($param == '0') {
+            $pembayaran     = null;
+            $riwayat        = null;
+            $bayar_detail   = null;
+            $tarif_paket    = null;
+            $single_tarif   = null;
+            $penjualan      = null;
+        } else {
+            $bayar_detail   = $this->M_global->getDataResult('bayar_card_detail', ['token_pembayaran' => $param]);
+            $pembayaran     = $this->M_global->getData('pembayaran', ['token_pembayaran' => $param]);
+            $pendaftaran    = $this->M_global->getData('pendaftaran', ['no_trx' => $pembayaran->no_trx]);
+            if (!empty($pendaftaran)) {
+                $tarif_paket    = $this->M_global->getDataResult('tarif_paket_pasien', ['no_trx' => $pendaftaran->no_trx]);
+
+                $kode_member    = $pendaftaran->kode_member;
+
+                $riwayat        = $this->M_global->getDataResult('pendaftaran', ['kode_member' => $kode_member]);
+                $single_tarif   = $this->M_global->getDataResult('pembayaran_tarif_single', ['token_pembayaran' => $param]);
+                $penjualan      = $this->db->query("SELECT bo.*, b.nama AS nama_barang, s.keterangan AS nama_satuan FROM barang_out_detail bo JOIN barang b ON b.kode_barang = bo.kode_barang JOIN m_satuan s ON s.kode_satuan = bo.kode_satuan WHERE bo.invoice = '$pembayaran->inv_jual'")->result();
+            } else {
+                $tarif_paket    = null;
+                $riwayat        = null;
+                $single_tarif   = null;
+                $penjualan      = null;
+            }
+        }
+
+        $parameter = [
+            $this->data,
+            'judul'             => 'Pembayaran',
+            'nama_apps'         => $web_setting->nama,
+            'page'              => 'Pembayaran',
+            'web'               => $web_setting,
+            'web_version'       => $web_version->version,
+            'list_data'         => '',
+            'data_pembayaran'   => $pembayaran,
+            'bayar_detail'      => $bayar_detail,
+            'tarif_paket'       => $tarif_paket,
+            'riwayat'           => $riwayat,
+            'single_tarif'      => $single_tarif,
+            'penjualan'         => $penjualan,
             'param2'            => $param2,
             'role'              => $this->M_global->getResult('m_role'),
         ];
 
         $this->template->load('Template/Content', 'Kasir/Form_pembayaran', $parameter);
+    }
+
+    public function getJual($invoice) {
+        $barang_out = $this->db->query("SELECT bo.*, b.nama AS nama_barang, s.keterangan AS nama_satuan FROM barang_out_detail bo JOIN barang b ON b.kode_barang = bo.kode_barang JOIN m_satuan s ON s.kode_satuan = bo.kode_satuan WHERE bo.invoice = '$invoice'")->result();
+
+        echo json_encode($barang_out);
     }
 
     public function getTarifSingle($kode_tarif)
@@ -611,15 +708,10 @@ class Kasir extends CI_Controller
     }
 
     // fungsi get Info
-    public function getInfoJual($inv_jual, $cek_retur)
+    public function getInfoJual($inv_jual)
     {
-        if ($cek_retur > 0) {
-            $data = $this->M_global->getData('barang_out_retur_header', ['invoice' => $inv_jual]);
-            $kode_member = '';
-        } else {
-            $data = $this->M_global->getData('barang_out_header', ['invoice' => $inv_jual]);
-            $kode_member = $data->kode_member;
-        }
+        $data = $this->M_global->getData('barang_out_header', ['invoice' => $inv_jual]);
+        $kode_member = $data->kode_member;
 
         if ($data) {
             echo json_encode([$data, ['kode_member' => $kode_member]]);

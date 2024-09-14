@@ -416,7 +416,8 @@
                 if (result.status == 1) { // jika mendapatkan respon 1
 
                     Swal.fire("Pendaftaran", "Berhasil " + message, "success").then(() => {
-                        querstion(result.no_trx);
+                        // querstion(result.no_trx);
+                        getUrl('Health/pendaftaran');
                     });
                 } else { // selain itu
 
@@ -547,11 +548,24 @@
 
     // fungsi lihat detail
     function getDetail(param) {
-        window.open(siteUrl + 'Health/print_pendaftaran/' + param, '_blank');
+        window.open(siteUrl + 'Health/print_pendaftaran/' + param+'/0', '_blank');
     }
 
     // fungsi lihat detail
     function getHisPas(param) {
-        window.open(siteUrl + 'Health/print_hispas/' + param, '_blank');
+        $.ajax({
+            url: siteUrl+'Health/getToken/'+param,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(result) {
+                if(result.status == 1) {
+                    window.open(siteUrl + 'Kasir/print_kwitansi/' + result.token+'/0', '_blank');
+                } else {
+                    Swal.fire("History Pasien", "Gagal diambil, silahkan dicoba kembali", "info");
+                }
+            }, error: function(result) {
+                error_proccess();
+            }
+        });
     }
 </script>

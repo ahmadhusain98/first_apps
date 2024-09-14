@@ -1,7 +1,7 @@
 <form method="post" id="form_pembayaran">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir Pembayaran <?= (($param2) ? 'Retur' : ''); ?></span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir Pembayaran</span>
         </div>
     </div>
     <br>
@@ -9,7 +9,7 @@
         <div class="col-md-12">
             <div class="row">
                 <div class="col-md-6">
-                    <label for="">Invoice <?= (($param2) ? 'Retur' : ''); ?> <sup class="text-danger">**</sup></label>
+                    <label for="">Invoice <sup class="text-danger">**</sup></label>
                     <div class="input-group mb-3">
                         <input type="hidden" name="token_pembayaran" id="token_pembayaran" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->token_pembayaran : '') ?>">
                         <input type="text" class="form-control" placeholder="Otomatis" id="invoice" name="invoice" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->invoice : '') ?>" readonly>
@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <label for="">Tgl/Jam Pembayaran <?= (($param2) ? 'Retur' : ''); ?> <sup class="text-danger">**</sup></label>
+                    <label for="">Tgl/Jam Pembayaran <sup class="text-danger">**</sup></label>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="input-group mb-3">
@@ -62,14 +62,9 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label for=""><?= (($param2) ? 'Returan' : 'Penjualan'); ?></label>
+                            <label for="">Penjualan</label>
                             <div class="input-group mb-3">
-                                <?php if ($param2) {
-                                    $select2_penjualan = 'select2_penjualan_retur';
-                                } else {
-                                    $select2_penjualan = 'select2_penjualan';
-                                } ?>
-                                <select name="inv_jual" id="inv_jual" class="form-control <?= $select2_penjualan ?>" data-placeholder="~ Pilih Penjualan" onchange="cekJual(this.value, '<?= (($param2) ? $param2 : '') ?>')">
+                                <select name="inv_jual" id="inv_jual" class="form-control select2_penjualan" data-placeholder="~ Pilih Penjualan" onchange="cekJual(this.value)">
                                     <?php
                                     if (!empty($data_pembayaran)) :
                                         $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $data_pembayaran->no_trx]);
@@ -88,7 +83,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-6 col-6">
-                                    <input type="checkbox" id="cek_cash" name="cek_cash" class="form-control" onclick="cek_cc(0)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 0) ? 'checked' : '') : '') ?> <?= (($param2) ? 'disabled' : '') ?>>
+                                    <input type="checkbox" id="cek_cash" name="cek_cash" class="form-control" onclick="cek_cc(0)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 0) ? 'checked' : '') : '') ?>>
                                 </div>
                                 <div class="col-md-6 col-6 my-auto">CASH <i class="fa-solid fa-money-bill"></i></div>
                             </div>
@@ -96,7 +91,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-6 col-6">
-                                    <input type="checkbox" id="cek_card" name="cek_card" class="form-control" onclick="cek_cc(1)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 1) ? 'checked' : '') : '') ?> <?= (($param2) ? 'disabled' : '') ?>>
+                                    <input type="checkbox" id="cek_card" name="cek_card" class="form-control" onclick="cek_cc(1)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 1) ? 'checked' : '') : '') ?>>
                                 </div>
                                 <div class="col-md-6 col-6 my-auto">CARD <i class="fa-solid fa-credit-card"></i></div>
                             </div>
@@ -104,7 +99,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-6 col-6">
-                                    <input type="checkbox" id="cek_cash_card" name="cek_cash_card" class="form-control" onclick="cek_cc(2)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 2) ? 'checked' : '') : '') ?> <?= (($param2) ? 'disabled' : '') ?>>
+                                    <input type="checkbox" id="cek_cash_card" name="cek_cash_card" class="form-control" onclick="cek_cc(2)" <?= (!empty($data_pembayaran) ? (($data_pembayaran->jenis_pembayaran == 2) ? 'checked' : '') : '') ?>>
                                 </div>
                                 <div class="col-md-6 col-6 my-auto">CASH <i class="fa-solid fa-money-bill"></i><br>CARD <i class="fa-solid fa-credit-card"></i></div>
                             </div>
@@ -167,11 +162,66 @@
     <hr>
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Tindakan Tarif</span>
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Resep Obat</span>
         </div>
     </div>
     <br>
     <input type="hidden" name="sumJual" id="sumJual" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->jual : 0) ?>">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table  table-striped table-bordered" id="tableJual" width="100%">
+                    <thead>
+                        <tr class="text-center">
+                            <th style="width: 5%;">No</th>
+                            <th style="width: 45%;">Barang</th>
+                            <th style="width: 10%;">Satuan</th>
+                            <th style="width: 10%;">Qty</th>
+                            <th style="width: 10%;">Harga</th>
+                            <th style="width: 10%;">Disc</th>
+                            <th style="width: 10%;">Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyJual">
+                        <?php if(!empty($penjualan)) : ?>
+                            <?php $noj = 1; foreach($penjualan as $pen) : ?>
+                                <tr id="rowJual<?= $noj ?>">
+                                    <td style="text-align: right;">
+                                        <label style="font-weight: normal;"><?= $noj ?></label>
+                                    </td>
+                                    <td>
+                                        <label style="font-weight: normal;">(<?= $pen->kode_barang ?>) <?= $pen->nama_barang ?></label>
+                                    </td>
+                                    <td>
+                                        <label style="font-weight: normal;"><?= $pen->nama_satuan ?></label>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <label style="font-weight: normal;"><?= number_format($pen->qty) ?></label>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <label style="font-weight: normal;"><?= number_format($pen->harga) ?></label>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <label style="font-weight: normal;"><?= number_format($pen->discrp) ?></label>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <label style="font-weight: normal;"><?= number_format($pen->jumlah) ?></label>
+                                    </td>
+                                </tr>
+                            <?php $noj++; endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Tindakan Tarif</span>
+        </div>
+    </div>
+    <br>
     <input type="hidden" name="discTarif" id="discTarif" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->disc_single : 0) ?>">
     <input type="hidden" name="sumTarif" id="sumTarif" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->single : 0) ?>">
     <input type="hidden" name="sumPaket" id="sumPaket" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->paket : 0) ?>">
@@ -497,11 +547,7 @@
 
     $('.forPaket').hide();
 
-    <?php if ($param2) : ?>
-        forJual.hide();
-    <?php else : ?>
-        forJual.show();
-    <?php endif; ?>
+    forJual.show();
 
     <?php if (!empty($data_pembayaran)) :  ?>
         kode_promo.attr('disabled', false);
@@ -521,9 +567,6 @@
         kode_promo.attr('disabled', true);
         document.getElementById('cek_cash').checked = true;
         fortableCard.hide();
-        <?php if (!$param2) : ?>
-            btnSimpan.attr('disabled', true);
-        <?php endif;  ?>
     <?php endif;  ?>
 
     function cek_cc(isi) {
@@ -618,20 +661,14 @@
     }
 
     // fungsi cek jual
-    function cekJual(x, cek_retur) {
+    function cekJual(x) {
         if (x == '' || x == null) { // jika x kosong/ null
             return;
         }
 
-        <?php if ($param2) : ?>
-            var cek_retur = 1;
-        <?php else : ?>
-            var cek_retur = 0;
-        <?php endif ?>
-
         // jalankan fungsi
         $.ajax({
-            url: siteUrl + 'Kasir/getInfoJual/' + x + '/' + cek_retur,
+            url: siteUrl + 'Kasir/getInfoJual/' + x,
             type: 'POST',
             dataType: 'JSON',
             success: function(result) { // jika fungsi berjalan dengan baik
@@ -646,6 +683,7 @@
                 } else { // selain itu
                     $('#sumJual').val(result[0]['total']);
 
+                    getJual(x);
                     hitung_kurang();
 
                     kode_promo.attr('disabled', false);
@@ -664,6 +702,51 @@
             error: function(result) { // jika fungsi error
                 btnSimpan.attr('disabled', false);
 
+                error_proccess();
+            }
+        });
+    }
+
+    function getJual(x) {
+        if(!x || x == null) {
+            return
+        }
+
+        $.ajax({
+            url: siteUrl+'Kasir/getJual/'+x,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(result) {
+                var row = 1;
+
+                $.each(result, function(index, value) {
+                    $('#bodyJual').append(`<tr id="rowJual${row}">
+                        <td style="text-align: right;">
+                            <label style="font-weight: normal;">${row}</label>
+                        </td>
+                        <td>
+                            <label style="font-weight: normal;">(${value.kode_barang}) ${value.nama_barang}</label>
+                        </td>
+                        <td>
+                            <label style="font-weight: normal;">${value.nama_satuan}</label>
+                        </td>
+                        <td style="text-align: right;">
+                            <label style="font-weight: normal;">${formatRpNoId(value.qty)}</label>
+                        </td>
+                        <td style="text-align: right;">
+                            <label style="font-weight: normal;">${formatRpNoId(value.harga)}</label>
+                        </td>
+                        <td style="text-align: right;">
+                            <label style="font-weight: normal;">${formatRpNoId(value.discrp)}</label>
+                        </td>
+                        <td style="text-align: right;">
+                            <label style="font-weight: normal;">${formatRpNoId(value.jumlah)}</label>
+                        </td>
+                    </tr>`);
+
+                    row++;
+                })
+            }, error: function(result) {
                 error_proccess();
             }
         });
@@ -709,7 +792,7 @@
                 hitung_kurang();
 
                 $('#inv_jual').html(`<option value="${result[0]['invoice']}">${result[0]['invoice']}</option>`);
-                cekJual(result[0]['invoice'], '')
+                cekJual(result[0]['invoice'])
 
                 if (result[0]['kode_member'] == 'U00001') {
                     $('.not_umum').hide();
@@ -1077,7 +1160,8 @@
                 if (result.status == 1) { // jika mendapatkan respon 1
 
                     Swal.fire("Pembayaran", "Berhasil " + message, "success").then(() => {
-                        question_cetak(result.token_pembayaran);
+                        // question_cetak(result.token_pembayaran);
+                        getUrl('Kasir');
                     });
                 } else { // selain itu
 
@@ -1116,14 +1200,10 @@
     function cek_button() {
         var kurang = parseFloat(($('#total_kurang').val()).replaceAll(',', ''));
 
-        <?php if ($param2) : ?>
+        if (kurang < 0) {
+            btnSimpan.attr('disabled', true);
+        } else {
             btnSimpan.attr('disabled', false);
-        <?php else : ?>
-            if (kurang < 0) {
-                btnSimpan.attr('disabled', true);
-            } else {
-                btnSimpan.attr('disabled', false);
-            }
-        <?php endif; ?>
+        }
     }
 </script>

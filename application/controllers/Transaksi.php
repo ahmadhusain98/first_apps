@@ -2755,7 +2755,7 @@ class Transaksi extends CI_Controller
                 $detail = $this->M_global->getDataResult('barang_out_detail', ['invoice' => $invoice]);
                 hitungStokJualIn($detail, $kode_gudang, $invoice);
 
-                // $this->print_barang_out($invoice);
+                $this->single_print_bout($invoice, 1);
 
                 // beri nilai status = 1 kirim ke view
                 echo json_encode(['status' => 1]);
