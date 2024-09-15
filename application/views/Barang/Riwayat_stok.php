@@ -3,38 +3,38 @@
 <form method="post" id="form_riwayat_stok">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Riwayat Stok Barang</span>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-6 col-6">
-            <select name="kode_gudang" id="kode_gudang" class="select2_gudang_int" data-placeholder="~ Pilih Gudang" onchange="getGudang(this.value)"></select>
-        </div>
-        <div class="col-md-6 col-6">
-            <div class="float-right">
-                <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
-            </div>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tableRiwayatStok" width="100%" style="border-radius: 10px;">
-                    <thead>
-                        <tr class="text-center">
-                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
-                            <th width="20%">Barang</th>
-                            <th width="15%">Gudang</th>
-                            <th width="12%">Min Stok</th>
-                            <th width="12%">Max Stok</th>
-                            <th width="10%">Stok</th>
-                            <th width="10%">Status</th>
-                            <th width="10%" style="border-radius: 0px 10px 0px 0px;">Histori</th>
-                        </tr>
-                    </thead>
-                </table>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Riwayat Stok Barang</span>
+                    <div class="float-right">
+                        <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <select name="kode_gudang" id="kode_gudang" class="select2_gudang_int" data-placeholder="~ Pilih Gudang" onchange="getGudang(this.value)"></select>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered" id="tableRiwayatStok" width="100%" style="border-radius: 10px;">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                                            <th width="20%">Barang</th>
+                                            <th width="15%">Gudang</th>
+                                            <th width="12%">Min Stok</th>
+                                            <th width="12%">Max Stok</th>
+                                            <th width="10%">Stok</th>
+                                            <th width="10%">Status</th>
+                                            <th width="10%" style="border-radius: 0px 10px 0px 0px;">Histori</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

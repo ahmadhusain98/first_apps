@@ -1036,7 +1036,7 @@ class Transaksi extends CI_Controller
 
             $detail = $this->db->query('SELECT hpo.invoice, dpo.kode_barang, dpo.kode_satuan AS satuan_default,
             dpo.qty - dpo.qty_terima AS qty_po, b.nama, b.kode_satuan, b.kode_satuan2, b.kode_satuan3,
-            dpo.harga, dpo.discpr, dpo.discrp, dpo.pajak, dpo.pajakrp, dpo.jumlah
+            dpo.harga, dpo.discpr, dpo.discrp, dpo.pajak, dpo.pajakrp, dpo.jumlah, (SELECT keterangan FROM m_satuan WHERE kode_satuan = dpo.kode_satuan) AS nama_satuan
             FROM barang_po_in_detail dpo
             JOIN barang_po_in_header hpo ON hpo.invoice = dpo.invoice
             JOIN barang b ON b.kode_barang = dpo.kode_barang
@@ -1602,7 +1602,7 @@ class Transaksi extends CI_Controller
         if ($param != '0') {
             $barang_in_retur    = $this->M_global->getData('barang_in_retur_header', ['invoice' => $param]);
             $barang_detail      = $this->M_global->getDataResult('barang_in_retur_detail', ['invoice' => $param]);
-            $pembeli            = $this->db->query('SELECT dpo.invoice, hpo.tgl_beli AS tgl_retur, hpo.jam_beli AS jam_retur, hpo.kode_supplier, hpo.kode_gudang FROM barang_in_detail dpo JOIN barang_in_header hpo ON dpo.invoice = hpo.invoice WHERE hpo.kode_cabang = "' . $kode_cabang . '" AND (hpo.invoice NOT IN (SELECT ht.invoice FROM barang_in_header ht WHERE ht.kode_cabang = "' . $kode_cabang . '") OR dpo.qty != (SELECT COALESCE(SUM(dt.qty), 0) FROM barang_in_retur_detail dt JOIN barang_in_retur_header ht ON dt.invoice = ht.invoice WHERE ht.invoice = hpo.invoice AND dt.kode_barang = dpo.kode_barang AND ht.kode_cabang = "' . $kode_cabang . '"))GROUP BY dpo.invoice, hpo.tgl_beli, hpo.jam_beli, hpo.kode_supplier, hpo.kode_gudang')->result();
+            $pembeli            = $this->db->query('SELECT dpo.invoice, hpo.tgl_beli, hpo.tgl_beli AS tgl_retur, hpo.jam_beli AS jam_retur, hpo.kode_supplier, hpo.kode_gudang FROM barang_in_detail dpo JOIN barang_in_header hpo ON dpo.invoice = hpo.invoice WHERE hpo.kode_cabang = "' . $kode_cabang . '" AND (hpo.invoice NOT IN (SELECT ht.invoice FROM barang_in_header ht WHERE ht.kode_cabang = "' . $kode_cabang . '") OR dpo.qty != (SELECT COALESCE(SUM(dt.qty), 0) FROM barang_in_retur_detail dt JOIN barang_in_retur_header ht ON dt.invoice = ht.invoice WHERE ht.invoice = hpo.invoice AND dt.kode_barang = dpo.kode_barang AND ht.kode_cabang = "' . $kode_cabang . '"))GROUP BY dpo.invoice, hpo.tgl_beli, hpo.jam_beli, hpo.kode_supplier, hpo.kode_gudang')->result();
         } else {
             $barang_in_retur    = null;
             $barang_detail      = null;
@@ -1635,7 +1635,7 @@ class Transaksi extends CI_Controller
         if ($header) {
             $detail = $this->db->query('SELECT hpo.invoice, dpo.kode_barang, dpo.kode_satuan AS satuan_default,
             dpo.qty - dpo.qty_retur AS qty_po, b.nama, b.kode_satuan, b.kode_satuan2, b.kode_satuan3,
-            dpo.harga, dpo.discpr, dpo.discrp, dpo.pajak, dpo.pajakrp, dpo.jumlah, hpo.surat_jalan, hpo.no_faktur
+            dpo.harga, dpo.discpr, dpo.discrp, dpo.pajak, dpo.pajakrp, dpo.jumlah, hpo.surat_jalan, hpo.no_faktur, (SELECT keterangan FROM m_satuan WHERE kode_satuan = dpo.kode_satuan) AS nama_satuan
             FROM barang_in_detail dpo
             JOIN barang_in_header hpo ON hpo.invoice = dpo.invoice
             JOIN barang b ON b.kode_barang = dpo.kode_barang
@@ -1711,7 +1711,7 @@ class Transaksi extends CI_Controller
 
         // detail
         $kode_barang_in = $this->input->post('kode_barang_in');
-        $kode_satuan    = $this->input->post('kode_satuan');
+        $kode_satuan_in = $this->input->post('kode_satuan');
         $harga_in       = $this->input->post('harga_in');
         $qty_in         = $this->input->post('qty_in');
         $discpr_in      = $this->input->post('discpr_in');
@@ -1719,122 +1719,126 @@ class Transaksi extends CI_Controller
         $pajakrp_in     = $this->input->post('pajakrp_in');
         $jumlah_in      = $this->input->post('jumlah_in');
 
-        // cek jumlah detail barang_in
-        $jum            = count($kode_barang_in);
+        if (isset($kode_barang_in)) {
+            // cek jumlah detail barang_in
+            $jum            = count($kode_barang_in);
 
-        // tampung isi header
-        $isi_header = [
-            'kode_cabang'   => $kode_cabang,
-            'invoice'       => $invoice,
-            'invoice_in'    => $invoice_in,
-            'tgl_retur'     => $tgl_retur,
-            'jam_retur'     => $jam_retur,
-            'alasan'        => $alasan,
-            'kode_supplier' => $kode_supplier,
-            'kode_gudang'   => $kode_gudang,
-            'surat_jalan'   => $sj,
-            'no_faktur'     => $nf,
-            'pajak'         => $pajak,
-            'diskon'        => $diskon,
-            'subtotal'      => $subtotal,
-            'total'         => $total,
-            'kode_user'     => $this->session->userdata('kode_user'),
-            'batal'         => 0,
-            'is_valid'      => 0,
-        ];
-
-        if ($param == 2) { // jika param = 2
-            aktifitas_user_transaksi('Transaksi Masuk', 'mengubah Retur Pembelian', $invoice);
-
-            if ($invoice_in != '' || $invoice_in != null || !empty($invoice_in) || isset($invoice_in)) {
-                $detail_retur = $this->M_global->getDataResult('barang_in_retur_detail', ['invoice' => $invoice]);
-
-                foreach ($detail_retur as $dt) {
-                    $where_po = ['invoice' => $invoice_in, 'kode_barang' => $dt->kode_barang, 'kode_satuan' => $dt->kode_satuan];
-
-                    $data_update = [
-                        'qty_retur' => 0
-                    ];
-
-                    $this->M_global->updateData('barang_in_detail', $data_update, $where_po);
-                }
-            }
-
-            // jalankan fungsi cek
-            $cek = [
-                $this->M_global->updateData('barang_in_retur_header', $isi_header, ['invoice' => $invoice]), // update header
-                $this->M_global->delData('barang_in_retur_detail', ['invoice' => $invoice]), // delete detail
+            // tampung isi header
+            $isi_header = [
+                'kode_cabang'   => $kode_cabang,
+                'invoice'       => $invoice,
+                'invoice_in'    => $invoice_in,
+                'tgl_retur'     => $tgl_retur,
+                'jam_retur'     => $jam_retur,
+                'alasan'        => $alasan,
+                'kode_supplier' => $kode_supplier,
+                'kode_gudang'   => $kode_gudang,
+                'surat_jalan'   => $sj,
+                'no_faktur'     => $nf,
+                'pajak'         => $pajak,
+                'diskon'        => $diskon,
+                'subtotal'      => $subtotal,
+                'total'         => $total,
+                'kode_user'     => $this->session->userdata('kode_user'),
+                'batal'         => 0,
+                'is_valid'      => 0,
             ];
-        } else { // selain itu
-            aktifitas_user_transaksi('Transaksi Masuk', 'menambahkan Retur Pembelian', $invoice);
 
-            // jalankan fungsi cek
-            $cek = $this->M_global->insertData('barang_in_retur_header', $isi_header); // insert header
-        }
-
-        if ($cek) { // jika fungsi cek berjalan
-            // lakukan loop
-            for ($x = 0; $x <= ($jum - 1); $x++) {
-                $kode_barang    = $kode_barang_in[$x];
-                $kode_satuan    = $kode_satuan[$x];
-                $harga          = str_replace(',', '', $harga_in[$x]);
-                $qty            = str_replace(',', '', $qty_in[$x]);
-                $discpr         = str_replace(',', '', $discpr_in[$x]);
-                $discrp         = str_replace(',', '', $discrp_in[$x]);
-                $pajakrp        = str_replace(',', '', $pajakrp_in[$x]);
-                $jumlah         = str_replace(',', '', $jumlah_in[$x]);
-
-                $barang1 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan' => $kode_satuan]);
-                $barang2 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan2' => $kode_satuan]);
-                $barang3 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan3' => $kode_satuan]);
-
-                if ($barang1) {
-                    $qty_satuan = 1;
-                } else if ($barang2) {
-                    $qty_satuan = $barang2->qty_satuan2;
-                } else {
-                    $qty_satuan = $barang3->qty_satuan3;
-                }
-
-                $qty_konversi   = $qty * $qty_satuan;
-
-                // tamping isi detail
-                $isi_detail = [
-                    'invoice'       => $invoice,
-                    'kode_barang'   => $kode_barang,
-                    'kode_satuan'   => $kode_satuan,
-                    'harga'         => $harga,
-                    'qty_konversi'  => $qty_konversi,
-                    'qty'           => $qty,
-                    'discpr'        => $discpr,
-                    'discrp'        => $discrp,
-                    'pajak'         => (($pajakrp > 0) ? 1 : 0),
-                    'pajakrp'       => $pajakrp,
-                    'jumlah'        => $jumlah,
-                ];
-
-                // insert detail
-                $this->M_global->insertData('barang_in_retur_detail', $isi_detail);
+            if ($param == 2) { // jika param = 2
+                aktifitas_user_transaksi('Transaksi Masuk', 'mengubah Retur Pembelian', $invoice);
 
                 if ($invoice_in != '' || $invoice_in != null || !empty($invoice_in) || isset($invoice_in)) {
-                    $where_in = ['invoice' => $invoice_in, 'kode_barang' => $kode_barang];
+                    $detail_retur = $this->M_global->getDataResult('barang_in_retur_detail', ['invoice' => $invoice]);
 
-                    $detail_in = $this->M_global->getData('barang_in_detail', $where_in);
+                    foreach ($detail_retur as $dt) {
+                        $where_po = ['invoice' => $invoice_in, 'kode_barang' => $dt->kode_barang, 'kode_satuan' => $dt->kode_satuan];
 
-                    $data_update = [
-                        'qty_retur' => ($detail_in->qty_retur + $qty)
-                    ];
+                        $data_update = [
+                            'qty_retur' => 0
+                        ];
 
-                    $this->M_global->updateData('barang_in_detail', $data_update, $where_in);
+                        $this->M_global->updateData('barang_in_detail', $data_update, $where_po);
+                    }
                 }
+
+                // jalankan fungsi cek
+                $cek = [
+                    $this->M_global->updateData('barang_in_retur_header', $isi_header, ['invoice' => $invoice]), // update header
+                    $this->M_global->delData('barang_in_retur_detail', ['invoice' => $invoice]), // delete detail
+                ];
+            } else { // selain itu
+                aktifitas_user_transaksi('Transaksi Masuk', 'menambahkan Retur Pembelian', $invoice);
+
+                // jalankan fungsi cek
+                $cek = $this->M_global->insertData('barang_in_retur_header', $isi_header); // insert header
             }
 
-            $this->single_print_bin_ret($invoice, 1);
+            if ($cek) { // jika fungsi cek berjalan
+                // lakukan loop
+                for ($x = 0; $x <= ($jum - 1); $x++) {
+                    $kode_barang    = $kode_barang_in[$x];
+                    $kode_satuan    = $kode_satuan_in[$x];
+                    $harga          = str_replace(',', '', $harga_in[$x]);
+                    $qty            = str_replace(',', '', $qty_in[$x]);
+                    $discpr         = str_replace(',', '', $discpr_in[$x]);
+                    $discrp         = str_replace(',', '', $discrp_in[$x]);
+                    $pajakrp        = str_replace(',', '', $pajakrp_in[$x]);
+                    $jumlah         = str_replace(',', '', $jumlah_in[$x]);
 
-            // beri nilai status = 1 kirim ke view
-            echo json_encode(['status' => 1]);
-        } else { // selain itu
-            // beri nilai status = 0 kirim ke view
+                    $barang1 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan' => $kode_satuan]);
+                    $barang2 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan2' => $kode_satuan]);
+                    $barang3 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan3' => $kode_satuan]);
+
+                    if ($barang1) {
+                        $qty_satuan = 1;
+                    } else if ($barang2) {
+                        $qty_satuan = $barang2->qty_satuan2;
+                    } else {
+                        $qty_satuan = $barang3->qty_satuan3;
+                    }
+
+                    $qty_konversi   = $qty * $qty_satuan;
+
+                    // tamping isi detail
+                    $isi_detail = [
+                        'invoice'       => $invoice,
+                        'kode_barang'   => $kode_barang,
+                        'kode_satuan'   => $kode_satuan,
+                        'harga'         => $harga,
+                        'qty_konversi'  => $qty_konversi,
+                        'qty'           => $qty,
+                        'discpr'        => $discpr,
+                        'discrp'        => $discrp,
+                        'pajak'         => (($pajakrp > 0) ? 1 : 0),
+                        'pajakrp'       => $pajakrp,
+                        'jumlah'        => $jumlah,
+                    ];
+
+                    // insert detail
+                    $this->M_global->insertData('barang_in_retur_detail', $isi_detail);
+
+                    if ($invoice_in != '' || $invoice_in != null || !empty($invoice_in) || isset($invoice_in)) {
+                        $where_in = ['invoice' => $invoice_in, 'kode_barang' => $kode_barang];
+
+                        $detail_in = $this->M_global->getData('barang_in_detail', $where_in);
+
+                        $data_update = [
+                            'qty_retur' => ($detail_in->qty_retur + $qty)
+                        ];
+
+                        $this->M_global->updateData('barang_in_detail', $data_update, $where_in);
+                    }
+                }
+
+                $this->single_print_bin_ret($invoice, 1);
+
+                // beri nilai status = 1 kirim ke view
+                echo json_encode(['status' => 1]);
+            } else { // selain itu
+                // beri nilai status = 0 kirim ke view
+                echo json_encode(['status' => 0]);
+            }
+        } else {
             echo json_encode(['status' => 0]);
         }
     }

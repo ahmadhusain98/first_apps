@@ -1224,6 +1224,302 @@ class Report extends CI_Controller
         cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
     }
 
+    // barang_po_in
+    public function barang_po_in($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $dari           = $this->input->get('dari');
+        $sampai         = $this->input->get('sampai');
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        // sintak
+        $sintak         = $this->db->query("SELECT m.* FROM barang_po_in_header m WHERE tgl_po >= '$dari' AND tgl_po <= '$sampai'")->result();
+
+        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 10%; border: 1px solid black; background-color: #272a3f; color: white;">Invoice</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Tgl/Jam Po</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Pemasok</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Gudang</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Pengaju</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Total</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            if ($param == 1) {
+                $total = number_format($s->total);
+            } else {
+                $total = ceil($s->total);
+            }
+
+            $body .= '<tr>
+                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->invoice . '</td>
+                <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_po)) . ' ~ ' . date('H:i:s', strtotime($s->jam_po)) . '</td>
+                <td style="border: 1px solid black;">' . $this->M_global->getData('m_supplier', ['kode_supplier' => $s->kode_supplier])->nama . '</td>
+                <td style="border: 1px solid black;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $s->kode_gudang])->nama . '</td>
+                <td style="border: 1px solid black;">' . '(' . $s->kode_user . ') ' . $this->M_global->getData('user', ['kode_user' => $s->kode_user])->nama . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $total . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body .= '</table>';
+
+        $judul = 'Report Pre Order';
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // barang_in
+    public function barang_in($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $dari           = $this->input->get('dari');
+        $sampai         = $this->input->get('sampai');
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        // sintak
+        $sintak         = $this->db->query("SELECT m.* FROM barang_in_header m WHERE tgl_beli >= '$dari' AND tgl_beli <= '$sampai'")->result();
+
+        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 10%; border: 1px solid black; background-color: #272a3f; color: white;">Invoice</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Tgl/Jam Po</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Pemasok</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Gudang</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Pengaju</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Total</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            if ($param == 1) {
+                $total = number_format($s->total);
+            } else {
+                $total = ceil($s->total);
+            }
+
+            $body .= '<tr>
+                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->invoice . '</td>
+                <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_beli)) . ' ~ ' . date('H:i:s', strtotime($s->jam_beli)) . '</td>
+                <td style="border: 1px solid black;">' . $this->M_global->getData('m_supplier', ['kode_supplier' => $s->kode_supplier])->nama . '</td>
+                <td style="border: 1px solid black;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $s->kode_gudang])->nama . '</td>
+                <td style="border: 1px solid black;">' . '(' . $s->kode_user . ') ' . $this->M_global->getData('user', ['kode_user' => $s->kode_user])->nama . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $total . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body .= '</table>';
+
+        $judul = 'Report Pembelian';
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // barang_in_retur
+    public function barang_in_retur($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $dari           = $this->input->get('dari');
+        $sampai         = $this->input->get('sampai');
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        // sintak
+        $sintak         = $this->db->query("SELECT m.* FROM barang_in_retur_header m WHERE tgl_retur >= '$dari' AND tgl_retur <= '$sampai'")->result();
+
+        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 10%; border: 1px solid black; background-color: #272a3f; color: white;">Invoice</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Tgl/Jam Po</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Pemasok</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Gudang</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Pengaju</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Total</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            if ($param == 1) {
+                $total = number_format($s->total);
+            } else {
+                $total = ceil($s->total);
+            }
+
+            $body .= '<tr>
+                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->invoice . '</td>
+                <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_retur)) . ' ~ ' . date('H:i:s', strtotime($s->jam_retur)) . '</td>
+                <td style="border: 1px solid black;">' . $this->M_global->getData('m_supplier', ['kode_supplier' => $s->kode_supplier])->nama . '</td>
+                <td style="border: 1px solid black;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $s->kode_gudang])->nama . '</td>
+                <td style="border: 1px solid black;">' . '(' . $s->kode_user . ') ' . $this->M_global->getData('user', ['kode_user' => $s->kode_user])->nama . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $total . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body .= '</table>';
+
+        $judul = 'Report Pembelian';
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // barang_out
+    public function barang_out($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $dari           = $this->input->get('dari');
+        $sampai         = $this->input->get('sampai');
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        // sintak
+        $sintak         = $this->db->query("SELECT m.* FROM barang_out_header m WHERE tgl_jual >= '$dari' AND tgl_jual <= '$sampai'")->result();
+
+        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Invoice</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Tgl/Jam Beli</th>
+            <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Gudang</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Pembeli</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Total</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            if ($param == 1) {
+                $total = number_format($s->total);
+            } else {
+                $total = ceil($s->total);
+            }
+
+            $body .= '<tr>
+                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->invoice . '</td>
+                <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_jual)) . ' ~ ' . date('H:i:s', strtotime($s->jam_jual)) . '</td>
+                <td style="border: 1px solid black;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $s->kode_gudang])->nama . '</td>
+                <td style="border: 1px solid black;">' . '(' . $s->kode_user . ') ' . $this->M_global->getData('user', ['kode_user' => $s->kode_user])->nama . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $total . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body .= '</table>';
+
+        $judul = 'Report Penjualan';
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // barang_out_retur
+    public function barang_out_retur($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $dari           = $this->input->get('dari');
+        $sampai         = $this->input->get('sampai');
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        // sintak
+        $sintak         = $this->db->query("SELECT m.* FROM barang_out_retur_header m WHERE tgl_retur >= '$dari' AND tgl_retur <= '$sampai'")->result();
+
+        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Invoice</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Tgl/Jam Beli</th>
+            <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Gudang</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Pembeli</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Total</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            if ($param == 1) {
+                $total = number_format($s->total);
+            } else {
+                $total = ceil($s->total);
+            }
+
+            $body .= '<tr>
+                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->invoice . '</td>
+                <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_retur)) . ' ~ ' . date('H:i:s', strtotime($s->jam_retur)) . '</td>
+                <td style="border: 1px solid black;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $s->kode_gudang])->nama . '</td>
+                <td style="border: 1px solid black;">' . '(' . $s->kode_user . ') ' . $this->M_global->getData('user', ['kode_user' => $s->kode_user])->nama . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $total . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body .= '</table>';
+
+        $judul = 'Report Penjualan';
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
     // activity user
     public function activity_user()
     {

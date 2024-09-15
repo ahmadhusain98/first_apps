@@ -765,7 +765,7 @@
                 var poli_pendaftaran = $('#kode_poli').val()
                 var tgl_dari_pendaftaran = $('#dari').val()
                 var tgl_sampai_pendaftaran = $('#sampai').val()
-            } else if(url == 'kasir') {
+            } else if ((url == 'kasir') || (url == 'barang_po_in') || (url == 'barang_in') || (url == 'barang_in_retur') || (url == 'barang_out') || (url == 'barang_out_retur')) {
                 var poli_pendaftaran = ''
                 var tgl_dari_pendaftaran = $('#dari').val()
                 var tgl_sampai_pendaftaran = $('#sampai').val()
@@ -785,6 +785,10 @@
                 var poli_pendaftaran = $('#kode_poli').val()
                 var tgl_dari_pendaftaran = $('#dari').val()
                 var tgl_sampai_pendaftaran = $('#sampai').val()
+            } else if ((url == 'kasir') || (url == 'barang_po_in') || (url == 'barang_in') || (url == 'barang_in_retur') || (url == 'barang_out') || (url == 'barang_out_retur')) {
+                var poli_pendaftaran = ''
+                var tgl_dari_pendaftaran = $('#dari').val()
+                var tgl_sampai_pendaftaran = $('#sampai').val()
             } else {
                 var poli_pendaftaran = ''
                 var tgl_dari_pendaftaran = ''
@@ -799,6 +803,10 @@
         function excel(url) {
             if (url == 'pendaftaran') {
                 var poli_pendaftaran = $('#kode_poli').val()
+                var tgl_dari_pendaftaran = $('#dari').val()
+                var tgl_sampai_pendaftaran = $('#sampai').val()
+            } else if ((url == 'kasir') || (url == 'barang_po_in') || (url == 'barang_in') || (url == 'barang_in_retur') || (url == 'barang_out') || (url == 'barang_out_retur')) {
+                var poli_pendaftaran = ''
                 var tgl_dari_pendaftaran = $('#dari').val()
                 var tgl_sampai_pendaftaran = $('#sampai').val()
             } else {
