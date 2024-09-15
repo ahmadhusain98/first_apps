@@ -13,14 +13,14 @@ class Setting_apps extends CI_Controller
         $this->load->model("M_auth");
 
         if (!empty($this->session->userdata("email"))) { // jika session email masih ada
-            
+
             $id_menu = $this->M_global->getData('m_menu', ['url' => 'Setting_apps'])->id;
 
             // ambil isi data berdasarkan email session dari table user, kemudian tampung ke variable $user
             $user = $this->M_global->getData("user", ["email" => $this->session->userdata("email")]);
 
             $cek_akses_menu = $this->M_global->getData('akses_menu', ['id_menu' => $id_menu, 'kode_role' => $user->kode_role]);
-            if($cek_akses_menu) {
+            if ($cek_akses_menu) {
                 // tampung data ke variable data public
                 $this->data = [
                     'nama'      => $user->nama,
@@ -64,11 +64,12 @@ class Setting_apps extends CI_Controller
     public function proses()
     {
         // variable
-        $id       = $this->input->post('id_web');
-        $nohp     = $this->input->post('nohp_web');
-        $email    = $this->input->post('email_web');
-        $nama     = $this->input->post('nama_web');
-        $alamat   = $this->input->post('alamat_web');
+        $id                       = $this->input->post('id_web');
+        $nohp                     = $this->input->post('nohp_web');
+        $email                    = $this->input->post('email_web');
+        $kode_email               = $this->input->post('kode_email');
+        $nama                     = $this->input->post('nama_web');
+        $alamat                   = $this->input->post('alamat_web');
 
         // configurasi upload file
         $config['upload_path']    = 'assets/img/web/';
@@ -111,12 +112,13 @@ class Setting_apps extends CI_Controller
 
         // masukan variable ke dalam variable $isi untuk di update
         $isi = [
-            'nama'      => $nama,
-            'email'     => $email,
-            'nohp'      => $nohp,
-            'alamat'    => $alamat,
-            'logo'      => $gambar,
-            'watermark' => $theme,
+            'nama'          => $nama,
+            'email'         => $email,
+            'kode_email'    => $kode_email,
+            'nohp'          => $nohp,
+            'alamat'        => $alamat,
+            'logo'          => $gambar,
+            'watermark'     => $theme,
         ];
 
         // jalankan fungsi update berdasarkan id

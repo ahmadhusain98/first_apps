@@ -1,7 +1,7 @@
 <!-- view atur ulang -->
 
 <div class="register-box" data-aos="fade-down">
-    <div class="card card-outline card-primary">
+    <div class="card card-outline card-primary" card-primary" style="background-color: rgba(255, 255, 255, 0.8); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);">
         <div class="card-header text-center">
             <a type="button" class="h1"><b><?= $nama_apps ?></b></a>
             <br>

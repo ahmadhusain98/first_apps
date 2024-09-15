@@ -1,5 +1,5 @@
 <div class="login-box" data-aos="fade-up">
-    <div class="card card-outline card-primary">
+    <div class="card card-outline card-primary" style="background-color: rgba(255, 255, 255, 0.8); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);">
         <div class="card-header text-center">
             <a type="button" class="h1"><b><?= $nama_apps ?></b></a>
             <br>
@@ -10,34 +10,33 @@
             <form id="form_login" method="post">
                 <div class="input-group mb-3">
                     <input type="email" class="form-control" placeholder="Email" id="email" name="email" onchange="cekEmailLog(this.value); cekUserRole(this.value); cekUserCabang(this.value)">
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <ion-icon name="mail-outline"></ion-icon>
-                        </div>
-                    </div>
                 </div>
                 <div class="input-group mb-3">
                     <input type="password" class="form-control" placeholder="Sandi" id="password" name="password">
                     <div class="input-group-append" onclick="pass()">
                         <div class="input-group-text">
-                            <ion-icon name="lock-closed-outline" id="lock_pass"></ion-icon>
-                            <ion-icon name="lock-open-outline" id="open_pass"></ion-icon>
+                            <i class="fa-solid fa-fw fa-lock text-danger" id="lock_pass"></i>
+                            <i class="fa-solid fa-lock-open text-success" id="open_pass"></i>
                         </div>
                     </div>
                 </div>
-                <div class="input-group mb-3" id="forshift">
+                <div class="mb-3" id="forshift">
                     <input type="hidden" name="kode_role" id="kode_role" value="">
-                    <select name="shift" id="shift" class="form-control select2_global" data-placeholder="~ Pilih Shift">
-                        <option value="">~ Pilih Shift</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                </div>
-                <div class="input-group mb-3" id="forcabang">
-                    <select name="cabang" id="cabang" class="form-control select2_cabang" data-placeholder="~ Pilih Cabang">
-                        <option value="">~ Pilih Cabang</option>
-                    </select>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select name="shift" id="shift" class="form-control select2_global" data-placeholder="~ Pilih Shift">
+                                <option value="">~ Pilih Shift</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6" id="forcabang">
+                            <select name="cabang" id="cabang" class="form-control select2_cabang" data-placeholder="~ Pilih Cabang">
+                                <option value="">~ Pilih Cabang</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">

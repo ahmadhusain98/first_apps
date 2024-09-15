@@ -39,31 +39,31 @@ function dell_field($table, $kolom)
 }
 
 // send email
-function _sendMail($emailUser, $title, $message)
-{
-    $CI = &get_instance();
-    // configurasi email
-    $config = [
-        'protocol'  => 'smtp',
-        'smtp_host' => 'ssl://smtp.googlemail.com',
-        'smtp_user' => 'myhers.official@gmail.com',
-        'smtp_pass' => 'gkgf yxav gone uqon',
-        'smtp_port' => 465,
-        'mailtype'  => 'html',
-        'charset'   => 'utf-8',
-        'newline'   => "\r\n"
-    ];
-    $CI->email->initialize($config);
-    $CI->email->from('myhers.official@gmail.com', 'Myhers');
-    $CI->email->to($emailUser);
-    $CI->email->subject($title);
-    $CI->email->message($message);
-    if ($CI->email->send()) { // email terkirim
-        echo json_encode(["status" => 1, "email" => $emailUser]);
-    } else { // email gagal terkirim
-        echo json_encode(["status" => 2, "email" => $emailUser]);
-    }
-}
+// function _sendMail($emailUser, $title, $message)
+// {
+//     $CI = &get_instance();
+//     // configurasi email
+//     $config = [
+//         'protocol'  => 'smtp',
+//         'smtp_host' => 'ssl://smtp.googlemail.com',
+//         'smtp_user' => 'myhers.official@gmail.com',
+//         'smtp_pass' => 'gkgf yxav gone uqon',
+//         'smtp_port' => 465,
+//         'mailtype'  => 'html',
+//         'charset'   => 'utf-8',
+//         'newline'   => "\r\n"
+//     ];
+//     $CI->email->initialize($config);
+//     $CI->email->from('myhers.official@gmail.com', 'Myhers');
+//     $CI->email->to($emailUser);
+//     $CI->email->subject($title);
+//     $CI->email->message($message);
+//     if ($CI->email->send()) { // email terkirim
+//         echo json_encode(["status" => 1, "email" => $emailUser]);
+//     } else { // email gagal terkirim
+//         echo json_encode(["status" => 2, "email" => $emailUser]);
+//     }
+// }
 
 function aktifitas_user($menu, $message, $kode, $value)
 {

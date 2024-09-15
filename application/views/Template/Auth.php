@@ -18,7 +18,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Scripts -->
-    <script src="<?= base_url() ?>assets/plugins/jquery/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- <script src="<?= base_url() ?>assets/plugins/jquery/jquery.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
 
@@ -27,9 +28,13 @@
     <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
-    <!-- Styles -->
+    <!-- select2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
 
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/dist/css/adminlte.min.css">
@@ -63,7 +68,7 @@
     <link rel="icon" href="<?= base_url('assets/img/web/') . $web->logo ?>" type="image/ico">
 </head>
 
-<body class="hold-transition login-page" style="background-color: #1f232f">
+<body class="hold-transition login-page" style="background-image: url(<?= site_url() ?>assets/img/bg.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; backdrop-filter: blur(8px);">
 
 
     <!-- responsive -->
@@ -156,16 +161,16 @@
             line-height: 1.42857;
         }
 
-        .floating{
-            position:fixed;
-            width:70px;
-            height:70px;
-            bottom:10px;
-            right:10px;
-            background-color:#14a651;
-            color:white;
-            border-radius:50%;
-            text-align:center;
+        .floating {
+            position: fixed;
+            width: 70px;
+            height: 70px;
+            bottom: 10px;
+            right: 10px;
+            background-color: #14a651;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
             box-shadow: 2px 2px 4px #999;
         }
     </style>

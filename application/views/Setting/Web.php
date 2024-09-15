@@ -11,54 +11,44 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <input type="hidden" name="id_web" id="id_web" class="form-control" value="<?= $web->id ?>">
-                                <div class="row">
-                                    <div class="col-md-6">
+                        <div class="row mb-3">
+                            <div class="col-md-6 col-12">
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
                                         <label for="email_web" class="control-label">Email <span class="text-danger">**</span></label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="nohp_web" class="control-label">Nomor Hp <span class="text-danger">**</span></label>
+                                        <input type="hidden" name="id_web" id="id_web" class="form-control" value="<?= $web->id ?>">
+                                        <input type="text" name="email_web" id="email_web" class="form-control" value="<?= $web->email ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <input type="text" name="email_web" id="email_web" class="form-control" value="<?= $web->email ?>">
+                                    <div class="col-md-12">
+                                        <label for="kode_email" class="control-label">Kode Email Apps <span class="text-danger">**</span></label>
+                                        <input type="text" name="kode_email" id="kode_email" class="form-control" value="<?= $web->kode_email ?>">
                                     </div>
-                                    <div class="col-md-6">
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="nama_web" class="control-label">Nama <span class="text-danger">**</span></label>
+                                        <input type="text" name="nama_web" id="nama_web" class="form-control" value="<?= $web->nama ?>">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="nohp_web" class="control-label">Nomor Hp <span class="text-danger">**</span></label>
                                         <input type="text" name="nohp_web" id="nohp_web" class="form-control" value="<?= $web->nohp ?>">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label for="nama_web" class="control-label">Nama <span class="text-danger">**</span></label>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-md-12">
-                                                <input type="text" name="nama_web" id="nama_web" class="form-control" value="<?= $web->nama ?>">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label for="alamat_web" class="control-label">Alamat <span class="text-danger">**</span></label>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-md-12">
-                                                <textarea name="alamat_web" id="alamat_web" class="form-control"><?= $web->alamat ?></textarea>
-                                            </div>
-                                        </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="alamat_web" class="control-label">Alamat <span class="text-danger">**</span></label>
+                                        <textarea name="alamat_web" id="alamat_web" class="form-control"><?= $web->alamat ?></textarea>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label for="logo_web" class="control-label">Logo</label>
-                                            </div>
-                                        </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="logo_web" class="control-label">Logo</label>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <img id="preview_img" class="rounded mx-auto d-block" style="border: 2px solid grey; width: 100%;" src="<?= base_url('assets/img/web/') . $web->logo; ?>" alt="User profile picture">
@@ -73,12 +63,10 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label for="wallpaper_web" class="control-label">Watermark</label>
-                                            </div>
-                                        </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="wallpaper_web" class="control-label">Watermark</label>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <img id="preview_theme" class="rounded mx-auto d-block" style="border: 2px solid grey; width: 100%; height: 100px; background-position: center; background-size: cover;" src="<?= base_url('assets/img/web/') . $web->watermark; ?>" alt="User profile picture">
@@ -114,6 +102,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     var nama_web = $('#nama_web');
     var nohp_web = $('#nohp_web');
     var email_web = $('#email_web');
+    var kode_email = $('#kode_email');
     var alamat_web = $('#alamat_web');
     var btnSimpan = $('#btnSimpan');
 
@@ -155,6 +144,12 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
             btnSimpan.attr('disabled', false);
 
             return Swal.fire("Email Website", "Form sudah diisi?", "question");
+        }
+
+        if (kode_email.val() == '' || kode_email.val() == null) {
+            btnSimpan.attr('disabled', false);
+
+            return Swal.fire("Kode Email Apps", "Form sudah diisi?", "question");
         }
 
         if (nohp_web.val() == '' || nohp_web.val() == null) {
