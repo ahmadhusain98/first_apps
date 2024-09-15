@@ -1,79 +1,86 @@
 <form method="post" id="form_report">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Parameter</span>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-6 offset-3 col-12">
-            <div class="row mb-3">
-                <label for="laporan" class="control-label col-md-3 m-auto">Laporan <sup class="text-success">**</sup></label>
-                <div class="col-md-9">
-                    <select name="laporan" id="laporan" class="form-control select2_global" data-placeholder="~ Pilih Laporan" onchange="cekReport(this.value)">
-                        <option value="">~ Pilih Laporan</option>
-                        <optgroup label="Transaksi Pembelian">
-                            <option value="1">1.1) Pembelian</option>
-                            <option value="1.1">1.2) Pembelian Detail</option>
-                            <option value="2">2.1) Retur Pembelian</option>
-                            <option value="2.1">2.2) Retur Pembelian Detail</option>
-                            <option value="3">3.1) Riwayat Stok Pembelian</option>
-                        </optgroup>
-                        <optgroup label="Transaksi Penjualan">
-                            <option value="4">1.1) Penjualan</option>
-                            <option value="4.1">1.2) Penjualan Detail</option>
-                            <option value="5">2.1) Retur Penjualan</option>
-                            <option value="5.1">2.2) Retur Penjualan Detail</option>
-                            <option value="6">3.1) Riwayat Stok Penjualan</option>
-                        </optgroup>
-                    </select>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Laporan Sistem</span>
                 </div>
-            </div>
-            <div class="row mb-3">
-                <label for="periode" class="control-label col-md-3 m-auto">Periode <sup class="text-success">**</sup></label>
-                <div class="col-md-9">
+                <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
-                            <input type="date" name="dari" id="dari" class="form-control" value="<?= date('Y-m-d') ?>">
-                        </div>
-                        <div class="col-md-6">
-                            <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
+                        <div class="col-md-6 offset-3 col-12">
+                            <div class="row mb-3">
+                                <label for="laporan" class="control-label col-md-3 m-auto">Laporan <sup class="text-success">**</sup></label>
+                                <div class="col-md-9">
+                                    <select name="laporan" id="laporan" class="form-control select2_global" data-placeholder="~ Pilih Laporan" onchange="cekReport(this.value)">
+                                        <option value="">~ Pilih Laporan</option>
+                                        <optgroup label="Transaksi Pembelian">
+                                            <option value="1">1.1) Pembelian</option>
+                                            <option value="1.1">1.2) Pembelian Detail</option>
+                                            <option value="2">2.1) Retur Pembelian</option>
+                                            <option value="2.1">2.2) Retur Pembelian Detail</option>
+                                            <option value="3">3.1) Riwayat Stok Pembelian</option>
+                                        </optgroup>
+                                        <optgroup label="Transaksi Penjualan">
+                                            <option value="4">1.1) Penjualan</option>
+                                            <option value="4.1">1.2) Penjualan Detail</option>
+                                            <option value="5">2.1) Retur Penjualan</option>
+                                            <option value="5.1">2.2) Retur Penjualan Detail</option>
+                                            <option value="6">3.1) Riwayat Stok Penjualan</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="periode" class="control-label col-md-3 m-auto">Periode <sup class="text-success">**</sup></label>
+                                <div class="col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="date" name="dari" id="dari" class="form-control" value="<?= date('Y-m-d') ?>">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3" id="pemasok">
+                                <label for="kode_supplier" class="control-label col-md-3 m-auto">Pemasok <sup id="idSupplier" class="text-danger">**</sup></label>
+                                <div class="col-md-9">
+                                    <select name="kode_supplier" id="kode_supplier" class="form-control select2_supplier" data-placeholder="~ Pilih Pemasok">
+                                        <option value="">~ Pilih Pemasok</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3" id="barang">
+                                <label for="kode_barang" class="control-label col-md-3 m-auto">Barang <sup id="idBarang" class="text-danger">**</sup></label>
+                                <div class="col-md-9">
+                                    <select name="kode_barang" id="kode_barang" class="form-control select2_barang" data-placeholder="~ Pilih Barang">
+                                        <option value="">~ Pilih Gudang</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="kode_gudang" class="control-label col-md-3 m-auto">Gudang <sup id="idGudang" class="text-danger">**</sup></label>
+                                <div class="col-md-9">
+                                    <select name="kode_gudang" id="kode_gudang" class="form-control select2_gudang_int" data-placeholder="~ Pilih Gudang">
+                                        <option value="">~ Pilih Gudang</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row mb-3" id="pemasok">
-                <label for="kode_supplier" class="control-label col-md-3 m-auto">Pemasok <sup id="idSupplier" class="text-danger">**</sup></label>
-                <div class="col-md-9">
-                    <select name="kode_supplier" id="kode_supplier" class="form-control select2_supplier" data-placeholder="~ Pilih Pemasok">
-                        <option value="">~ Pilih Pemasok</option>
-                    </select>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="text-center">
+                                <button class="btn btn-primary" type="button" onclick="cetak(0)"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</button>
+                                <button class="btn btn-warning" type="button" onclick="cetak(1)"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</button>
+                                <button class="btn btn-success" type="button" onclick="cetak(2)"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-3" id="barang">
-                <label for="kode_barang" class="control-label col-md-3 m-auto">Barang <sup id="idBarang" class="text-danger">**</sup></label>
-                <div class="col-md-9">
-                    <select name="kode_barang" id="kode_barang" class="form-control select2_barang" data-placeholder="~ Pilih Barang">
-                        <option value="">~ Pilih Gudang</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="kode_gudang" class="control-label col-md-3 m-auto">Gudang <sup id="idGudang" class="text-danger">**</sup></label>
-                <div class="col-md-9">
-                    <select name="kode_gudang" id="kode_gudang" class="form-control select2_gudang_int" data-placeholder="~ Pilih Gudang">
-                        <option value="">~ Pilih Gudang</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6 offset-3 col-12">
-            <div class="float-right">
-                <button class="btn btn-primary" type="button" onclick="cetak(0)"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</button>
-                <button class="btn btn-warning" type="button" onclick="cetak(1)"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</button>
-                <button class="btn btn-success" type="button" onclick="cetak(2)"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</button>
             </div>
         </div>
     </div>
