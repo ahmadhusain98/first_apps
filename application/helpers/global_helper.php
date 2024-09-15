@@ -1218,20 +1218,20 @@ function _code_promo()
     return $kode_member;
 }
 
-function _invoicePenyesuaianStok()
+function _invoicePenyesuaianStok($cabang)
 {
     $CI           = &get_instance();
 
     $now          = date('Y-m-d');
 
-    $lastNumber   = $CI->db->query('SELECT * FROM penyesuaian_header WHERE tgl_penyesuaian = "' . $now . '" ORDER BY id DESC LIMIT 1')->row();
+    $lastNumber   = $CI->db->query('SELECT * FROM penyesuaian_header WHERE kode_cabang = "' . $cabang . '" AND tgl_penyesuaian = "' . $now . '" ORDER BY id DESC LIMIT 1')->row();
     $number       = 1;
     if ($lastNumber) {
-        $number   = $CI->db->query('SELECT * FROM penyesuaian_header WHERE tgl_penyesuaian = "' . $now . '"')->num_rows() + 1;
-        $invoice  = 'PS~' . date('dmY') . sprintf("%05d", $number);
+        $number   = $CI->db->query('SELECT * FROM penyesuaian_header WHERE kode_cabang = "' . $cabang . '" AND tgl_penyesuaian = "' . $now . '"')->num_rows() + 1;
+        $invoice  = $CI->session->userdata('init_cabang') . 'TPS-' . date('Ymd') . sprintf("%05d", $number);
     } else {
         $number   = 0;
-        $invoice  = 'PS~' . date('dmY') . "00001";
+        $invoice  = $CI->session->userdata('init_cabang') . 'TPS-' . date('Ymd') . "00001";
     }
     return $invoice;
 }
@@ -1252,8 +1252,8 @@ function hitungStokAdjIn($detail, $kode_gudang, $invoice)
                 'kode_barang'   => $d->kode_barang,
                 'kode_gudang'   => $kode_gudang,
                 'so'            => 0,
-                'penyesuaian'   => $d->qty,
-                'akhir'         => $d->qty,
+                'penyesuaian'   => $d->qty_konversi,
+                'akhir'         => $d->qty_konversi,
                 'last_tgl_trx'  => $date,
                 'last_jam_trx'  => $time,
                 'last_no_trx'   => $invoice,
@@ -1263,8 +1263,8 @@ function hitungStokAdjIn($detail, $kode_gudang, $invoice)
             $CI->M_global->insertData('barang_stok', $isi_stok);
         } else {
             $CI->db->query("UPDATE barang_stok SET 
-            masuk = masuk + $d->qty, 
-            akhir = akhir + $d->qty, 
+            masuk = masuk + $d->qty_konversi, 
+            akhir = akhir + $d->qty_konversi, 
             penyesuaian = $d->qty,
             last_tgl_trx = '$date', 
             last_jam_trx = '$time',
@@ -1279,21 +1279,24 @@ function hitungStokAdjOut($detail, $kode_gudang, $invoice)
 {
     $CI   = &get_instance();
 
+    $kode_cabang = $CI->session->userdata('cabang');
+
     $date = date('Y-m-d');
     $time = date('H:i:s');
     $user = $CI->session->userdata('kode_user');
 
     foreach ($detail as $d) {
-        $cek = $CI->M_global->jumDataRow('barang_stok', ['kode_gudang' => $kode_gudang, 'kode_barang' => $d->kode_barang]);
+        $cek = $CI->M_global->jumDataRow('barang_stok', ['kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang, 'kode_barang' => $d->kode_barang]);
 
         if ($cek < 1) {
             $isi_stok = [
                 'kode_barang'   => $d->kode_barang,
                 'kode_gudang'   => $kode_gudang,
-                'masuk'         => 0 - $d->qty,
-                'akhir'         => 0 - $d->qty,
+                'kode_cabang'   => $kode_cabang,
+                'masuk'         => 0 - $d->qty_konversi,
+                'akhir'         => 0 - $d->qty_konversi,
                 'so'            => 0,
-                'penyesuaian'   => 0 - $d->qty,
+                'penyesuaian'   => 0 - $d->qty_konversi,
                 'last_tgl_trx'  => $date,
                 'last_jam_trx'  => $time,
                 'last_no_trx'   => $invoice,
@@ -1303,14 +1306,14 @@ function hitungStokAdjOut($detail, $kode_gudang, $invoice)
             $CI->M_global->insertData('barang_stock', $isi_stok);
         } else {
             $CI->db->query("UPDATE barang_stok SET 
-            masuk = masuk - $d->qty, 
-            akhir = akhir - $d->qty,
-            penyesuaian = penyesuaian - $d->qty,
+            masuk = masuk - $d->qty_konversi, 
+            akhir = akhir - $d->qty_konversi,
+            penyesuaian = penyesuaian - $d->qty_konversi,
             last_tgl_trx = '$date', 
             last_jam_trx = '$time',
             last_no_trx = '$invoice',
             last_user = '$user' 
-            WHERE kode_barang = '$d->kode_barang' AND kode_gudang = '$kode_gudang'");
+            WHERE kode_barang = '$d->kode_barang' AND kode_gudang = '$kode_gudang' AND kode_cabang = '$kode_cabang'");
         }
     }
 }

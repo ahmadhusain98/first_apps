@@ -1520,6 +1520,62 @@ class Report extends CI_Controller
         cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
     }
 
+    // penyesuaian_stok
+    public function penyesuaian_stok($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $dari           = $this->input->get('dari');
+        $sampai         = $this->input->get('sampai');
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        // sintak
+        $sintak         = $this->db->query("SELECT m.* FROM penyesuaian_header m WHERE tgl_penyesuaian >= '$dari' AND tgl_penyesuaian <= '$sampai'")->result();
+
+        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 30%; border: 1px solid black; background-color: #272a3f; color: white;">Invoice</th>
+            <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Tgl/Jam Penyesuaian</th>
+            <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Gudang</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Pengaju</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            if ($param == 1) {
+                $total = number_format($s->total);
+            } else {
+                $total = ceil($s->total);
+            }
+
+            $body .= '<tr>
+                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->invoice . '</td>
+                <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_penyesuaian)) . ' ~ ' . date('H:i:s', strtotime($s->jam_penyesuaian)) . '</td>
+                <td style="border: 1px solid black;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $s->kode_gudang])->nama . '</td>
+                <td style="border: 1px solid black;">' . '(' . $s->kode_user . ') ' . $this->M_global->getData('user', ['kode_user' => $s->kode_user])->nama . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body .= '</table>';
+
+        $judul = 'Report Penjualan';
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
     // activity user
     public function activity_user()
     {
@@ -1765,6 +1821,25 @@ class Report extends CI_Controller
             JOIN barang b ON d.kode_barang = b.kode_barang
             JOIN member s ON h.kode_member = s.kode_member
             WHERE h.is_valid = 1
+
+            UNION ALL
+
+            SELECT
+            CONCAT(DATE_FORMAT(h.tgl_penyesuaian, '%d/%m/%Y'), ' ~ ', h.jam_penyesuaian) AS record_date,
+            h.invoice,
+            CONCAT('Adjustment ~ ', s.nama) AS keterangan,
+            d.qty_konversi AS masuk,
+            0 AS keluar,
+            h.tgl_penyesuaian AS tgl,
+            h.jam_penyesuaian AS jam,
+            d.kode_barang,
+            h.kode_cabang AS kode_cabang,
+            h.kode_gudang
+            FROM penyesuaian_header h
+            JOIN penyesuaian_detail d ON h.invoice = d.invoice
+            JOIN barang b ON d.kode_barang = b.kode_barang
+            JOIN user s ON h.kode_user = s.kode_user
+            WHERE h.acc = 1
         ) AS semua WHERE kode_barang = '$kode_barang' AND kode_gudang = '$kode_gudang' AND kode_cabang = '$kode_cabang' ORDER BY tgl, jam ASC")->result();
 
         $barang = $this->M_global->getData('barang', ['kode_barang' => $kode_barang]);
