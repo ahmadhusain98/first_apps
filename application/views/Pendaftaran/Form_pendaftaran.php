@@ -131,22 +131,22 @@
                             <button type="button" class="btn btn-primary" onclick="tambahTarifPaket()" id="btnTambahPaket" <?= ((!empty($pasien_paket) ? (((count($pasien_paket) > 0) ? '' : 'disabled')) : 'disabled')) ?>><i class="fa-solid fa-folder-plus"></i> Tambah Tarif Paket</button>
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <button type="button" class="btn btn-danger" onclick="getUrl('Health/pendaftaran')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="float-right">
-                                            <?php if (!empty($data_pendaftaran)) : ?>
-                                                <button type="button" class="btn btn-info" onclick="getUrl('Health/form_pendaftaran/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
-                                            <?php else : ?>
-                                                <button type="button" class="btn btn-info" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
-                                            <?php endif ?>
-                                            <button type="button" class="btn btn-success" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
-                                        </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-danger" onclick="getUrl('Health/pendaftaran')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="float-right">
+                                        <?php if (!empty($data_pendaftaran)) : ?>
+                                            <button type="button" class="btn btn-info" onclick="getUrl('Health/form_pendaftaran/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                                        <?php else : ?>
+                                            <button type="button" class="btn btn-info" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
+                                        <?php endif ?>
+                                        <button type="button" class="btn btn-success" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
                                     </div>
                                 </div>
                             </div>
