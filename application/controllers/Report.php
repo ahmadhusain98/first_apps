@@ -1172,6 +1172,58 @@ class Report extends CI_Controller
         cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
     }
 
+    // kasir
+    public function kasir($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $dari           = $this->input->get('dari');
+        $sampai         = $this->input->get('sampai');
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        // sintak
+        $sintak         = $this->db->query("SELECT m.* FROM pembayaran m WHERE tgl_pembayaran >= '$dari' AND tgl_pembayaran <= '$sampai'")->result();
+
+        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Tgl/Jam Bayar</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Invoice</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">No. Transaksi</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Jenis Bayar</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Kasir</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            $body .= '<tr>
+                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_pembayaran)) . ' ~ ' . date('H:i:s', strtotime($s->jam_pembayaran)) . '</td>
+                <td style="border: 1px solid black;">' . $s->invoice . '</td>
+                <td style="border: 1px solid black;">' . $s->no_trx . '</td>
+                <td style="border: 1px solid black; text-align: center;">' . (($s->jenis_pembayaran > 0) ? (($s->jenis_pembayaran == 1) ? 'Card' : 'Cash + Card') : 'Cash') . '</td>
+                <td style="border: 1px solid black;">' . '(' . $s->kode_user . ') ' . $this->M_global->getData('user', ['kode_user' => $s->kode_user])->nama . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body .= '</table>';
+
+        $judul = 'Report Kasir';
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
     // activity user
     public function activity_user()
     {

@@ -765,6 +765,10 @@
                 var poli_pendaftaran = $('#kode_poli').val()
                 var tgl_dari_pendaftaran = $('#dari').val()
                 var tgl_sampai_pendaftaran = $('#sampai').val()
+            } else if(url == 'kasir') {
+                var poli_pendaftaran = ''
+                var tgl_dari_pendaftaran = $('#dari').val()
+                var tgl_sampai_pendaftaran = $('#sampai').val()
             } else {
                 var poli_pendaftaran = ''
                 var tgl_dari_pendaftaran = ''
