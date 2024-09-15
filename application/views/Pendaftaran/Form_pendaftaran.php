@@ -1,248 +1,227 @@
 <form method="post" id="form_pendaftaran">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="row mb-3">
-                <div class="col-md-12">
-                    <label for="">No. Pendaftaran</label>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Otomatis" id="no_trx" name="no_trx" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_trx : '') ?>" readonly>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <i class="fa-regular fa-id-badge"></i>
-                            </div>
-                        </div>
-                    </div>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
                 </div>
-                <div class="col-md-12">
-                    <label for="">Member <sup class="text-danger">**</sup></label>
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <select name="kode_member" id="kode_member" class="form-control select2_member" data-placeholder="~ Cari Member" onchange="getRiwayat(this.value)">
-                                <?php
-                                if (!empty($data_pendaftaran)) :
-                                    $member = $this->M_global->getData('member', ['kode_member' => $data_pendaftaran->kode_member]);
-                                    echo '<option value="' . $member->kode_member . '">' . $member->kode_member . ' ~ ' . $member->nama . '</option>';
-                                endif;
-                                ?>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <button type="button" class="btn btn-primary w-100" onclick="updateMember()" id="btnUMember"><i class="fa-regular fa-pen-to-square"></i>&nbsp;&nbsp;Update</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-12">
-                    <label for="">Tgl/Jam Daftar <sup class="text-danger">**</sup></label>
+                <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="input-group mb-3">
-                                <input type="date" class="form-control" id="tgl_masuk" name="tgl_masuk" value="<?= (!empty($data_pendaftaran) ? date('Y-m-d', strtotime($data_pendaftaran->tgl_daftar)) : date('Y-m-d')) ?>" readonly>
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <i class="fa-regular fa-calendar"></i>
+                        <div class="col-md-6 col-12">
+                            <div class="form-group">
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="">No. Pendaftaran</label>
+                                        <input type="text" class="form-control" placeholder="Otomatis" id="no_trx" name="no_trx" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_trx : '') ?>" readonly>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for="">Member <sup class="text-danger">**</sup></label>
+                                        <div class="row mb-3">
+                                            <div class="col-md-8">
+                                                <select name="kode_member" id="kode_member" class="form-control select2_member" data-placeholder="~ Cari Member" onchange="getRiwayat(this.value)">
+                                                    <?php
+                                                    if (!empty($data_pendaftaran)) :
+                                                        $member = $this->M_global->getData('member', ['kode_member' => $data_pendaftaran->kode_member]);
+                                                        echo '<option value="' . $member->kode_member . '">' . $member->kode_member . ' ~ ' . $member->nama . '</option>';
+                                                    endif;
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <button type="button" class="btn btn-primary w-100" onclick="updateMember()" id="btnUMember"><i class="fa-regular fa-pen-to-square"></i>&nbsp;&nbsp;Update</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-group mb-3">
-                                <input type="time" class="form-control" id="jam_masuk" name="jam_masuk" value="<?= (!empty($data_pendaftaran) ? date('H:i:s', strtotime($data_pendaftaran->jam_daftar)) : date('H:i:s')) ?>" readonly>
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <i class="fa-regular fa-clock"></i>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="">Tgl/Jam Daftar <sup class="text-danger">**</sup></label>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input type="date" class="form-control" id="tgl_masuk" name="tgl_masuk" value="<?= (!empty($data_pendaftaran) ? date('Y-m-d', strtotime($data_pendaftaran->tgl_daftar)) : date('Y-m-d')) ?>" readonly>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="time" class="form-control" id="jam_masuk" name="jam_masuk" value="<?= (!empty($data_pendaftaran) ? date('H:i:s', strtotime($data_pendaftaran->jam_daftar)) : date('H:i:s')) ?>" readonly>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="">No. Antrian</label>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Otomatis" id="no_antrian" name="no_antrian" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_antrian : '') ?>" readonly>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <i class="fa-solid fa-hourglass"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label for="">Ruangan/Bed <sup class="text-danger">**</sup></label>
-                    <div class="input-group mb-3">
-                        <select name="kode_ruang" id="kode_ruang" class="form-control select2_ruang" data-placeholder="~ Pilih Ruang">
-                            <?php
-                            if (!empty($data_pendaftaran)) :
-                                $ruang = $this->M_global->getData('m_ruang', ['kode_ruang' => $data_pendaftaran->kode_ruang]);
-                                echo '<option value="' . $ruang->kode_ruang . '">' . $ruang->kode_ruang . ' ~ ' . $ruang->keterangan . '</option>';
-                            endif;
-                            ?>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="">Poli <sup class="text-danger">**</sup></label>
-                    <div class="input-group mb-3">
-                        <select name="kode_poli" id="kode_poli" class="form-control select2_poli" data-placeholder="~ Pilih Poli" onchange="getDokter(this.value)">
-                            <?php
-                            if (!empty($data_pendaftaran)) :
-                                $poli = $this->M_global->getData('m_poli', ['kode_poli' => $data_pendaftaran->kode_poli]);
-                                echo '<option value="' . $poli->kode_poli . '">' . $poli->kode_poli . ' ~ ' . $poli->keterangan . '</option>';
-                            endif;
-                            ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label for="">Dokter Poli <sup class="text-danger">**</sup></label>
-                    <div class="input-group mb-3">
-                        <select name="kode_dokter" id="kode_dokter" class="form-control select2_dokter_poli" data-placeholder="~ Pilih Dokter">
-                            <?php
-                            if (!empty($data_pendaftaran)) :
-                                $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $data_pendaftaran->kode_dokter]);
-                                echo '<option value="' . $dokter->kode_dokter . '">' . $dokter->kode_dokter . ' ~ ' . $dokter->nama . '</option>';
-                            endif;
-                            ?>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <button type="button" class="btn btn-danger" onclick="getUrl('Health/pendaftaran')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
-                </div>
-                <div class="col-md-6">
-                    <div class="float-right">
-                        <?php if (!empty($data_pendaftaran)) : ?>
-                            <button type="button" class="btn btn-info" onclick="getUrl('Health/form_pendaftaran/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
-                        <?php else : ?>
-                            <button type="button" class="btn btn-info" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
-                        <?php endif ?>
-                        <button type="button" class="btn btn-success" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <label for="">Tarif Paket</label>
-            <div class="table-responsive">
-                <input type="hidden" name="jumPaket" id="jumPaket" value="<?= ((!empty($pasien_paket)) ? count($pasien_paket) : 0) ?>">
-                <table class="table table-striped table-bordered" id="tableTarifPaket" width="100%" style="border-raidus: 10px;">
-                    <thead>
-                        <tr class="text-center">
-                            <th width="5%">Hapus</th>
-                            <th width="85%">Tindakan</th>
-                            <th width="10%">Kunjungan</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bodyTarifPaket">
-                        <?php if (!empty($pasien_paket)) : ?>
-                            <?php $no = 1;
-                            foreach ($pasien_paket as $pp) :
-                                $paket = $this->M_global->getData('m_tarif', ['kode_tarif' => $pp->kode_tarif]);
-                            ?>
-                                <tr id="rowPaket<?= $no ?>">
-                                    <td>
-                                        <button type="button" class="btn btn-danger" onclick="hapusTindakan('<?= $no ?>')">
-                                            <i class="fa-solid fa-delete-left"></i>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <select name="kode_tarif[]" id="kode_tarif<?= $no ?>" class="form-control select2_tarif_paket" data-placeholder="~ Pilih Tindakan" onchange="getKunjungan(this.value, <?= $no ?>)">
-                                            <option value="<?= $pp->kode_tarif ?>"><?= $paket->nama; ?></option>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="">No. Antrian</label>
+                                        <input type="text" class="form-control" placeholder="Otomatis" id="no_antrian" name="no_antrian" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_antrian : '') ?>" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="">Ruangan/Bed <sup class="text-danger">**</sup></label>
+                                        <select name="kode_ruang" id="kode_ruang" class="form-control select2_ruang" data-placeholder="~ Pilih Ruang">
+                                            <?php
+                                            if (!empty($data_pendaftaran)) :
+                                                $ruang = $this->M_global->getData('m_ruang', ['kode_ruang' => $data_pendaftaran->kode_ruang]);
+                                                echo '<option value="' . $ruang->kode_ruang . '">' . $ruang->kode_ruang . ' ~ ' . $ruang->keterangan . '</option>';
+                                            endif;
+                                            ?>
                                         </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="kunjungan[]" id="kunjungan<?= $no ?>" class="form-control text-center" readonly value="<?= $pp->kunjungan ?>">
-                                    </td>
-                                </tr>
-                            <?php $no++;
-                            endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="">Poli <sup class="text-danger">**</sup></label>
+                                        <select name="kode_poli" id="kode_poli" class="form-control select2_poli" data-placeholder="~ Pilih Poli" onchange="getDokter(this.value)">
+                                            <?php
+                                            if (!empty($data_pendaftaran)) :
+                                                $poli = $this->M_global->getData('m_poli', ['kode_poli' => $data_pendaftaran->kode_poli]);
+                                                echo '<option value="' . $poli->kode_poli . '">' . $poli->kode_poli . ' ~ ' . $poli->keterangan . '</option>';
+                                            endif;
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="">Dokter Poli <sup class="text-danger">**</sup></label>
+                                        <select name="kode_dokter" id="kode_dokter" class="form-control select2_dokter_poli" data-placeholder="~ Pilih Dokter">
+                                            <?php
+                                            if (!empty($data_pendaftaran)) :
+                                                $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $data_pendaftaran->kode_dokter]);
+                                                echo '<option value="' . $dokter->kode_dokter . '">' . $dokter->kode_dokter . ' ~ ' . $dokter->nama . '</option>';
+                                            endif;
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <label for="">Tarif Paket</label>
+                            <div class="table-responsive">
+                                <input type="hidden" name="jumPaket" id="jumPaket" value="<?= ((!empty($pasien_paket)) ? count($pasien_paket) : 0) ?>">
+                                <table class="table table-striped table-bordered" id="tableTarifPaket" width="100%" style="border-raidus: 10px;">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th width="5%">Hapus</th>
+                                            <th width="85%">Tindakan</th>
+                                            <th width="10%">Kunjungan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyTarifPaket">
+                                        <?php if (!empty($pasien_paket)) : ?>
+                                            <?php $no = 1;
+                                            foreach ($pasien_paket as $pp) :
+                                                $paket = $this->M_global->getData('m_tarif', ['kode_tarif' => $pp->kode_tarif]);
+                                            ?>
+                                                <tr id="rowPaket<?= $no ?>">
+                                                    <td>
+                                                        <button type="button" class="btn btn-danger" onclick="hapusTindakan('<?= $no ?>')">
+                                                            <i class="fa-solid fa-delete-left"></i>
+                                                        </button>
+                                                    </td>
+                                                    <td>
+                                                        <select name="kode_tarif[]" id="kode_tarif<?= $no ?>" class="form-control select2_tarif_paket" data-placeholder="~ Pilih Tindakan" onchange="getKunjungan(this.value, <?= $no ?>)">
+                                                            <option value="<?= $pp->kode_tarif ?>"><?= $paket->nama; ?></option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="kunjungan[]" id="kunjungan<?= $no ?>" class="form-control text-center" readonly value="<?= $pp->kunjungan ?>">
+                                                    </td>
+                                                </tr>
+                                            <?php $no++;
+                                            endforeach; ?>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="tambahTarifPaket()" id="btnTambahPaket" <?= ((!empty($pasien_paket) ? (((count($pasien_paket) > 0) ? '' : 'disabled')) : 'disabled')) ?>><i class="fa-solid fa-folder-plus"></i> Tambah Tarif Paket</button>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-danger" onclick="getUrl('Health/pendaftaran')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="float-right">
+                                            <?php if (!empty($data_pendaftaran)) : ?>
+                                                <button type="button" class="btn btn-info" onclick="getUrl('Health/form_pendaftaran/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                                            <?php else : ?>
+                                                <button type="button" class="btn btn-info" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
+                                            <?php endif ?>
+                                            <button type="button" class="btn btn-success" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button type="button" class="btn btn-primary" onclick="tambahTarifPaket()" id="btnTambahPaket" <?= ((!empty($pasien_paket) ? (((count($pasien_paket) > 0) ? '' : 'disabled')) : 'disabled')) ?>><i class="fa-solid fa-folder-plus"></i> Tambah Tarif Paket</button>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Riwayat Member</span>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tableRiwayat" width="100%" style="border-radius: 10px;">
-                    <thead>
-                        <tr class="text-center">
-                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
-                            <th>Cabang</th>
-                            <th>No. Transaksi</th>
-                            <th>Tgl/Jam Daftar</th>
-                            <th>Tgl/Jam Keluar</th>
-                            <th>Poli</th>
-                            <th>Dokter</th>
-                            <th width="10%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bodyRiwayat">
-                        <?php if (!empty($data_pendaftaran)) : ?>
-                            <?php $no = 1;
-                            foreach ($riwayat as $r) : ?>
-                                <tr>
-                                    <td><?= $no ?></td>
-                                    <td>
-                                        <?= $this->M_global->getData('cabang', ['kode_cabang' => $r->kode_cabang])->cabang ?>
-                                        <?php
-                                        if ($r->status_trx == 0) {
-                                            $cek_status = 'success';
-                                            $message_status = 'Open';
-                                            $btndis = 'disabled';
-                                        } else if ($r->status_trx == 2) {
-                                            $cek_status = 'warning';
-                                            $message_status = 'Cancel';
-                                            $btndis = '';
-                                        } else {
-                                            $cek_status = 'danger';
-                                            $message_status = 'Close';
-                                            $btndis = '';
-                                        }
-                                        ?>
-                                        <span class="badge badge-<?= $cek_status ?>"><?= $message_status ?></span>
-                                    </td>
-                                    <td><?= $r->no_trx ?></td>
-                                    <td><?= date('Y-m-d', strtotime($r->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($r->jam_daftar)) ?></td>
-                                    <td><?= '<span class="text-center">' . (($r->status_trx < 1) ? '-' : date('d/m/Y', strtotime($r->tgl_keluar)) . ' ~ ' . date('H:i:s', strtotime($r->jam_keluar))) . '</>' ?></td>
-                                    <td><?= $this->M_global->getData('m_poli', ['kode_poli' => $r->kode_poli])->keterangan ?></td>
-                                    <td><?= $this->M_global->getData('dokter', ['kode_dokter' => $r->kode_dokter])->nama ?></td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getHisPas('<?= $r->no_trx ?>')" <?= $btndis ?>><i class="fa-solid fa-circle-info"></i></button>
-                                    </td>
-                                </tr>
-                            <?php $no++;
-                            endforeach; ?>
-                        <?php else : ?>
-                            <tr>
-                                <td style="border-radius: 0px 0px 10px 10px;" colspan="7" class="text-center">Belum Ada Riwayat</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Riwayat Member</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered" id="tableRiwayat" width="100%" style="border-radius: 10px;">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                                            <th>Cabang</th>
+                                            <th>No. Transaksi</th>
+                                            <th>Tgl/Jam Daftar</th>
+                                            <th>Tgl/Jam Keluar</th>
+                                            <th>Poli</th>
+                                            <th>Dokter</th>
+                                            <th width="10%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyRiwayat">
+                                        <?php if (!empty($data_pendaftaran)) : ?>
+                                            <?php $no = 1;
+                                            foreach ($riwayat as $r) : ?>
+                                                <tr>
+                                                    <td><?= $no ?></td>
+                                                    <td>
+                                                        <?= $this->M_global->getData('cabang', ['kode_cabang' => $r->kode_cabang])->cabang ?>
+                                                        <?php
+                                                        if ($r->status_trx == 0) {
+                                                            $cek_status = 'success';
+                                                            $message_status = 'Open';
+                                                            $btndis = 'disabled';
+                                                        } else if ($r->status_trx == 2) {
+                                                            $cek_status = 'warning';
+                                                            $message_status = 'Cancel';
+                                                            $btndis = '';
+                                                        } else {
+                                                            $cek_status = 'danger';
+                                                            $message_status = 'Close';
+                                                            $btndis = '';
+                                                        }
+                                                        ?>
+                                                        <span class="badge badge-<?= $cek_status ?>"><?= $message_status ?></span>
+                                                    </td>
+                                                    <td><?= $r->no_trx ?></td>
+                                                    <td><?= date('Y-m-d', strtotime($r->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($r->jam_daftar)) ?></td>
+                                                    <td><?= '<span class="text-center">' . (($r->status_trx < 1) ? '-' : date('d/m/Y', strtotime($r->tgl_keluar)) . ' ~ ' . date('H:i:s', strtotime($r->jam_keluar))) . '</>' ?></td>
+                                                    <td><?= $this->M_global->getData('m_poli', ['kode_poli' => $r->kode_poli])->keterangan ?></td>
+                                                    <td><?= $this->M_global->getData('dokter', ['kode_dokter' => $r->kode_dokter])->nama ?></td>
+                                                    <td class="text-center">
+                                                        <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getHisPas('<?= $r->no_trx ?>')" <?= $btndis ?>><i class="fa-solid fa-circle-info"></i></button>
+                                                    </td>
+                                                </tr>
+                                            <?php $no++;
+                                            endforeach; ?>
+                                        <?php else : ?>
+                                            <tr>
+                                                <td style="border-radius: 0px 0px 10px 10px;" colspan="8" class="text-center">Belum Ada Riwayat</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -548,22 +527,23 @@
 
     // fungsi lihat detail
     function getDetail(param) {
-        window.open(siteUrl + 'Health/print_pendaftaran/' + param+'/0', '_blank');
+        window.open(siteUrl + 'Health/print_pendaftaran/' + param + '/0', '_blank');
     }
 
     // fungsi lihat detail
     function getHisPas(param) {
         $.ajax({
-            url: siteUrl+'Health/getToken/'+param,
+            url: siteUrl + 'Health/getToken/' + param,
             type: 'POST',
             dataType: 'JSON',
             success: function(result) {
-                if(result.status == 1) {
-                    window.open(siteUrl + 'Kasir/print_kwitansi/' + result.token+'/0', '_blank');
+                if (result.status == 1) {
+                    window.open(siteUrl + 'Kasir/print_kwitansi/' + result.token + '/0', '_blank');
                 } else {
                     Swal.fire("History Pasien", "Gagal diambil, silahkan dicoba kembali", "info");
                 }
-            }, error: function(result) {
+            },
+            error: function(result) {
                 error_proccess();
             }
         });

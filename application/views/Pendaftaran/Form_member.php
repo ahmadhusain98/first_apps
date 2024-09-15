@@ -1,255 +1,165 @@
 <form method="post" id="form_user">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="">NIK</label>
-                        <div class="input-group mb-3">
-                            <input type="number" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="NIK" class="form-control" placeholder="NIK" id="nik" name="nik" value="<?= ((!empty($data_member)) ? $data_member->nik : '') ?>" onchange="getAddress(this.value, 'nik')" <?= (!empty($data_member) ? 'readonly' : '') ?>>
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <ion-icon name="id-card-outline"></ion-icon>
-                                </div>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="nik">NIK</label>
+                                <input type="number" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="NIK" class="form-control" placeholder="NIK" id="nik" name="nik" value="<?= ((!empty($data_member)) ? $data_member->nik : '') ?>" onchange="getAddress(this.value, 'nik')" <?= (!empty($data_member) ? 'readonly' : '') ?>>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="nama">Nama</label>
+                                <input type="hidden" class="form-control" id="kodeMember" name="kodeMember" value="<?= ((!empty($data_member)) ? $data_member->kode_member : '') ?>">
+                                <input type="text" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Nama Lengkap" class="form-control" placeholder="Nama Lengkap" id="nama" name="nama" value="<?= ((!empty($data_member)) ? $data_member->nama : '') ?>" onkeyup="ubah_nama(this.value, 'nama')">
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="">Nama</label>
-                        <div class="input-group mb-3">
-                            <input type="hidden" class="form-control" id="kodeMember" name="kodeMember" value="<?= ((!empty($data_member)) ? $data_member->kode_member : '') ?>">
-                            <input type="text" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Nama Lengkap" class="form-control" placeholder="Nama Lengkap" id="nama" name="nama" value="<?= ((!empty($data_member)) ? $data_member->nama : '') ?>" onkeyup="ubah_nama(this.value, 'nama')">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <ion-icon name="person-outline"></ion-icon>
-                                </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="email">Email</label>
+                                <input type="email" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Email" class="form-control" placeholder="Email" id="email" name="email" onchange="cekEmail('email')" value="<?= ((!empty($data_member)) ? $data_member->email : '') ?>">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="nohp">No. Hp</label>
+                                <input type="number" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="No. HP" class="form-control" placeholder="No. Hp" id="nohp" name="nohp" value="<?= ((!empty($data_member)) ? $data_member->nohp : '') ?>">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="tmp_lahir">Tempat Lahir</label>
+                                <input type="text" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Tempat Lahir" class="form-control" placeholder="Tempat Lahir" id="tmp_lahir" name="tmp_lahir" value="<?= ((!empty($data_member)) ? $data_member->tmp_lahir : '') ?>" onkeyup="ubah_nama(this.value, 'tmp_lahir')">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="tgl_lahir">Tanggal Lahir</label>
+                                <input type="date" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Tgl Lahir" class="form-control" placeholder="Tgl Lahir" id="tgl_lahir" name="tgl_lahir" value="<?= ((!empty($data_member)) ? (isset($data_member->tgl_lahir) ? date('Y-m-d', strtotime($data_member->tgl_lahir)) : date('Y-m-d')) : date('Y-m-d')) ?>">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="password">Sandi</label>
+                                <input type="password" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Sandi" class="form-control" placeholder="Sandi" id="password" name="password" value="<?= ((!empty($data_member)) ? $data_member->secondpass : '') ?>">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="pendidikan">Pendidikan</label>
+                                <select name="pendidikan" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Pendidikan" id="pendidikan" class="select2_pendidikan" data-placeholder="~ Pilih Pendidikan">
+                                    <?php
+                                    if (!empty($data_member)) {
+                                        $pend = $this->M_global->getData('m_pendidikan', ['kode_pendidikan' => $data_member->pendidikan]);
+                                        echo "<option value='" . $pend->kode_pendidikan . "'>" . $pend->keterangan . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="pekerjaan">Pekerjaan</label>
+                                <select name="pekerjaan" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Pekerjaan" id="pekerjaan" class="select2_pekerjaan" data-placeholder="~ Pilih Pekerjaan">
+                                    <?php
+                                    if (!empty($data_member)) {
+                                        $pek = $this->M_global->getData('m_pekerjaan', ['kode_pekerjaan' => $data_member->pekerjaan]);
+                                        echo "<option value='" . $pek->kode_pekerjaan . "'>" . $pek->keterangan . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="agama">Agama</label>
+                                <select name="agama" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Agama" id="agama" class="select2_agama" data-placeholder="~ Pilih Agama">
+                                    <?php
+                                    if (!empty($data_member)) {
+                                        $agam = $this->M_global->getData('m_agama', ['kode_agama' => $data_member->agama]);
+                                        echo "<option value='" . $agam->kode_agama . "'>" . $agam->keterangan . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="jkel">Jenis Kelamin</label>
+                                <select name="jkel" id="jkel" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Gender" class="form-control select2_global" data-placeholder="~ Pilih Gender">
+                                    <option value="">~ Pilih Gender</option>
+                                    <option value="P" <?= (!empty($data_member) ? (($data_member->jkel == 'P') ? 'selected' : '') : '') ?>>Laki-laki</option>
+                                    <option value="W" <?= (!empty($data_member) ? (($data_member->jkel == 'W') ? 'selected' : '') : '') ?>>Perempuan</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="provinsi">Provinsi</label>
+                                <select name="provinsi" id="provinsi" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Provinsi" class="form-control select2_provinsi" data-placeholder="~ Pilih Provinsi" onchange="getKabupaten(this.value)">
+                                    <?php
+                                    if (!empty($data_member)) {
+                                        $prov = $this->M_global->getData('m_provinsi', ['kode_provinsi' => $data_member->provinsi]);
+                                        echo "<option value='" . $prov->kode_provinsi . "'>" . $prov->provinsi . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="kabupaten">Kabupaten</label>
+                                <select name="kabupaten" id="kabupaten" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Kabupaten" class="form-control select2_kabupaten" data-placeholder="~ Pilih Kabupaten" onchange="getKecamatan(this.value)">
+                                    <?php
+                                    if (!empty($data_member)) {
+                                        $prov = $this->M_global->getData('kabupaten', ['kode_kabupaten' => $data_member->kabupaten]);
+                                        echo "<option value='" . $prov->kode_kabupaten . "'>" . $prov->kabupaten . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="kecamatan">Kecamatan</label>
+                                <select name="kecamatan" id="kecamatan" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Kecamatan" class="form-control select2_kecamatan" data-placeholder="~ Pilih Kecamatan">
+                                    <?php
+                                    if (!empty($data_member)) {
+                                        $prov = $this->M_global->getData('kecamatan', ['kode_kecamatan' => $data_member->kecamatan]);
+                                        echo "<option value='" . $prov->kode_kecamatan . "'>" . $prov->kecamatan . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="desa">Desa</label>
+                                <input type="text" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Desa" class="form-control" placeholder="Desa" id="desa" name="desa" value="<?= ((!empty($data_member)) ? $data_member->desa : '') ?>" onkeyup="ubah_nama(this.value, 'desa')">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="kodepos">Kode POS</label>
+                                <input type="number" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Kode Pos" class="form-control" placeholder="Kode Pos" id="kodepos" name="kodepos" value="<?= ((!empty($data_member)) ? $data_member->kodepos : '') ?>" onkeyup="cekLength(this.value, 'kodepos')">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="rt">RT</label>
+                                <input type="text" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="RT" class="form-control" placeholder="RT" id="rt" name="rt" value="<?= ((!empty($data_member)) ? $data_member->rt : '') ?>">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="rw">RW</label>
+                                <input type="number" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="RW" class="form-control" placeholder="RW" id="rw" name="rw" value="<?= ((!empty($data_member)) ? $data_member->rw : '') ?>">
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="">Email</label>
-                        <div class="input-group mb-3">
-                            <input type="email" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Email" class="form-control" placeholder="Email" id="email" name="email" onchange="cekEmail('email')" value="<?= ((!empty($data_member)) ? $data_member->email : '') ?>">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <ion-icon name="mail-outline"></ion-icon>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="">No. Hp</label>
-                        <div class="input-group mb-3">
-                            <input type="number" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="No. HP" class="form-control" placeholder="No. Hp" id="nohp" name="nohp" value="<?= ((!empty($data_member)) ? $data_member->nohp : '') ?>">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <ion-icon name="call-outline"></ion-icon>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="">Tempat Lahir</label>
-                        <div class="input-group mb-3">
-                            <input type="text" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Tempat Lahir" class="form-control" placeholder="Tempat Lahir" id="tmp_lahir" name="tmp_lahir" value="<?= ((!empty($data_member)) ? $data_member->tmp_lahir : '') ?>" onkeyup="ubah_nama(this.value, 'tmp_lahir')">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <ion-icon name="home-outline"></ion-icon>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="">Tanggal Lahir</label>
-                        <div class="input-group mb-3">
-                            <input type="date" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Tgl Lahir" class="form-control" placeholder="Tgl Lahir" id="tgl_lahir" name="tgl_lahir" value="<?= ((!empty($data_member)) ? (isset($data_member->tgl_lahir) ? date('Y-m-d', strtotime($data_member->tgl_lahir)) : date('Y-m-d')) : date('Y-m-d')) ?>">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <ion-icon name="calendar-outline"></ion-icon>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="">Sandi</label>
-                        <div class="input-group mb-3">
-                            <input type="password" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Sandi" class="form-control" placeholder="Sandi" id="password" name="password" value="<?= ((!empty($data_member)) ? $data_member->secondpass : '') ?>">
-                            <div class="input-group-append" onclick="pass()">
-                                <div class="input-group-text">
-                                    <ion-icon name="lock-closed-outline" id="lock_pass"></ion-icon>
-                                    <ion-icon name="lock-open-outline" id="open_pass"></ion-icon>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="">Pendidikan</label>
-                        <div class="input-group mb-3">
-                            <select name="pendidikan" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Pendidikan" id="pendidikan" class="select2_pendidikan" data-placeholder="~ Pilih Pendidikan">
-                                <?php
-                                if (!empty($data_member)) {
-                                    $pend = $this->M_global->getData('m_pendidikan', ['kode_pendidikan' => $data_member->pendidikan]);
-                                    echo "<option value='" . $pend->kode_pendidikan . "'>" . $pend->keterangan . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="">Pekerjaan</label>
-                        <div class="input-group mb-3">
-                            <select name="pekerjaan" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Pekerjaan" id="pekerjaan" class="select2_pekerjaan" data-placeholder="~ Pilih Pekerjaan">
-                                <?php
-                                if (!empty($data_member)) {
-                                    $pek = $this->M_global->getData('m_pekerjaan', ['kode_pekerjaan' => $data_member->pekerjaan]);
-                                    echo "<option value='" . $pek->kode_pekerjaan . "'>" . $pek->keterangan . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="">Agama</label>
-                        <div class="input-group mb-3">
-                            <select name="agama" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Agama" id="agama" class="select2_agama" data-placeholder="~ Pilih Agama">
-                                <?php
-                                if (!empty($data_member)) {
-                                    $agam = $this->M_global->getData('m_agama', ['kode_agama' => $data_member->agama]);
-                                    echo "<option value='" . $agam->kode_agama . "'>" . $agam->keterangan . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="">Jenis Kelamin</label>
-                        <div class="input-group mb-3">
-                            <select name="jkel" id="jkel" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Gender" class="form-control select2_global" data-placeholder="~ Pilih Gender">
-                                <option value="">~ Pilih Gender</option>
-                                <option value="P" <?= (!empty($data_member) ? (($data_member->jkel == 'P') ? 'selected' : '') : '') ?>>Laki-laki</option>
-                                <option value="W" <?= (!empty($data_member) ? (($data_member->jkel == 'W') ? 'selected' : '') : '') ?>>Perempuan</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="">Provinsi</label>
-                        <div class="input-group mb-3">
-                            <select name="provinsi" id="provinsi" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Provinsi" class="form-control select2_provinsi" data-placeholder="~ Pilih Provinsi" onchange="getKabupaten(this.value)">
-                                <?php
-                                if (!empty($data_member)) {
-                                    $prov = $this->M_global->getData('m_provinsi', ['kode_provinsi' => $data_member->provinsi]);
-                                    echo "<option value='" . $prov->kode_provinsi . "'>" . $prov->provinsi . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="">Kabupaten</label>
-                        <div class="input-group mb-3">
-                            <select name="kabupaten" id="kabupaten" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Kabupaten" class="form-control select2_kabupaten" data-placeholder="~ Pilih Kabupaten" onchange="getKecamatan(this.value)">
-                                <?php
-                                if (!empty($data_member)) {
-                                    $prov = $this->M_global->getData('kabupaten', ['kode_kabupaten' => $data_member->kabupaten]);
-                                    echo "<option value='" . $prov->kode_kabupaten . "'>" . $prov->kabupaten . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="">Kecamatan</label>
-                        <div class="input-group mb-3">
-                            <select name="kecamatan" id="kecamatan" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Kecamatan" class="form-control select2_kecamatan" data-placeholder="~ Pilih Kecamatan">
-                                <?php
-                                if (!empty($data_member)) {
-                                    $prov = $this->M_global->getData('kecamatan', ['kode_kecamatan' => $data_member->kecamatan]);
-                                    echo "<option value='" . $prov->kode_kecamatan . "'>" . $prov->kecamatan . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="">Desa</label>
-                        <div class="input-group mb-3">
-                            <input type="text" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Desa" class="form-control" placeholder="Desa" id="desa" name="desa" value="<?= ((!empty($data_member)) ? $data_member->desa : '') ?>" onkeyup="ubah_nama(this.value, 'desa')">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <ion-icon name="home-outline"></ion-icon>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="">Kode POS</label>
-                        <div class="input-group mb-3">
-                            <input type="number" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Kode Pos" class="form-control" placeholder="Kode Pos" id="kodepos" name="kodepos" value="<?= ((!empty($data_member)) ? $data_member->kodepos : '') ?>" onkeyup="cekLength(this.value, 'kodepos')">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <ion-icon name="locate-outline"></ion-icon>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="">RT</label>
-                        <div class="input-group mb-3">
-                            <input type="text" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="RT" class="form-control" placeholder="RT" id="rt" name="rt" value="<?= ((!empty($data_member)) ? $data_member->rt : '') ?>">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <ion-icon name="locate-outline"></ion-icon>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="">RW</label>
-                        <div class="input-group mb-3">
-                            <input type="number" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="RW" class="form-control" placeholder="RW" id="rw" name="rw" value="<?= ((!empty($data_member)) ? $data_member->rw : '') ?>">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <ion-icon name="locate-outline"></ion-icon>
-                                </div>
-                            </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-danger" onclick="getUrl('Health/daftar')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+                            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                            <?php if (!empty($data_member)) : ?>
+                                <button type="button" class="btn btn-info float-right" onclick="getUrl('Health/form_daftar/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                            <?php else : ?>
+                                <button type="button" class="btn btn-info float-right" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
+                            <?php endif ?>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <button type="button" class="btn btn-danger" onclick="getUrl('Health/daftar')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
-            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
-            <?php if (!empty($data_member)) : ?>
-                <button type="button" class="btn btn-info float-right" onclick="getUrl('Health/form_daftar/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
-            <?php else : ?>
-                <button type="button" class="btn btn-info float-right" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
-            <?php endif ?>
         </div>
     </div>
 </form>
@@ -476,7 +386,7 @@
     }
 
     // fungsi reset form
-    function reset() {
+    function reseting() {
         if (kodeMember.val() == '' || kodeMember.val() == null) {
             kodeMember.val('');
         }
@@ -486,10 +396,14 @@
         email.val('');
         password.val('');
         nohp.val('');
+        tmp_lahir.val('');
         jkel.val('').change();
-        provinsi.append(`<option value="">~ Pilih Provinsi</option>`);
-        kabupaten.append(`<option value="">~ Pilih Kaupaten</option>`);
-        kecamatan.append(`<option value="">~ Pilih Kecamatan</option>`);
+        provinsi.val('').change();
+        kabupaten.val('').change();
+        kecamatan.val('').change();
+        pendidikan.val('').change();
+        pekerjaan.val('').change();
+        agama.val('').change();
         desa.val('');
         kodepos.val('');
         rt.val('');
