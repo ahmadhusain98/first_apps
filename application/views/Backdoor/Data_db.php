@@ -1,55 +1,68 @@
-<div class="row mb-3">
-    <div class="col-md-6">
-        <button type="button" class="btn btn-danger" onclick="getUrl('Backdoor')"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
-    </div>
-    <div class="col-md-6">
-        <div class="float-right">
-            <button class="btn btn-primary" onclick="backup()"><i class="fa-solid fa-cloud-arrow-down"></i> Backup Database</button>
-        </div>
-        <!-- masih error saat upload table m_menu -->
-        <!-- <div class="float-right">
-            <form id="form_db" method="post">
-                <div class="input-group mb-3">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="myfile" name="myfile">
-                        <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Cari File SQL</label>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Databases</span>
+            </div>
+            <div class="card-footer">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-danger" onclick="getUrl('Backdoor')"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
                     </div>
-                    <div class="input-group-append">
-                        <span class="input-group-text" id="inputGroupFileAddon02" type="button" onclick="restore_db()">Upload</span>
+                    <div class="col-md-6">
+                        <div class="float-right">
+                            <button class="btn btn-primary" onclick="backup()"><i class="fa-solid fa-cloud-arrow-down"></i> Backup Database</button>
+                        </div>
+                        <!-- masih error saat upload table m_menu -->
+                        <!-- <div class="float-right">
+                            <form id="form_db" method="post">
+                                <div class="input-group mb-3">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="myfile" name="myfile">
+                                        <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Cari File SQL</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="inputGroupFileAddon02" type="button" onclick="restore_db()">Upload</span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div> -->
                     </div>
                 </div>
-            </form>
-        </div> -->
-    </div>
-</div>
-<div class="row mb-3">
-    <div class="col-md-12">
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered" width="100%" style="border-radius: 10px;" id="myTables">
-                <thead>
-                    <tr class="text-center">
-                        <th style="width: 5%; border-radius: 10px 0px 0px 0px;">No</th>
-                        <th>Nama Database</th>
-                        <th>Tgl Backup</th>
-                        <th style="width: 15%; border-radius: 0px 10px 0px 0px;">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $no = 1;
-                    foreach ($backup_db as $bdb) : ?>
-                        <tr>
-                            <td class="text-right"><?= $no ?></td>
-                            <td><?= $bdb->nama ?></td>
-                            <td><?= date('d/m/Y ~ H:i:s', strtotime($bdb->tgl_backup)) ?></td>
-                            <td class="text-center">
-                                <button class="btn btn-info" type="button" onclick="download_db('<?= $bdb->nama; ?>')"><i class="fa-solid fa-download"></i></button>
-                                <button class="btn btn-danger" type="button" onclick="delete_db('<?= $bdb->id; ?>')"><i class="fa-solid fa-trash-can-arrow-up"></i></button>
-                            </td>
-                        </tr>
-                    <?php $no++;
-                    endforeach; ?>
-                </tbody>
-            </table>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered" width="100%" style="border-radius: 10px;" id="myTables">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th style="width: 5%; border-radius: 10px 0px 0px 0px;">No</th>
+                                        <th>Nama Database</th>
+                                        <th>Tgl Backup</th>
+                                        <th style="width: 15%; border-radius: 0px 10px 0px 0px;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $no = 1;
+                                    foreach ($backup_db as $bdb) : ?>
+                                        <tr>
+                                            <td class="text-right"><?= $no ?></td>
+                                            <td><?= $bdb->nama ?></td>
+                                            <td><?= date('d/m/Y ~ H:i:s', strtotime($bdb->tgl_backup)) ?></td>
+                                            <td class="text-center">
+                                                <button class="btn btn-info" type="button" onclick="download_db('<?= $bdb->nama; ?>')"><i class="fa-solid fa-download"></i></button>
+                                                <button class="btn btn-danger" type="button" onclick="delete_db('<?= $bdb->id; ?>')"><i class="fa-solid fa-trash-can-arrow-up"></i></button>
+                                            </td>
+                                        </tr>
+                                    <?php $no++;
+                                    endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

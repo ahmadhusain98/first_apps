@@ -6,37 +6,44 @@ echo _lock_so();
 <form method="post" id="form_barang_in">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Cabang</span>
-        </div>
-    </div>
-    <br>
-    <div class="row mb-3">
-        <div class="col-md-6 col-12">
-            <button type="button" class="btn btn-danger" onclick="getUrl('Backdoor')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
-        </div>
-        <div class="col-md-6 col-12">
-            <div class="float-right">
-                <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tableAksesCabang" width="100%" style="border-radius: 10px;">
-                    <thead>
-                        <tr class="text-center">
-                            <th rowspan="2" width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
-                            <th rowspan="2" width="25%">User</th>
-                            <th colspan="<?= count($cabang) ?>" width="70%">Akses</th>
-                        </tr>
-                        <tr class="text-center">
-                            <?php foreach ($cabang as $c) : ?>
-                                <th><?= $c->inisial_cabang ?></td>
-                                <?php endforeach ?>
-                        </tr>
-                    </thead>
-                </table>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Cabang</span>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-6 col-12">
+                            <button type="button" class="btn btn-danger" onclick="getUrl('Backdoor')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <div class="float-right">
+                                <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered" id="tableAksesCabang" width="100%" style="border-radius: 10px;">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th rowspan="2" width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                                            <th rowspan="2" width="25%">User</th>
+                                            <th colspan="<?= count($cabang) ?>" width="70%">Akses</th>
+                                        </tr>
+                                        <tr class="text-center">
+                                            <?php foreach ($cabang as $c) : ?>
+                                                <th><?= $c->inisial_cabang ?></td>
+                                                <?php endforeach ?>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
