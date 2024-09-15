@@ -5,72 +5,80 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 <form method="post" id="form_pajak">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="nama">Nama <span class="text-danger">**</span></label>
-                                <input type="hidden" class="form-control" id="kodePajak" name="kodePajak" placeholder="Otomatis" readonly>
-                                <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Pajak" onkeyup="ubah_nama(this.value, 'nama')">
-                            </div>
-                        </div>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
                         <div class="row">
-                            <div class="col-md-12">
-                                <label for="persentase">Persentase <span class="text-danger">**</span></label>
-                                <input type="text" class="form-control" id="persentase" name="persentase" placeholder="Masukkan Persentase" onkeyup="ubah_nama(this.value, 'persentase')">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="nama">Nama <span class="text-danger">**</span></label>
+                                        <input type="hidden" class="form-control" id="kodePajak" name="kodePajak" placeholder="Otomatis" readonly>
+                                        <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Pajak" onkeyup="ubah_nama(this.value, 'nama')">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="persentase">Persentase <span class="text-danger">**</span></label>
+                                        <input type="text" class="form-control" id="persentase" name="persentase" placeholder="Masukkan Persentase" onkeyup="ubah_nama(this.value, 'persentase')">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="float-right">
-                <button type="button" class="btn btn-info" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
-                <button type="button" class="btn btn-success" onclick="save()" id="btnSimpan" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
-            </div>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Pajak</span>
-            <div class="float-right">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#" onclick="preview('pajak')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="print('pajak')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="excel('pajak')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
-                    </ul>
+                <div class="card-footer">
+                    <div class="float-right">
+                        <button type="button" class="btn btn-info" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
+                        <button type="button" class="btn btn-success" onclick="save()" id="btnSimpan" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
             </div>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tablePajak" width="100%" style="border-radius: 10px;">
-                    <thead>
-                        <tr class="text-center">
-                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
-                            <th width="60%">Nama</th>
-                            <th width="20%">Persentase</th>
-                            <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
-                        </tr>
-                    </thead>
-                </table>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Pajak</span>
+                    <div class="float-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="preview('pajak')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="print('pajak')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="excel('pajak')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered" id="tablePajak" width="100%" style="border-radius: 10px;">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                                            <th width="60%">Nama</th>
+                                            <th width="20%">Persentase</th>
+                                            <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -160,7 +168,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 if (result.status == 1) { // jika mendapatkan respon 1
 
                     Swal.fire("Pajak", "Berhasil " + message, "success").then(() => {
-                        reset();
+                        reseting();
                         reloadTable();
                     });
                 } else { // selain itu
@@ -191,14 +199,14 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 
                     btnSimpan.attr('disabled', false);
                 } else { // selain itu, kosongkan
-                    reset();
+                    reseting();
                 }
             }
         });
     }
 
     // fungsi reset form
-    function reset() {
+    function reseting() {
         kodePajak.val('');
         nama.val('');
         persentase.val('');

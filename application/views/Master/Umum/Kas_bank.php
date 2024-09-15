@@ -5,39 +5,44 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 <form method="post" id="form_kas_bank">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Kas & Bank</span>
-            <div class="float-right">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#" onclick="preview('kas_bank')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="print('kas_bank')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="excel('kas_bank')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
-                    </ul>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Kas & Bank</span>
+                    <div class="float-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="preview('kas_bank')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="print('kas_bank')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="excel('kas_bank')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                        <button type="button" class="btn btn-success" onclick="getUrl('Master/form_kas_bank/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
-                <button type="button" class="btn btn-success" onclick="getUrl('Master/form_kas_bank/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
-            </div>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tableKas_bank" width="100%" style="border-radius: 10px;">
-                    <thead>
-                        <tr class="text-center">
-                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
-                            <th width="20%">ID</th>
-                            <th width="20%">Nama</th>
-                            <th width="20%">Tipe</th>
-                            <th width="20%">Akun</th>
-                            <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
-                        </tr>
-                    </thead>
-                </table>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered" id="tableKas_bank" width="100%" style="border-radius: 10px;">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                                            <th width="20%">ID</th>
+                                            <th width="20%">Nama</th>
+                                            <th width="20%">Tipe</th>
+                                            <th width="20%">Akun</th>
+                                            <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

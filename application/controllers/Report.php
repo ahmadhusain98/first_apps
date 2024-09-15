@@ -50,8 +50,11 @@ class Report extends CI_Controller
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_satuan s ORDER BY s.kode_satuan ASC")->result();
 
-        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
-        $body .= '<tr>
+        $body           .= '<br>';
+
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+
+        $body           .= '<tr>
             <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
             <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
             <th style="width: 70%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
@@ -59,7 +62,7 @@ class Report extends CI_Controller
 
         $no = 1;
         foreach ($sintak as $s) {
-            $body .= '<tr>
+            $body       .= '<tr>
                 <td style="border: 1px solid black;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_satuan . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
@@ -67,13 +70,13 @@ class Report extends CI_Controller
             $no++;
         }
 
-        $body .= '</table>';
+        $body           .= '</table>';
 
-        $judul = 'Master Satuan';
-        $filename = $judul; // nama file yang ingin di simpan
+        $judul          = 'Master Satuan';
+        $filename       = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf
-        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
     }
 
     // kategori
@@ -91,11 +94,14 @@ class Report extends CI_Controller
         // parameter dari view laporan
         $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
+        $body           .= '<br>';
+
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_kategori s ORDER BY s.kode_kategori ASC")->result();
 
-        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
-        $body .= '<tr>
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+
+        $body           .= '<tr>
             <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
             <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
             <th style="width: 70%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
@@ -111,13 +117,13 @@ class Report extends CI_Controller
             $no++;
         }
 
-        $body .= '</table>';
+        $body           .= '</table>';
 
-        $judul = 'Master Kategori';
-        $filename = $judul; // nama file yang ingin di simpan
+        $judul          = 'Master Kategori';
+        $filename       = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf
-        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
     }
 
     // jenis
@@ -138,8 +144,10 @@ class Report extends CI_Controller
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_jenis s ORDER BY s.kode_jenis ASC")->result();
 
-        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
-        $body .= '<tr>
+        $body           .= '<br>';
+
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body           .= '<tr>
             <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
             <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
             <th style="width: 70%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
@@ -155,13 +163,13 @@ class Report extends CI_Controller
             $no++;
         }
 
-        $body .= '</table>';
+        $body           .= '</table>';
 
-        $judul = 'Master Jenis';
-        $filename = $judul; // nama file yang ingin di simpan
+        $judul          = 'Master Jenis';
+        $filename       = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf
-        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
     }
 
     // supplier
@@ -182,8 +190,8 @@ class Report extends CI_Controller
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_supplier s ORDER BY s.kode_supplier ASC")->result();
 
-        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
-        $body .= '<tr>
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body           .= '<tr>
             <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
             <th style="width: 12%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
             <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
@@ -195,7 +203,7 @@ class Report extends CI_Controller
 
         $no = 1;
         foreach ($sintak as $s) {
-            $body .= '<tr>
+            $body       .= '<tr>
                 <td style="border: 1px solid black;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_supplier . '</td>
                 <td style="border: 1px solid black;">' . $s->nama . '</td>
@@ -207,10 +215,10 @@ class Report extends CI_Controller
             $no++;
         }
 
-        $body .= '</table>';
+        $body           .= '</table>';
 
-        $judul = 'Master Supplier';
-        $filename = $judul; // nama file yang ingin di simpan
+        $judul          = 'Master Supplier';
+        $filename       = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf
         cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
@@ -234,8 +242,8 @@ class Report extends CI_Controller
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_gudang s ORDER BY s.kode_gudang ASC")->result();
 
-        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
-        $body .= '<tr>
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body           .= '<tr>
             <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
             <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
             <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
@@ -246,7 +254,7 @@ class Report extends CI_Controller
 
         $no = 1;
         foreach ($sintak as $s) {
-            $body .= '<tr>
+            $body       .= '<tr>
                 <td style="border: 1px solid black;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_gudang . '</td>
                 <td style="border: 1px solid black;">' . $s->nama . '</td>
@@ -257,10 +265,10 @@ class Report extends CI_Controller
             $no++;
         }
 
-        $body .= '</table>';
+        $body           .= '</table>';
 
-        $judul = 'Master Gudang';
-        $filename = $judul; // nama file yang ingin di simpan
+        $judul          = 'Master Gudang';
+        $filename       = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf
         cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
@@ -283,9 +291,10 @@ class Report extends CI_Controller
 
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_bank s ORDER BY s.kode_bank ASC")->result();
+        $body           .= '<br>';
 
-        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
-        $body .= '<tr>
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body           .= '<tr>
             <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
             <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
             <th style="width: 70%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
@@ -293,7 +302,7 @@ class Report extends CI_Controller
 
         $no = 1;
         foreach ($sintak as $s) {
-            $body .= '<tr>
+            $body       .= '<tr>
                 <td style="border: 1px solid black;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_bank . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
@@ -301,13 +310,13 @@ class Report extends CI_Controller
             $no++;
         }
 
-        $body .= '</table>';
+        $body           .= '</table>';
 
-        $judul = 'Master Bank';
-        $filename = $judul; // nama file yang ingin di simpan
+        $judul          = 'Master Bank';
+        $filename       = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf
-        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
     }
 
     // pekerjaan
@@ -327,9 +336,10 @@ class Report extends CI_Controller
 
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_pekerjaan s ORDER BY s.kode_pekerjaan ASC")->result();
+        $body           .= '<br>';
 
-        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
-        $body .= '<tr>
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body           .= '<tr>
             <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
             <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
             <th style="width: 70%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
@@ -337,7 +347,7 @@ class Report extends CI_Controller
 
         $no = 1;
         foreach ($sintak as $s) {
-            $body .= '<tr>
+            $body       .= '<tr>
                 <td style="border: 1px solid black;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_pekerjaan . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
@@ -345,13 +355,13 @@ class Report extends CI_Controller
             $no++;
         }
 
-        $body .= '</table>';
+        $body           .= '</table>';
 
-        $judul = 'Master Pekerjaan';
-        $filename = $judul; // nama file yang ingin di simpan
+        $judul          = 'Master Pekerjaan';
+        $filename       = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf
-        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
     }
 
     // agama
@@ -371,9 +381,10 @@ class Report extends CI_Controller
 
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_agama s ORDER BY s.kode_agama ASC")->result();
+        $body           .= '<br>';
 
-        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
-        $body .= '<tr>
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body           .= '<tr>
             <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
             <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
             <th style="width: 70%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
@@ -381,7 +392,7 @@ class Report extends CI_Controller
 
         $no = 1;
         foreach ($sintak as $s) {
-            $body .= '<tr>
+            $body       .= '<tr>
                 <td style="border: 1px solid black;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_agama . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
@@ -389,13 +400,13 @@ class Report extends CI_Controller
             $no++;
         }
 
-        $body .= '</table>';
+        $body           .= '</table>';
 
-        $judul = 'Master Agama';
-        $filename = $judul; // nama file yang ingin di simpan
+        $judul          = 'Master Agama';
+        $filename       = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf
-        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
     }
 
     // pendidikan
@@ -415,9 +426,10 @@ class Report extends CI_Controller
 
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_pendidikan s ORDER BY s.kode_pendidikan ASC")->result();
+        $body           .= '<br>';
 
-        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
-        $body .= '<tr>
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body           .= '<tr>
             <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
             <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
             <th style="width: 70%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
@@ -425,7 +437,7 @@ class Report extends CI_Controller
 
         $no = 1;
         foreach ($sintak as $s) {
-            $body .= '<tr>
+            $body       .= '<tr>
                 <td style="border: 1px solid black;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_pendidikan . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
@@ -433,13 +445,13 @@ class Report extends CI_Controller
             $no++;
         }
 
-        $body .= '</table>';
+        $body           .= '</table>';
 
-        $judul = 'Master Pendidikan';
-        $filename = $judul; // nama file yang ingin di simpan
+        $judul          = 'Master Pendidikan';
+        $filename       = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf
-        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
     }
 
     // poli
@@ -459,9 +471,10 @@ class Report extends CI_Controller
 
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_poli s ORDER BY s.kode_poli ASC")->result();
+        $body           .= '<br>';
 
-        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
-        $body .= '<tr>
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body           .= '<tr>
             <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
             <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
             <th style="width: 70%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
@@ -469,7 +482,7 @@ class Report extends CI_Controller
 
         $no = 1;
         foreach ($sintak as $s) {
-            $body .= '<tr>
+            $body       .= '<tr>
                 <td style="border: 1px solid black;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_poli . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
@@ -477,13 +490,13 @@ class Report extends CI_Controller
             $no++;
         }
 
-        $body .= '</table>';
+        $body           .= '</table>';
 
-        $judul = 'Master Poli';
-        $filename = $judul; // nama file yang ingin di simpan
+        $judul          = 'Master Poli';
+        $filename       = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf
-        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
     }
 
     // kas_bank
@@ -503,9 +516,10 @@ class Report extends CI_Controller
 
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM kas_bank s ORDER BY s.kode_kas_bank ASC")->result();
+        $body           .= '<br>';
 
-        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
-        $body .= '<tr>
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body           .= '<tr>
             <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
             <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
             <th style="width: 30%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
@@ -515,7 +529,7 @@ class Report extends CI_Controller
 
         $no = 1;
         foreach ($sintak as $s) {
-            $body .= '<tr>
+            $body       .= '<tr>
                 <td style="border: 1px solid black;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_kas_bank . '</td>
                 <td style="border: 1px solid black;">' . $s->nama . '</td>
@@ -525,13 +539,107 @@ class Report extends CI_Controller
             $no++;
         }
 
-        $body .= '</table>';
+        $body           .= '</table>';
 
-        $judul = 'Master Kas Bank';
-        $filename = $judul; // nama file yang ingin di simpan
+        $judul          = 'Master Kas Bank';
+        $filename       = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf
-        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // pajak
+    public function pajak($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        // sintak
+        $sintak         = $this->db->query("SELECT s.* FROM m_pajak s ORDER BY s.kode_pajak ASC")->result();
+        $body           .= '<br>';
+
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body           .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
+            <th style="width: 50%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Persentase</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            $body       .= '<tr>
+                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->kode_pajak . '</td>
+                <td style="border: 1px solid black;">' . $s->nama . '</td>
+                <td style="border: 1px solid black;">' . $s->persentase . '%' . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body           .= '</table>';
+
+        $judul          = 'Master Pajak';
+        $filename        = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // akun
+    public function akun($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        // sintak
+        $sintak         = $this->db->query("SELECT s.* FROM m_akun s ORDER BY s.kode_akun ASC")->result();
+        $body           .= '<br>';
+
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body           .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
+            <th style="width: 50%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Klasifikasi</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            $body       .= '<tr>
+                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->kode_akun . '</td>
+                <td style="border: 1px solid black;">' . $s->nama_akun . '</td>
+                <td style="border: 1px solid black;">' . $this->M_global->getData('klasifikasi_akun', ['kode_klasifikasi' => $s->kode_klasifikasi])->klasifikasi . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body           .= '</table>';
+
+        $judul          = 'Master Akun';
+        $filename        = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
     }
 
     // barang
@@ -856,6 +964,155 @@ class Report extends CI_Controller
 
         $judul = 'Master Perawat';
         $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // tin_single
+    public function tin_single($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+        $kode_cabang    = $this->session->userdata('cabang');
+
+        // sintak
+        $sintak         = $this->db->query("SELECT m.*, tj.* FROM m_tarif m JOIN tarif_jasa tj USING(kode_tarif) WHERE tj.kode_cabang = '$kode_cabang'")->result();
+
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body           .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 10%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
+            <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Jasa RS</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Jasa Dokter</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Jasa Pelayanan</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Jasa Poli</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            if ($param == 1) {
+                $jasa_rs        = number_format($s->jasa_rs);
+                $jasa_dokter    = number_format($s->jasa_dokter);
+                $jasa_pelayanan = number_format($s->jasa_pelayanan);
+                $jasa_poli      = number_format($s->jasa_poli);
+            } else {
+                $jasa_rs        = ceil($s->jasa_rs);
+                $jasa_dokter    = ceil($s->jasa_dokter);
+                $jasa_pelayanan = ceil($s->jasa_pelayanan);
+                $jasa_poli      = ceil($s->jasa_poli);
+            }
+
+            $body       .= '<tr>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->kode_tarif . '</td>
+                <td style="border: 1px solid black;">' . $s->nama . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $jasa_rs . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $jasa_dokter . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $jasa_pelayanan . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $jasa_poli . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body           .= '</table>';
+
+        $judul          = 'Master Tarif Single';
+        $filename       = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // tin_paket
+    public function tin_paket($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+        $kode_cabang    = $this->session->userdata('cabang');
+
+        // sintak
+        $sintak         = $this->db->query("SELECT m.*, tj.* FROM m_tarif m JOIN tarif_paket tj USING(kode_tarif) WHERE tj.kode_cabang = '$kode_cabang'")->result();
+
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body           .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 10%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
+            <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Jasa RS</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Jasa Dokter</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Jasa Pelayanan</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Jasa Poli</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            $kunjungan                  = count($this->M_global->getDataResult('tarif_paket', ['kode_tarif' => $s->kode_tarif, 'kode_cabang' => $kode_cabang]));
+
+            $jasa_rs                    = [];
+            $jasa_dokter                = [];
+            $jasa_pelayanan             = [];
+            $jasa_poli                  = [];
+            $kunj                       = [];
+
+            for ($x = 1; $x <= $kunjungan; $x++) {
+                $jasa                   = $this->M_global->getData('tarif_paket', ['kode_tarif' => $s->kode_tarif, 'kunjungan' => $x]);
+
+                $kunj[$x]               = $x;
+
+                if ($param == 1) {
+                    $jasa_rs[$x]        = number_format($jasa->jasa_rs);
+                    $jasa_dokter[$x]    = number_format($jasa->jasa_dokter);
+                    $jasa_pelayanan[$x] = number_format($jasa->jasa_pelayanan);
+                    $jasa_poli[$x]      = number_format($jasa->jasa_poli);
+                } else {
+                    $jasa_rs[$x]        = ceil($jasa->jasa_rs);
+                    $jasa_dokter[$x]    = ceil($jasa->jasa_dokter);
+                    $jasa_pelayanan[$x] = ceil($jasa->jasa_pelayanan);
+                    $jasa_poli[$x]      = ceil($jasa->jasa_poli);
+                }
+            }
+
+            $jasa_rs_str                = implode('<br>', array_map(fn($k, $v) => "<div style='float: left;'>Paket $k: </div><div style='float: right;'>Rp. $v</div>", array_keys($jasa_rs), $jasa_rs));
+            $jasa_dokter_str            = implode('<br>', array_map(fn($k, $v) => "<div style='float: left;'>Paket $k: </div><div style='float: right;'>Rp. $v</div>", array_keys($jasa_dokter), $jasa_dokter));
+            $jasa_pelayanan_str         = implode('<br>', array_map(fn($k, $v) => "<div style='float: left;'>Paket $k: </div><div style='float: right;'>Rp. $v</div>", array_keys($jasa_pelayanan), $jasa_pelayanan));
+            $jasa_poli_str              = implode('<br>', array_map(fn($k, $v) => "<div style='float: left;'>Paket $k: </div><div style='float: right;'>Rp. $v</div>", array_keys($jasa_poli), $jasa_poli));
+
+            $body       .= '<tr>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->kode_tarif . '</td>
+                <td style="border: 1px solid black;">' . $s->nama . '</td>
+                <td style="border: 1px solid black;">' . $jasa_rs_str . '</td>
+                <td style="border: 1px solid black;">' . $jasa_dokter_str . '</td>
+                <td style="border: 1px solid black;">' . $jasa_pelayanan_str . '</td>
+                <td style="border: 1px solid black;">' . $jasa_poli_str . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body           .= '</table>';
+
+        $judul          = 'Master Tarif Paket';
+        $filename       = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf
         cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);

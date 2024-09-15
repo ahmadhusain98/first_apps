@@ -5,60 +5,59 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 <form method="post" id="form_logistik">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Logistik</span>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-4 col-12 mb-2">
-            <select name="kode_kategori" id="kode_kategori" onchange="getKat(this.value)" data-placeholder="~ Pilih Kategori" class="form-control select2_global">
-                <option value="">~ Pilih Bagian</option>
-                <option value="semua"># Semua</option>
-                <?php foreach ($kategori as $k) : ?>
-                    <option value="<?= $k->kode_kategori ?>"><?= $k->keterangan ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <div class="col-md-8 col-12 mb-2">
-            <div class="float-right">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#" onclick="preview('logistik')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="print('logistik')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="excel('logistik')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
-                    </ul>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Logistik</span>
+                    <div class="float-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="preview('logistik')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="print('logistik')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="excel('logistik')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                        <button type="button" class="btn btn-success" onclick="getUrl('Master/form_logistik/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
-                <button type="button" class="btn btn-success" onclick="getUrl('Master/form_logistik/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
-            </div>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered" id="tableLogistik" width="100%" style="border-radius: 10px;">
-                    <thead>
-                        <tr class="text-center">
-                            <th rowspan="2" width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
-                            <th rowspan="2">Barcode</th>
-                            <th rowspan="2">Nama</th>
-                            <th rowspan="2">Satuan</th>
-                            <th rowspan="2">Kategori</th>
-                            <th colspan="4">Harga</th>
-                            <th rowspan="2" width="10%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
-                        </tr>
-                        <tr>
-                            <th>HNA</th>
-                            <th>HPP</th>
-                            <th>Jual</th>
-                            <th>Persediaan</th>
-                        </tr>
-                    </thead>
-                </table>
+                <div class="card-footer">
+                    <select name="kode_kategori" id="kode_kategori" onchange="getKat(this.value)" data-placeholder="~ Pilih Kategori" class="form-control select2_global">
+                        <option value="">~ Pilih Bagian</option>
+                        <?php foreach ($kategori as $k) : ?>
+                            <option value="<?= $k->kode_kategori ?>"><?= $k->keterangan ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered" id="tableLogistik" width="100%" style="border-radius: 10px;">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th rowspan="2" width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                                            <th rowspan="2">Barcode</th>
+                                            <th rowspan="2">Nama</th>
+                                            <th rowspan="2">Satuan</th>
+                                            <th rowspan="2">Kategori</th>
+                                            <th colspan="4">Harga</th>
+                                            <th rowspan="2" width="10%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
+                                        </tr>
+                                        <tr>
+                                            <th>HNA</th>
+                                            <th>HPP</th>
+                                            <th>Jual</th>
+                                            <th>Persediaan</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

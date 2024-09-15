@@ -5,89 +5,92 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 <form method="post" id="form_web">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-12">
-                    <input type="hidden" name="id_web" id="id_web" class="form-control" value="<?= $web->id ?>">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="email_web" class="control-label">Email <span class="text-danger">**</span></label>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="nohp_web" class="control-label">Nomor Hp <span class="text-danger">**</span></label>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <input type="text" name="email_web" id="email_web" class="form-control" value="<?= $web->email ?>">
-                        </div>
-                        <div class="col-md-6">
-                            <input type="text" name="nohp_web" id="nohp_web" class="form-control" value="<?= $web->nohp ?>">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="nama_web" class="control-label">Nama <span class="text-danger">**</span></label>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <input type="text" name="nama_web" id="nama_web" class="form-control" value="<?= $web->nama ?>">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label for="alamat_web" class="control-label">Alamat <span class="text-danger">**</span></label>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <textarea name="alamat_web" id="alamat_web" class="form-control"><?= $web->alamat ?></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label for="logo_web" class="control-label">Logo</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <img id="preview_img" class="rounded mx-auto d-block" style="border: 2px solid grey; width: 100%;" src="<?= base_url('assets/img/web/') . $web->logo; ?>" alt="User profile picture">
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="input-group">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="filefoto" aria-describedby="inputGroupFileAddon01" name="filefoto" onchange="readURL(this)">
-                                            <label class="custom-file-label" id="label-gambar" for="inputGroupFile01">Cari Gambar</label>
-                                        </div>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" name="id_web" id="id_web" class="form-control" value="<?= $web->id ?>">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="email_web" class="control-label">Email <span class="text-danger">**</span></label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="nohp_web" class="control-label">Nomor Hp <span class="text-danger">**</span></label>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label for="wallpaper_web" class="control-label">Watermark</label>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <input type="text" name="email_web" id="email_web" class="form-control" value="<?= $web->email ?>">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" name="nohp_web" id="nohp_web" class="form-control" value="<?= $web->nohp ?>">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <img id="preview_theme" class="rounded mx-auto d-block" style="border: 2px solid grey; width: 100%; height: 100px; background-position: center; background-size: cover;" src="<?= base_url('assets/img/web/') . $web->watermark; ?>" alt="User profile picture">
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="input-group">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="watermark" aria-describedby="inputGroupFileAddon01" name="watermark" onchange="readURLTheme(this)">
-                                            <label class="custom-file-label" id="label-gambar" for="inputGroupFile01">Cari Gambar</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="nama_web" class="control-label">Nama <span class="text-danger">**</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <input type="text" name="nama_web" id="nama_web" class="form-control" value="<?= $web->nama ?>">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label for="alamat_web" class="control-label">Alamat <span class="text-danger">**</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <textarea name="alamat_web" id="alamat_web" class="form-control"><?= $web->alamat ?></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label for="logo_web" class="control-label">Logo</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <img id="preview_img" class="rounded mx-auto d-block" style="border: 2px solid grey; width: 100%;" src="<?= base_url('assets/img/web/') . $web->logo; ?>" alt="User profile picture">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="input-group">
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="filefoto" aria-describedby="inputGroupFileAddon01" name="filefoto" onchange="readURL(this)">
+                                                        <label class="custom-file-label" id="label-gambar" for="inputGroupFile01">Cari Gambar</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label for="wallpaper_web" class="control-label">Watermark</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <img id="preview_theme" class="rounded mx-auto d-block" style="border: 2px solid grey; width: 100%; height: 100px; background-position: center; background-size: cover;" src="<?= base_url('assets/img/web/') . $web->watermark; ?>" alt="User profile picture">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="input-group">
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="watermark" aria-describedby="inputGroupFileAddon01" name="watermark" onchange="readURLTheme(this)">
+                                                        <label class="custom-file-label" id="label-gambar" for="inputGroupFile01">Cari Gambar</label>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -95,11 +98,12 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                         </div>
                     </div>
                 </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-md-12 text-right">
-                    <button type="button" class="btn btn-success" id="btnSimpan" onclick="simpan()" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-12 text-right">
+                            <button type="button" class="btn btn-success" id="btnSimpan" onclick="simpan()" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

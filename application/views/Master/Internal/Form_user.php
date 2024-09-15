@@ -1,67 +1,76 @@
 <form method="post" id="form_user">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-                <div class="input-group mb-3">
-                    <input type="hidden" class="form-control" placeholder="Nama Lengkap" id="kodeUser" name="kodeUser" value="<?= ((!empty($data_user)) ? $data_user->kode_user : '') ?>">
-                    <input type="text" class="form-control" placeholder="Nama Lengkap" id="nama" name="nama" value="<?= ((!empty($data_user)) ? $data_user->nama : '') ?>" onkeyup="ubah_nama(this.value, 'nama')">
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <ion-icon name="person-outline"></ion-icon>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="nama">Nama Lengkap <sup class="text-danger">**</sup></label>
+                                <input type="hidden" class="form-control" placeholder="Nama Lengkap" id="kodeUser" name="kodeUser" value="<?= ((!empty($data_user)) ? $data_user->kode_user : '') ?>">
+                                <input type="text" class="form-control" placeholder="Nama Lengkap" id="nama" name="nama" value="<?= ((!empty($data_user)) ? $data_user->nama : '') ?>" onkeyup="ubah_nama(this.value, 'nama')">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email">Email <sup class="text-danger">**</sup></label>
+                                <input type="email" class="form-control" placeholder="Email" id="email" name="email" onchange="cekEmail('email')" value="<?= ((!empty($data_user)) ? $data_user->email : '') ?>">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="password">Sandi <sup class="text-danger">**</sup></label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" placeholder="Sandi" id="password" name="password" value="<?= ((!empty($data_user)) ? $data_user->secondpass : '') ?>">
+                                    <div class="input-group-append" onclick="pass()">
+                                        <div class="input-group-text">
+                                            <i class="fa-solid fa-lock text-danger" id="lock_pass"></i>
+                                            <i class="fa-solid fa-lock-open text-success" id="open_pass"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="jkel">Gender <sup class="text-danger">**</sup></label>
+                                <select name="jkel" id="jkel" class="form-control select2_global" data-placeholder="~ Pilih Gender">
+                                    <option value="">~ Pilih Gender</option>
+                                    <option value="P" <?= (!empty($data_user) ? (($data_user->jkel == 'P') ? 'selected' : '') : '') ?>>Laki-laki</option>
+                                    <option value="W" <?= (!empty($data_user) ? (($data_user->jkel == 'W') ? 'selected' : '') : '') ?>>Perempuan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="kode_role">Role <sup class="text-danger">**</sup></label>
+                                <select name="kode_role" id="kode_role" class="form-control select2_global" data-placeholder="~ Pilih Role">
+                                    <option value="">~ Pilih Role</option>
+                                    <?php foreach ($role as $r) : ?>
+                                        <option value="<?= $r->kode_role ?>" <?= (!empty($data_user) ? (($data_user->kode_role == $r->kode_role) ? 'selected' : '') : '') ?>><?= $r->keterangan ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="nohp">No. HP <sup class="text-danger">**</sup></label>
+                                <input type="text" name="nohp" id="nohp" class="form-control text-right" placeholder="08xxx">
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="input-group mb-3">
-                    <input type="email" class="form-control" placeholder="Email" id="email" name="email" onchange="cekEmail('email')" value="<?= ((!empty($data_user)) ? $data_user->email : '') ?>">
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <ion-icon name="mail-outline"></ion-icon>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-danger" onclick="getUrl('Master/user')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+                            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                            <?php if (!empty($data_user)) : ?>
+                                <button type="button" class="btn btn-info float-right" onclick="getUrl('Master/form_user/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                            <?php else : ?>
+                                <button type="button" class="btn btn-info float-right" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
+                            <?php endif ?>
                         </div>
                     </div>
-                </div>
-                <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="Sandi" id="password" name="password" value="<?= ((!empty($data_user)) ? $data_user->secondpass : '') ?>">
-                    <div class="input-group-append" onclick="pass()">
-                        <div class="input-group-text">
-                            <ion-icon name="lock-closed-outline" id="lock_pass"></ion-icon>
-                            <ion-icon name="lock-open-outline" id="open_pass"></ion-icon>
-                        </div>
-                    </div>
-                </div>
-                <div class="input-group mb-3">
-                    <select name="jkel" id="jkel" class="form-control select2_global" data-placeholder="~ Pilih Gender">
-                        <option value="">~ Pilih Gender</option>
-                        <option value="P" <?= (!empty($data_user) ? (($data_user->jkel == 'P') ? 'selected' : '') : '') ?>>Laki-laki</option>
-                        <option value="W" <?= (!empty($data_user) ? (($data_user->jkel == 'W') ? 'selected' : '') : '') ?>>Perempuan</option>
-                    </select>
-                </div>
-                <div class="input-group mb-3">
-                    <select name="kode_role" id="kode_role" class="form-control select2_global" data-placeholder="~ Pilih Role">
-                        <option value="">~ Pilih Role</option>
-                        <?php foreach ($role as $r) : ?>
-                            <option value="<?= $r->kode_role ?>" <?= (!empty($data_user) ? (($data_user->kode_role == $r->kode_role) ? 'selected' : '') : '') ?>><?= $r->keterangan ?></option>
-                        <?php endforeach; ?>
-                    </select>
                 </div>
             </div>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <button type="button" class="btn btn-danger" onclick="getUrl('Master/user')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
-            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
-            <?php if (!empty($data_user)) : ?>
-                <button type="button" class="btn btn-info float-right" onclick="getUrl('Master/form_user/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
-            <?php else : ?>
-                <button type="button" class="btn btn-info float-right" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
-            <?php endif ?>
         </div>
     </div>
 </form>
@@ -76,6 +85,7 @@
     var password = $('#password');
     var jkel = $('#jkel');
     var kode_role = $('#kode_role');
+    var nohp = $('#nohp');
 
     btnSimpan.attr('disabled', false);
 
@@ -104,6 +114,11 @@
 
         if (kode_role.val() == "" || kode_role.val() == null) { // jika kode_role null/ kosong
             Swal.fire("Role", "Form sudah diisi?", "question");
+            return;
+        }
+
+        if (nohp.val() == "" || nohp.val() == null) { // jika nohp null/ kosong
+            Swal.fire("No. HP", "Form sudah diisi?", "question");
             return;
         }
 

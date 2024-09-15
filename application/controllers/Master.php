@@ -89,12 +89,6 @@ class Master extends CI_Controller
             $upd_diss = 'disabled';
         }
 
-        if ($deleted > 0) {
-            $del_diss = '';
-        } else {
-            $del_diss = 'disabled';
-        }
-
         // table server side tampung kedalam variable $list
         $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
         $data         = [];
@@ -102,14 +96,32 @@ class Master extends CI_Controller
 
         // loop $list
         foreach ($list as $rd) {
-            $cekIsset = $this->M_global->jumDataRow('barang', ['kode_satuan' => $rd->kode_satuan]);
+            if ($deleted > 0) {
+                $barang = $this->M_global->getResult('barang');
+
+                $satuan = [];
+                foreach ($barang as $b) {
+                    $satuan[] = [$b->kode_satuan, $b->kode_satuan2, $b->kode_satuan3];
+                }
+
+                $flattened_satuan = array_merge(...$satuan);
+
+                if (in_array($rd->kode_satuan, $flattened_satuan)) {
+                    $del_diss = 'disabled';
+                } else {
+                    $del_diss = '';
+                }
+            } else {
+                $del_diss = 'disabled';
+            }
+
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->kode_satuan;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_satuan . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
-                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_satuan . "'" . ')" ' . $del_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_satuan . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_satuan . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -262,12 +274,6 @@ class Master extends CI_Controller
             $upd_diss = 'disabled';
         }
 
-        if ($deleted > 0) {
-            $del_diss = '';
-        } else {
-            $del_diss = 'disabled';
-        }
-
         // table server side tampung kedalam variable $list
         $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
         $data         = [];
@@ -275,14 +281,25 @@ class Master extends CI_Controller
 
         // loop $list
         foreach ($list as $rd) {
-            $cekIsset = $this->M_global->jumDataRow('barang', ['kode_kategori' => $rd->kode_kategori]);
+            if ($deleted > 0) {
+                $cekIsset = $this->M_global->jumDataRow('barang', ['kode_kategori' => $rd->kode_kategori]);
+
+                if ($cekIsset > 0) {
+                    $del_diss = 'disabled';
+                } else {
+                    $del_diss = '';
+                }
+            } else {
+                $del_diss = 'disabled';
+            }
+
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->kode_kategori;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_kategori . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
-                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_kategori . "'" . ')" ' . $del_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_kategori . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_kategori . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -453,38 +470,36 @@ class Master extends CI_Controller
         $kondisi_param1   = '';
 
         // kondisi role
-        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
 
         if ($updated > 0) {
-            $upd_diss = '';
+            $upd_diss     = '';
         } else {
-            $upd_diss = 'disabled';
+            $upd_diss     = 'disabled';
         }
 
         // table server side tampung kedalam variable $list
-        $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
-        $data         = [];
-        $no           = $_POST['start'] + 1;
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
-            $cek_beli = $this->M_global->jumDataRow('barang_in_header', ['kode_supplier' => $rd->kode_supplier]);
-
-            if ($cek_beli < 1) {
-                $cek_retur = $this->M_global->jumDataRow('barang_in_retur_header', ['kode_supplier' => $rd->kode_supplier]);
-
-                if ($cek_retur < 1) {
-                    if ($deleted > 0) {
-                        $del_diss = '';
-                    } else {
-                        $del_diss = 'disabled';
-                    }
+            if ($deleted > 0) {
+                $cekIsset1        = $this->M_global->jumDataRow('barang_in_header', ['kode_supplier' => $rd->kode_supplier]);
+                if ($cekIsset1 > 0) {
+                    $del_diss     = 'disabled';
                 } else {
-                    $del_diss = 'disabled';
+                    $cekIsset2    = $this->M_global->jumDataRow('barang_in_retur_header', ['kode_supplier' => $rd->kode_supplier]);
+                    if ($cekIsset2 > 0) {
+                        $del_diss = 'disabled';
+                    } else {
+                        $del_diss = '';
+                    }
                 }
             } else {
-                $del_diss = 'disabled';
+                $del_diss         = 'disabled';
             }
 
             $row    = [];
@@ -496,8 +511,8 @@ class Master extends CI_Controller
             $row[]  = $rd->fax;
             $row[]  = $rd->alamat;
             $row[]  = '<div class="text-center">
-                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_supplier . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
-                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_supplier . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_supplier . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_supplier . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -667,38 +682,36 @@ class Master extends CI_Controller
         $kondisi_param1   = 'bagian';
 
         // kondisi role
-        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
 
         if ($updated > 0) {
-            $upd_diss = '';
+            $upd_diss     = '';
         } else {
-            $upd_diss = 'disabled';
+            $upd_diss     = 'disabled';
         }
 
         // table server side tampung kedalam variable $list
-        $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
-        $data         = [];
-        $no           = $_POST['start'] + 1;
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
-            $cek_beli = $this->M_global->jumDataRow('barang_in_header', ['kode_gudang' => $rd->kode_gudang]);
-
-            if ($cek_beli < 1) {
-                $cek_retur = $this->M_global->jumDataRow('barang_in_retur_header', ['kode_gudang' => $rd->kode_gudang]);
-
-                if ($cek_retur < 1) {
-                    if ($deleted > 0) {
-                        $del_diss = '';
-                    } else {
-                        $del_diss = 'disabled';
-                    }
+            if ($deleted > 0) {
+                $cekIsset1        = $this->M_global->jumDataRow('barang_in_header', ['kode_gudang' => $rd->kode_gudang]);
+                if ($cekIsset1 > 0) {
+                    $del_diss     = 'disabled';
                 } else {
-                    $del_diss = 'disabled';
+                    $cekIsset2    = $this->M_global->jumDataRow('barang_in_retur_header', ['kode_gudang' => $rd->kode_gudang]);
+                    if ($cekIsset2 > 0) {
+                        $del_diss = 'disabled';
+                    } else {
+                        $del_diss = '';
+                    }
                 }
             } else {
-                $del_diss = 'disabled';
+                $del_diss         = 'disabled';
             }
 
             $pajak  = $this->M_global->getData('m_pajak', ['kode_pajak' => $rd->vat]);
@@ -711,8 +724,8 @@ class Master extends CI_Controller
             $row[]  = '<div class="text-right">' . ((!empty($pajak)) ? $pajak->persentase . '%' : '-') . '</div>';
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                    <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_gudang . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
-                    <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_gudang . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+                    <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_gudang . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                    <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_gudang . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -882,8 +895,8 @@ class Master extends CI_Controller
             $row[]  = $rd->kode_bank;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_bank . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
-                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_bank . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_bank . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_bank . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -1027,35 +1040,40 @@ class Master extends CI_Controller
         $kondisi_param1   = '';
 
         // kondisi role
-        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
 
         if ($updated > 0) {
-            $upd_diss = '';
+            $upd_diss     = '';
         } else {
-            $upd_diss = 'disabled';
-        }
-
-        if ($deleted > 0) {
-            $del_diss = '';
-        } else {
-            $del_diss = 'disabled';
+            $upd_diss     = 'disabled';
         }
 
         // table server side tampung kedalam variable $list
-        $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
-        $data         = [];
-        $no           = $_POST['start'] + 1;
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
+            if ($deleted > 0) {
+                $cekIsset       = $this->M_global->getData('member', ['pekerjaan' => $rd->kode_pekerjaan]);
+                if ($cekIsset) {
+                    $del_diss   = 'disabled';
+                } else {
+                    $del_diss   = '';
+                }
+            } else {
+                $del_diss       = 'disabled';
+            }
+
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->kode_pekerjaan;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_pekerjaan . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
-                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_pekerjaan . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_pekerjaan . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_pekerjaan . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -1231,46 +1249,55 @@ class Master extends CI_Controller
     public function barang_list($param = '')
     {
         // kondisi role
-        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $updated        = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted        = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
 
         if ($updated > 0) {
-            $upd_diss = '';
+            $upd_diss   = '';
         } else {
-            $upd_diss = 'disabled';
-        }
-
-        if ($deleted > 0) {
-            $del_diss = '';
-        } else {
-            $del_diss = 'disabled';
+            $upd_diss   = 'disabled';
         }
 
         // table server side tampung kedalam variable $list
-        $list         = $this->M_barang->get_datatables($param);
-        $data         = [];
-        $no           = $_POST['start'] + 1;
+        $list           = $this->M_barang->get_datatables($param);
+        $data           = [];
+        $no             = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
-            $satuan1 = $this->M_global->getData('m_satuan', ['kode_satuan' => $rd->kode_satuan]);
-            $satuan2 = $this->M_global->getData('m_satuan', ['kode_satuan' => $rd->kode_satuan2]);
-            $satuan3 = $this->M_global->getData('m_satuan', ['kode_satuan' => $rd->kode_satuan3]);
-            $row    = [];
-            $row[]  = $no++;
-            $row[]  = $rd->kode_barang . '<br><a type="button" style="margin-bottom: 5px;" class="btn btn-dark" target="_blank" href="' . site_url('Master/print_barcode/') . $rd->kode_barang . '"><i class="fa-solid fa-barcode"></i> Barcode</a>';
-            $row[]  = $rd->nama;
-            $row[]  = $satuan1->keterangan . ((!empty($satuan2) ? '<br>' . $satuan2->keterangan . ' ~ ' . number_format($rd->qty_satuan2) . ' ' . $satuan1->keterangan : '')) . ((!empty($satuan3) ? '<br>' . $satuan3->keterangan . ' ~ ' . number_format($rd->qty_satuan3) . ' ' . $satuan1->keterangan : ''));
-            $row[]  = $this->M_global->getData('m_kategori', ['kode_kategori' => $rd->kode_kategori])->keterangan;
-            $row[]  = '<div class="text-right">' . number_format($rd->hna) . '</div>';
-            $row[]  = '<div class="text-right">' . number_format($rd->hpp) . '</div>';
-            $row[]  = '<div class="text-right">' . number_format($rd->harga_jual) . '</div>';
-            $row[]  = '<div class="text-right">' . number_format($rd->nilai_persediaan) . '</div>';
-            $row[]  = '<div class="text-center">
+            if ($deleted > 0) {
+                $cekIsset       = $this->M_global->jumDataRow('barang_in_detail', ['kode_barang' => $rd->kode_barang]);
+                $cekIsset2      = $this->M_global->jumDataRow('barang_in_retur_detail', ['kode_barang' => $rd->kode_barang]);
+                $cekIsset3      = $this->M_global->jumDataRow('barang_out_detail', ['kode_barang' => $rd->kode_barang]);
+                $cekIsset4      = $this->M_global->jumDataRow('barang_out_retur_detail', ['kode_barang' => $rd->kode_barang]);
+
+                if ($cekIsset > 0 || $cekIsset2 > 0 || $cekIsset3 > 0 || $cekIsset4 > 0) {
+                    $del_diss   = 'disabled';
+                } else {
+                    $del_diss   = '';
+                }
+            } else {
+                $del_diss       = 'disabled';
+            }
+
+            $satuan1    = $this->M_global->getData('m_satuan', ['kode_satuan' => $rd->kode_satuan]);
+            $satuan2    = $this->M_global->getData('m_satuan', ['kode_satuan' => $rd->kode_satuan2]);
+            $satuan3    = $this->M_global->getData('m_satuan', ['kode_satuan' => $rd->kode_satuan3]);
+            $row        = [];
+            $row[]      = $no++;
+            $row[]      = $rd->kode_barang . '<br><a type="button" style="margin-bottom: 5px;" class="btn btn-dark" target="_blank" href="' . site_url('Master/print_barcode/') . $rd->kode_barang . '"><i class="fa-solid fa-barcode"></i> Barcode</a>';
+            $row[]      = $rd->nama;
+            $row[]      = $satuan1->keterangan . ((!empty($satuan2) ? '<br>' . $satuan2->keterangan . ' ~ ' . number_format($rd->qty_satuan2) . ' ' . $satuan1->keterangan : '')) . ((!empty($satuan3) ? '<br>' . $satuan3->keterangan . ' ~ ' . number_format($rd->qty_satuan3) . ' ' . $satuan1->keterangan : ''));
+            $row[]      = $this->M_global->getData('m_kategori', ['kode_kategori' => $rd->kode_kategori])->keterangan;
+            $row[]      = '<div class="text-right">' . number_format($rd->hna) . '</div>';
+            $row[]      = '<div class="text-right">' . number_format($rd->hpp) . '</div>';
+            $row[]      = '<div class="text-right">' . number_format($rd->harga_jual) . '</div>';
+            $row[]      = '<div class="text-right">' . number_format($rd->nilai_persediaan) . '</div>';
+            $row[]      = '<div class="text-center">
                 <button type="button" style="margin-bottom: 5px;" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_barang . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
                 <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_barang . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
-            $data[] = $row;
+            $data[]     = $row;
         }
 
         // hasil server side
@@ -1894,6 +1921,7 @@ class Master extends CI_Controller
         $password     = md5($secondpass);
         $jkel         = $this->input->post('jkel');
         $kode_role    = $this->input->post('kode_role');
+        $nohp         = $this->input->post('nohp');
 
         // cek jkel untuk foto
         if ($jkel == 'P') { // jika pria
@@ -1922,6 +1950,7 @@ class Master extends CI_Controller
             'jkel'          => $jkel,
             'foto'          => $foto,
             'kode_role'     => $kode_role,
+            'nohp'          => $nohp,
             'actived'       => 1,
             'joined'        => date('Y-m-d H:i:s'),
         ];
@@ -2016,35 +2045,40 @@ class Master extends CI_Controller
         $kondisi_param1   = '';
 
         // kondisi role
-        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
 
         if ($updated > 0) {
-            $upd_diss = '';
+            $upd_diss     = '';
         } else {
-            $upd_diss = 'disabled';
-        }
-
-        if ($deleted > 0) {
-            $del_diss = '';
-        } else {
-            $del_diss = 'disabled';
+            $upd_diss     = 'disabled';
         }
 
         // table server side tampung kedalam variable $list
-        $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
-        $data         = [];
-        $no           = $_POST['start'] + 1;
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
+            if ($deleted > 0) {
+                $cekIsset       = $this->M_global->getData('member', ['agama' => $rd->kode_agama]);
+                if ($cekIsset) {
+                    $del_diss   = 'disabled';
+                } else {
+                    $del_diss   = '';
+                }
+            } else {
+                $del_diss       = 'disabled';
+            }
+
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->kode_agama;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_agama . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
-                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_agama . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_agama . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_agama . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -2188,35 +2222,40 @@ class Master extends CI_Controller
         $kondisi_param1   = '';
 
         // kondisi role
-        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
 
         if ($updated > 0) {
-            $upd_diss = '';
+            $upd_diss     = '';
         } else {
-            $upd_diss = 'disabled';
-        }
-
-        if ($deleted > 0) {
-            $del_diss = '';
-        } else {
-            $del_diss = 'disabled';
+            $upd_diss     = 'disabled';
         }
 
         // table server side tampung kedalam variable $list
-        $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
-        $data         = [];
-        $no           = $_POST['start'] + 1;
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
+            if ($deleted > 0) {
+                $cekIsset       = $this->M_global->getData('member', ['pendidikan' => $rd->kode_pendidikan]);
+                if ($cekIsset) {
+                    $del_diss   = 'disabled';
+                } else {
+                    $del_diss   = '';
+                }
+            } else {
+                $del_diss       = 'disabled';
+            }
+
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->kode_pendidikan;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_pendidikan . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
-                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_pendidikan . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_pendidikan . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_pendidikan . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -2360,46 +2399,46 @@ class Master extends CI_Controller
         $kondisi_param1   = '';
 
         // kondisi role
-        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
 
         if ($updated > 0) {
-            $upd_diss = '';
+            $upd_diss     = '';
         } else {
-            $upd_diss = 'disabled';
+            $upd_diss     = 'disabled';
         }
 
         // table server side tampung kedalam variable $list
-        $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
-        $data         = [];
-        $no           = $_POST['start'] + 1;
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
-            $row    = [];
-            $row[]  = $no++;
-            $row[]  = $rd->kode_poli;
-            $row[]  = $rd->keterangan;
-
-            $cekDel = $this->M_global->jumDataRow('dokter_poli', ['kode_poli' => $rd->kode_poli]);
-            if ($cekDel < 1) {
-                $cekDel2 = $this->M_global->jumDataRow('perawat_poli', ['kode_poli' => $rd->kode_poli]);
-                if ($cekDel2 < 1) {
-                    if ($deleted > 0) {
+            if ($deleted > 0) {
+                $cekIsset         = $this->M_global->jumDataRow('dokter_poli', ['kode_poli' => $rd->kode_poli]);
+                if ($cekIsset < 1) {
+                    $cekIsset2    = $this->M_global->jumDataRow('perawat_poli', ['kode_poli' => $rd->kode_poli]);
+                    if ($cekIsset2 < 1) {
                         $del_diss = '';
                     } else {
                         $del_diss = 'disabled';
                     }
                 } else {
-                    $del_diss = 'disabled';
+                    $del_diss     = 'disabled';
                 }
             } else {
-                $del_diss = 'disabled';
+                $del_diss         = 'disabled';
             }
 
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->kode_poli;
+            $row[]  = $rd->keterangan;
+
             $row[]  = '<div class="text-center">
-                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_poli . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
-                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_poli . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_poli . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_poli . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -2543,48 +2582,53 @@ class Master extends CI_Controller
         $kondisi_param1   = '';
 
         // kondisi role
-        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
 
         // table server side tampung kedalam variable $list
-        $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
-        $data         = [];
-        $no           = $_POST['start'] + 1;
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
 
-            $prov   = $this->M_global->getData('m_provinsi', ['kode_provinsi' => $rd->provinsi])->provinsi;
-            $kab    = $this->M_global->getData('kabupaten', ['kode_kabupaten' => $rd->kabupaten])->kabupaten;
-            $kec    = $this->M_global->getData('kecamatan', ['kode_kecamatan' => $rd->kecamatan])->kecamatan;
+            $prov               = $this->M_global->getData('m_provinsi', ['kode_provinsi' => $rd->provinsi])->provinsi;
+            $kab                = $this->M_global->getData('kabupaten', ['kode_kabupaten' => $rd->kabupaten])->kabupaten;
+            $kec                = $this->M_global->getData('kecamatan', ['kode_kecamatan' => $rd->kecamatan])->kecamatan;
 
             if ($updated > 0) {
-                $upd_diss = '';
+                $upd_diss       = '';
             } else {
-                $upd_diss = 'disabled';
+                $upd_diss       = 'disabled';
             }
 
             if ($deleted > 0) {
-                $del_diss = '';
+                $cekIsset       = $this->M_global->jumDataRow('pendaftaran', ['kode_dokter' => $rd->kode_dokter]);
+                if ($cekIsset > 0) {
+                    $del_diss   = 'disabled';
+                } else {
+                    $del_diss   = '';
+                }
             } else {
-                $del_diss = 'disabled';
+                $del_diss       = 'disabled';
             }
 
-            $dokter_poli = $this->M_global->getDataResult('dokter_poli', ['kode_dokter' => $rd->kode_dokter]);
+            $dokter_poli        = $this->M_global->getDataResult('dokter_poli', ['kode_dokter' => $rd->kode_dokter]);
 
-            $row    = [];
-            $row[]  = $no++;
-            $row[]  = $rd->kode_dokter;
-            $row[]  = $rd->nama;
-            $row[]  = $rd->nohp;
-            $row[]  = 'Prov. ' . $prov . ',<br>Kab. ' . $kab . ',<br>Kec. ' . $kec . ',<br>Ds. ' . $rd->desa . ',<br>(POS: ' . $rd->kodepos . ')';
-            $row[]  = 'Mulai: <br><span class="float-right">' . date('d/m/Y', strtotime($rd->tgl_mulai)) . '</span><br>Hingga: <br><span class="float-right">' . date('d/m/Y', strtotime($rd->tgl_berhenti)) . '</span>';
-            $dpoli = [];
+            $row            = [];
+            $row[]          = $no++;
+            $row[]          = $rd->kode_dokter;
+            $row[]          = $rd->nama;
+            $row[]          = $rd->nohp;
+            $row[]          = 'Prov. ' . $prov . ',<br>Kab. ' . $kab . ',<br>Kec. ' . $kec . ',<br>Ds. ' . $rd->desa . ',<br>(POS: ' . $rd->kodepos . ')';
+            $row[]          = 'Mulai: <br><span class="float-right">' . date('d/m/Y', strtotime($rd->tgl_mulai)) . '</span><br>Hingga: <br><span class="float-right">' . date('d/m/Y', strtotime($rd->tgl_berhenti)) . '</span>';
+            $dpoli          = [];
             foreach ($dokter_poli as $dp) {
-                $dpoli[] = ' ' . $this->M_global->getData('m_poli', ['kode_poli' => $dp->kode_poli])->keterangan;
+                $dpoli[]    = ' ' . $this->M_global->getData('m_poli', ['kode_poli' => $dp->kode_poli])->keterangan;
             }
-            $row[]  = $dpoli;
-            $row[]  = '<div class="text-center">' . (($rd->status == 1) ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-dark">Non-aktif</span>') . '</div>';
+            $row[]          = $dpoli;
+            $row[]          = '<div class="text-center">' . (($rd->status == 1) ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-dark">Non-aktif</span>') . '</div>';
 
             if ($rd->status > 0) {
                 $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="actived(' . "'" . $rd->kode_dokter . "', 0" . ')" ' . $upd_diss . '><i class="fa-solid fa-user-xmark"></i></button>';
@@ -2592,7 +2636,7 @@ class Master extends CI_Controller
                 $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="actived(' . "'" . $rd->kode_dokter . "', 1" . ')" ' . $upd_diss . '><i class="fa-solid fa-user-check"></i></button>';
             }
 
-            $row[]  = '<div class="text-center">
+            $row[]          = '<div class="text-center">
                 ' . $actived_akun . '
                 <button type="button" style="margin-bottom: 5px;" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_dokter . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
                 <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_dokter . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
@@ -3101,37 +3145,40 @@ class Master extends CI_Controller
         $kondisi_param1   = '';
 
         // kondisi role
-        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
 
         if ($updated > 0) {
-            $upd_diss = '';
+            $upd_diss     = '';
         } else {
-            $upd_diss = 'disabled';
-        }
-
-        if ($deleted > 0) {
-            $del_diss = '';
-        } else {
-            $del_diss = 'disabled';
+            $upd_diss     = 'disabled';
         }
 
         // table server side tampung kedalam variable $list
-        $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
-        $data         = [];
-        $no           = $_POST['start'] + 1;
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
-            $cekIsset = $this->M_global->jumDataRow('barang_jenis', ['kode_jenis' => $rd->kode_jenis]);
+            if ($deleted > 0) {
+                $cekIsset       = $this->M_global->jumDataRow('barang_jenis', ['kode_jenis' => $rd->kode_jenis]);
+                if ($cekIsset > 0) {
+                    $del_diss   = 'disabled';
+                } else {
+                    $del_diss   = '';
+                }
+            } else {
+                $del_diss = 'disabled';
+            }
 
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->kode_jenis;
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
-                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_jenis . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
-                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_jenis . "'" . ')" ' . $del_diss . ' ' . (($cekIsset > 0) ? 'disabled' : '') . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_jenis . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_jenis . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -3275,25 +3322,25 @@ class Master extends CI_Controller
         $kondisi_param1   = '';
 
         // kondisi role
-        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
 
         if ($updated > 0) {
-            $upd_diss = '';
+            $upd_diss     = '';
         } else {
-            $upd_diss = 'disabled';
+            $upd_diss     = 'disabled';
         }
 
         if ($deleted > 0) {
-            $del_diss = '';
+            $del_diss     = '';
         } else {
-            $del_diss = 'disabled';
+            $del_diss     = 'disabled';
         }
 
         // table server side tampung kedalam variable $list
-        $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
-        $data         = [];
-        $no           = $_POST['start'] + 1;
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
@@ -3317,8 +3364,8 @@ class Master extends CI_Controller
             $row[]  = $akun;
 
             $row[]  = '<div class="text-center">
-                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_kas_bank . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
-                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_kas_bank . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_kas_bank . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_kas_bank . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -3479,31 +3526,31 @@ class Master extends CI_Controller
         $kondisi_param1   = '';
 
         // kondisi role
-        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
 
         if ($updated > 0) {
-            $upd_diss = '';
+            $upd_diss     = '';
         } else {
-            $upd_diss = 'disabled';
+            $upd_diss     = 'disabled';
         }
 
         // table server side tampung kedalam variable $list
-        $list         = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
-        $data         = [];
-        $no           = $_POST['start'] + 1;
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
             if ($deleted > 0) {
-                $cek_diss = $this->M_global->jumDataRow('m_gudang', ['pajak' => $rd->kode_pajak]);
+                $cek_diss       = $this->M_global->jumDataRow('m_gudang', ['pajak' => $rd->kode_pajak]);
                 if ($cek_diss > 0) {
-                    $del_diss = 'disabled';
+                    $del_diss   = 'disabled';
                 } else {
-                    $del_diss = '';
+                    $del_diss   = '';
                 }
             } else {
-                $del_diss = 'disabled';
+                $del_diss       = 'disabled';
             }
 
             $row    = [];
@@ -3511,8 +3558,8 @@ class Master extends CI_Controller
             $row[]  = $rd->nama;
             $row[]  = '<span class="float-right">' . $rd->persentase . '%</span>';
             $row[]  = '<div class="text-center">
-                <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_pajak . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
-                <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_pajak . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_pajak . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_pajak . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -3651,37 +3698,42 @@ class Master extends CI_Controller
         $this->load->model('M_tarif');
 
         // kondisi role
-        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $updated        = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted        = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
 
         if ($updated > 0) {
-            $upd_diss = '';
+            $upd_diss   = '';
         } else {
-            $upd_diss = 'disabled';
+            $upd_diss   = 'disabled';
         }
 
-        if ($deleted > 0) {
-            $del_diss = '';
-        } else {
-            $del_diss = 'disabled';
-        }
+        $list           = $this->M_tarif->get_datatables($param1);
 
-        $list = $this->M_tarif->get_datatables($param1);
-
-        $data = [];
-        $no = $_POST['start'] + 1;
+        $data           = [];
+        $no             = $_POST['start'] + 1;
 
         // Loop through the list to populate the data array
         foreach ($list as $rd) {
-            $row = [];
-            $row[] = $no++;
-            $row[] = $rd->kode_tarif;
-            $row[] = $rd->nama;
-            $row[] = 'Rp. <div class="float-right">' . number_format($rd->jasa_rs) . '</div>';
-            $row[] = 'Rp. <div class="float-right">' . number_format($rd->jasa_dokter) . '</div>';
-            $row[] = 'Rp. <div class="float-right">' . number_format($rd->jasa_pelayanan) . '</div>';
-            $row[] = 'Rp. <div class="float-right">' . number_format($rd->jasa_poli) . '</div>';
-            $row[] = '<div class="text-center">
+            if ($deleted > 0) {
+                $cekIsset       = $this->M_global->jumDataRow('pembayaran_tarif_single', ['kode_tarif' => $rd->kode_tarif]);
+                if ($cekIsset > 0) {
+                    $del_diss   = 'disabled';
+                } else {
+                    $del_diss   = '';
+                }
+            } else {
+                $del_diss       = 'disabled';
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->kode_tarif;
+            $row[]  = $rd->nama;
+            $row[]  = 'Rp. <div class="float-right">' . number_format($rd->jasa_rs) . '</div>';
+            $row[]  = 'Rp. <div class="float-right">' . number_format($rd->jasa_dokter) . '</div>';
+            $row[]  = 'Rp. <div class="float-right">' . number_format($rd->jasa_pelayanan) . '</div>';
+            $row[]  = 'Rp. <div class="float-right">' . number_format($rd->jasa_poli) . '</div>';
+            $row[]  = '<div class="text-center">
                 <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_tarif . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
                 <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_tarif . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
@@ -3690,10 +3742,10 @@ class Master extends CI_Controller
 
         // Prepare the output in JSON format
         $output = [
-            "draw" => $_POST['draw'],
-            "recordsTotal" => $this->M_tarif->count_all($param1),
-            "recordsFiltered" => $this->M_tarif->count_filtered($param1),
-            "data" => $data,
+            "draw"              => $_POST['draw'],
+            "recordsTotal"      => $this->M_tarif->count_all($param1),
+            "recordsFiltered"   => $this->M_tarif->count_filtered($param1),
+            "data"              => $data,
         ];
 
         // Send the output to the view
@@ -3910,63 +3962,68 @@ class Master extends CI_Controller
     public function tin_paket_list($param1 = 2)
     {
         $this->load->model('M_tarif');
-        $kode_cabang = $this->session->userdata('cabang');
+        $kode_cabang    = $this->session->userdata('cabang');
 
         // kondisi role
-        $updated    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $updated        = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted        = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
 
         if ($updated > 0) {
-            $upd_diss = '';
+            $upd_diss   = '';
         } else {
-            $upd_diss = 'disabled';
+            $upd_diss   = 'disabled';
         }
 
-        if ($deleted > 0) {
-            $del_diss = '';
-        } else {
-            $del_diss = 'disabled';
-        }
+        $list           = $this->M_tarif->get_datatables($param1);
 
-        $list = $this->M_tarif->get_datatables($param1);
-
-        $data = [];
-        $no = $_POST['start'] + 1;
+        $data           = [];
+        $no             = $_POST['start'] + 1;
 
         // Loop through the list to populate the data array
         foreach ($list as $rd) {
-            $kunjungan = count($this->M_global->getDataResult('tarif_paket', ['kode_tarif' => $rd->kode_tarif, 'kode_cabang' => $kode_cabang]));
-
-            $jasa_rs = [];
-            $jasa_dokter = [];
-            $jasa_pelayanan = [];
-            $jasa_poli = [];
-            $kunj = [];
-
-            for ($x = 1; $x <= $kunjungan; $x++) {
-                $jasa = $this->M_global->getData('tarif_paket', ['kode_tarif' => $rd->kode_tarif, 'kunjungan' => $x]);
-
-                $kunj[$x] = $x;
-                $jasa_rs[$x] = number_format($jasa->jasa_rs);
-                $jasa_dokter[$x] = number_format($jasa->jasa_dokter);
-                $jasa_pelayanan[$x] = number_format($jasa->jasa_pelayanan);
-                $jasa_poli[$x] = number_format($jasa->jasa_poli);
+            if ($deleted > 0) {
+                $cekIsset           = $this->M_global->jumDataRow('tarif_paket_pasien', ['kode_tarif' => $rd->kode_tarif]);
+                if ($cekIsset > 0) {
+                    $del_diss       = 'disabled';
+                } else {
+                    $del_diss       = '';
+                }
+            } else {
+                $del_diss           = 'disabled';
             }
 
-            $jasa_rs_str = implode('<br>', array_map(fn($k, $v) => "<div style='float: left;'>Paket $k: Rp.</div><div class='float-right'>$v</div>", array_keys($jasa_rs), $jasa_rs));
-            $jasa_dokter_str = implode('<br>', array_map(fn($k, $v) => "<div style='float: left;'>Paket $k: Rp.</div><div class='float-right'>$v</div>", array_keys($jasa_dokter), $jasa_dokter));
-            $jasa_pelayanan_str = implode('<br>', array_map(fn($k, $v) => "<div style='float: left;'>Paket $k: Rp.</div><div class='float-right'>$v</div>", array_keys($jasa_pelayanan), $jasa_pelayanan));
-            $jasa_poli_str = implode('<br>', array_map(fn($k, $v) => "<div style='float: left;'>Paket $k: Rp.</div><div class='float-right'>$v</div>", array_keys($jasa_poli), $jasa_poli));
+            $kunjungan              = count($this->M_global->getDataResult('tarif_paket', ['kode_tarif' => $rd->kode_tarif, 'kode_cabang' => $kode_cabang]));
 
-            $row = [];
-            $row[] = $no++;
-            $row[] = $rd->kode_tarif . '<br><span class="badge badge-primary">Kunjungan: ' . $kunjungan . '</span>';
-            $row[] = $rd->nama;
-            $row[] = '<div>' . $jasa_rs_str . '</div>';
-            $row[] = '<div>' . $jasa_dokter_str . '</div>';
-            $row[] = '<div>' . $jasa_pelayanan_str . '</div>';
-            $row[] = '<div>' . $jasa_poli_str . '</div>';
-            $row[] = '<div class="text-center">
+            $jasa_rs                = [];
+            $jasa_dokter            = [];
+            $jasa_pelayanan         = [];
+            $jasa_poli              = [];
+            $kunj                   = [];
+
+            for ($x = 1; $x <= $kunjungan; $x++) {
+                $jasa               = $this->M_global->getData('tarif_paket', ['kode_tarif' => $rd->kode_tarif, 'kunjungan' => $x]);
+
+                $kunj[$x]           = $x;
+                $jasa_rs[$x]        = number_format($jasa->jasa_rs);
+                $jasa_dokter[$x]    = number_format($jasa->jasa_dokter);
+                $jasa_pelayanan[$x] = number_format($jasa->jasa_pelayanan);
+                $jasa_poli[$x]      = number_format($jasa->jasa_poli);
+            }
+
+            $jasa_rs_str            = implode('<br>', array_map(fn($k, $v) => "<div style='float: left;'>Paket $k: Rp.</div><div class='float-right'>$v</div>", array_keys($jasa_rs), $jasa_rs));
+            $jasa_dokter_str        = implode('<br>', array_map(fn($k, $v) => "<div style='float: left;'>Paket $k: Rp.</div><div class='float-right'>$v</div>", array_keys($jasa_dokter), $jasa_dokter));
+            $jasa_pelayanan_str     = implode('<br>', array_map(fn($k, $v) => "<div style='float: left;'>Paket $k: Rp.</div><div class='float-right'>$v</div>", array_keys($jasa_pelayanan), $jasa_pelayanan));
+            $jasa_poli_str          = implode('<br>', array_map(fn($k, $v) => "<div style='float: left;'>Paket $k: Rp.</div><div class='float-right'>$v</div>", array_keys($jasa_poli), $jasa_poli));
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->kode_tarif . '<br><span class="badge badge-primary">Kunjungan: ' . $kunjungan . '</span>';
+            $row[]  = $rd->nama;
+            $row[]  = '<div>' . $jasa_rs_str . '</div>';
+            $row[]  = '<div>' . $jasa_dokter_str . '</div>';
+            $row[]  = '<div>' . $jasa_pelayanan_str . '</div>';
+            $row[]  = '<div>' . $jasa_poli_str . '</div>';
+            $row[]  = '<div class="text-center">
                 <button type="button" class="btn btn-warning" onclick="ubah(' . "'" . $rd->kode_tarif . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
                 <button type="button" class="btn btn-danger" onclick="hapus(' . "'" . $rd->kode_tarif . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
@@ -3975,10 +4032,10 @@ class Master extends CI_Controller
 
         // Prepare the output in JSON format
         $output = [
-            "draw" => $_POST['draw'],
-            "recordsTotal" => $this->M_tarif->count_all($param1),
-            "recordsFiltered" => $this->M_tarif->count_filtered($param1),
-            "data" => $data,
+            "draw"              => $_POST['draw'],
+            "recordsTotal"      => $this->M_tarif->count_all($param1),
+            "recordsFiltered"   => $this->M_tarif->count_filtered($param1),
+            "data"              => $data,
         ];
 
         // Send the output to the view

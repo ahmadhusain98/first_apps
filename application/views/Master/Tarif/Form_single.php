@@ -1,296 +1,296 @@
 <form method="post" id="form_tarif">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="id" class="control-label">Kode Tarif</label>
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control" id="kodeTarif" name="kodeTarif" placeholder="Otomatis" value="<?= (!empty($tarif) ? $tarif->kode_tarif : '') ?>" readonly>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="nama">Nama Tarif <span class="text-danger">**</span></label>
-                                <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama" onkeyup="ubah_nama(this.value, 'nama')" value="<?= (!empty($tarif) ? $tarif->nama : '') ?>">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="id" class="control-label">Kategori Tarif <sup class="text-danger">**</sup></label>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <select name="kategori" id="kategori" class="form-control select2_kategori_tarif" data-placeholder="~ Pilih Kategori">
-                                            <?php if (!empty($tarif)) :
-                                                $kategori = $this->M_global->getData('kategori_tarif', ['kode_kategori' => $tarif->kategori]); ?>
-                                                <option value="<?= $tarif->kategori; ?>"><?= $kategori->keterangan ?></option>
-                                            <?php endif; ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="width: 100%;">
-                                            <i class="fa-solid fa-circle-plus"></i> Tambah
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="nama">Jenis Tarif</label>
-                                <input type="hidden" class="form-control" id="jenis" name="jenis" placeholder="Jenis Tarif" value="1">
-                                <input type="text" class="form-control" id="jenisx" name="jenisx" placeholder="Jenis Tarif" value="Single" readonly>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Detail</span>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header" style="background-color: #343a40;">
-                    <button class="btn btn-primary" id="btn-tab-jasa" type="button" onclick="tabs(1)">JASA</button>
-                    <button class="btn btn-light" id="btn-tab-bhp" type="button" onclick="tabs(2)">BHP</button>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
                 </div>
                 <div class="card-body">
-                    <div class="row" id="for1">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <div class="row mb-3">
+                    <div class="form-group">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="row">
                                     <div class="col-md-12">
-                                        <div class="table-responsive">
-                                            <table class="table table-striped table-bordered" id="tableDetail" width="100%" style="border-radius: 10px;">
-                                                <thead>
-                                                    <tr class="text-center">
-                                                        <th rowspan="2" style="width: 5%;">Hapus</th>
-                                                        <th rowspan="2" style="width: 35%;">Cabang</th>
-                                                        <th colspan="4" style="width: 60%;">Jasa</th>
-                                                    </tr>
-                                                    <tr class="text-center">
-                                                        <th style="width: 15%;">RS</th>
-                                                        <th style="width: 15%;">Dokter</th>
-                                                        <th style="width: 15%;">Pelayanan</th>
-                                                        <th style="width: 15%;">Poli</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="bodyDetail">
-                                                    <?php if (!empty($single_jasa)) : ?>
-                                                        <?php $no = 1;
-                                                        foreach ($single_jasa as $sj) : ?>
-                                                            <tr id="rowJasa<?= $no ?>">
-                                                                <td>
-                                                                    <button type="button" class="btn btn-dark" onclick="hapusBaris(<?= $no ?>)"><i class="fa-solid fa-delete-left"></i></button>
-                                                                </td>
-                                                                <td>
-                                                                    <select name="kode_cabang[]" id="kode_cabang<?= $no ?>" class="select2_all_cabang" data-placeholder="~ Pilih Cabang">
-                                                                        <?php $cabang = $this->M_global->getData('cabang', ['kode_cabang' => $sj->kode_cabang]); ?>
-                                                                        <option value="<?= $sj->kode_cabang ?>"><?= $cabang->cabang ?></option>
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" name="jasa_rs[]" id="jasa_rs<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_rs) ?>" onkeyup="formatRp(this.value, 'jasa_rs<?= $no ?>');">
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" name="jasa_dokter[]" id="jasa_dokter<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_dokter) ?>" onkeyup="formatRp(this.value, 'jasa_dokter<?= $no ?>');">
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" name="jasa_pelayanan[]" id="jasa_pelayanan<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_pelayanan) ?>" onkeyup="formatRp(this.value, 'jasa_pelayanan<?= $no ?>');">
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" name="jasa_poli[]" id="jasa_poli<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_poli) ?>" onkeyup="formatRp(this.value, 'jasa_poli<?= $no ?>');">
-                                                                </td>
-                                                            </tr>
-                                                        <?php $no++;
-                                                        endforeach; ?>
-                                                    <?php else : ?>
-                                                        <tr id="rowJasa1">
-                                                            <td>
-                                                                <button type="button" class="btn btn-dark" onclick="hapusBaris(1)"><i class="fa-solid fa-delete-left"></i></button>
-                                                            </td>
-                                                            <td>
-                                                                <select name="kode_cabang[]" id="kode_cabang1" class="select2_all_cabang" data-placeholder="~ Pilih Cabang"></select>
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" name="jasa_rs[]" id="jasa_rs1" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_rs1');">
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" name="jasa_dokter[]" id="jasa_dokter1" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_dokter1');">
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" name="jasa_pelayanan[]" id="jasa_pelayanan1" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_pelayanan1');">
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" name="jasa_poli[]" id="jasa_poli1" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_poli1');">
-                                                            </td>
-                                                        </tr>
-                                                    <?php endif; ?>
-                                                </tbody>
-                                            </table>
+                                        <label for="id" class="control-label">Kode Tarif</label>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="kodeTarif" name="kodeTarif" placeholder="Otomatis" value="<?= (!empty($tarif) ? $tarif->kode_tarif : '') ?>" readonly>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="hidden" class="form-control" id="jumJasa" value="<?= (!empty($single_jasa) ? count($single_jasa) : '1') ?>">
-                                        <button type="button" class="btn btn-primary" onclick="tambah_jasa()"><i class="fa-solid fa-folder-plus"></i> Tambah Jasa</button>
+                                        <label for="nama">Nama Tarif <span class="text-danger">**</span></label>
+                                        <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama" onkeyup="ubah_nama(this.value, 'nama')" value="<?= (!empty($tarif) ? $tarif->nama : '') ?>">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row" id="for2">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <div class="row mb-3">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="row">
                                     <div class="col-md-12">
-                                        <div class="table-responsive">
-                                            <table class="table table-striped table-bordered" id="tableBhp" width="100%" style="border-radius: 10px;">
-                                                <thead>
-                                                    <tr class="text-center">
-                                                        <th width="5%" style="border-radius: 10px 0px 0px 0px;">Hapus</th>
-                                                        <th width="35%">Barang</th>
-                                                        <th width="15%">Satuan</th>
-                                                        <th width="15%">Harga</th>
-                                                        <th width="15%">Qty</th>
-                                                        <th width="15%" style="border-radius: 0px 10px 0px 0px;">Jumlah</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="bodyBhp">
-                                                    <?php if (!empty($single_bhp)) : ?>
-                                                        <?php 
-                                                        $nobhp = 1;
-                                                        foreach ($single_bhp as $sbhp) :
-                                                            $barang = $this->M_global->getData('barang', ['kode_barang' => $sbhp->kode_barang]);
-
-                                                            $satuan = [];
-                                                            foreach ([$barang->kode_satuan, $barang->kode_satuan2, $barang->kode_satuan3] as $satuanCode) {
-                                                                $satuanDetail = $this->M_global->getData('m_satuan', ['kode_satuan' => $satuanCode]);
-                                                                if ($satuanDetail) {
-                                                                    $satuan[] = [
-                                                                        'kode_satuan' => $satuanCode,
-                                                                        'keterangan' => $satuanDetail->keterangan,
-                                                                    ];
-                                                                } else {
-                                                                    $satuan[] = [
-                                                                        'kode_satuan' => '',
-                                                                        'keterangan' => '~ Pilih Satuan'
-                                                                    ];
-                                                                }
-                                                            }
-                                                            ?>
-                                                            <tr id="rowBhp<?= htmlspecialchars($nobhp) ?>">
-                                                                <td class="text-center">
-                                                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= htmlspecialchars($nobhp) ?>" onclick="hapusBarang('<?= htmlspecialchars($nobhp) ?>')">
-                                                                        <i class="fa-solid fa-delete-left"></i>
-                                                                    </button>
-                                                                </td>
-                                                                <td>
-                                                                    <select name="kode_barang[]" id="kode_barang<?= htmlspecialchars($nobhp) ?>" class="form-control select2_barang" data-placeholder="~ Pilih Barang" onchange="getBarang(this.value, '<?= htmlspecialchars($nobhp) ?>')">
-                                                                        <option value="<?= htmlspecialchars($sbhp->kode_barang) ?>"><?= htmlspecialchars($barang->nama) ?></option>
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <select name="kode_satuan[]" id="kode_satuan<?= htmlspecialchars($nobhp) ?>" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, <?= htmlspecialchars($nobhp) ?>)">
-                                                                        <option value="">~ Pilih Satuan</option>
-                                                                        <?php foreach ($satuan as $s) : ?>
-                                                                            <option value="<?= htmlspecialchars($s['kode_satuan']) ?>" <?= ($sbhp->kode_satuan == $s['kode_satuan'] ? 'selected' : '') ?>>
-                                                                                <?= htmlspecialchars($s['keterangan']) ?>
-                                                                            </option>
-                                                                        <?php endforeach; ?>
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" id="harga<?= htmlspecialchars($nobhp) ?>" name="harga[]" value="<?= htmlspecialchars(number_format($sbhp->harga)) ?>" class="form-control text-right" readonly>
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" id="qty<?= htmlspecialchars($nobhp) ?>" name="qty[]" value="<?= htmlspecialchars(number_format($sbhp->qty)) ?>" class="form-control text-right" onchange="hitung_st('<?= htmlspecialchars($nobhp) ?>'); formatRp(this.value, 'qty<?= htmlspecialchars($nobhp) ?>')">
-                                                                </td>
-                                                                <td class="text-right">
-                                                                    <input type="text" id="jumlah<?= htmlspecialchars($nobhp) ?>" name="jumlah[]" value="<?= htmlspecialchars(number_format($sbhp->jumlah)) ?>" class="form-control text-right" readonly>
-                                                                </td>
-                                                            </tr>
-                                                        <?php 
-                                                            $nobhp++;
-                                                        endforeach; 
-                                                        ?>
-                                                    <?php else : ?>
-                                                        <tr id="rowBhp1">
-                                                            <td class="text-center">
-                                                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus1" onclick="hapusBarang('1')"><i class="fa-solid fa-delete-left"></i></button>
-                                                            </td>
-                                                            <td>
-                                                                <select name="kode_barang[]" id="kode_barang1" class="form-control select2_barang" data-placeholder="~ Pilih Barang" onchange="getBarang(this.value, '1')"></select>
-                                                            </td>
-                                                            <td>
-                                                                <select name="kode_satuan[]" id="kode_satuan1" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, 1)">
-                                                                    <option value="">~ Pilih Satuan</option>
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" id="harga1" name="harga[]" value="0" class="form-control text-right" readonly>
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" id="qty1" name="qty[]" value="1" class="form-control text-right" onchange="hitung_st('1'); formatRp(this.value, 'qty1')">
-                                                            </td>
-                                                            <td class="text-right">
-                                                                <input type="text" id="jumlah1" name="jumlah[]" value="0" class="form-control text-right" readonly>
-                                                            </td>
-                                                        </tr>
+                                        <label for="id" class="control-label">Kategori Tarif <sup class="text-danger">**</sup></label>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <select name="kategori" id="kategori" class="form-control select2_kategori_tarif" data-placeholder="~ Pilih Kategori">
+                                                    <?php if (!empty($tarif)) :
+                                                        $kategori = $this->M_global->getData('kategori_tarif', ['kode_kategori' => $tarif->kategori]); ?>
+                                                        <option value="<?= $tarif->kategori; ?>"><?= $kategori->keterangan ?></option>
                                                     <?php endif; ?>
-                                                </tbody>
-                                            </table>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="width: 100%;">
+                                                    <i class="fa-solid fa-circle-plus"></i> Tambah
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="hidden" class="form-control" id="jumBhp" value="<?= (!empty($single_bhp) ? count($single_bhp) : '1') ?>">
-                                        <button type="button" class="btn btn-primary" onclick="tambah_bhp()"><i class="fa-solid fa-folder-plus"></i> Tambah BHP</button>
+                                        <label for="nama">Jenis Tarif</label>
+                                        <input type="hidden" class="form-control" id="jenis" name="jenis" placeholder="Jenis Tarif" value="1">
+                                        <input type="text" class="form-control" id="jenisx" name="jenisx" placeholder="Jenis Tarif" value="Single" readonly>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="card-footer">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Detail</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header" style="background-color: #343a40;">
+                                    <button class="btn btn-primary" id="btn-tab-jasa" type="button" onclick="tabs(1)">JASA</button>
+                                    <button class="btn btn-light" id="btn-tab-bhp" type="button" onclick="tabs(2)">BHP</button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row" id="for1">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-striped table-bordered" id="tableDetail" width="100%" style="border-radius: 10px;">
+                                                                <thead>
+                                                                    <tr class="text-center">
+                                                                        <th rowspan="2" style="width: 5%;">Hapus</th>
+                                                                        <th rowspan="2" style="width: 35%;">Cabang</th>
+                                                                        <th colspan="4" style="width: 60%;">Jasa</th>
+                                                                    </tr>
+                                                                    <tr class="text-center">
+                                                                        <th style="width: 15%;">RS</th>
+                                                                        <th style="width: 15%;">Dokter</th>
+                                                                        <th style="width: 15%;">Pelayanan</th>
+                                                                        <th style="width: 15%;">Poli</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="bodyDetail">
+                                                                    <?php if (!empty($single_jasa)) : ?>
+                                                                        <?php $no = 1;
+                                                                        foreach ($single_jasa as $sj) : ?>
+                                                                            <tr id="rowJasa<?= $no ?>">
+                                                                                <td>
+                                                                                    <button type="button" class="btn btn-dark" onclick="hapusBaris(<?= $no ?>)"><i class="fa-solid fa-delete-left"></i></button>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <select name="kode_cabang[]" id="kode_cabang<?= $no ?>" class="select2_all_cabang" data-placeholder="~ Pilih Cabang">
+                                                                                        <?php $cabang = $this->M_global->getData('cabang', ['kode_cabang' => $sj->kode_cabang]); ?>
+                                                                                        <option value="<?= $sj->kode_cabang ?>"><?= $cabang->cabang ?></option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="text" name="jasa_rs[]" id="jasa_rs<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_rs) ?>" onkeyup="formatRp(this.value, 'jasa_rs<?= $no ?>');">
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="text" name="jasa_dokter[]" id="jasa_dokter<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_dokter) ?>" onkeyup="formatRp(this.value, 'jasa_dokter<?= $no ?>');">
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="text" name="jasa_pelayanan[]" id="jasa_pelayanan<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_pelayanan) ?>" onkeyup="formatRp(this.value, 'jasa_pelayanan<?= $no ?>');">
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="text" name="jasa_poli[]" id="jasa_poli<?= $no ?>" class="form-control text-right" value="<?= number_format($sj->jasa_poli) ?>" onkeyup="formatRp(this.value, 'jasa_poli<?= $no ?>');">
+                                                                                </td>
+                                                                            </tr>
+                                                                        <?php $no++;
+                                                                        endforeach; ?>
+                                                                    <?php else : ?>
+                                                                        <tr id="rowJasa1">
+                                                                            <td>
+                                                                                <button type="button" class="btn btn-dark" onclick="hapusBaris(1)"><i class="fa-solid fa-delete-left"></i></button>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select name="kode_cabang[]" id="kode_cabang1" class="select2_all_cabang" data-placeholder="~ Pilih Cabang"></select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="text" name="jasa_rs[]" id="jasa_rs1" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_rs1');">
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="text" name="jasa_dokter[]" id="jasa_dokter1" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_dokter1');">
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="text" name="jasa_pelayanan[]" id="jasa_pelayanan1" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_pelayanan1');">
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="text" name="jasa_poli[]" id="jasa_poli1" class="form-control text-right" value="0" onkeyup="formatRp(this.value, 'jasa_poli1');">
+                                                                            </td>
+                                                                        </tr>
+                                                                    <?php endif; ?>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input type="hidden" class="form-control" id="jumJasa" value="<?= (!empty($single_jasa) ? count($single_jasa) : '1') ?>">
+                                                        <button type="button" class="btn btn-primary" onclick="tambah_jasa()"><i class="fa-solid fa-folder-plus"></i> Tambah Jasa</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" id="for2">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-striped table-bordered" id="tableBhp" width="100%" style="border-radius: 10px;">
+                                                                <thead>
+                                                                    <tr class="text-center">
+                                                                        <th width="5%" style="border-radius: 10px 0px 0px 0px;">Hapus</th>
+                                                                        <th width="35%">Barang</th>
+                                                                        <th width="15%">Satuan</th>
+                                                                        <th width="15%">Harga</th>
+                                                                        <th width="15%">Qty</th>
+                                                                        <th width="15%" style="border-radius: 0px 10px 0px 0px;">Jumlah</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="bodyBhp">
+                                                                    <?php if (!empty($single_bhp)) : ?>
+                                                                        <?php
+                                                                        $nobhp = 1;
+                                                                        foreach ($single_bhp as $sbhp) :
+                                                                            $barang = $this->M_global->getData('barang', ['kode_barang' => $sbhp->kode_barang]);
+
+                                                                            $satuan = [];
+                                                                            foreach ([$barang->kode_satuan, $barang->kode_satuan2, $barang->kode_satuan3] as $satuanCode) {
+                                                                                $satuanDetail = $this->M_global->getData('m_satuan', ['kode_satuan' => $satuanCode]);
+                                                                                if ($satuanDetail) {
+                                                                                    $satuan[] = [
+                                                                                        'kode_satuan' => $satuanCode,
+                                                                                        'keterangan' => $satuanDetail->keterangan,
+                                                                                    ];
+                                                                                } else {
+                                                                                    $satuan[] = [
+                                                                                        'kode_satuan' => '',
+                                                                                        'keterangan' => '~ Pilih Satuan'
+                                                                                    ];
+                                                                                }
+                                                                            }
+                                                                        ?>
+                                                                            <tr id="rowBhp<?= htmlspecialchars($nobhp) ?>">
+                                                                                <td class="text-center">
+                                                                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= htmlspecialchars($nobhp) ?>" onclick="hapusBarang('<?= htmlspecialchars($nobhp) ?>')">
+                                                                                        <i class="fa-solid fa-delete-left"></i>
+                                                                                    </button>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <select name="kode_barang[]" id="kode_barang<?= htmlspecialchars($nobhp) ?>" class="form-control select2_barang" data-placeholder="~ Pilih Barang" onchange="getBarang(this.value, '<?= htmlspecialchars($nobhp) ?>')">
+                                                                                        <option value="<?= htmlspecialchars($sbhp->kode_barang) ?>"><?= htmlspecialchars($barang->nama) ?></option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <select name="kode_satuan[]" id="kode_satuan<?= htmlspecialchars($nobhp) ?>" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, <?= htmlspecialchars($nobhp) ?>)">
+                                                                                        <option value="">~ Pilih Satuan</option>
+                                                                                        <?php foreach ($satuan as $s) : ?>
+                                                                                            <option value="<?= htmlspecialchars($s['kode_satuan']) ?>" <?= ($sbhp->kode_satuan == $s['kode_satuan'] ? 'selected' : '') ?>>
+                                                                                                <?= htmlspecialchars($s['keterangan']) ?>
+                                                                                            </option>
+                                                                                        <?php endforeach; ?>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="text" id="harga<?= htmlspecialchars($nobhp) ?>" name="harga[]" value="<?= htmlspecialchars(number_format($sbhp->harga)) ?>" class="form-control text-right" readonly>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="text" id="qty<?= htmlspecialchars($nobhp) ?>" name="qty[]" value="<?= htmlspecialchars(number_format($sbhp->qty)) ?>" class="form-control text-right" onchange="hitung_st('<?= htmlspecialchars($nobhp) ?>'); formatRp(this.value, 'qty<?= htmlspecialchars($nobhp) ?>')">
+                                                                                </td>
+                                                                                <td class="text-right">
+                                                                                    <input type="text" id="jumlah<?= htmlspecialchars($nobhp) ?>" name="jumlah[]" value="<?= htmlspecialchars(number_format($sbhp->jumlah)) ?>" class="form-control text-right" readonly>
+                                                                                </td>
+                                                                            </tr>
+                                                                        <?php
+                                                                            $nobhp++;
+                                                                        endforeach;
+                                                                        ?>
+                                                                    <?php else : ?>
+                                                                        <tr id="rowBhp1">
+                                                                            <td class="text-center">
+                                                                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus1" onclick="hapusBarang('1')"><i class="fa-solid fa-delete-left"></i></button>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select name="kode_barang[]" id="kode_barang1" class="form-control select2_barang" data-placeholder="~ Pilih Barang" onchange="getBarang(this.value, '1')"></select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select name="kode_satuan[]" id="kode_satuan1" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, 1)">
+                                                                                    <option value="">~ Pilih Satuan</option>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="text" id="harga1" name="harga[]" value="0" class="form-control text-right" readonly>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="text" id="qty1" name="qty[]" value="1" class="form-control text-right" onchange="hitung_st('1'); formatRp(this.value, 'qty1')">
+                                                                            </td>
+                                                                            <td class="text-right">
+                                                                                <input type="text" id="jumlah1" name="jumlah[]" value="0" class="form-control text-right" readonly>
+                                                                            </td>
+                                                                        </tr>
+                                                                    <?php endif; ?>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input type="hidden" class="form-control" id="jumBhp" value="<?= (!empty($single_bhp) ? count($single_bhp) : '1') ?>">
+                                                        <button type="button" class="btn btn-primary" onclick="tambah_bhp()"><i class="fa-solid fa-folder-plus"></i> Tambah BHP</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-danger" onclick="getUrl('Master/tin_single')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+                            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                            <?php if (!empty($tarif)) : ?>
+                                <button type="button" class="btn btn-info float-right" onclick="getUrl('Master/form_tin_single/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                            <?php else : ?>
+                                <button type="button" class="btn btn-info float-right" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
+                            <?php endif ?>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <button type="button" class="btn btn-danger" onclick="getUrl('Master/tin_single')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
-            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
-            <?php if (!empty($tarif)) : ?>
-                <button type="button" class="btn btn-info float-right" onclick="getUrl('Master/form_tin_single/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
-            <?php else : ?>
-                <button type="button" class="btn btn-info float-right" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
-            <?php endif ?>
         </div>
     </div>
 </form>
@@ -476,7 +476,7 @@
     function reseting() {
         kodeTarif.val('');
         nama.val('');
-        kategori.html(`<option value="">~ Pilih Kategori</option>`);
+        kategori.val('').change();
         $('#jumJasa').val(0);
         bodyDetail.empty();
         tambah_jasa();
@@ -497,8 +497,8 @@
             type: 'POST',
             dataType: 'JSON',
             success: function(result) { // jika fungsi berjalan
-                $('#harga'+i).val(formatRpNoId(result[0].hna));
-                $('#jumlah'+i).val(formatRpNoId(result[0].hna * qty));
+                $('#harga' + i).val(formatRpNoId(result[0].hna));
+                $('#jumlah' + i).val(formatRpNoId(result[0].hna * qty));
 
                 // each satuan
                 $.each(result[1], function(index, value) {

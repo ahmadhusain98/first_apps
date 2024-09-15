@@ -179,8 +179,8 @@
     <div class="wrapper">
 
         <!-- Preloader -->
-        <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="<?= base_url() ?>assets/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+        <div class="preloader flex-column justify-content-center align-items-center" style="background-color: #fcfefc;">
+            <img class="animation__shake" src="<?= base_url('assets/img/loading_2.gif') ?>" alt="AdminLTELogo" height="200" width="200">
         </div>
 
         <!-- Navbar -->
@@ -344,7 +344,8 @@
                                             $cek_submenu2 = $this->db->query("SELECT sm2.* FROM sub_menu2 sm2 JOIN sub_menu sm ON sm2.id_submenu = sm.id WHERE sm.url_submenu IS NULL AND sm2.id_submenu = '$sm->id'")->num_rows();
                                         ?>
                                             <li class="nav-item">
-                                                <?php if ($cek_submenu2 > 0) : ?>
+                                                <?php if ($cek_submenu2 > 0) :
+                                                ?>
                                                     <a type="button" class="nav-link">
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $sm->icon ?>
                                                         <p>
@@ -360,16 +361,24 @@
                                                         <?php
                                                         $sub_menu2 = $this->db->get_where("sub_menu2", ["id_submenu" => $sm->id])->result();
                                                         foreach ($sub_menu2 as $sm2) :
+                                                            if ($sm2->url_submenu2 == $this->uri->segment(2)) { // jika url menu sama dengan segment 1 dari url
+                                                                // aktifkan
+                                                                $aktifUrl3 = 'active';
+                                                            } else { // selain itu
+                                                                // nonaktifkan
+                                                                $aktifUrl3 = '';
+                                                            }
                                                         ?>
                                                             <li class="nav-item">
-                                                                <a type="button" class="nav-link" href="<?= site_url($m->url . '/' . $sm2->url_submenu2) ?>">
+                                                                <a type="button" class="nav-link <?= $aktifUrl3 ?>" href="<?= site_url($m->url . '/' . $sm2->url_submenu2) ?>">
                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $sm2->icon ?>
                                                                     <p><?= $sm2->nama ?></p>
                                                                 </a>
                                                             </li>
                                                         <?php endforeach; ?>
                                                     </ul>
-                                                <?php else : ?>
+                                                <?php else :
+                                                ?>
                                                     <a type="button" class="nav-link" href="<?= site_url($m->url . '/' . $sm->url_submenu) ?>">
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $sm->icon ?>
                                                         <p>
@@ -389,7 +398,7 @@
         </aside>
 
         <!-- wrapper -->
-        <div class="content-wrapper" style="background-color: white; margin-top: 55px;">
+        <div class="content-wrapper" style="background-color: #f7f7f7; margin-top: 55px;">
             <!-- <div class="content-header">
                 <div class="container-fluid">
                     <div class="row">
@@ -441,8 +450,6 @@
         <br>
         <br>
         <br>
-        <br>
-        <br>
 
         <!-- footer -->
         <footer class="main-footer fixed-bottom shadow-lg">
@@ -472,6 +479,8 @@
 
         // load pertama kali saat sistem berjalan
         $("#open_pass").hide();
+
+        AOS.init();
 
         $(".select2_global").select2({
             placeholder: $(this).data('placeholder'),
