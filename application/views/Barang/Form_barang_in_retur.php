@@ -618,7 +618,7 @@
                                     <span>${value.kode_barang} ~ ${value.nama}</span>
                                 </td>
                                 <td>
-                                    <input type="text" id="kode_satuan${x}" name="kode_satuan[]" value="${value.satuan_default}">
+                                    <input type="hidden" id="kode_satuan${x}" name="kode_satuan[]" value="${value.satuan_default}">
                                     <input type="text" class="form-control" id="kode_satuanx${x}" name="kode_satuanx[]" value="${value.nama_satuan}" readonly>
                                 </td>
                                 <td>

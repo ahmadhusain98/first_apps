@@ -43,7 +43,7 @@ function cetak_pdf($judul, $body, $cek_param, $position, $filename, $web, $yes =
         $mpdf->setAutoBottomMargin = 'pad';
         // $mpdf->SetWatermarkText($web->nama, 0.05); // beri watermark dengan transparansi 0.1
         // $mpdf->showWatermarkText = true; // izinkan watermark tampil
-        $mpdf->SetWatermarkImage(base_url('assets/img/web/') . $web->watermark, 0.1, [70, 40]);
+        $mpdf->SetWatermarkImage(base_url('assets/img/web/') . $web->watermark, 0.2, [70, 40]);
         $mpdf->showWatermarkImage = true;
         $mpdf->AddPage($position); // isi posisi cetakan L (landscape)/ P (potrait)
         $mpdf->setAutoTopMargin = 'pad';
@@ -128,7 +128,7 @@ function cetak_pdf_small($judul, $body, $cek_param, $position, $filename, $web, 
         $mpdf->setAutoBottomMargin = 'stretch';
         // $mpdf->SetWatermarkText($web->nama, 0.05); // beri watermark dengan transparansi 0.1
         // $mpdf->showWatermarkText = true; // izinkan watermark tampil
-        $mpdf->SetWatermarkImage(base_url('assets/img/web/') . $web->watermark, 0.1, [55, 30]);
+        $mpdf->SetWatermarkImage(base_url('assets/img/web/') . $web->watermark, 0.2, [55, 30]);
         $mpdf->showWatermarkImage = true;
         $mpdf->AddPage($position); // isi posisi cetakan L (landscape)/ P (potrait)
         $mpdf->setAutoTopMargin = 'stretch';

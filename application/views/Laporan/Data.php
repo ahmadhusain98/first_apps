@@ -13,6 +13,11 @@
                                 <div class="col-md-9">
                                     <select name="laporan" id="laporan" class="form-control select2_global" data-placeholder="~ Pilih Laporan" onchange="cekReport(this.value)">
                                         <option value="">~ Pilih Laporan</option>
+                                        <optgroup label="Management Depan">
+                                            <option value="0">0.1) Pendaftaran Member</option>
+                                            <option value="0.1">0.2) Pendaftaran Tanpa Paket</option>
+                                            <option value="0.2">0.3) Pendaftaran Dengan Paket</option>
+                                        </optgroup>
                                         <optgroup label="Transaksi Pembelian">
                                             <option value="1">1.1) Pembelian</option>
                                             <option value="1.1">1.2) Pembelian Detail</option>
@@ -55,11 +60,19 @@
                                 <label for="kode_barang" class="control-label col-md-3 m-auto">Barang <sup id="idBarang" class="text-danger">**</sup></label>
                                 <div class="col-md-9">
                                     <select name="kode_barang" id="kode_barang" class="form-control select2_barang" data-placeholder="~ Pilih Barang">
-                                        <option value="">~ Pilih Gudang</option>
+                                        <option value="">~ Pilih Barang</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row mb-3" id="poli">
+                                <label for="kode_poli" class="control-label col-md-3 m-auto">Poli <sup id="idPoli" class="text-danger">**</sup></label>
+                                <div class="col-md-9">
+                                    <select name="kode_poli" id="kode_poli" class="form-control select2_poli" data-placeholder="~ Pilih poli">
+                                        <option value="">~ Pilih Poli</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3" id="gudang">
                                 <label for="kode_gudang" class="control-label col-md-3 m-auto">Gudang <sup id="idGudang" class="text-danger">**</sup></label>
                                 <div class="col-md-9">
                                     <select name="kode_gudang" id="kode_gudang" class="form-control select2_gudang_int" data-placeholder="~ Pilih Gudang">
@@ -94,43 +107,60 @@
     var sampai = $('#sampai');
     var pemasok = $('#pemasok');
     var barang = $('#barang');
+    var poli = $('#poli');
+    var kode_poli = $('#kode_poli');
     var kode_supplier = $('#kode_supplier');
+    var gudang = $('#gudang');
     var kode_gudang = $('#kode_gudang');
     var kode_barang = $('#kode_barang');
     var idSupplier = $('#idSupplier');
     var idGudang = $('#idGudang');
+    var idPoli = $('#idPoli');
     var idBarang = $('#idBarang');
 
     barang.hide();
+    poli.hide();
+    idPoli.hide();
 
     // fungsi cek report
     function cekReport(param) {
-        if (param == 1 || param == '1.1' || param == 2 || param == '2.1') {
+        if (param == 0 || param == '0' || param == '0.1' || param == '0.2') {
+            poli.fadeIn(0);
+            idSupplier.fadeOut(0);
+            idGudang.fadeOut(0);
+            gudang.fadeOut(0);
+            barang.fadeOut(0);
+            pemasok.fadeOut(0);
+        } else if (param == 1 || param == '1.1' || param == 2 || param == '2.1') {
             idSupplier.fadeOut(0);
             idGudang.fadeOut(0);
             barang.fadeOut(0);
             pemasok.fadeIn(0);
+            poli.fadeOut(0);
         } else if (param == 3) {
             pemasok.fadeOut(0);
             idSupplier.fadeOut(0);
             idGudang.fadeIn(0);
             barang.fadeIn(0);
+            poli.fadeOut(0);
         } else if (param == 4 || param == '4.1') {
             pemasok.fadeOut(0);
             idSupplier.fadeOut(0);
             idGudang.fadeOut(0);
             barang.fadeOut(0);
+            poli.fadeOut(0);
         } else {
             pemasok.fadeIn(0);
             idSupplier.fadeIn(0);
             idGudang.fadeIn(0);
             barang.fadeOut(0);
+            poli.fadeOut(0);
         }
     }
 
     // fungsi cetak
     function cetak(param) {
-        if (laporan.val() == 1 || laporan.val() == '1' || laporan.val() == '1.1' || laporan.val() == 2 || laporan.val() == '2' || laporan.val() == '2.1' || laporan.val() == 4 || laporan.val() == '4' || laporan.val() == '4.1') {} else if (laporan.val() == 3 || laporan.val() == '3') {
+        if (laporan.val() == 0 || laporan.val() == '0.1' || laporan.val() == '0.2' || laporan.val() == 1 || laporan.val() == '1' || laporan.val() == '1.1' || laporan.val() == 2 || laporan.val() == '2' || laporan.val() == '2.1' || laporan.val() == 4 || laporan.val() == '4' || laporan.val() == '4.1') {} else if (laporan.val() == 3 || laporan.val() == '3') {
             if (kode_barang.val() == '' || kode_barang.val() == null) {
                 return Swal.fire("Barang", "Form sudah diisi?", "question");
             }
@@ -148,7 +178,7 @@
             }
         }
 
-        var parameterString = `/${param}?laporan=${laporan.val()}&dari=${dari.val()}&sampai=${sampai.val()}&kode_supplier=${kode_supplier.val()}&kode_gudang=${kode_gudang.val()}&kode_barang=${kode_barang.val()}`;
+        var parameterString = `/${param}?laporan=${laporan.val()}&dari=${dari.val()}&sampai=${sampai.val()}&kode_supplier=${kode_supplier.val()}&kode_gudang=${kode_gudang.val()}&kode_barang=${kode_barang.val()}&kode_poli=${kode_poli.val()}`;
         window.open(`${siteUrl}Laporan/report_print${parameterString}`, '_blank');
     }
 </script>

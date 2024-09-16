@@ -1124,42 +1124,36 @@
         }
 
         function initailizeSelect2_all_cabang() {
-            if (param == '' || param == null || param == 'null') { // jika parameter kosong/ null
-                // jalankan fungsi select2_default
-                select2_default('select2_all_cabang');
-            } else { // selain itu
-                // jalan fungsi select2 asli
-                $(".select2_all_cabang").select2({
-                    allowClear: true,
-                    multiple: false,
-                    placeholder: '~ Pilih Cabang',
-                    dropdownAutoWidth: true,
-                    width: '100%',
-                    language: {
-                        inputTooShort: function() {
-                            return 'Ketikan Nomor minimal 1 huruf';
-                        }
-                    },
-                    ajax: {
-                        url: siteUrl + 'Select2_master/dataAllCabang/',
-                        type: 'POST',
-                        dataType: 'JSON',
-                        delay: 100,
-                        data: function(result) {
-                            return {
-                                searchTerm: result.term
-                            };
-                        },
-
-                        processResults: function(result) {
-                            return {
-                                results: result
-                            };
-                        },
-                        cache: true
+            $(".select2_all_cabang").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Cabang',
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 1 huruf';
                     }
-                });
-            }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataAllCabang/',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
         }
 
         function initailizeSelect2_kategori_tarif() {

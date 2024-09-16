@@ -15,8 +15,8 @@
                                         <input type="text" class="form-control" placeholder="Otomatis" id="no_trx" name="no_trx" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_trx : '') ?>" readonly>
                                     </div>
                                     <div class="col-md-12">
-                                        <label for="">Member <sup class="text-danger">**</sup></label>
-                                        <div class="row mb-3">
+                                        <label for="" class="mt-3">Member <sup class="text-danger">**</sup></label>
+                                        <div class="row">
                                             <div class="col-md-8">
                                                 <select name="kode_member" id="kode_member" class="form-control select2_member" data-placeholder="~ Cari Member" onchange="getRiwayat(this.value)">
                                                     <?php
@@ -135,7 +135,7 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="row mb-3">
+                            <div class="row">
                                 <div class="col-md-6">
                                     <button type="button" class="btn btn-danger" onclick="getUrl('Health/pendaftaran')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
                                 </div>
