@@ -12,18 +12,13 @@
             <form id="form_repass" method="post">
                 <div class="input-group mb-3">
                     <input type="email" class="form-control" placeholder="Email" id="email" name="email" onchange="cekEmail(this.value)">
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fas fa-envelope"></span>
-                        </div>
-                    </div>
                 </div>
                 <div class="input-group mb-3">
                     <input type="password" class="form-control" placeholder="Sandi Baru" id="password" name="password">
                     <div class="input-group-append" onclick="pass()">
                         <div class="input-group-text">
-                            <span class="fas fa-lock" id="lock_pass"></span>
-                            <span class="fas fa-lock-open" id="open_pass"></span>
+                            <i class="fa-solid fa-fw fa-lock text-danger" id="lock_pass"></i>
+                            <i class="fa-solid fa-lock-open text-success" id="open_pass"></i>
                         </div>
                     </div>
                 </div>
