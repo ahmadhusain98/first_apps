@@ -273,8 +273,8 @@
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-position: center; background-size: cover;">
-            <!-- <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-image: url(<?= base_url() ?>assets/img/web/<?= $web->bg_theme ?>); background-position: center; background-size: cover;"> -->
+        <!-- <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-position: center; background-size: cover;"> -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: <?= $web->bg_theme ?>;">
             <!-- Brand Logo -->
             <a type="button" href="<?= site_url('Home') ?>" class="brand-link" style="backdrop-filter: blur(10px);">
                 <img src="<?= base_url('assets/img/web/') . $web->logo ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
@@ -429,7 +429,7 @@
             </div> -->
 
             <!-- modal loading proses -->
-            <div class="modal fade" id="loading" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="loading" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-body text-center">
@@ -596,6 +596,11 @@
                 icon: "error"
             });
             return;
+        }
+
+        // uppercase
+        function upperCase(params, forid) {
+            $('#' + forid).val(params.toUpperCase())
         }
 
         // huruf besar diawal kata
@@ -847,8 +852,8 @@
                 }
             },
             "aLengthMenu": [
-                [5, 15, 20, -1],
-                [5, 15, 20, "Semua"]
+                [10, 25, 50, 75, 100, -1],
+                [10, 25, 50, 75, 100, "Semua"]
             ],
             "columnDefs": [{
                 "targets": [-1],
@@ -884,8 +889,8 @@
                     }
                 },
                 "lengthMenu": [
-                    [5, 15, 20, -1],
-                    [5, 15, 20, "Semua"]
+                    [10, 25, 50, 75, 100, -1],
+                    [10, 25, 50, 75, 100, "Semua"]
                 ],
                 "columnDefs": [{
                     "targets": [-1],

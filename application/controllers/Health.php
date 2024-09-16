@@ -447,7 +447,7 @@ class Health extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'pendaftaran';
-        $colum            = ['id', 'no_trx', 'tgl_daftar', 'jam_daftar', 'kode_member', 'kode_poli', 'kode_dokter', 'no_antrian', 'tgl_keluar', 'jam_keluar', 'status_trx'];
+        $colum            = ['id', 'no_trx', 'tgl_daftar', 'jam_daftar', 'kode_member', 'kode_poli', 'kode_ruang', 'kode_dokter', 'no_antrian', 'tgl_keluar', 'jam_keluar', 'status_trx'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -504,13 +504,13 @@ class Health extends CI_Controller
 
             $row    = [];
             $row[]  = $no++;
-            $row[]  = $rd->no_trx;
-            $row[]  = $rd->kode_member . ' ~ ' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama;
-            $row[]  = date('d/m/Y', strtotime($rd->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_daftar));
+            $row[]  = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>'));
+            $row[]  = $rd->kode_member . '<br>' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama;
+            $row[]  = date('d/m/Y', strtotime($rd->tgl_daftar)) . '<br>' . date('H:i:s', strtotime($rd->jam_daftar));
             $row[]  = '<span class="text-center">' . (($rd->status_trx < 1) ? '-' : (($rd->tgl_keluar == null) ? '' : date('d/m/Y', strtotime($rd->tgl_keluar))) . ' ~ ' . (($rd->jam_keluar == null) ? '' : date('H:i:s', strtotime($rd->jam_keluar)))) . '</>';
-            $row[]  = $this->M_global->getData('m_poli', ['kode_poli' => $rd->kode_poli])->keterangan;
-            $row[]  = $this->M_global->getData('dokter', ['kode_dokter' => $rd->kode_dokter])->nama;
-            $row[]  = '<div class="text-center">' . (($rd->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>')) . '</div>';
+            $row[]  = $this->M_global->getData('m_poli', ['kode_poli' => $rd->kode_poli])->keterangan . '<br>(' . $this->M_global->getData('m_ruang', ['kode_ruang' => $rd->kode_ruang])->keterangan . ')';
+            $row[]  = 'Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $rd->kode_dokter])->nama;
+            $row[]  = $rd->no_antrian;
 
             if ($rd->status_trx < 1) {
                 $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" onclick="actived(' . "'" . $rd->no_trx . "', 0" . ')" ' . $upd_diss . '><i class="fa-solid fa-user-xmark"></i></button>';
@@ -976,7 +976,8 @@ class Health extends CI_Controller
         $this->template->load('Template/Content', 'Pendaftaran/Form_pendaftaran', $parameter);
     }
 
-    public function getToken($no_trx) {
+    public function getToken($no_trx)
+    {
         $pembayaran = $this->M_global->getData('pembayaran', ['no_trx' => $no_trx]);
 
         echo json_encode(['status' => 1, 'token' => $pembayaran->token_pembayaran]);
@@ -988,7 +989,7 @@ class Health extends CI_Controller
         $paket = $this->M_global->getDataResult('tarif_paket', ['kode_tarif' => $kode_tarif, 'kode_cabang' => $kode_cabang]);
         $tarif = $this->db->query("SELECT * FROM tarif_paket_pasien WHERE kode_tarif = '$kode_tarif' AND status = 1 AND kode_member = '$kode_member' ORDER BY id DESC LIMIT 1")->row();
 
-        if(!empty($tarif)) {
+        if (!empty($tarif)) {
             if ($tarif->kunjungan >= (count($paket))) {
                 $new_kunjungan = 1;
             } else {

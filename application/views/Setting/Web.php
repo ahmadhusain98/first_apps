@@ -82,6 +82,12 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="bg_theme" class="control-label">Tema Sidebar</label>
+                                        <input type="color" name="bg_theme" id="bg_theme" class="form-control" value="<?= $web->bg_theme ?>">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

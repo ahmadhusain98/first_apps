@@ -28,7 +28,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
-                                                <button type="button" class="btn btn-primary w-100" onclick="updateMember()" id="btnUMember"><i class="fa-regular fa-pen-to-square"></i>&nbsp;&nbsp;Update</button>
+                                                <button type="button" class="btn btn-warning w-100" onclick="updateMember()" id="btnUMember"><i class="fa-regular fa-pen-to-square"></i>&nbsp;&nbsp;Update</button>
                                             </div>
                                         </div>
                                     </div>

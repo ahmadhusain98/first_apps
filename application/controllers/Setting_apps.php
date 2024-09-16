@@ -69,6 +69,7 @@ class Setting_apps extends CI_Controller
         $email                    = $this->input->post('email_web');
         $kode_email               = $this->input->post('kode_email');
         $nama                     = $this->input->post('nama_web');
+        $bg_theme                 = $this->input->post('bg_theme');
         $alamat                   = $this->input->post('alamat_web');
 
         // configurasi upload file
@@ -103,8 +104,8 @@ class Setting_apps extends CI_Controller
             $theme = $this->upload->data('file_name');
         } else { // selain itu
             // beri nilai default
-            if ($web->logo == 'sidebar1.jpeg') {
-                $theme = 'sidebar1.jpeg';
+            if ($web->watermark == 'My_Logo_4_2.png') {
+                $theme = 'My_Logo_4_2.png';
             } else {
                 $theme = $web->watermark;
             }
@@ -118,6 +119,7 @@ class Setting_apps extends CI_Controller
             'nohp'          => $nohp,
             'alamat'        => $alamat,
             'logo'          => $gambar,
+            'bg_theme'      => $bg_theme,
             'watermark'     => $theme,
         ];
 

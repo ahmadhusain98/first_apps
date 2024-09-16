@@ -1,244 +1,246 @@
 <form method="post" id="form_barang">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="id" class="control-label">Barcode</label>
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control" id="kodeBarang" name="kodeBarang" placeholder="Otomatis, Bila sudah ada isikan barcode" value="<?= (!empty($barang) ? $barang->kode_barang : '') ?>" <?= (!empty($barang) ? 'readonly' : '') ?>>
-                                    <div class="input-group-append">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" <?= ((!empty($barang) ? '' : 'disabled')) ?>>
-                                            <i class="fa-regular fa-hourglass-half"></i>&nbsp;&nbsp;<?= ((!empty($barang) ? 'Stok Barang Gudang' : 'Stok Barang Baru Tidak Tersedia')) ?>
-                                        </button>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="id" class="control-label">Barcode</label>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="kodeBarang" name="kodeBarang" placeholder="Otomatis, Bila sudah ada isikan barcode" value="<?= (!empty($barang) ? $barang->kode_barang : '') ?>" <?= (!empty($barang) ? 'readonly' : '') ?>>
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" <?= ((!empty($barang) ? '' : 'disabled')) ?>>
+                                                    <i class="fa-regular fa-hourglass-half"></i>&nbsp;&nbsp;<?= ((!empty($barang) ? 'Stok Barang Gudang' : 'Stok Barang Baru Tidak Tersedia')) ?>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="kode_satuan" class="control-label">Satuan Kecil <span class="text-danger">**</span></label>
+                                        <select name="kode_satuan" id="kode_satuan" class="form-control select2_global" data-placeholder="~ Pilih Satuan">
+                                            <option value="">~ Pilih Satuan</option>
+                                            <?php foreach ($m_satuan as $s) : ?>
+                                                <option value="<?= $s->kode_satuan ?>" <?= (!empty($barang) ? (($s->kode_satuan == $barang->kode_satuan) ? 'selected' : '') : '') ?>><?= $s->keterangan ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="kode_satuan" class="control-label">Satuan Kecil <span class="text-danger">**</span></label>
-                                <select name="kode_satuan" id="kode_satuan" class="form-control select2_global" data-placeholder="~ Pilih Satuan">
-                                    <option value="">~ Pilih Satuan</option>
-                                    <?php foreach ($m_satuan as $s) : ?>
-                                        <option value="<?= $s->kode_satuan ?>" <?= (!empty($barang) ? (($s->kode_satuan == $barang->kode_satuan) ? 'selected' : '') : '') ?>><?= $s->keterangan ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="nama">Nama <span class="text-danger">**</span></label>
-                                <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama" onkeyup="ubah_nama(this.value, 'nama')" value="<?= (!empty($barang) ? $barang->nama : '') ?>">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="kode_satuan2" class="control-label">Satuan Sedang</label>
-                                <select name="kode_satuan2" id="kode_satuan2" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="qty_satuan(this.value, 2)">
-                                    <option value="">~ Pilih Satuan</option>
-                                    <?php foreach ($m_satuan as $s) : ?>
-                                        <option value="<?= $s->kode_satuan ?>" <?= (!empty($barang) ? (($s->kode_satuan == $barang->kode_satuan2) ? 'selected' : '') : '') ?>><?= $s->keterangan ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="qty_satuan2">Qty Satuan Sedang</label>
-                                <input type="text" name="qty_satuan2" id="qty_satuan2" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->qty_satuan2) : 0) ?>">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="kode_kategori" class="control-label">Kategori <span class="text-danger">**</span></label>
-                                <select name="kode_kategori" id="kode_kategori" class="form-control select2_global" data-placeholder="~ Pilih">
-                                    <option value="">~ Pilih</option>
-                                    <?php foreach ($kategori as $k) : ?>
-                                        <option value="<?= $k->kode_kategori ?>" <?= (!empty($barang) ? (($k->kode_kategori == $barang->kode_kategori) ? 'selected' : '') : '') ?>><?= $k->keterangan ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="kode_satuan3" class="control-label">Satuan Besar</label>
-                                <select name="kode_satuan3" id="kode_satuan3" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="qty_satuan(this.value, 3)">
-                                    <option value="">~ Pilih Satuan</option>
-                                    <?php foreach ($m_satuan as $s) : ?>
-                                        <option value="<?= $s->kode_satuan ?>" <?= (!empty($barang) ? (($s->kode_satuan == $barang->kode_satuan3) ? 'selected' : '') : '') ?>><?= $s->keterangan ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="qty_satuan3">Qty Satuan Besar</label>
-                                <input type="text" name="qty_satuan3" id="qty_satuan3" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->qty_satuan3) : 0) ?>">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="hna">HNA <span class="text-danger">**</span></label>
-                                <input type="text" name="hna" id="hna" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->hna) : '0') ?>" onchange="formatRp(this.value, 'hna'); getHpp(this.value)">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="hpp">HPP <span class="text-danger">**</span></label>
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <select name="opsi_hpp" id="opsi_hpp" class="form-control select2_global" onchange="cek_opsi_hpp(this.value)">
-                                            <option value="1" <?= (!empty($barang) ? (($barang->opsi_hpp == 1) ? 'selected' : '') : '') ?>>Manual</option>
-                                            <option value="2" <?= (!empty($barang) ? (($barang->opsi_hpp == 2) ? 'selected' : '') : '') ?>>Persentase</option>
+                                    <div class="col-md-12">
+                                        <label for="nama">Nama <span class="text-danger">**</span></label>
+                                        <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama" onkeyup="ubah_nama(this.value, 'nama')" value="<?= (!empty($barang) ? $barang->nama : '') ?>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="kode_satuan2" class="control-label">Satuan Sedang</label>
+                                        <select name="kode_satuan2" id="kode_satuan2" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="qty_satuan(this.value, 2)">
+                                            <option value="">~ Pilih Satuan</option>
+                                            <?php foreach ($m_satuan as $s) : ?>
+                                                <option value="<?= $s->kode_satuan ?>" <?= (!empty($barang) ? (($s->kode_satuan == $barang->kode_satuan2) ? 'selected' : '') : '') ?>><?= $s->keterangan ?></option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-6">
+                                        <label for="qty_satuan2">Qty Satuan Sedang</label>
+                                        <input type="text" name="qty_satuan2" id="qty_satuan2" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->qty_satuan2) : 0) ?>">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="kode_kategori" class="control-label">Kategori <span class="text-danger">**</span></label>
+                                        <select name="kode_kategori" id="kode_kategori" class="form-control select2_global" data-placeholder="~ Pilih">
+                                            <option value="">~ Pilih</option>
+                                            <?php foreach ($kategori as $k) : ?>
+                                                <option value="<?= $k->kode_kategori ?>" <?= (!empty($barang) ? (($k->kode_kategori == $barang->kode_kategori) ? 'selected' : '') : '') ?>><?= $k->keterangan ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="kode_satuan3" class="control-label">Satuan Besar</label>
+                                        <select name="kode_satuan3" id="kode_satuan3" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="qty_satuan(this.value, 3)">
+                                            <option value="">~ Pilih Satuan</option>
+                                            <?php foreach ($m_satuan as $s) : ?>
+                                                <option value="<?= $s->kode_satuan ?>" <?= (!empty($barang) ? (($s->kode_satuan == $barang->kode_satuan3) ? 'selected' : '') : '') ?>><?= $s->keterangan ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="qty_satuan3">Qty Satuan Besar</label>
+                                        <input type="text" name="qty_satuan3" id="qty_satuan3" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->qty_satuan3) : 0) ?>">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="hna">HNA <span class="text-danger">**</span></label>
+                                        <input type="text" name="hna" id="hna" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->hna) : '0') ?>" onchange="formatRp(this.value, 'hna'); getHpp(this.value)">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="hpp">HPP <span class="text-danger">**</span></label>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input type="text" name="persentase_hpp" id="persentase_hpp" class="form-control text-right" placeholder="%" value="<?= (!empty($barang) ? number_format($barang->persentase_hpp) : '') ?>" onchange="get_hpp(this.value)">
+                                                <select name="opsi_hpp" id="opsi_hpp" class="form-control select2_global" onchange="cek_opsi_hpp(this.value)">
+                                                    <option value="1" <?= (!empty($barang) ? (($barang->opsi_hpp == 1) ? 'selected' : '') : '') ?>>Manual</option>
+                                                    <option value="2" <?= (!empty($barang) ? (($barang->opsi_hpp == 2) ? 'selected' : '') : '') ?>>Persentase</option>
+                                                </select>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" name="hpp" id="hpp" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->hpp) : '0') ?>" onchange="formatRp(this.value, 'hpp'); cekHna(this.value, 'hpp')">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="persentase_hpp" id="persentase_hpp" class="form-control text-right" placeholder="%" value="<?= (!empty($barang) ? number_format($barang->persentase_hpp) : '') ?>" onchange="get_hpp(this.value)">
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <input type="text" name="hpp" id="hpp" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->hpp) : '0') ?>" onchange="formatRp(this.value, 'hpp'); cekHna(this.value, 'hpp')">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="harga_jual">Jual <span class="text-danger">**</span></label>
-                                <input type="text" name="harga_jual" id="harga_jual" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->harga_jual) : '0') ?>" onchange="formatRp(this.value, 'harga_jual'); cekHpp(this.value, 'harga_jual')">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="nilai_persediaan">Nilai Persediaan <span class="text-danger">**</span></label>
-                                <input type="text" name="nilai_persediaan" id="nilai_persediaan" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->nilai_persediaan) : '0') ?>" onchange="formatRp(this.value, 'nilai_persediaan'); cekHpp(this.value, 'nilai_persediaan')">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="stok_min">Stok Minimal <span class="text-danger">**</span></label>
-                                <input type="text" name="stok_min" id="stok_min" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->stok_min) : '0') ?>" onchange="formatRp(this.value, 'stok_min')">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="stok_max">Stok Maksimal <span class="text-danger">**</span></label>
-                                <input type="text" name="stok_max" id="stok_max" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->stok_max) : '0') ?>" onchange="formatRp(this.value, 'stok_max')">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="filefoto" class="control-label">Gambar</label>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <img id="preview_img" class="rounded mx-auto d-block" style="border: 2px solid grey; width: 100%;" src="<?= base_url('assets/img/obat/') . (!empty($barang) ? $barang->image : 'default.jpg'); ?>" alt="User profile picture">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="harga_jual">Jual <span class="text-danger">**</span></label>
+                                        <input type="text" name="harga_jual" id="harga_jual" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->harga_jual) : '0') ?>" onchange="formatRp(this.value, 'harga_jual'); cekHpp(this.value, 'harga_jual')">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-8">
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="filefoto" aria-describedby="inputGroupFileAddon01" name="filefoto" onchange="readURL(this)">
-                                        <label class="custom-file-label" id="label-gambar" for="inputGroupFile01">Cari Gambar</label>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="nilai_persediaan">Nilai Persediaan <span class="text-danger">**</span></label>
+                                        <input type="text" name="nilai_persediaan" id="nilai_persediaan" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->nilai_persediaan) : '0') ?>" onchange="formatRp(this.value, 'nilai_persediaan'); cekHpp(this.value, 'nilai_persediaan')">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="stok_min">Stok Minimal <span class="text-danger">**</span></label>
+                                        <input type="text" name="stok_min" id="stok_min" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->stok_min) : '0') ?>" onchange="formatRp(this.value, 'stok_min')">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="stok_max">Stok Maksimal <span class="text-danger">**</span></label>
+                                        <input type="text" name="stok_max" id="stok_max" class="form-control text-right" value="<?= (!empty($barang) ? number_format($barang->stok_max) : '0') ?>" onchange="formatRp(this.value, 'stok_max')">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="filefoto" class="control-label">Gambar</label>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <img id="preview_img" class="rounded mx-auto d-block" style="border: 2px solid grey; width: 100%;" src="<?= base_url('assets/img/obat/') . (!empty($barang) ? $barang->image : 'default.jpg'); ?>" alt="User profile picture">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="filefoto" aria-describedby="inputGroupFileAddon01" name="filefoto" onchange="readURL(this)">
+                                                <label class="custom-file-label" id="label-gambar" for="inputGroupFile01">Cari Gambar</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="kode_jenis" class="control-label">Jenis Obat <span class="text-danger">**</span></label>
+                                        <select name="kode_jenis[]" id="kode_jenis" class="form-control select2_global" data-placeholder="~ Pilih Jenis Obat" multiple="multiple">
+                                            <option value="">~ Pilih Jenis Obat</option>
+                                            <?php if (!empty($barang)) :
+                                                $bj_arr = [];
+                                                foreach ($barang_jenis as $bj) :
+                                                    $bj_arr[] = $bj->kode_jenis;
+                                            ?>
+                                            <?php endforeach;
+                                            endif; ?>
+                                            <?php foreach ($jenis as $j) : ?>
+                                                <option value="<?= $j->kode_jenis ?>" <?= (!empty($barang) ? (in_array($j->kode_jenis, $bj_arr) ? 'selected' : '') : '') ?>><?= $j->keterangan ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
                             <div class="col-md-12">
-                                <label for="kode_jenis" class="control-label">Jenis Obat <span class="text-danger">**</span></label>
-                                <select name="kode_jenis[]" id="kode_jenis" class="form-control select2_global" data-placeholder="~ Pilih Jenis Obat" multiple="multiple">
-                                    <option value="">~ Pilih Jenis Obat</option>
+                                <label for="kode_cabang" class="control-label">Cabang <span class="text-danger">**</span></label>
+                                <select name="kode_cabang[]" id="kode_cabang" class="form-control select2_global" data-placeholder="~ Pilih Cabang" multiple="multiple">
+                                    <option value="">~ Pilih Cabang</option>
                                     <?php if (!empty($barang)) :
-                                        $bj_arr = [];
-                                        foreach ($barang_jenis as $bj) :
-                                            $bj_arr[] = $bj->kode_jenis;
+                                        $cabang_arr = [];
+                                        foreach ($barang_cabang as $bc) :
+                                            $cabang_arr[] = $bc->kode_cabang;
                                     ?>
                                     <?php endforeach;
                                     endif; ?>
-                                    <?php foreach ($jenis as $j) : ?>
-                                        <option value="<?= $j->kode_jenis ?>" <?= (!empty($barang) ? (in_array($j->kode_jenis, $bj_arr) ? 'selected' : '') : '') ?>><?= $j->keterangan ?></option>
+                                    <?php foreach ($cabang_all as $ca) : ?>
+                                        <option value="<?= $ca->kode_cabang ?>" <?= (!empty($barang) ? (in_array($ca->kode_cabang, $cabang_arr) ? 'selected' : '') : '') ?>><?= $ca->cabang ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-12">
-                        <label for="kode_cabang" class="control-label">Cabang <span class="text-danger">**</span></label>
-                        <select name="kode_cabang[]" id="kode_cabang" class="form-control select2_global" data-placeholder="~ Pilih Cabang" multiple="multiple">
-                            <option value="">~ Pilih Cabang</option>
-                            <?php if (!empty($barang)) :
-                                $cabang_arr = [];
-                                foreach ($barang_cabang as $bc) :
-                                    $cabang_arr[] = $bc->kode_cabang;
-                            ?>
-                            <?php endforeach;
-                            endif; ?>
-                            <?php foreach ($cabang_all as $ca) : ?>
-                                <option value="<?= $ca->kode_cabang ?>" <?= (!empty($barang) ? (in_array($ca->kode_cabang, $cabang_arr) ? 'selected' : '') : '') ?>><?= $ca->cabang ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-danger" onclick="getUrl('Master/barang')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+                            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                            <?php if (!empty($barang)) : ?>
+                                <button type="button" class="btn btn-info float-right" onclick="getUrl('Master/form_barang/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                            <?php else : ?>
+                                <button type="button" class="btn btn-info float-right" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
+                            <?php endif ?>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <button type="button" class="btn btn-danger" onclick="getUrl('Master/barang')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
-            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
-            <?php if (!empty($barang)) : ?>
-                <button type="button" class="btn btn-info float-right" onclick="getUrl('Master/form_barang/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
-            <?php else : ?>
-                <button type="button" class="btn btn-info float-right" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
-            <?php endif ?>
         </div>
     </div>
 

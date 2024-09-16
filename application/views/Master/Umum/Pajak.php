@@ -69,8 +69,9 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                     <thead>
                                         <tr class="text-center">
                                             <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
-                                            <th width="60%">Nama</th>
+                                            <th width="55%">Nama</th>
                                             <th width="20%">Persentase</th>
+                                            <th width="5%">Aktif</th>
                                             <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                         </tr>
                                     </thead>
@@ -91,9 +92,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     var kodePajak = $('#kodePajak');
     var nama = $('#nama');
     var persentase = $('#persentase');
-    var btnSimpan = $('#btnSimpan');
-
-    // btnSimpan.attr('disabled', false);
+    const btnSimpan = $('#btnSimpan');
 
     // fungsi simpan
     function save() {
@@ -243,6 +242,49 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                         } else { // selain itu
 
                             Swal.fire("Pajak", "Gagal di hapus!, silahkan dicoba kembali", "info");
+                        }
+                    },
+                    error: function(result) { // jika fungsi error
+                        btnSimpan.attr('disabled', false);
+
+                        error_proccess();
+                    }
+                });
+            }
+        });
+    }
+
+    // fungsi set_default berdasarkan kode_pajak
+    function set_default(kode_pajak) {
+        // ajukan pertanyaaan
+        Swal.fire({
+            title: "Kamu yakin?",
+            text: "Data ini akan dijadikan pajak default!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, atur default!",
+            cancelButtonText: "Tidak!"
+        }).then((result) => {
+            if (result.isConfirmed) { // jika yakin
+
+                // jalankan fungsi
+                $.ajax({
+                    url: siteUrl + 'Master/setDefPajak/' + kode_pajak,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    success: function(result) { // jika fungsi berjalan dengan baik
+                        btnSimpan.attr('disabled', false);
+
+                        if (result.status == 1) { // jika mendapatkan hasil 1
+
+                            Swal.fire("Pajak", "Berhasil diupdate!", "success").then(() => {
+                                reloadTable();
+                            });
+                        } else { // selain itu
+
+                            Swal.fire("Pajak", "Gagal diupdate!, silahkan dicoba kembali", "info");
                         }
                     },
                     error: function(result) { // jika fungsi error

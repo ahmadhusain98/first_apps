@@ -28,18 +28,8 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="kode_supplier" class="control-label">Pemasok <sup class="text-danger">**</sup></label>
-                                <input type="hidden" name="cek_pajak" id="cek_pajak" value="<?php if (!empty($data_barang_po_in)) {
-                                                                                                $pajak_supplier = $this->M_global->getData('m_supplier', ['kode_supplier' => $data_barang_po_in->kode_supplier]);
-                                                                                                $pajak = $this->M_global->getData('m_pajak', ['kode_pajak' => $pajak_supplier->pajak]);
-                                                                                                if ($pajak) {
-                                                                                                    echo $pajak->persentase;
-                                                                                                } else {
-                                                                                                    echo 0;
-                                                                                                }
-                                                                                            } else {
-                                                                                                echo 0;
-                                                                                            } ?>">
-                                <select name="kode_supplier" id="kode_supplier" class="form-control select2_supplier" data-placeholder="~ Pilih Pemasok" onchange="getPajak(this.value)">
+                                <input type="hidden" name="cek_pajak" id="cek_pajak" value="<?= $pajak ?>">
+                                <select name="kode_supplier" id="kode_supplier" class="form-control select2_supplier" data-placeholder="~ Pilih Pemasok">
                                     <?php
                                     if (!empty($data_barang_po_in)) :
                                         $supplier = $this->M_global->getData('m_supplier', ['kode_supplier' => $data_barang_po_in->kode_supplier])->nama;
@@ -66,6 +56,9 @@
                 </div>
                 <div class="card-footer">
                     <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Detail Barang</span>
+                    <div class="float-right">
+                        <span class="text-danger font-weight-bold">Pajak Aktif: <?= $pajak ?>%</span>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -608,33 +601,33 @@
     }
 
     // getPajak
-    function getPajak(param) {
-        if (param == '' || param == null) {
-            cek_pajak.val(0);
+    // function getPajak(param) {
+    //     if (param == '' || param == null) {
+    //         cek_pajak.val(0);
 
-            return;
-        }
+    //         return;
+    //     }
 
-        $.ajax({
-            url: siteUrl + 'Transaksi/getPajak/' + param,
-            type: "POST",
-            data: form.serialize(),
-            dataType: "JSON",
-            success: function(result) {
-                cek_pajak.val(result.pajak_supplier);
+    //     $.ajax({
+    //         url: siteUrl + 'Transaksi/getPajak/' + param,
+    //         type: "POST",
+    //         data: form.serialize(),
+    //         dataType: "JSON",
+    //         success: function(result) {
+    //             cek_pajak.val(result.pajak_supplier);
 
-                var tableBarang = document.getElementById('tableDetailBarangIn'); // ambil id table detail
-                var rowCount = tableBarang.rows.length; // hitung jumlah rownya
+    //             var tableBarang = document.getElementById('tableDetailBarangIn'); // ambil id table detail
+    //             var rowCount = tableBarang.rows.length; // hitung jumlah rownya
 
-                for (var i = 1; i < rowCount; i++) {
-                    hitung_st(i);
-                }
-            },
-            error: function(result) {
-                error_proccess();
-            }
-        })
-    }
+    //             for (var i = 1; i < rowCount; i++) {
+    //                 hitung_st(i);
+    //             }
+    //         },
+    //         error: function(result) {
+    //             error_proccess();
+    //         }
+    //     })
+    // }
 
     // perhitungan diskon % row
     function hitung_dpr(x) {

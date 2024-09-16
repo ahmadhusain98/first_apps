@@ -41,13 +41,11 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label for="pajak">Pajak <span class="text-danger">**</span></label>
-                                        <select name="pajak" id="pajak" class="form-control select2_pajak" data-placeholder="~ Pilih">
-                                            <?php if (!empty($gudang)) : ?>
-                                                <option value="<?= $gudang->pajak ?>"><?= $this->M_global->getData('m_pajak', ['kode_pajak' => $gudang->pajak])->nama; ?></option>
-                                            <?php else: ?>
-                                                <option value="">~ Pilih</option>
-                                            <?php endif; ?>
+                                        <label for="aktif">Status <span class="text-danger">**</span></label>
+                                        <select name="aktif" id="aktif" class="form-control select2_global" data-placeholder="~ Pilih Status">
+                                            <option value="">~ Pilih Status</option>
+                                            <option value="0" <?= (!empty($gudang) ? (($gudang->aktif == 0) ? 'selected' : '') : '') ?>>Non-aktif</option>
+                                            <option value="1" <?= (!empty($gudang) ? (($gudang->aktif == 1) ? 'selected' : '') : '') ?>>Aktif</option>
                                         </select>
                                     </div>
                                 </div>
@@ -90,7 +88,7 @@
     var kodeGudang = $('#kodeGudang');
     var nama = $('#nama');
     var bagian = $('#bagian');
-    var pajak = $('#pajak');
+    var aktif = $('#aktif');
     var keterangan = $('#keterangan');
 
     btnSimpan.attr('disabled', false);
@@ -111,10 +109,10 @@
             return Swal.fire("No. Hp", "Form sudah diisi?", "question");
         }
 
-        if (pajak.val() == '' || pajak.val() == null) { // jika pajak null/ kosong
+        if (aktif.val() == '' || aktif.val() == null) { // jika aktif null/ kosong
             btnSimpan.attr('disabled', false);
 
-            return Swal.fire("Pajak", "Form sudah diisi?", "question");
+            return Swal.fire("Status", "Form sudah diisi?", "question");
         }
 
         if (keterangan.val() == '' || keterangan.val() == null) { // jika keterangan null/ kosong

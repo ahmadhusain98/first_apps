@@ -88,52 +88,39 @@ class Backdoor extends CI_Controller
         $this->db->insert("activity_user", $aktifitas);
 
         $sintak = [
-            // po
+            $this->db->query("TRUNCATE TABLE activity_user"),
             $this->db->query("TRUNCATE TABLE barang_po_in_header"),
             $this->db->query("TRUNCATE TABLE barang_po_in_detail"),
-
-            // pembelian
             $this->db->query("TRUNCATE TABLE barang_in_header"),
             $this->db->query("TRUNCATE TABLE barang_in_detail"),
-
-            // piutang
-            $this->db->query("TRUNCATE TABLE piutang"),
-            $this->db->query("TRUNCATE TABLE kas_utama"),
-            $this->db->query("TRUNCATE TABLE kas_second"),
-
-            // retur pembelian
             $this->db->query("TRUNCATE TABLE barang_in_retur_header"),
             $this->db->query("TRUNCATE TABLE barang_in_retur_detail"),
-
-            // penjualan
             $this->db->query("TRUNCATE TABLE barang_out_header"),
             $this->db->query("TRUNCATE TABLE barang_out_detail"),
-
-            // retur penjualan
             $this->db->query("TRUNCATE TABLE barang_out_retur_header"),
             $this->db->query("TRUNCATE TABLE barang_out_retur_detail"),
-
-            // stok
             $this->db->query("TRUNCATE TABLE barang_stok"),
-
-            // pembayaran
             $this->db->query("TRUNCATE TABLE bayar_card_detail"),
+            $this->db->query("TRUNCATE TABLE bayar_kas_card"),
             $this->db->query("TRUNCATE TABLE bayar_um_card_detail"),
-            $this->db->query("TRUNCATE TABLE cart_header"),
             $this->db->query("TRUNCATE TABLE cart_detail"),
+            $this->db->query("TRUNCATE TABLE cart_header"),
             $this->db->query("TRUNCATE TABLE cart_promo"),
+            $this->db->query("TRUNCATE TABLE deposit_kas"),
+            $this->db->query("TRUNCATE TABLE kas_second"),
+            $this->db->query("TRUNCATE TABLE kas_utama"),
+            $this->db->query("UPDATE member SET last_regist = '', status_regist = 0"),
+            $this->db->query("TRUNCATE TABLE mutasi_kas"),
+            $this->db->query("TRUNCATE TABLE m_promo"),
             $this->db->query("TRUNCATE TABLE pembayaran"),
+            $this->db->query("TRUNCATE TABLE pembayaran_tarif_single"),
             $this->db->query("TRUNCATE TABLE pembayaran_uangmuka"),
-            $this->db->query("TRUNCATE TABLE uang_muka"),
-
-            $this->db->query("TRUNCATE TABLE tarif_paket_pasien"),
-
-            // pendaftaran
             $this->db->query("TRUNCATE TABLE pendaftaran"),
-
-            // log user
-            $this->db->query("TRUNCATE TABLE activity_user"),
-
+            $this->db->query("TRUNCATE TABLE penyesuaian_detail"),
+            $this->db->query("TRUNCATE TABLE penyesuaian_header"),
+            $this->db->query("TRUNCATE TABLE piutang"),
+            $this->db->query("TRUNCATE TABLE tarif_paket_pasien"),
+            $this->db->query("TRUNCATE TABLE uang_muka"),
         ];
 
         if ($sintak) {
@@ -164,7 +151,35 @@ class Backdoor extends CI_Controller
 
         if ($cek->num_rows() > 0) {
             foreach ($cek->result() as $c) {
-                if ($c->my_table == 'user' || $c->my_table == 'member' || $c->my_table == 'cabang' || $c->my_table == 'kecamatan' || $c->my_table == 'kabupaten' || $c->my_table == 'backup_db' || $c->my_table == 'cabang_user' || $c->my_table == 'm_agama' || $c->my_table == 'm_gudang' || $c->my_table == 'm_pekerjaan' || $c->my_table == 'm_pendidikan' || $c->my_table == 'm_provinsi' || $c->my_table == 'm_role'  || $c->my_table == 'member_token' || $c->my_table == 'sub_menu' || $c->my_table == 'sub_menu2' || $c->my_table == 'user_token' || $c->my_table == 'web_setting' || $c->my_table == 'web_version' || $c->my_table == 'm_menu') {
+                $selain = [
+                    'akses_menu',
+                    'backup_db',
+                    'cabang',
+                    'cabang_user',
+                    'kabupaten',
+                    'kecamatan',
+                    'klasifikasi_akun',
+                    'm_menu',
+                    'm_gudang',
+                    'm_bank',
+                    'm_agama',
+                    'm_pekerjaan',
+                    'm_pendidikan',
+                    'member',
+                    'member_token',
+                    'm_poli',
+                    'm_provinsi',
+                    'm_role',
+                    'm_ruang', // cek lagi
+                    'sub_menu',
+                    'sub_menu2',
+                    'user',
+                    'user_token',
+                    'web_setting',
+                    'web_version',
+                ];
+
+                if (in_array($c->my_table, $selain)) {
                     $query = TRUE;
                 } else {
                     $query = $this->db->query("TRUNCATE TABLE $c->my_table");

@@ -115,6 +115,7 @@
             cancelButtonText: "Tidak!"
         }).then((result) => {
             if (result.isConfirmed) { // jika yakin
+                $('#loading').modal('show');
 
                 // jalankan fungsi
                 $.ajax({
@@ -124,15 +125,19 @@
                     success: function(result) { // jika fungsi berjalan dengan baik
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
+                            $('#loading').modal('hide');
+
                             Swal.fire("Empty Database", "Berhasil dikosongkan", "success").then(() => {
                                 location.href = siteUrl + "Auth/logout";
                             });
                         } else { // selain itu
+                            $('#loading').modal('hide');
 
                             Swal.fire("Empty Database", "Gagal dikosongkan" + ", silahkan dicoba kembali", "info");
                         }
                     },
                     error: function(result) { // jika fungsi error
+                        $('#loading').modal('hdie');
 
                         error_proccess();
                     }

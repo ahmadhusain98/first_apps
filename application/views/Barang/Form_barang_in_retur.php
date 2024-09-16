@@ -82,6 +82,9 @@
                 </div>
                 <div class="card-footer">
                     <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Detail Barang</span>
+                    <div class="float-right">
+                        <span class="text-danger font-weight-bold">Pajak Aktif: <?= $pajak ?>%</span>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">

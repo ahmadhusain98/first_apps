@@ -42,7 +42,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
-                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="width: 100%;">
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" id="btnTambahModal" data-target="#modal_kategori" style="width: 100%;">
                                                     <i class="fa-solid fa-circle-plus"></i> Tambah
                                                 </button>
                                             </div>
@@ -295,17 +295,23 @@
     </div>
 </form>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal_kategori" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Tambah Kategori Tarif</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeModalKategori">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <form method="post" id="form_kategori">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label for="inisial_kategori">Inisial <sup class="text-danger">**</sup></label>
+                            <input type="text" class="form-control" id="inisial_kategori" name="inisial_kategori" placeholder="Inisial..." onkeyup="upperCase(this.value, 'inisial_kategori')" maxlength="3" max="3">
+                        </div>
+                    </div>
                     <div class="row mb-3">
                         <div class="col-12">
                             <label for="keterangan_kategori">Keterangan <sup class="text-danger">**</sup></label>
@@ -323,7 +329,7 @@
     </div>
 </div>
 
-<script>
+<script type="text/javascript">
     const bodyDetail = $('#bodyDetail');
     const bodyBhp = $('#bodyBhp');
     const form_tarif = $('#form_tarif');
@@ -335,6 +341,8 @@
     const for2 = $('#for2');
     const btn_tab_jasa = $('#btn-tab-jasa');
     const btn_tab_bhp = $('#btn-tab-bhp');
+    var closeModalKategori = $('#closeModalKategori');
+    var btnModal = $('#btnTambahModal');
 
     tabs(1);
 
@@ -359,16 +367,38 @@
     }
 
     function proses_kategori() {
-        $('#exampleModal').modal('hide');
+        closeModalKategori.trigger('click')
 
-        if ($('#keterangan_kategori').val() == '' || $('#keterangan_kategori').val() == null) {
-            Swal.fire("Keterangan Kategori", "Form sudah diisi?", "question");
-
-            $('#exampleModal').modal('show');
-
-            return
+        // Check if the keterangan_kategori is empty or null
+        if ($('#inisial_kategori').val() === '' || $('#inisial_kategori').val() === null) {
+            // Show alert and re-show the modal
+            Swal.fire({
+                title: "Inisial Kategori",
+                text: "Form sudah diisi?",
+                icon: "question"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    btnModal.trigger('click');
+                }
+            });
+            return;
         }
 
+        if ($('#keterangan_kategori').val() === '' || $('#keterangan_kategori').val() === null) {
+            // Show alert and re-show the modal
+            Swal.fire({
+                title: "Keterangan Kategori",
+                text: "Form sudah diisi?",
+                icon: "question"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    btnModal.trigger('click');
+                }
+            });
+            return;
+        }
+
+        // AJAX request
         $.ajax({
             url: siteUrl + 'Master/add_kategori_tarif',
             type: 'POST',
@@ -376,20 +406,34 @@
             data: $('#form_kategori').serialize(),
             success: function(result) {
                 if (result.status == 1) {
-                    Swal.fire("Kategori Tarif", "Berhasil dibuat, silahkan dipilih!", "success");
+                    Swal.fire({
+                        title: "Kategori Tarif",
+                        text: "Berhasil dibuat, silahkan dipilih!",
+                        icon: "success"
+                    }).then(() => {
+                        $('#inisial_kategori').val('');
+                        $('#keterangan_kategori').val('');
 
-                    $('#exampleModal').modal('hide');
+                        closeModalKategori.trigger('click')
+                    });
                 } else {
-                    Swal.fire("Kategori Tarif", "Gagal dibuat, silahkan coba lagi!", "info");
+                    Swal.fire({
+                        title: "Kategori Tarif",
+                        text: "Gagal dibuat, silahkan coba lagi!",
+                        icon: "info"
+                    });
                 }
             },
-            error: function(result) {
+            error: function() {
+                // Call the error processing function
                 error_proccess();
 
-                $('#exampleModal').modal('show');
+                // Show the modal again if there's an error
+                btnModal.trigger('click');
             }
-        })
+        });
     }
+
 
     function tambah_jasa() {
         var jum = Number($('#jumJasa').val());

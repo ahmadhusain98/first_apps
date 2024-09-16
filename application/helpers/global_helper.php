@@ -192,6 +192,23 @@ function _kodeTarif($jenis)
     return $kode_user;
 }
 
+function _kodePajak()
+{
+    $CI               = &get_instance();
+
+    $inisial          = "PJK";
+    $lastNumber       = $CI->db->query('SELECT * FROM m_pajak ORDER BY kode_pajak DESC LIMIT 1')->row();
+    $number           = 1;
+    if ($lastNumber) {
+        $number       = count($CI->db->query('SELECT * FROM m_pajak')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%07d", $number);
+    } else {
+        $number       = 0;
+        $kode_user    = $inisial . "0000001";
+    }
+    return $kode_user;
+}
+
 function _kodePoli()
 {
     $CI               = &get_instance();

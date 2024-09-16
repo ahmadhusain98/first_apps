@@ -675,7 +675,7 @@ class Master extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'm_gudang';
-        $colum            = ['id', 'kode_gudang', 'nama', 'bagian', 'keterangan', 'vat'];
+        $colum            = ['id', 'kode_gudang', 'nama', 'bagian', 'keterangan', 'aktif'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -714,14 +714,12 @@ class Master extends CI_Controller
                 $del_diss         = 'disabled';
             }
 
-            $pajak  = $this->M_global->getData('m_pajak', ['kode_pajak' => $rd->vat]);
-
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->kode_gudang;
             $row[]  = $rd->nama;
             $row[]  = $rd->bagian;
-            $row[]  = '<div class="text-right">' . ((!empty($pajak)) ? $pajak->persentase . '%' : '-') . '</div>';
+            $row[]  = '<div class="text-center">' . (($rd->aktif > 0) ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-dark">Non-aktif</span>') . '</div>';
             $row[]  = $rd->keterangan;
             $row[]  = '<div class="text-center">
                     <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_gudang . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
@@ -766,8 +764,7 @@ class Master extends CI_Controller
         // variable
         $nama         = $this->input->post('nama');
         $bagian       = $this->input->post('bagian');
-        $pajak        = $this->input->post('pajak');
-        $vat          = ($pajak) ? 1 : 0;
+        $aktif        = $this->input->post('aktif');
         $keterangan   = $this->input->post('keterangan');
 
         if ($param == 1) { // jika parameternya 1
@@ -783,8 +780,7 @@ class Master extends CI_Controller
             'kode_gudang' => $kodeGudang,
             'nama'        => $nama,
             'bagian'      => $bagian,
-            'vat'         => $vat,
-            'pajak'       => $pajak,
+            'aktif'       => $aktif,
             'keterangan'  => $keterangan,
         ];
 
@@ -3519,7 +3515,7 @@ class Master extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'm_pajak';
-        $colum            = ['id', 'kode_pajak', 'nama', 'persentase'];
+        $colum            = ['id', 'kode_pajak', 'nama', 'persentase', 'aktif'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -3543,12 +3539,7 @@ class Master extends CI_Controller
         // loop $list
         foreach ($list as $rd) {
             if ($deleted > 0) {
-                $cek_diss       = $this->M_global->jumDataRow('m_gudang', ['pajak' => $rd->kode_pajak]);
-                if ($cek_diss > 0) {
-                    $del_diss   = 'disabled';
-                } else {
-                    $del_diss   = '';
-                }
+                $del_diss       = '';
             } else {
                 $del_diss       = 'disabled';
             }
@@ -3557,6 +3548,7 @@ class Master extends CI_Controller
             $row[]  = $no++;
             $row[]  = $rd->nama;
             $row[]  = '<span class="float-right">' . $rd->persentase . '%</span>';
+            $row[]  = '<div class="text-center">' . '<input type="checkbox" class="form-control" name="default_ppn" id="default_ppn" ' . ($rd->aktif == 1 ? 'checked' : '') . '  onclick="set_default(' . "'" . $rd->kode_pajak . "'" . ')">' . '</div>';
             $row[]  = '<div class="text-center">
                 <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_pajak . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
                 <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_pajak . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
@@ -3574,6 +3566,23 @@ class Master extends CI_Controller
 
         // kirimkan ke view
         echo json_encode($output);
+    }
+
+    public function setDefPajak($kode_pajak)
+    {
+        $cek = $this->db->query("UPDATE m_pajak SET aktif = 0");
+
+        if ($cek) {
+            $cek2 = $this->db->query("UPDATE m_pajak SET aktif = 1 WHERE kode_pajak = '$kode_pajak'");
+        } else {
+            $cek2 = TRUE;
+        }
+
+        if ($cek2) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
     }
 
     // fungsi cek pajak berdasarkan keterangan pajak
@@ -3603,7 +3612,7 @@ class Master extends CI_Controller
 
         if ($param == 1) { // jika parameternya 1
             // maka buat kode baru
-            $kodePajak = $this->db->query("SELECT kode_pajak FROM m_pajak ORDER BY kode_pajak DESC LIMIT 1")->row()->kode_pajak + 1;
+            $kodePajak = _kodePajak();
         } else { // selain itu
             // ambil kode dari inputan
             $kodePajak = $this->input->post('kodePajak');
@@ -3614,6 +3623,7 @@ class Master extends CI_Controller
             'kode_pajak'    => $kodePajak,
             'nama'          => $nama,
             'persentase'    => $persentase,
+            'aktif'         => 0,
         ];
 
         if ($param == 1) { // jika parameternya 1
@@ -3788,9 +3798,10 @@ class Master extends CI_Controller
     public function add_kategori_tarif()
     {
         $kode_kategori = _kodeKategoriTarif();
+        $inisial = $this->input->post('inisial_kategori');
         $keterangan = $this->input->post('keterangan_kategori');
 
-        $cek = $this->M_global->insertData('kategori_tarif', ['kode_kategori' => $kode_kategori, 'keterangan' => $keterangan]);
+        $cek = $this->M_global->insertData('kategori_tarif', ['kode_kategori' => $kode_kategori, 'keterangan' => $keterangan, 'inisial_kode' => $inisial]);
 
         if ($cek) {
             aktifitas_user('Master Tarif (Kategori)', 'menambahkan Kategori Tarif', $kode_kategori, $keterangan);
@@ -3802,6 +3813,8 @@ class Master extends CI_Controller
 
     public function tin_single_proses($param)
     {
+        $kategori       = $this->input->post('kategori');
+
         if ($param == 1) {
             $kode_tarif = _kodeTarif(1);
         } else {
@@ -3809,7 +3822,6 @@ class Master extends CI_Controller
         }
 
         $nama           = $this->input->post('nama');
-        $kategori       = $this->input->post('kategori');
         $jenis          = 1;
 
         $kode_cabang    = $this->input->post('kode_cabang');
@@ -4077,6 +4089,8 @@ class Master extends CI_Controller
 
     public function tin_paket_proses($param)
     {
+        $kategori       = $this->input->post('kategori');
+
         if ($param == 1) {
             $kode_tarif = _kodeTarif(2);
         } else {
@@ -4084,7 +4098,6 @@ class Master extends CI_Controller
         }
 
         $nama           = $this->input->post('nama');
-        $kategori       = $this->input->post('kategori');
         $jenis          = 2;
 
         $kode_cabang    = $this->input->post('kode_cabang');

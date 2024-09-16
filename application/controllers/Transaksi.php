@@ -214,7 +214,7 @@ class Transaksi extends CI_Controller
             'data_barang_po_in' => $barang_po_in,
             'barang_po_detail'  => $barang_po_detail,
             'role'              => $this->M_global->getResult('m_role'),
-            'pajak'             => $this->M_global->getData('m_pajak', ['id' => 1])->persentase,
+            'pajak'             => $this->M_global->getData('m_pajak', ['aktif' => 1])->persentase,
             'list_barang'       => $this->M_global->getResult('barang'),
         ];
 
@@ -225,6 +225,7 @@ class Transaksi extends CI_Controller
     public function barang_po_in_proses($param)
     {
         $kode_cabang      = $this->session->userdata('cabang');
+        $shift            = $this->session->userdata('shift');
 
         // header
         if ($param == 1) { // jika param = 1
@@ -269,6 +270,7 @@ class Transaksi extends CI_Controller
             'subtotal'      => $subtotal,
             'total'         => $total,
             'kode_user'     => $this->session->userdata('kode_user'),
+            'shift'         => $shift,
             'batal'         => 0,
             'is_valid'      => 0,
         ];
@@ -556,14 +558,11 @@ class Transaksi extends CI_Controller
 
             // update is_valid jadi 0
             $cek = $this->M_global->updateData('barang_po_in_header', ['is_valid' => 0, 'tgl_valid' => null, 'jam_valid' => null], ['invoice' => $invoice]);
-
-            hitungStokBrgOut($detail, $kode_gudang, $invoice);
         } else { // selain itu
             aktifitas_user_transaksi('Transaksi Masuk', 'Confirm PO', $invoice);
 
             // update is_valid jadi 1
             $cek = $this->M_global->updateData('barang_po_in_header', ['is_valid' => 1, 'tgl_valid' => date('Y-m-d'), 'jam_valid' => date('H:i:s')], ['invoice' => $invoice]);
-            hitungStokBrgIn($detail, $kode_gudang, $invoice);
         }
 
         if ($cek) { // jika fungsi cek berjalan
@@ -1020,7 +1019,7 @@ class Transaksi extends CI_Controller
             'barang_po_in_x'    => $this->db->query('SELECT bpo.* FROM barang_po_in_header bpo WHERE bpo.is_valid = 1 AND bpo.kode_cabang = "' . $kode_cabang . '"')->result(),
             'barang_po_in'      => $this->db->query('SELECT dpo.invoice, hpo.tgl_po, hpo.jam_po FROM barang_po_in_detail dpo JOIN barang_po_in_header hpo ON dpo.invoice = hpo.invoice WHERE hpo.kode_cabang = "' . $kode_cabang . '" AND (hpo.invoice NOT IN (SELECT ht.invoice_po FROM barang_in_header ht WHERE ht.kode_cabang = "' . $kode_cabang . '") OR dpo.qty != (SELECT COALESCE(SUM(dt.qty), 0) FROM barang_in_detail dt JOIN barang_in_header ht ON dt.invoice = ht.invoice WHERE ht.invoice_po = hpo.invoice AND dt.kode_barang = dpo.kode_barang AND ht.kode_cabang = "' . $kode_cabang . '"))GROUP BY dpo.invoice, hpo.tgl_po, hpo.jam_po')->result(),
             'role'              => $this->M_global->getResult('m_role'),
-            'pajak'             => $this->M_global->getData('m_pajak', ['id' => 1])->persentase,
+            'pajak'             => $this->M_global->getData('m_pajak', ['aktif' => 1])->persentase,
             'list_barang'       => $this->M_global->getResult('barang'),
         ];
 
@@ -1129,6 +1128,7 @@ class Transaksi extends CI_Controller
     public function barang_in_proses($param)
     {
         $kode_cabang      = $this->session->userdata('cabang');
+        $shift            = $this->session->userdata('shift');
 
         // header
         if ($param == 1) { // jika param = 1
@@ -1144,6 +1144,7 @@ class Transaksi extends CI_Controller
         $kode_gudang      = $this->input->post('kode_gudang');
         $surat_jalan      = $this->input->post('surat_jalan');
         $no_faktur        = $this->input->post('no_faktur');
+        $kirim_via        = $this->input->post('kirim_via');
 
         if (!$surat_jalan || $surat_jalan == null) {
             $sj = _surat_jalan($kode_cabang);
@@ -1193,6 +1194,8 @@ class Transaksi extends CI_Controller
                 'subtotal'      => $subtotal,
                 'total'         => $total,
                 'kode_user'     => $this->session->userdata('kode_user'),
+                'shift'         => $shift,
+                'kirim_via'     => $kirim_via,
                 'batal'         => 0,
                 'is_valid'      => 0,
             ];
@@ -1371,13 +1374,21 @@ class Transaksi extends CI_Controller
             $detail = $this->M_global->getDataResult('barang_in_detail', ['invoice' => $invoice]);
 
             foreach ($detail as $d) {
+                $barang         = $this->M_global->getData('barang', ['kode_barang' => $d->kode_barang]);
+
                 $kode_barang    = $d->kode_barang;
                 $harga          = $d->harga;
                 $qty_konversi   = $d->qty_konversi;
                 $qty            = $d->qty;
 
                 $new_hna = ($harga / ($qty_konversi / $qty));
-                $this->M_global->updateData('barang', ['hna' => $new_hna, 'nilai_persediaan' => $new_hna], ['kode_barang' => $kode_barang]); // update barang
+
+                if ($barang->opsi_hpp == 2) {
+                    $hpp = $new_hna + ($new_hna * ($barang->persentase_hpp / 100));
+                } else {
+                    $hpp = $new_hna;
+                }
+                $this->M_global->updateData('barang', ['hna' => $new_hna, 'nilai_persediaan' => $hpp, 'hpp' => $hpp], ['kode_barang' => $kode_barang]); // update barang
             }
 
             hitungStokBrgIn($detail, $kode_gudang, $invoice);
@@ -1621,7 +1632,7 @@ class Transaksi extends CI_Controller
             'barang_detail'         => $barang_detail,
             'pembelian'             => $pembeli,
             'role'                  => $this->M_global->getResult('m_role'),
-            'pajak'                 => $this->M_global->getData('m_pajak', ['id' => 1])->persentase,
+            'pajak'                 => $this->M_global->getData('m_pajak', ['aktif' => 1])->persentase,
         ];
 
         $this->template->load('Template/Content', 'Barang/Form_barang_in_retur', $parameter);
@@ -1674,7 +1685,8 @@ class Transaksi extends CI_Controller
     // fungsi insert/update proses barang_in_retur
     public function barang_in_retur_proses($param)
     {
-        $kode_cabang = $this->session->userdata('cabang');
+        $kode_cabang    = $this->session->userdata('cabang');
+        $shift          = $this->session->userdata('shift');
 
         // header
         if ($param == 1) { // jika param = 1
@@ -1740,6 +1752,7 @@ class Transaksi extends CI_Controller
                 'subtotal'      => $subtotal,
                 'total'         => $total,
                 'kode_user'     => $this->session->userdata('kode_user'),
+                'shift'         => $shift,
                 'batal'         => 0,
                 'is_valid'      => 0,
             ];
@@ -2044,11 +2057,13 @@ class Transaksi extends CI_Controller
         // detail barang
         $detail         = $this->M_global->getDataResult('barang_in_retur_detail', ['invoice' => $invoice]);
 
+        $referensi      = $header->invoice_in;
+
         if ($acc == 0) { // jika acc = 0
             aktifitas_user_transaksi('Transaksi Masuk', 'Reject Retur Pembelian', $invoice);
 
             // update piutang
-            $piutang = $this->M_global->getData('piutang', ['referensi' => $invoice, 'kode_cabang' => $kode_cabang]);
+            $piutang = $this->M_global->getData('piutang', ['referensi' => $referensi, 'kode_cabang' => $kode_cabang]);
             $piutang_no = $piutang->piutang_no;
 
             // update is_valid jadi 0
@@ -2527,7 +2542,7 @@ class Transaksi extends CI_Controller
             'data_barang_out'   => $barang_out,
             'barang_detail'     => $barang_detail,
             'role'              => $this->M_global->getResult('m_role'),
-            'pajak'             => $this->M_global->getData('m_pajak', ['id' => 1])->persentase,
+            'pajak'             => $this->M_global->getData('m_pajak', ['aktif' => 1])->persentase,
             'list_barang'       => $this->M_global->getResult('barang'),
         ];
 
@@ -3232,7 +3247,7 @@ class Transaksi extends CI_Controller
             'data_barang_out_retur'     => $barang_out_retur,
             'barang_detail'             => $barang_detail,
             'role'                      => $this->M_global->getResult('m_role'),
-            'pajak'                     => $this->M_global->getData('m_pajak', ['id' => 1])->persentase,
+            'pajak'                     => $this->M_global->getData('m_pajak', ['aktif' => 1])->persentase,
             'list_barang'               => $this->M_global->getResult('barang'),
         ];
 
@@ -3765,7 +3780,7 @@ class Transaksi extends CI_Controller
             'data_penyesuaian_stok' => $penyesuaian_stok,
             'barang_detail'         => $barang_detail,
             'role'                  => $this->M_global->getResult('m_role'),
-            'pajak'                 => $this->M_global->getData('m_pajak', ['id' => 1])->persentase,
+            'pajak'                 => $this->M_global->getData('m_pajak', ['aktif' => 1])->persentase,
             'list_barang'           => $this->M_global->getResult('barang'),
         ];
 

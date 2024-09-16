@@ -79,18 +79,35 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="surat_jalan" class="control-label">Surat Jalan</label>
-                                <input type="text" class="form-control" placeholder="Otomatis" id="surat_jalan" name="surat_jalan" value="<?= (!empty($data_barang_in) ? $data_barang_in->surat_jalan : '') ?>">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="surat_jalan" class="control-label">Surat Jalan</label>
+                                        <input type="text" class="form-control" placeholder="Otomatis" id="surat_jalan" name="surat_jalan" value="<?= (!empty($data_barang_in) ? $data_barang_in->surat_jalan : '') ?>">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="no_faktur" class="control-label">No. Faktur</label>
+                                        <input type="text" class="form-control" placeholder="Otomatis" id="no_faktur" name="no_faktur" value="<?= (!empty($data_barang_in) ? $data_barang_in->no_faktur : '') ?>">
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <label for="no_faktur" class="control-label">No. Faktur</label>
-                                <input type="text" class="form-control" placeholder="Otomatis" id="no_faktur" name="no_faktur" value="<?= (!empty($data_barang_in) ? $data_barang_in->no_faktur : '') ?>">
+                                <label for="kirim_via" class="control-label">Dikirim Via <sup class="text-danger">**</sup></label>
+                                <select name="kirim_via" id="kirim_via" class="form-control select2_global" data-placeholder="~ Pilih Pengiriman">
+                                    <option value="">~ Pilih Pengiriman</option>
+                                    <option value="WA" <?= (!empty($data_barang_in) ? (($data_barang_in->kirim_via == 'WA') ? 'selected' : '') : '') ?>>WA</option>
+                                    <option value="EMAIL" <?= (!empty($data_barang_in) ? (($data_barang_in->kirim_via == 'EMAIL') ? 'selected' : '') : '') ?>>EMAIL</option>
+                                    <option value="SMS" <?= (!empty($data_barang_in) ? (($data_barang_in->kirim_via == 'SMS') ? 'selected' : '') : '') ?>>SMS</option>
+                                    <option value="TELPON" <?= (!empty($data_barang_in) ? (($data_barang_in->kirim_via == 'TELPON') ? 'selected' : '') : '') ?>>TELPON</option>
+                                </select>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
                     <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Detail Barang</span>
+                    <div class="float-right">
+                        <span class="text-danger font-weight-bold">Pajak Aktif: <?= $pajak ?>%</span>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3 alert-po">
@@ -353,6 +370,7 @@
     var kode_gudang = $('#kode_gudang');
     var surat_jalan = $('#surat_jalan');
     var no_faktur = $('#no_faktur');
+    var kirim_via = $('#kirim_via');
 
     // detail
     var kode_satuan = $('#kode_satuan');
@@ -992,6 +1010,11 @@
         if (!kode_gudang.val()) {
             btnSimpan.attr('disabled', false);
             return Swal.fire("Gudang", "Form sudah dipilih?", "question");
+        }
+
+        if (!kirim_via.val()) {
+            btnSimpan.attr('disabled', false);
+            return Swal.fire("Dikirim Via", "Form sudah dipilih?", "question");
         }
 
         var param = invoice.val() ? 2 : 1; // Set param based on invoice value

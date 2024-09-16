@@ -327,12 +327,13 @@ class M_select2 extends CI_Model
         $limit = ' LIMIT 50';
 
         if (!empty($key)) {
-            $add_sintak = ' WHERE (keterangan LIKE "%' . $key . '%") ORDER BY keterangan ASC';
+            $add_sintak = ' WHERE (r.keterangan LIKE "%' . $key . '%") ORDER BY r.keterangan ASC';
         } else {
-            $add_sintak = ' ORDER BY keterangan ASC';
+            $add_sintak = ' ORDER BY r.keterangan ASC';
         }
 
-        $sintak = $this->db->query('SELECT kode_ruang AS id, keterangan AS text FROM m_ruang ' . $add_sintak . $limit)->result();
+        $sintak = $this->db->query("SELECT r.kode_ruang AS id, r.keterangan AS text 
+        FROM m_ruang r $add_sintak " . $limit)->result();
 
         return $sintak;
     }

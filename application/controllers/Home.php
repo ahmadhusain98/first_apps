@@ -71,8 +71,8 @@ class Home extends CI_Controller
             'jumlah_bayar'      => count($header_bayar),
             'saldo_kas'         => $saldo,
             'jumlah_daftar'     => count($header_daftar),
-            'hutang'            => $this->db->query("SELECT SUM(jumlah) AS hutang FROM piutang WHERE kode_cabang = '$sess_cabang' AND jumlah > 0")->row(),
-            'piutang'           => $this->db->query("SELECT SUM(jumlah) AS piutang FROM piutang WHERE kode_cabang = '$sess_cabang' AND jumlah < 0")->row(),
+            'hutang'            => $this->db->query("SELECT SUM(jumlah) AS hutang FROM piutang WHERE kode_cabang = '$sess_cabang' AND jumlah > 0 AND status = 0")->row(),
+            'piutang'           => $this->db->query("SELECT SUM(jumlah) AS piutang FROM piutang WHERE kode_cabang = '$sess_cabang' AND jumlah < 0 AND status = 0")->row(),
         ];
 
         $this->template->load('Template/Content', 'Home/Dashboard', $parameter);
