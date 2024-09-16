@@ -128,10 +128,16 @@ class Accounting extends CI_Controller
                 $gudang     = $this->M_global->getData('barang_in_retur_header', ['invoice' => $rd->referensi])->kode_gudang;
             }
 
+            if ($rd->jumlah > 0) {
+                $link = 'onclick="printsingle(\'' . htmlspecialchars('Transaksi/single_print_bin/' . $rd->referensi . '/0', ENT_QUOTES, 'UTF-8') . '\')"';
+            } else {
+                $link = 'onclick="printsingle(\'' . htmlspecialchars('Transaksi/single_print_bin_ret/' . $rd->referensi . '/0', ENT_QUOTES, 'UTF-8') . '\')"';
+            }
+
             $row    = [];
             $row[]  = $no++;
-            $row[]  = $rd->referensi;
-            $row[]  = date('d/m/Y', strtotime($rd->tanggal_bayar)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_bayar));
+            $row[]  = '<a type="button" class="text-primary" ' . $link . '>' . htmlspecialchars($rd->referensi, ENT_QUOTES, 'UTF-8') . '</a>';
+            $row[]  = '<div class="text-center">' . ($rd->tanggal_bayar == null) ? 'xx/xx/xxxx ~ 00:00:00' : date('d/m/Y', strtotime($rd->tanggal_bayar)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_bayar)) . '</div>';
             $row[]  = $this->M_global->getData('m_supplier', ['kode_supplier' => $supplier])->nama;
             $row[]  = (($rd->jumlah > 0) ? '<span class="badge badge-warning">Hutang</span>' : '<span class="badge badge-info">Piutang</span>');
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->jumlah) . '</span>';
