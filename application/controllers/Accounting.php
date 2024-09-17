@@ -48,6 +48,11 @@ class Accounting extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
+        $hutang_num      = $this->db->query("SELECT * FROM piutang WHERE kode_cabang = '".$this->session->userdata('cabang')."' AND jumlah > 0")->num_rows();
+        $hutang          = $this->db->query("SELECT SUM(jumlah) AS hutang FROM piutang WHERE kode_cabang = '".$this->session->userdata('cabang')."' AND jumlah > 0")->row();
+        $piutang_num     = $this->db->query("SELECT * FROM piutang WHERE kode_cabang = '".$this->session->userdata('cabang')."' AND jumlah < 0")->num_rows();
+        $piutang         = $this->db->query("SELECT SUM(jumlah) AS piutang FROM piutang WHERE kode_cabang = '".$this->session->userdata('cabang')."' AND jumlah < 0")->row();
+
         $parameter = [
             $this->data,
             'judul'         => 'Accounting',
@@ -55,7 +60,10 @@ class Accounting extends CI_Controller
             'page'          => 'Accounting',
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
-            'piutang_num'   => $this->M_global->getDataResult('piutang', ['kode_cabang' => $this->session->userdata('cabang')]),
+            'hutang_num'    => (($hutang_num > 0) ? $hutang_num : 0),
+            'hutang'        => (!empty($hutang) ? $hutang->hutang : 0),
+            'piutang'       => (!empty($piutang) ? $piutang->piutang : 0),
+            'piutang_num'   => (($piutang_num > 0) ? $piutang_num : 0),
             'list_data'     => 'Accounting/piutang_list/',
             'param1'        => '',
         ];
