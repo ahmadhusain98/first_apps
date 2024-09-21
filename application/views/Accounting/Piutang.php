@@ -2,6 +2,33 @@
 $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->created;
 ?>
 
+<div class="row">
+    <div class="col-lg-6 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>Rp. <?= number_format($hutang); ?></h3>
+                <p>Hutang Belum Dibayar</p>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-scale-unbalanced"></i>
+            </div>
+            <a type="button" class="small-box-footer text-left p-3">Jumlah: <?= number_format($hutang_num); ?></a>
+        </div>
+    </div>
+    <div class="col-lg-6 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>Rp. <?= number_format($piutang); ?></h3>
+                <p>Piutang Belum Dibayar</p>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-scale-unbalanced-flip"></i>
+            </div>
+            <a type="button" class="small-box-footer text-left p-3">Jumlah: <?= number_format($piutang_num); ?></a>
+        </div>
+    </div>
+</div>
+
 <form method="post" id="form_piutang">
     <div class="row">
         <div class="col-md-12">
