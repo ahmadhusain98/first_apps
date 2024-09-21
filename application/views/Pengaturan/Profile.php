@@ -201,7 +201,7 @@ if ($data_user->on_off == 1) {
                                                             <tr>
                                                                 <td width="14%" class="text-left"><span class="badge bg-success"><?= date("d m Y", strtotime($au->waktu)); ?></span></td>
                                                                 <td width="10%" class="text-left"><?= $au->menu; ?></td>
-                                                                <td width="41%" class="text-left"><?= $au->kegiatan; ?></td>
+                                                                <td width="41%" class="text-left"><?= $au->kegiatan . $au->detail_kegiatan; ?></td>
                                                                 <td width="5%" class="text-left"><?= $au->kode_cabang; ?></td>
                                                                 <td width="10%" class="text-left">Shif: <?= $au->shift; ?></td>
                                                                 <td width="20%" class="text-right">Jam : <?= date("H:i", strtotime($au->waktu)); ?></td>

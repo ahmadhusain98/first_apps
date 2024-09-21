@@ -65,24 +65,29 @@ function dell_field($table, $kolom)
 //     }
 // }
 
-function aktifitas_user($menu, $message, $kode, $value)
+function aktifitas_user($menu, $message, $kode, $value, $detail = [])
 {
-    $CI         = &get_instance();
-    $sess       = $CI->session->userdata('email');
-    $cabang     = $CI->session->userdata('init_cabang');
-    $shift      = $CI->session->userdata('shift');
+    $CI       = &get_instance();
+    $sess     = $CI->session->userdata('email');
+    $cabang   = $CI->session->userdata('init_cabang');
+    $shift    = $CI->session->userdata('shift');
+
+    // Ensure $detail is a string
+    $details  = empty($detail) ? '' : '<br>Detail: ' . implode(', ', $detail);
 
     $aktifitas = [
-        'email'         => $sess,
-        'kegiatan'      => $sess . " Telah <b>" . $message . " " . $value . "</b> dengan kode/inv <b>" . $kode . "</b>",
-        'menu'          => $menu,
-        'waktu'         => date('Y-m-d H:i:s'),
-        'kode_cabang'   => $cabang,
-        'shift'         => $shift,
+        'email'           => $sess,
+        'kegiatan'        => $sess . " Telah <b>" . htmlspecialchars($message) . " " . htmlspecialchars($value) . "</b> dengan kode/inv <b>" . htmlspecialchars($kode) . "</b>",
+        'detail_kegiatan' => $details,
+        'menu'            => $menu,
+        'waktu'           => date('Y-m-d H:i:s'),
+        'kode_cabang'     => $cabang,
+        'shift'           => $shift,
     ];
 
     $CI->db->insert("activity_user", $aktifitas);
 }
+
 
 function aktifitas_user_transaksi($menu, $message, $kode)
 {
