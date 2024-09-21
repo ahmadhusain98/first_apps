@@ -287,17 +287,17 @@ class Kasir extends CI_Controller
         <tr>
             <td style="width: 23%;">Member</td>
             <td style="width: 2%;">:</td>
-            <td style="width: 75%;">' . $member->nama . ' ('.$member->jkel.', '.hitung_umur($member->tgl_lahir).')</td>
+            <td style="width: 75%;">' . $member->nama . ' (' . $member->jkel . ', ' . hitung_umur($member->tgl_lahir) . ')</td>
         </tr>
         <tr>
             <td style="width: 23%;">Alamat</td>
             <td style="width: 2%;">:</td>
-            <td style="width: 75%;">'.$this->M_global->getData('m_provinsi', ['kode_provinsi' => $member->provinsi])->provinsi.', '.$this->M_global->getData('kabupaten', ['kode_kabupaten' => $member->kabupaten])->kabupaten.', '.$this->M_global->getData('kecamatan', ['kode_kecamatan' => $member->kecamatan])->kecamatan.'</td>
+            <td style="width: 75%;">' . $this->M_global->getData('m_provinsi', ['kode_provinsi' => $member->provinsi])->provinsi . ', ' . $this->M_global->getData('kabupaten', ['kode_kabupaten' => $member->kabupaten])->kabupaten . ', ' . $this->M_global->getData('kecamatan', ['kode_kecamatan' => $member->kecamatan])->kecamatan . '</td>
         </tr>
         <tr>
             <td style="width: 23%;"></td>
             <td style="width: 2%;"></td>
-            <td style="width: 75%;">'.$member->desa.' ('.$member->kodepos.'), RT/RW ('.$member->rt.'/'.$member->rw.')</td>
+            <td style="width: 75%;">' . $member->desa . ' (' . $member->kodepos . '), RT/RW (' . $member->rt . '/' . $member->rw . ')</td>
         </tr>';
 
         $body .= '<tr>
@@ -390,7 +390,7 @@ class Kasir extends CI_Controller
         $body .= '</table>';
 
         $body .= '<page_break>';
-        
+
 
         $body .= '<table style="width: 100%; font-size: 9px; padding-top: 35vh;" cellpadding="2px">';
 
@@ -463,7 +463,7 @@ class Kasir extends CI_Controller
         $pembayaran = $this->M_global->getData('pembayaran', ['token_pembayaran' => $token_pembayaran]);
 
         if ($batal == 0) { // jika batal = 0
-            if($pembayaran->cek_um > 0) {
+            if ($pembayaran->cek_um > 0) {
                 $um_masuk = $pembayaran->um_masuk;
                 $this->db->query("UPDATE uang_muka SET uang_masuk = uang_masuk + $um_masuk, uang_sisa = uang_sisa + $um_masuk WHERE last_invoice = '$pembayaran->invoice'");
             }
@@ -474,7 +474,7 @@ class Kasir extends CI_Controller
                 $this->M_global->updateData('tarif_paket_pasien', ['status' => 1], ['no_trx' => $pembayaran->no_trx]),
             ];
         } else { // selain itu
-            if($pembayaran->cek_um > 0) {
+            if ($pembayaran->cek_um > 0) {
                 $um_masuk = $pembayaran->um_masuk;
                 $this->db->query("UPDATE uang_muka SET uang_masuk = uang_masuk - $um_masuk, uang_sisa = uang_sisa - $um_masuk WHERE last_invoice = '$pembayaran->invoice'");
             }
@@ -600,7 +600,8 @@ class Kasir extends CI_Controller
         $this->template->load('Template/Content', 'Kasir/Form_pembayaran', $parameter);
     }
 
-    public function getJual($invoice) {
+    public function getJual($invoice)
+    {
         $barang_out = $this->db->query("SELECT bo.*, b.nama AS nama_barang, s.keterangan AS nama_satuan FROM barang_out_detail bo JOIN barang b ON b.kode_barang = bo.kode_barang JOIN m_satuan s ON s.kode_satuan = bo.kode_satuan WHERE bo.invoice = '$invoice'")->result();
 
         echo json_encode($barang_out);
@@ -1539,6 +1540,8 @@ class Kasir extends CI_Controller
             $invoice            = $this->input->post('invoice');
         }
 
+        $kode_cabang            = $this->session->userdata('cabang');
+
         // variable
         $jenis_pembayaran       = $this->input->post('jenis_pembayaran');
         $tgl_pembayaran         = $this->input->post('tgl_pembayaran');
@@ -1569,6 +1572,8 @@ class Kasir extends CI_Controller
             // insert ke pembayaran_uangmuka
             $cek = $this->M_global->insertData('pembayaran_uangmuka', $isi_pembayaran);
 
+            $cek_param = 'menambahkan';
+
             updateUangMukaIn($kode_member, $invoice, $tgl_pembayaran, $jam_pembayaran, $total);
         } else { // selain itu
 
@@ -1577,13 +1582,36 @@ class Kasir extends CI_Controller
 
             updateUangMukaUpdate($kode_member, $invoice, $tgl_pembayaran, $jam_pembayaran, $total, $total_awal);
 
+            $cek_param = 'mengubah';
+
+            // update piutang
+            $piutang = $this->M_global->getData('piutang', ['referensi' => $invoice, 'kode_cabang' => $kode_cabang]);
+            $piutang_no = $piutang->piutang_no;
+
             // update pembayaran_uangmuka dan hapus cardnya
             $cek = [
                 $this->M_global->updateData('pembayaran_uangmuka', $isi_pembayaran, ['invoice' => $invoice]),
-                $this->M_global->delData('bayar_um_card_detail', ['invoice' => $invoice])
+                $this->M_global->delData('bayar_um_card_detail', ['invoice' => $invoice]),
+                $this->M_global->delData('piutang', ['piutang_no' => $piutang_no]),
             ];
         }
 
+        aktifitas_user('Pembayaran', $cek_param . ' Uang Muka', $invoice, $kode_user, $isi_pembayaran);
+
+        // insert piutang ketika di acc
+        $piutang_no = _noPiutang($kode_cabang);
+
+        $isi_piutang = [
+            'kode_cabang'       => $kode_cabang,
+            'piutang_no'        => $piutang_no,
+            'tanggal'           => $tgl_pembayaran,
+            'jam'               => $jam_pembayaran,
+            'referensi'         => $invoice,
+            'jumlah'            => 0 - $total,
+            'status'            => 0,
+        ];
+
+        $this->M_global->insertData('piutang', $isi_piutang);
 
         if ($cek) { // jika fungsi cek berjalan
             // variable detail card

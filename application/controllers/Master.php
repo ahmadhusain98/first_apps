@@ -4135,8 +4135,8 @@ class Master extends CI_Controller
                     $this->M_global->updateData('m_tarif', $isi, ['kode_tarif' => $kode_tarif]),
                 ];
             }
-            
-            aktifitas_user('Master Tarif Paket', 'menambahkan Tarif Paket', $kode_tarif, $nama, $isi);
+
+            aktifitas_user('Master Tarif Paket', $cek_param . ' Tarif Paket', $kode_tarif, $nama, $isi);
 
             if ($cek) {
                 // JASA

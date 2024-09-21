@@ -48,10 +48,10 @@ class Accounting extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        $hutang_num      = $this->db->query("SELECT * FROM piutang WHERE kode_cabang = '".$this->session->userdata('cabang')."' AND jumlah > 0")->num_rows();
-        $hutang          = $this->db->query("SELECT SUM(jumlah) AS hutang FROM piutang WHERE kode_cabang = '".$this->session->userdata('cabang')."' AND jumlah > 0")->row();
-        $piutang_num     = $this->db->query("SELECT * FROM piutang WHERE kode_cabang = '".$this->session->userdata('cabang')."' AND jumlah < 0")->num_rows();
-        $piutang         = $this->db->query("SELECT SUM(jumlah) AS piutang FROM piutang WHERE kode_cabang = '".$this->session->userdata('cabang')."' AND jumlah < 0")->row();
+        $hutang_num      = $this->db->query("SELECT * FROM piutang WHERE kode_cabang = '" . $this->session->userdata('cabang') . "' AND jumlah > 0")->num_rows();
+        $hutang          = $this->db->query("SELECT SUM(jumlah) AS hutang FROM piutang WHERE kode_cabang = '" . $this->session->userdata('cabang') . "' AND jumlah > 0")->row();
+        $piutang_num     = $this->db->query("SELECT * FROM piutang WHERE kode_cabang = '" . $this->session->userdata('cabang') . "' AND jumlah < 0")->num_rows();
+        $piutang         = $this->db->query("SELECT SUM(jumlah) AS piutang FROM piutang WHERE kode_cabang = '" . $this->session->userdata('cabang') . "' AND jumlah < 0")->row();
 
         $parameter = [
             $this->data,
@@ -75,65 +75,71 @@ class Accounting extends CI_Controller
     public function piutang_list($param1 = 1, $param2 = '')
     {
         // parameter untuk list table
-        $table            = 'piutang';
-        $colum            = ['id', 'kode_cabang', 'piutang_no', 'tanggal', 'jam', 'referensi', 'jumlah', 'status', 'tanggal_bayar', 'jam_bayar'];
-        $order            = 'id';
-        $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
-        $kondisi_param2   = '';
-        $kondisi_param1   = 'tanggal';
+        $table                  = 'piutang';
+        $colum                  = ['id', 'kode_cabang', 'piutang_no', 'tanggal', 'jam', 'referensi', 'jumlah', 'status', 'tanggal_bayar', 'jam_bayar'];
+        $order                  = 'id';
+        $order2                 = 'desc';
+        $order_arr              = ['id' => 'asc'];
+        $kondisi_param2         = '';
+        $kondisi_param1         = 'tanggal';
 
         // kondisi role
-        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
-        $confirmed        = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->confirmed;
+        $updated                = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted                = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $confirmed              = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->confirmed;
 
         // table server side tampung kedalam variable $list
-        $dat    = explode("~", $param1);
+        $dat                    = explode("~", $param1);
 
         if ($dat[0] == 1) {
-            $bulan        = date('m');
-            $tahun        = date('Y');
-            $type         = 1;
+            $bulan              = date('m');
+            $tahun              = date('Y');
+            $type               = 1;
         } else {
-            $bulan        = date('Y-m-d', strtotime($dat[1]));
-            $tahun        = date('Y-m-d', strtotime($dat[2]));
-            $type         = 2;
+            $bulan              = date('Y-m-d', strtotime($dat[1]));
+            $tahun              = date('Y-m-d', strtotime($dat[2]));
+            $type               = 2;
         }
 
-        $list             = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2);
+        $list                   = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2);
 
-        $data             = [];
-        $no               = $_POST['start'] + 1;
+        $data                   = [];
+        $no                     = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
             if ($updated > 0) {
-                $upd_diss = _lock_button();
+                $upd_diss       = _lock_button();
             } else {
-                $upd_diss = 'disabled';
+                $upd_diss       = 'disabled';
             }
 
             if ($deleted > 0) {
-                $del_diss = _lock_button();
+                $del_diss       = _lock_button();
             } else {
-                $del_diss = 'disabled';
+                $del_diss       = 'disabled';
             }
 
             if ($rd->status > 0) {
-                $confirm_diss =  'disabled';
+                $confirm_diss   = 'disabled';
             } else {
-                $confirm_diss = '';
+                $confirm_diss   = '';
             }
 
-            $jual = $this->M_global->getData('barang_in_header', ['invoice' => $rd->referensi]);
+            $jual               = $this->M_global->getData('barang_in_header', ['invoice' => $rd->referensi]);
 
             if ($jual) {
-                $supplier   = $jual->kode_supplier;
-                $gudang     = $jual->kode_gudang;
+                $supplier       = $jual->kode_supplier;
             } else {
-                $supplier   = $this->M_global->getData('barang_in_retur_header', ['invoice' => $rd->referensi])->kode_supplier;
-                $gudang     = $this->M_global->getData('barang_in_retur_header', ['invoice' => $rd->referensi])->kode_gudang;
+                $supplier       = $this->M_global->getData('barang_in_retur_header', ['invoice' => $rd->referensi]);
+            }
+
+            if ($supplier) {
+                $supplier       = $supplier->kode_supplier;
+                $x              = $this->M_global->getData('m_supplier', ['kode_supplier' => $supplier]);
+            } else {
+                $supplier       = $this->M_global->getData('pembayaran_uangmuka', ['invoice' => $rd->referensi])->kode_user;
+                $x              = $this->M_global->getData('member', ['kode_member' => $supplier]);
             }
 
             if ($rd->jumlah > 0) {
@@ -146,7 +152,7 @@ class Accounting extends CI_Controller
             $row[]  = $no++;
             $row[]  = '<a type="button" class="text-primary" ' . $link . '>' . htmlspecialchars($rd->referensi, ENT_QUOTES, 'UTF-8') . '</a>';
             $row[]  = '<div class="text-center">' . ($rd->tanggal_bayar == null) ? 'xx/xx/xxxx ~ 00:00:00' : date('d/m/Y', strtotime($rd->tanggal_bayar)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_bayar)) . '</div>';
-            $row[]  = $this->M_global->getData('m_supplier', ['kode_supplier' => $supplier])->nama;
+            $row[]  = $x->nama;
             $row[]  = (($rd->jumlah > 0) ? '<span class="badge badge-warning">Hutang</span>' : '<span class="badge badge-info">Piutang</span>');
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->jumlah) . '</span>';
             $row[]  = '<div class="text-center">' . (($rd->status > 0) ? '<span class="badge badge-success">Terbayarkan</span>' : '<span class="badge badge-danger">Belum dibayar</span>') . '</div>';
