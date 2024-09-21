@@ -243,6 +243,13 @@ class Backdoor extends CI_Controller
 
         $this->db->insert("activity_user", $aktifitas);
 
+        $data = [
+            'nama'          => $dbname . '.sql',
+            'tgl_backup'    => date('Y-m-d H:i:s'),
+        ];
+
+        $this->M_global->insertData('backup_db', $data);
+
         $save   = 'database/' . $dbname . '.sql';
 
         $config = [
@@ -259,19 +266,12 @@ class Backdoor extends CI_Controller
         $backup = $this->dbutil->backup($config);
         write_file($save, $backup);
 
-        $data = [
-            'nama' => $dbname . '.sql',
-            'tgl_backup' => date('Y-m-d H:i:s'),
-        ];
-
-        $this->M_global->insertData('backup_db', $data);
-
         echo json_encode(['status' => 1]);
     }
 
     public function del_db($id)
     {
-        $dbname = $this->M_global->getData('backup_db', ['id' => $id])->nama;
+        $dbname     = $this->M_global->getData('backup_db', ['id' => $id])->nama;
 
         $sess       = $this->session->userdata('email');
         $cabang     = $this->session->userdata('init_cabang');
