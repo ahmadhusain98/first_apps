@@ -499,7 +499,7 @@ class Transaksi extends CI_Controller
             </tr>
             <tr>
                 <td colspan="6" style="width:60%;">&nbsp;</td>
-                <td colspan="3" style="width:40%; text-align: center;">Yogyakarta, ' . strftime('%d %B %Y', strtotime(date('Y-m-d'))) . '</td>
+                <td colspan="3" style="width:40%; text-align: center;">Yogyakarta, ' . strtotime(date('Y-m-d')) . '</td>
             </tr>
             <tr>
                 <td colspan="6" style="width:60%;">&nbsp;</td>

@@ -435,7 +435,7 @@ class M_select2 extends CI_Model
             $add_sintak = ' ORDER BY p.no_trx ASC';
         }
 
-        $sintak = $this->db->query('SELECT p.no_trx AS id, CONCAT(p.no_trx, " ~ Kode Member: " , p.kode_member, " | Nama Member: ", m.nama) AS text FROM pendaftaran p JOIN member m ON p.kode_member = m.kode_member WHERE p.kode_poli = "' . $kode_poli . '" AND p.status_trx = 0 ' . $add_sintak . $limit)->result();
+        $sintak = $this->db->query('SELECT p.no_trx AS id, CONCAT(p.no_trx, " ~ Kode Member: " , p.kode_member, " | Nama Member: ", m.nama) AS text FROM pendaftaran p JOIN member m ON p.kode_member = m.kode_member WHERE p.kode_poli = "' . $kode_poli . '" AND p.status_trx = 0 AND p.no_trx NOT IN (SELECT no_trx FROM barang_out_header) ' . $add_sintak . $limit)->result();
 
         return $sintak;
     }

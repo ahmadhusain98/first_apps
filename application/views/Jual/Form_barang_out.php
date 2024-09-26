@@ -239,12 +239,12 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-md-12">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Transaksi/barang_out')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
-                            <button type="button" class="btn btn-success float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($data_barang_out) ? 'Perbarui' : 'Simpan') ?></button>
+                            <button type="button" class="btn btn-danger" onclick="getUrl('Transaksi/barang_out')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+                            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
                             <?php if (!empty($data_barang_out)) : ?>
-                                <button type="button" class="btn btn-info float-right btn-sm" onclick="getUrl('Transaksi/form_barang_out/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                                <button type="button" class="btn btn-info float-right" onclick="getUrl('Transaksi/form_barang_out/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Baru</button>
                             <?php else : ?>
-                                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+                                <button type="button" class="btn btn-info float-right" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
                             <?php endif ?>
                         </div>
                     </div>

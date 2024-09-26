@@ -23,7 +23,15 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                 <div class="row mb-3">
                                     <div class="col-md-12">
                                         <label for="kode_email" class="control-label">Kode Email Apps <span class="text-danger">**</span></label>
-                                        <input type="text" name="kode_email" id="kode_email" class="form-control" value="<?= $web->kode_email ?>">
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" placeholder="Sandi" id="kode_email" name="kode_email" value="<?= $web->kode_email ?>">
+                                            <div class="input-group-append" onclick="pass_mail()">
+                                                <div class="input-group-text">
+                                                    <i class="fa-solid fa-fw fa-lock text-success" id="lock_pass"></i>
+                                                    <i class="fa-solid fa-lock-open text-danger" id="open_pass"></i>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -213,5 +221,29 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 error_proccess();
             }
         });
+    }
+
+    $("#open_pass").hide();
+
+    // fungsi tampil/sembunyi password
+    function pass_mail() {
+        if (document.getElementById("kode_email").type == "password") { // jika icon password gembok di klik
+            // ubah tipe password menjadi text
+            document.getElementById("kode_email").type = "text";
+
+            // tampilkan icon buka
+            $("#open_pass").show();
+
+            // sembunyikan icon gembok
+            $("#lock_pass").hide();
+        } else { // selain itu
+            // ubah tipe password menjadi passwword
+            document.getElementById("kode_email").type = "password";
+            // sembunyikan icon buka
+            $("#open_pass").hide();
+
+            // tampilkan icon gembok
+            $("#lock_pass").show();
+        }
     }
 </script>

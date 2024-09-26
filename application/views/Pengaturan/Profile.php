@@ -292,27 +292,24 @@ if ($data_user->on_off == 1) {
                                 <form method="post" id="form-password">
                                     <div class="form-group row">
                                         <label for="inputName" class="col-sm-2 col-form-label">Password Baru</label>
-                                        <div class="col-sm-10">
-                                            <input type="password" class="form-control" id="password1" name="password1" placeholder="Password Baru">
+                                        <div class="input-group col-sm-10">
+                                            <input type="password" class="form-control" placeholder="Password Baru" id="password1" name="password1">
+                                            <div class="input-group-append" onclick="pass1()">
+                                                <div class="input-group-text">
+                                                    <i class="fa-solid fa-fw fa-lock text-success" id="lock_pass1"></i>
+                                                    <i class="fa-solid fa-lock-open text-danger" id="open_pass1"></i>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="inputName" class="col-sm-2 col-form-label">Ulangi</label>
-                                        <div class="col-sm-10">
-                                            <input type="password" class="form-control" id="password2" name="password2" placeholder="Ulangi">
-                                        </div>
-                                    </div>
-                                    <div class="form-check mb-3" id="cek">
-                                        <div class="row">
-                                            <div class="col-sm-2"></div>
-                                            <div class="col-sm-10">
-                                                <div class="row">
-                                                    <div class="col-sm-11">
-                                                        <label class="form-check-label float-right" for="exampleCheck1">Lihat password</label>
-                                                    </div>
-                                                    <div class="col-sm-1">
-                                                        <input type="checkbox" class="form-control float-right" id="show_log">
-                                                    </div>
+                                        <div class="input-group col-sm-10">
+                                            <input type="password" class="form-control" placeholder="Ulangi Password" id="password2" name="password2">
+                                            <div class="input-group-append" onclick="pass2()">
+                                                <div class="input-group-text">
+                                                    <i class="fa-solid fa-fw fa-lock text-success" id="lock_pass2"></i>
+                                                    <i class="fa-solid fa-lock-open text-danger" id="open_pass2"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -333,21 +330,8 @@ if ($data_user->on_off == 1) {
 </section>
 
 <script>
-    let btn = document.querySelector('#cek');
     let input = document.querySelector('#password1');
     let input2 = document.querySelector('#password2');
-
-    btn.addEventListener('click', () => {
-        if (input.type === "password" || input2.type === "password") {
-            input.type = "text"
-            input2.type = "text"
-            document.getElementById('show_log').checked = true;
-        } else {
-            input.type = "password"
-            input2.type = "password"
-            document.getElementById('show_log').checked = false;
-        }
-    })
 
     function simpan_profile(id) {
         Swal.fire({
@@ -458,5 +442,52 @@ if ($data_user->on_off == 1) {
     function download_au(param) {
         var param = `?tgl=${param}`
         window.open(`${siteUrl}Report/activity_user/1${param}`, '_blank');
+    }
+
+    $("#open_pass1").hide();
+    $("#open_pass2").hide();
+
+    // fungsi tampil/sembunyi password
+    function pass1() {
+        if (document.getElementById("password1").type == "password") { // jika icon password gembok di klik
+            // ubah tipe password menjadi text
+            document.getElementById("password1").type = "text";
+
+            // tampilkan icon buka
+            $("#open_pass1").show();
+
+            // sembunyikan icon gembok
+            $("#lock_pass1").hide();
+        } else { // selain itu
+            // ubah tipe password menjadi passwword
+            document.getElementById("password1").type = "password";
+            // sembunyikan icon buka
+            $("#open_pass1").hide();
+
+            // tampilkan icon gembok
+            $("#lock_pass1").show();
+        }
+    }
+
+    // fungsi tampil/sembunyi password
+    function pass2() {
+        if (document.getElementById("password2").type == "password") { // jika icon password gembok di klik
+            // ubah tipe password menjadi text
+            document.getElementById("password2").type = "text";
+
+            // tampilkan icon buka
+            $("#open_pass2").show();
+
+            // sembunyikan icon gembok
+            $("#lock_pass2").hide();
+        } else { // selain itu
+            // ubah tipe password menjadi passwword
+            document.getElementById("password2").type = "password";
+            // sembunyikan icon buka
+            $("#open_pass2").hide();
+
+            // tampilkan icon gembok
+            $("#lock_pass2").show();
+        }
     }
 </script>

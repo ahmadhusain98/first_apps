@@ -17,8 +17,8 @@
                     <input type="password" class="form-control" placeholder="Sandi Baru" id="password" name="password">
                     <div class="input-group-append" onclick="pass()">
                         <div class="input-group-text">
-                            <i class="fa-solid fa-fw fa-lock text-danger" id="lock_pass"></i>
-                            <i class="fa-solid fa-lock-open text-success" id="open_pass"></i>
+                            <i class="fa-solid fa-fw fa-lock text-success" id="lock_pass"></i>
+                            <i class="fa-solid fa-lock-open text-danger" id="open_pass"></i>
                         </div>
                     </div>
                 </div>
