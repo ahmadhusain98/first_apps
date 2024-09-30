@@ -36,7 +36,7 @@ CREATE TABLE `activity_user` (
   `kode_cabang` varchar(10) NOT NULL,
   `shift` int NOT NULL,
   PRIMARY KEY (`id_activity`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (1, 'shali@gmail.com', 'shali@gmail.com <b>Meninggalkan Sistem</b>', NULL, 'Logout', '2024-09-26 09:55:06', 'DIY', 1);
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (2, 'shali@gmail.com', 'shali@gmail.com <b>Masuk Sistem</b>', NULL, 'Login', '2024-09-30 08:51:25', 'DIY', 1);
@@ -53,6 +53,19 @@ INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiata
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (13, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan PO</b> dengan kode/inv <b>DIYMPO-2024093000001</b>', NULL, 'Mutasi', '2024-09-30 11:55:54', 'DIY', 1);
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (14, 'shali@gmail.com', 'shali@gmail.com Telah <b>menghapus Backupan Database first_apps_20240921_2006.sql</b>', NULL, 'Pintu Belakang', '2024-09-30 12:41:18', 'DIY', 1);
 INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (15, 'shali@gmail.com', 'shali@gmail.com Telah <b>melakukan Backup Database first_apps_20240930_1241</b>', NULL, 'Pintu Belakang', '2024-09-30 12:41:20', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (16, 'shali@gmail.com', 'shali@gmail.com Telah <b>Reject PO</b> dengan kode/inv <b>DIYMPO-2024093000001</b>', NULL, 'Mutasi', '2024-09-30 12:47:29', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (17, 'shali@gmail.com', 'shali@gmail.com Telah <b>Confirm PO</b> dengan kode/inv <b>DIYMPO-2024093000001</b>', NULL, 'Mutasi', '2024-09-30 12:51:19', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (18, 'shali@gmail.com', 'shali@gmail.com Telah <b>Reject PO</b> dengan kode/inv <b>DIYMPO-2024093000001</b>', NULL, 'Mutasi', '2024-09-30 12:51:27', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (19, 'shali@gmail.com', 'shali@gmail.com Telah <b>Confirm PO</b> dengan kode/inv <b>DIYMPO-2024093000001</b>', NULL, 'Mutasi', '2024-09-30 13:02:33', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (20, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Penerimaan</b> dengan kode/inv <b>DIYMPO-2024093000002</b>', NULL, 'Mutasi', '2024-09-30 15:16:01', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (21, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Penerimaan</b> dengan kode/inv <b>DIYMTS-2024093000001</b>', NULL, 'Mutasi', '2024-09-30 15:17:17', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (22, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Penerimaan</b> dengan kode/inv <b>DIYMTS-2024093000001</b>', NULL, 'Mutasi', '2024-09-30 15:17:58', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (23, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Penerimaan</b> dengan kode/inv <b>DIYMTS-2024093000001</b>', NULL, 'Mutasi', '2024-09-30 15:20:01', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (24, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Penerimaan</b> dengan kode/inv <b>DIYMTS-2024093000001</b>', NULL, 'Mutasi', '2024-09-30 15:21:10', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (25, 'shali@gmail.com', 'shali@gmail.com Telah <b>menambahkan Penerimaan</b> dengan kode/inv <b>DIYMTS-2024093000001</b>', NULL, 'Mutasi', '2024-09-30 15:22:35', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (26, 'shali@gmail.com', 'shali@gmail.com Telah <b>mengubah Penerimaan</b> dengan kode/inv <b>DIYMTS-2024093000001</b>', NULL, 'Mutasi', '2024-09-30 15:32:52', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (27, 'shali@gmail.com', 'shali@gmail.com Telah <b>menghapus Backupan Database first_apps_20240930_1241.sql</b>', NULL, 'Pintu Belakang', '2024-09-30 15:33:26', 'DIY', 1);
+INSERT INTO `activity_user` (`id_activity`, `email`, `kegiatan`, `detail_kegiatan`, `menu`, `waktu`, `kode_cabang`, `shift`) VALUES (28, 'shali@gmail.com', 'shali@gmail.com Telah <b>melakukan Backup Database first_apps_20240930_1533</b>', NULL, 'Pintu Belakang', '2024-09-30 15:33:28', 'DIY', 1);
 
 
 #
@@ -106,9 +119,9 @@ CREATE TABLE `backup_db` (
   `nama` varchar(200) NOT NULL,
   `tgl_backup` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `backup_db` (`id`, `nama`, `tgl_backup`) VALUES (29, 'first_apps_20240930_1241.sql', '2024-09-30 12:41:20');
+INSERT INTO `backup_db` (`id`, `nama`, `tgl_backup`) VALUES (30, 'first_apps_20240930_1533.sql', '2024-09-30 15:33:28');
 
 
 #
@@ -9035,6 +9048,65 @@ INSERT INTO `member_token` (`id`, `email`, `token`, `valid`) VALUES (1, 'ahmad.h
 
 
 #
+# TABLE STRUCTURE FOR: mutasi_detail
+#
+
+DROP TABLE IF EXISTS `mutasi_detail`;
+
+CREATE TABLE `mutasi_detail` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `invoice` varchar(30) NOT NULL,
+  `kode_barang` varchar(10) NOT NULL,
+  `kode_satuan` varchar(10) NOT NULL,
+  `harga` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `qty` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `qty_konversi` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `discpr` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `discrp` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `pajak` int NOT NULL,
+  `pajakrp` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `jumlah` decimal(20,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `mutasi_detail` (`id`, `invoice`, `kode_barang`, `kode_satuan`, `harga`, `qty`, `qty_konversi`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES (4, 'DIYMTS-2024093000001', 'DIY~S00001', 'SAT0000005', '10000.00', '10.00', '10.00', '0.00', '0.00', 0, '0.00', '100000.00');
+INSERT INTO `mutasi_detail` (`id`, `invoice`, `kode_barang`, `kode_satuan`, `harga`, `qty`, `qty_konversi`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES (5, 'DIYMTS-2024093000001', 'DIY~O00001', 'SAT0000009', '2000.00', '10.00', '10.00', '0.00', '0.00', 0, '0.00', '20000.00');
+INSERT INTO `mutasi_detail` (`id`, `invoice`, `kode_barang`, `kode_satuan`, `harga`, `qty`, `qty_konversi`, `discpr`, `discrp`, `pajak`, `pajakrp`, `jumlah`) VALUES (6, 'DIYMTS-2024093000001', 'MGL~P00001', 'SAT0000009', '3000.00', '10.00', '10.00', '0.00', '0.00', 0, '0.00', '30000.00');
+
+
+#
+# TABLE STRUCTURE FOR: mutasi_header
+#
+
+DROP TABLE IF EXISTS `mutasi_header`;
+
+CREATE TABLE `mutasi_header` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `invoice` varchar(30) NOT NULL,
+  `invoice_po` varchar(30) NOT NULL,
+  `kode_cabang` varchar(10) NOT NULL,
+  `tgl` date DEFAULT NULL,
+  `jam` time DEFAULT NULL,
+  `dari` varchar(255) NOT NULL,
+  `menuju` varchar(255) NOT NULL,
+  `jenis` int NOT NULL,
+  `user` varchar(255) NOT NULL,
+  `shift` int NOT NULL,
+  `status` int NOT NULL,
+  `tgl_approve` date DEFAULT NULL,
+  `jam_approve` time DEFAULT NULL,
+  `user_approve` varchar(255) NOT NULL DEFAULT '0.00',
+  `subtotal` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `diskon` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `pajak` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `total` decimal(20,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `mutasi_header` (`id`, `invoice`, `invoice_po`, `kode_cabang`, `tgl`, `jam`, `dari`, `menuju`, `jenis`, `user`, `shift`, `status`, `tgl_approve`, `jam_approve`, `user_approve`, `subtotal`, `diskon`, `pajak`, `total`) VALUES (1, 'DIYMTS-2024093000001', 'DIYMPO-2024093000001', 'CAB0000002', '2024-09-30', '15:22:28', 'GUD0000001', 'GUD0000002', 0, 'S00001', 1, 0, NULL, NULL, '0.00', '150000.00', '0.00', '0.00', '150000.00');
+
+
+#
 # TABLE STRUCTURE FOR: mutasi_kas
 #
 
@@ -9115,7 +9187,7 @@ CREATE TABLE `mutasi_po_header` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `mutasi_po_header` (`id`, `invoice`, `kode_cabang`, `tgl_po`, `jam_po`, `dari`, `menuju`, `jenis_po`, `user`, `shift`, `status_po`, `tgl_approve`, `jam_approve`, `user_approve`, `subtotal`, `diskon`, `pajak`, `total`) VALUES (2, 'DIYMPO-2024093000001', 'CAB0000002', '2024-09-30', '11:55:33', 'GUD0000001', 'GUD0000002', 0, 'S00001', 1, 0, NULL, NULL, '', '15000.00', '0.00', '0.00', '15000.00');
+INSERT INTO `mutasi_po_header` (`id`, `invoice`, `kode_cabang`, `tgl_po`, `jam_po`, `dari`, `menuju`, `jenis_po`, `user`, `shift`, `status_po`, `tgl_approve`, `jam_approve`, `user_approve`, `subtotal`, `diskon`, `pajak`, `total`) VALUES (2, 'DIYMPO-2024093000001', 'CAB0000002', '2024-09-30', '11:55:33', 'GUD0000001', 'GUD0000002', 0, 'S00001', 1, 1, '2024-09-30', '13:02:33', 'S00001', '15000.00', '0.00', '0.00', '15000.00');
 
 
 #
@@ -9367,7 +9439,7 @@ CREATE TABLE `sub_menu2` (
   `icon` varchar(200) DEFAULT NULL,
   `nama` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (1, 1, 'satuan', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Satuan');
 INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (2, 1, 'kategori', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Kategori');
@@ -9387,8 +9459,8 @@ INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VAL
 INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (16, 9, 'barang_out', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Penjualan');
 INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (17, 9, 'barang_out_retur', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Retur Penjualan');
 INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (19, 16, 'penyesuaian_stok', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Penyesuaian Stok');
-INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (20, 16, 'pengajuan_mutasi', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Mutasi PO');
-INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (21, 16, 'riwayat_stok', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Riwayat Stok');
+INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (20, 16, 'pengajuan_mutasi', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Pengajuan Mutasi');
+INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (21, 16, 'penerimaan_mutasi', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Penerimaan Mutasi');
 INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (24, 1, 'kas_bank', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Kas & Bank');
 INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (25, 1, 'pajak', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Pajak');
 INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (28, 17, 'tin_single', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Single');
@@ -9397,6 +9469,7 @@ INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VAL
 INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (31, 19, 'mutasi_kas', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Mutasi');
 INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (32, 1, 'akun', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Akun');
 INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (33, 16, 'so', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Stock Opname');
+INSERT INTO `sub_menu2` (`id`, `id_submenu`, `url_submenu2`, `icon`, `nama`) VALUES (34, 16, 'riwayat_stok', '<ion-icon name=\"chevron-forward-outline\"></ion-icon>', 'Riwayat Stok');
 
 
 #

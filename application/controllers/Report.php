@@ -1900,4 +1900,144 @@ class Report extends CI_Controller
         // jalankan fungsi cetak_pdf
         cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
     }
+
+    // mutasi_po
+    public function mutasi_po($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $dari           = $this->input->get('dari');
+        $sampai         = $this->input->get('sampai');
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        // sintak
+        $sintak         = $this->db->query("SELECT m.* FROM mutasi_po_header m WHERE tgl_po >= '$dari' AND tgl_po <= '$sampai'")->result();
+
+        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 10%; border: 1px solid black; background-color: #272a3f; color: white;">Invoice</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Tgl/Jam Pengajuan</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Jenis Mutasi</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Dari</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Menuju</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Total</th>
+            <th style="width: 10%; border: 1px solid black; background-color: #272a3f; color: white;">User</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            if ($param == 1) {
+                $total = number_format($s->total);
+            } else {
+                $total = ceil($s->total);
+            }
+
+            if ($s->jenis_po == 0) { // jenis gudang
+                $dari = $this->M_global->getData('m_gudang', ['kode_gudang' => $s->dari])->nama;
+                $menuju = $this->M_global->getData('m_gudang', ['kode_gudang' => $s->menuju])->nama;
+            } else { // jenis cabang
+                $dari = $this->M_global->getData('cabang', ['kode_cabang' => $s->dari])->cabang;
+                $menuju = $this->M_global->getData('cabang', ['kode_cabang' => $s->menuju])->cabang;
+            }
+
+            $body .= '<tr>
+                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->invoice . '</td>
+                <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_po)) . ' ~ ' . date('H:i:s', strtotime($s->jam_po)) . '</td>
+                <td style="border: 1px solid black; text-align: center;">' . ($s->jenis_po > 0 ? 'Mutasi Cabang' : 'Mutasi Gudang') . '</td>
+                <td style="border: 1px solid black;">' . $dari . '</td>
+                <td style="border: 1px solid black;">' . $menuju . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $total . '</td>
+                <td style="border: 1px solid black;">' . $this->M_global->getData('user', ['kode_user' => $s->user])->nama . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body .= '</table>';
+
+        $judul = 'Report Pengajuan Mutasi';
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // mutasi
+    public function mutasi($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $dari           = $this->input->get('dari');
+        $sampai         = $this->input->get('sampai');
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        // sintak
+        $sintak         = $this->db->query("SELECT m.* FROM mutasi_header m WHERE tgl >= '$dari' AND tgl <= '$sampai'")->result();
+
+        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 10%; border: 1px solid black; background-color: #272a3f; color: white;">Invoice</th>
+            <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Tgl/Jam Pengajuan</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Jenis Mutasi</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Dari</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Menuju</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Total</th>
+            <th style="width: 10%; border: 1px solid black; background-color: #272a3f; color: white;">User</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            if ($param == 1) {
+                $total = number_format($s->total);
+            } else {
+                $total = ceil($s->total);
+            }
+
+            if ($s->jenis == 0) { // jenis gudang
+                $dari = $this->M_global->getData('m_gudang', ['kode_gudang' => $s->dari])->nama;
+                $menuju = $this->M_global->getData('m_gudang', ['kode_gudang' => $s->menuju])->nama;
+            } else { // jenis cabang
+                $dari = $this->M_global->getData('cabang', ['kode_cabang' => $s->dari])->cabang;
+                $menuju = $this->M_global->getData('cabang', ['kode_cabang' => $s->menuju])->cabang;
+            }
+
+            $body .= '<tr>
+                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->invoice . '</td>
+                <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl)) . ' ~ ' . date('H:i:s', strtotime($s->jam)) . '</td>
+                <td style="border: 1px solid black; text-align: center;">' . ($s->jenis > 0 ? 'Mutasi Cabang' : 'Mutasi Gudang') . '</td>
+                <td style="border: 1px solid black;">' . $dari . '</td>
+                <td style="border: 1px solid black;">' . $menuju . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $total . '</td>
+                <td style="border: 1px solid black;">' . $this->M_global->getData('user', ['kode_user' => $s->user])->nama . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body .= '</table>';
+
+        $judul = 'Report Pengajuan Mutasi';
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
 }

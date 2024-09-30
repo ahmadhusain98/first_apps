@@ -3,25 +3,25 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 echo _lock_so();
 ?>
 
-<form method="post" id="form_mutasi_po">
+<form method="post" id="form_mutasi">
     <div class="row">
         <div class="col-md-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">
-                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Pengajuan Mutasi</span>
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Mutasi</span>
                     <div class="float-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" onclick="preview('mutasi_po')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="print('mutasi_po')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="excel('mutasi_po')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="preview('mutasi')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="print('mutasi')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="excel('mutasi')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
                             </ul>
                         </div>
                         <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
-                        <button type="button" class="btn btn-success" onclick="getUrl('Transaksi/form_mutasi_po/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                        <button type="button" class="btn btn-success" onclick="getUrl('Transaksi/form_mutasi/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -50,7 +50,7 @@ echo _lock_so();
                                         <tr class="text-center">
                                             <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
                                             <th width="15%">Invoice</th>
-                                            <th width="15%">Tgl/Jam Pengajuan</th>
+                                            <th width="15%">Tgl/Jam Mutasi</th>
                                             <th width="10%">Jenis Mutasi</th>
                                             <th width="10%">Dari</th>
                                             <th width="10%">Menuju</th>
@@ -75,13 +75,13 @@ echo _lock_so();
 
     // fungsi cetak
     function cetak(x, y) {
-        printsingle('Transaksi/single_print_mutasi_po/' + x + '/' + y);
+        printsingle('Transaksi/single_print_mutasi/' + x + '/' + y);
     }
 
     //fungsi ubah berdasarkan lemparan kode
     function ubah(invoice) {
         // jalankan fungsi
-        getUrl('Transaksi/form_mutasi_po/' + invoice);
+        getUrl('Transaksi/form_mutasi/' + invoice);
     }
 
     // fungsi hapus berdasarkan invoice
@@ -148,7 +148,7 @@ echo _lock_so();
 
                 // jalankan fungsi
                 $.ajax({
-                    url: siteUrl + 'Transaksi/accmutasi_po/' + invoice + '/' + param,
+                    url: siteUrl + 'Transaksi/accmutasi/' + invoice + '/' + param,
                     type: 'POST',
                     dataType: 'JSON',
                     success: function(result) { // jika fungsi berjalan dengan baik
