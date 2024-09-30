@@ -255,7 +255,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     }
 
     // fungsi set_default berdasarkan kode_pajak
-    function set_default(kode_pajak) {
+    function set_default(kode_pajak, no) {
         // ajukan pertanyaaan
         Swal.fire({
             title: "Kamu yakin?",
@@ -293,6 +293,10 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                         error_proccess();
                     }
                 });
+            } else if (result.dismiss == 'cancel') {
+                document.getElementById('default_ppn' + no).checked = false
+            } else {
+                document.getElementById('default_ppn' + no).checked = false
             }
         });
     }

@@ -43,6 +43,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                             <th>Bagian</th>
                                             <th>Status</th>
                                             <th>Keterangan</th>
+                                            <th>Utama</th>
                                             <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                         </tr>
                                     </thead>
@@ -107,6 +108,49 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                         error_proccess();
                     }
                 });
+            }
+        });
+    }
+
+    // fungsi set_default berdasarkan kode_gudang
+    function set_default(kode_gudang, no) {
+        // ajukan pertanyaaan
+        Swal.fire({
+            title: "Kamu yakin?",
+            text: "Data ini akan dijadikan Gudang default!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, atur default!",
+            cancelButtonText: "Tidak!"
+        }).then((result) => {
+            if (result.isConfirmed) { // jika yakin
+
+                // jalankan fungsi
+                $.ajax({
+                    url: siteUrl + 'Master/setDefGudang/' + kode_gudang,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    success: function(result) { // jika fungsi berjalan dengan baik
+                        if (result.status == 1) { // jika mendapatkan hasil 1
+
+                            Swal.fire("Gudang", "Berhasil diupdate!", "success").then(() => {
+                                reloadTable();
+                            });
+                        } else { // selain itu
+
+                            Swal.fire("Gudang", "Gagal diupdate!, silahkan dicoba kembali", "info");
+                        }
+                    },
+                    error: function(result) { // jika fungsi error
+                        error_proccess();
+                    }
+                });
+            } else if (result.dismiss == 'cancel') {
+                document.getElementById('default_ppn' + no).checked = false
+            } else {
+                document.getElementById('default_ppn' + no).checked = false
             }
         });
     }

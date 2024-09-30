@@ -46,7 +46,8 @@
                                         $gudang = $this->M_global->getData('m_gudang', ['kode_gudang' => $data_barang_po_in->kode_gudang])->nama;
                                         echo '<option value="' . $data_barang_po_in->kode_gudang . '">' . $gudang . '</option>';
                                     else :
-                                        echo '<option value="GUD0000001" selected>Farmasi Tunai</option>';
+                                        $utama = $this->M_global->getData('m_gudang', ['utama' => 1]);
+                                        echo '<option value="' . $utama->kode_gudang . '" selected>' . $utama->nama . '</option>';
                                     endif;
                                     ?>
                                 </select>

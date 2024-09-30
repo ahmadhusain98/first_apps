@@ -675,7 +675,7 @@ class Master extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'm_gudang';
-        $colum            = ['id', 'kode_gudang', 'nama', 'bagian', 'keterangan', 'aktif'];
+        $colum            = ['id', 'kode_gudang', 'nama', 'bagian', 'keterangan', 'aktif', 'utama'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -715,17 +715,20 @@ class Master extends CI_Controller
             }
 
             $row    = [];
-            $row[]  = $no++;
+            $row[]  = $no;
             $row[]  = $rd->kode_gudang;
             $row[]  = $rd->nama;
             $row[]  = $rd->bagian;
             $row[]  = '<div class="text-center">' . (($rd->aktif > 0) ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-dark">Non-aktif</span>') . '</div>';
             $row[]  = $rd->keterangan;
+            $row[]  = '<div class="text-center">' . '<input type="checkbox" class="form-control" name="default_ppn" id="default_ppn' . $no . '" ' . ($rd->utama == 1 ? 'checked' : '') . '  onclick="set_default(' . "'" . $rd->kode_gudang . "', '" . $no . "'" . ')" ' . (($rd->utama == 1) ? 'disabled' : '') . '>' . '</div>';
             $row[]  = '<div class="text-center">
                     <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_gudang . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
                     <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_gudang . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
+
+            $no++;
         }
 
         // hasil server side
@@ -738,6 +741,23 @@ class Master extends CI_Controller
 
         // kirimkan ke view
         echo json_encode($output);
+    }
+
+    public function setDefGudang($kode_gudang)
+    {
+        $cek = $this->db->query("UPDATE m_gudang SET utama = 0");
+
+        if ($cek) {
+            $cek2 = $this->db->query("UPDATE m_gudang SET utama = 1 WHERE kode_gudang = '$kode_gudang'");
+        } else {
+            $cek2 = TRUE;
+        }
+
+        if ($cek2) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
     }
 
     // fungsi cek gudang berdasarkan nama gudang
@@ -3542,15 +3562,17 @@ class Master extends CI_Controller
             }
 
             $row    = [];
-            $row[]  = $no++;
+            $row[]  = $no;
             $row[]  = $rd->nama;
             $row[]  = '<span class="float-right">' . $rd->persentase . '%</span>';
-            $row[]  = '<div class="text-center">' . '<input type="checkbox" class="form-control" name="default_ppn" id="default_ppn" ' . ($rd->aktif == 1 ? 'checked' : '') . '  onclick="set_default(' . "'" . $rd->kode_pajak . "'" . ')">' . '</div>';
+            $row[]  = '<div class="text-center">' . '<input type="checkbox" class="form-control" name="default_ppn" id="default_ppn' . $no . '" ' . ($rd->aktif == 1 ? 'checked' : '') . '  onclick="set_default(' . "'" . $rd->kode_pajak . "', '" . $no . "'" . ')" ' . (($rd->aktif > 0) ? 'disabled' : '') . '>' . '</div>';
             $row[]  = '<div class="text-center">
                 <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_pajak . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
                 <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_pajak . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
+
+            $no++;
         }
 
         // hasil server side

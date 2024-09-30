@@ -3092,71 +3092,71 @@ class Transaksi extends CI_Controller
     public function barang_out_retur_list($param1 = 1, $param2 = '')
     {
         // parameter untuk list table
-        $table            = 'barang_out_retur_header';
-        $colum            = ['id', 'invoice', 'invoice_jual', 'tgl_retur', 'jam_retur', 'kode_gudang', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid', 'tgl_valid', 'jam_valid', 'kode_member'];
-        $order            = 'id';
-        $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
-        $kondisi_param2   = 'kode_gudang';
-        $kondisi_param1   = 'tgl_retur';
+        $table                      = 'barang_out_retur_header';
+        $colum                      = ['id', 'invoice', 'invoice_jual', 'tgl_retur', 'jam_retur', 'kode_gudang', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid', 'tgl_valid', 'jam_valid', 'kode_member'];
+        $order                      = 'id';
+        $order2                     = 'desc';
+        $order_arr                  = ['id' => 'asc'];
+        $kondisi_param2             = 'kode_gudang';
+        $kondisi_param1             = 'tgl_retur';
 
         // kondisi role
-        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
-        $confirmed        = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->confirmed;
+        $updated                    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted                    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $confirmed                  = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->confirmed;
 
         // table server side tampung kedalam variable $list
-        $dat              = explode("~", $param1);
+        $dat                        = explode("~", $param1);
 
         if ($dat[0] == 1) {
-            $bulan        = date('m');
-            $tahun        = date('Y');
-            $type         = 1;
+            $bulan                  = date('m');
+            $tahun                  = date('Y');
+            $type                   = 1;
         } else {
-            $bulan        = date('Y-m-d', strtotime($dat[1]));
-            $tahun        = date('Y-m-d', strtotime($dat[2]));
-            $type         = 2;
+            $bulan                  = date('Y-m-d', strtotime($dat[1]));
+            $tahun                  = date('Y-m-d', strtotime($dat[2]));
+            $type                   = 2;
         }
 
-        $list             = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2);
+        $list                       = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2);
 
-        $data             = [];
-        $no               = $_POST['start'] + 1;
+        $data                       = [];
+        $no                         = $_POST['start'] + 1;
 
         // loop $list
         foreach ($list as $rd) {
             if ($updated > 0) {
                 if ($rd->batal > 0) {
-                    $upd_diss = 'disabled';
+                    $upd_diss       = 'disabled';
                 } else {
                     if ($rd->is_valid > 0) {
-                        $upd_diss = 'disabled';
+                        $upd_diss   = 'disabled';
                     } else {
-                        $upd_diss =  _lock_button();
+                        $upd_diss   = _lock_button();
                     }
                 }
             } else {
-                $upd_diss = 'disabled';
+                $upd_diss           = 'disabled';
             }
 
             if ($deleted > 0) {
                 if ($rd->batal > 0) {
-                    $del_diss = 'disabled';
+                    $del_diss       = 'disabled';
                 } else {
                     if ($rd->is_valid > 0) {
-                        $del_diss = 'disabled';
+                        $del_diss   = 'disabled';
                     } else {
-                        $del_diss = _lock_button();
+                        $del_diss   = _lock_button();
                     }
                 }
             } else {
-                $del_diss = 'disabled';
+                $del_diss           = 'disabled';
             }
 
             if ($confirmed > 0) {
-                $confirm_diss = _lock_button();
+                $confirm_diss       = _lock_button();
             } else {
-                $confirm_diss = 'disabled';
+                $confirm_diss       = 'disabled';
             }
 
             $row    = [];
@@ -3273,7 +3273,7 @@ class Transaksi extends CI_Controller
                 if ($satuanDetail) {
                     $satuan = [
                         'kode_satuan' => $value->satuan_default,
-                        'keterangan' => $satuanDetail->keterangan,
+                        'keterangan'  => $satuanDetail->keterangan,
                     ];
                 } else {
                     $satuan = '';
@@ -3383,9 +3383,9 @@ class Transaksi extends CI_Controller
                 $pajakrp        = str_replace(',', '', $pajakrp_out[$x]);
                 $jumlah         = str_replace(',', '', $jumlah_out[$x]);
 
-                $barang1 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan' => $kode_satuan]);
-                $barang2 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan2' => $kode_satuan]);
-                $barang3 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan3' => $kode_satuan]);
+                $barang1        = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan' => $kode_satuan]);
+                $barang2        = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan2' => $kode_satuan]);
+                $barang3        = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan3' => $kode_satuan]);
 
                 if ($barang1) {
                     $qty_satuan = 1;
@@ -3427,25 +3427,25 @@ class Transaksi extends CI_Controller
     // fungsi print single barang_out_retur
     public function single_print_bout_ret($invoice, $yes)
     {
-        $param          = 1;
+        $param            = 1;
 
         // param website
-        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_setting      = $this->M_global->getData('web_setting', ['id' => 1]);
 
-        $position       = 'P'; // cek posisi l/p
+        $position         = 'P'; // cek posisi l/p
 
         // body cetakan
-        $body           = '';
-        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+        $body             = '';
+        $body             .= '<br><br>'; // beri jarak antara kop dengan body
 
         // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+        $pencetak         = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
-        $breaktable     = '<br>';
-        $file = 'Retur Penjualan';
+        $breaktable       = '<br>';
+        $file             = 'Retur Penjualan';
 
         // isi body
-        $header = $this->M_global->getData('barang_out_retur_header', ['invoice' => $invoice]);
+        $header           = $this->M_global->getData('barang_out_retur_header', ['invoice' => $invoice]);
 
         // body header
         $body .= '<table style="width: 100%; font-size: 11px;">
@@ -3596,18 +3596,18 @@ class Transaksi extends CI_Controller
     // fungsi hapus retur barang out
     public function delBeliOutRetur($invoice)
     {
-        $header = $this->M_global->getData('barang_out_retur_header', ['invoice' => $invoice]);
+        $header     = $this->M_global->getData('barang_out_retur_header', ['invoice' => $invoice]);
         $detail_cek = $this->M_global->getDataResult('barang_out_retur_detail', ['invoice' => $invoice]);
 
         if ($header->invoice_out != '' || $header->invoice_out != null || !empty($header->invoice_out) || isset($header->invoice_out)) {
             foreach ($detail_cek as $dc) {
-                $detail_terima = $this->M_global->getData('barang_out_retur_detail', ['invoice' => $invoice, 'kode_barang' => $dc->kode_barang]);
-                $detail_po = $this->M_global->getData('barang_out_detail', ['invoice' => $header->invoice_out, 'kode_barang' => $dc->kode_barang]);
+                $detail_terima    = $this->M_global->getData('barang_out_retur_detail', ['invoice' => $invoice, 'kode_barang' => $dc->kode_barang]);
+                $detail_po        = $this->M_global->getData('barang_out_detail', ['invoice' => $header->invoice_out, 'kode_barang' => $dc->kode_barang]);
 
                 if ($detail_po->kode_barang == $detail_terima->kode_barang) {
-                    $where_po = ['invoice' => $header->invoice_out, 'kode_barang' => $detail_po->kode_barang, 'kode_satuan' => $detail_po->kode_satuan];
+                    $where_po     = ['invoice' => $header->invoice_out, 'kode_barang' => $detail_po->kode_barang, 'kode_satuan' => $detail_po->kode_satuan];
 
-                    $data_update = [
+                    $data_update  = [
                         'qty_retur' => $detail_po->qty_retur - $detail_terima->qty
                     ];
 
@@ -3845,9 +3845,9 @@ class Transaksi extends CI_Controller
                     $kode_satuan    = $kode_satuan_ps[$x];
                     $qty            = str_replace(',', '', $qty_ps[$x]);
 
-                    $barang1 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan' => $kode_satuan]);
-                    $barang2 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan2' => $kode_satuan]);
-                    $barang3 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan3' => $kode_satuan]);
+                    $barang1        = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan' => $kode_satuan]);
+                    $barang2        = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan2' => $kode_satuan]);
+                    $barang3        = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan3' => $kode_satuan]);
 
                     if ($barang1) {
                         $qty_satuan = 1;
@@ -3948,8 +3948,6 @@ class Transaksi extends CI_Controller
         // website config
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
-
-        $now = date('Y-m-d');
 
         $cek_jadwal_so = $this->M_global->getData('jadwal_so', ['id' => 1]);
 
@@ -4170,5 +4168,541 @@ class Transaksi extends CI_Controller
 
         // Send the output to the view
         echo json_encode($output);
+    }
+
+    /**
+     * Pengajuan Mutasi
+     * untuk menampilkan, menambahkan, dan mengubah satuan dalam sistem
+     */
+
+    public function pengajuan_mutasi()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Transaksi',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Mutasi PO',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => 'Transaksi/mutasi_po_list/',
+            'param1'        => '',
+        ];
+
+        $this->template->load('Template/Content', 'Mutasi/Pengajuan', $parameter);
+    }
+
+    // fungsi list mutasi_po
+    public function mutasi_po_list($param1 = 1, $param2 = '')
+    {
+        // parameter untuk list table
+        $table                      = 'mutasi_po_header';
+        $colum                      = ['id', 'invoice', 'tgl_po', 'jam_po', 'jenis_po', 'dari', 'menuju', 'total', 'user', 'status_po'];
+        $order                      = 'id';
+        $order2                     = 'desc';
+        $order_arr                  = ['id' => 'asc'];
+        $kondisi_param2             = '';
+        $kondisi_param1             = 'tgl_po';
+
+        // kondisi role
+        $updated                    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted                    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        $confirmed                  = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->confirmed;
+
+        // table server side tampung kedalam variable $list
+        $dat                        = explode("~", $param1);
+
+        if ($dat[0] == 1) {
+            $bulan                  = date('m');
+            $tahun                  = date('Y');
+            $type                   = 1;
+        } else {
+            $bulan                  = date('Y-m-d', strtotime($dat[1]));
+            $tahun                  = date('Y-m-d', strtotime($dat[2]));
+            $type                   = 2;
+        }
+
+        $list                       = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2);
+
+        $data                       = [];
+        $no                         = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($updated > 0) {
+                if ($rd->status_po > 0) {
+                    $upd_diss   = 'disabled';
+                } else {
+                    $upd_diss   = _lock_button();
+                }
+            } else {
+                $upd_diss           = 'disabled';
+            }
+
+            if ($deleted > 0) {
+                if ($rd->status_po > 0) {
+                    $del_diss   = 'disabled';
+                } else {
+                    $del_diss   = _lock_button();
+                }
+            } else {
+                $del_diss           = 'disabled';
+            }
+
+            if ($confirmed > 0) {
+                $confirm_diss       = _lock_button();
+            } else {
+                $confirm_diss       = 'disabled';
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->invoice . '<br>' . (($rd->status_po > 0) ? '<span class="badge badge-primary">ACC</span>' : '<span class="badge badge-success">Buka</span>');
+            $row[]  = date('d/m/Y', strtotime($rd->tgl_po)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_po));
+            $row[]  = '<div class="text-center">' . (($rd->jenis_po > 0) ? '<span class="badge badge-primary">Mutasi Cabang</span>' : '<span class="badge badge-success">Mutasi Gudang</span>') . '</div>';
+            $row[]  = (($rd->jenis_po > 0) ? $this->M_global->getData('cabang', ['kode_cabang' => $rd->dari])->cabang : $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->dari])->nama);
+            $row[]  = (($rd->jenis_po > 0) ? $this->M_global->getData('cabang', ['kode_cabang' => $rd->menuju])->cabang : $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->menuju])->nama);
+            $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
+
+            if ($rd->status_po > 0) {
+                $ubah   = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" disabled><i class="fa-regular fa-pen-to-square"></i></button>';
+
+                $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="ACC" disabled><i class="fa-regular fa-circle-check"></i></button>';
+            } else {
+                $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><i class="fa-solid fa-check-to-slot"></i></button>';
+
+                $ubah   = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "', 0" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>';
+            }
+
+            $row[]  = '<div class="text-center">
+                ' . $accept . '
+                ' . $ubah . '
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-dark" title="Cetak" onclick="cetak(' . "'" . $rd->invoice . "', 0" . ')"><i class="fa-solid fa-print"></i></button>
+            </div>';
+
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables2->count_all($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2),
+            "recordsFiltered" => $this->M_datatables2->count_filtered($table, $colum, $order_arr, $order, $order2, $kondisi_param1, $type, $bulan, $tahun, $param2, $kondisi_param2),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    // form mutasi_po page
+    public function form_mutasi_po($param)
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        if ($param != '0') {
+            $mutasi_po        = $this->M_global->getData('mutasi_po_header', ['invoice' => $param]);
+            $mutasi_po_detail = $this->M_global->getDataResult('mutasi_po_detail', ['invoice' => $param]);
+        } else {
+            $mutasi_po        = null;
+            $mutasi_po_detail = null;
+        }
+
+        $parameter = [
+            $this->data,
+            'judul'             => 'Transaksi',
+            'nama_apps'         => $web_setting->nama,
+            'page'              => 'Pengajuan Pembelian',
+            'web'               => $web_setting,
+            'web_version'       => $web_version->version,
+            'list_data'         => '',
+            'data_mutasi_po'    => $mutasi_po,
+            'mutasi_po_detail'  => $mutasi_po_detail,
+            'role'              => $this->M_global->getResult('m_role'),
+            'pajak'             => $this->M_global->getData('m_pajak', ['aktif' => 1])->persentase,
+            'list_barang'       => $this->M_global->getResult('barang'),
+        ];
+
+        $this->template->load('Template/Content', 'Mutasi/Form_mutasi_po', $parameter);
+    }
+
+    // get jenis mutasi
+    public function getJenisMutasi($jenis)
+    {
+        if ($jenis == 0) {
+            $jenism   = $this->db->query('SELECT kode_gudang AS kode, nama AS nama FROM m_gudang WHERE aktif = 1')->result();
+        } else {
+            $jenism   = $this->db->query('SELECT kode_cabang AS kode, cabang AS nama FROM cabang')->result();
+        }
+
+        echo json_encode($jenism);
+    }
+
+    // fungsi insert/update proses mutasi_po
+    public function mutasi_po_proses($param)
+    {
+        $kode_cabang    = $this->session->userdata('cabang');
+        $shift          = $this->session->userdata('shift');
+
+        // header
+        if ($param == 1) { // jika param = 1
+            $invoice    = _invoicePOM($kode_cabang);
+        } else {
+            $invoice    = $this->input->post('invoice');
+        }
+
+        $tgl_po         = $this->input->post('tgl_po');
+        $jam_po         = $this->input->post('jam_po');
+        $jenis_po       = $this->input->post('jenis_po');
+        $dari           = $this->input->post('dari');
+        $menuju         = $this->input->post('menuju');
+
+        $subtotal       = str_replace(',', '', $this->input->post('subtotal'));
+        $diskon         = str_replace(',', '', $this->input->post('diskon'));
+        $pajak          = str_replace(',', '', $this->input->post('pajak'));
+        $total          = str_replace(',', '', $this->input->post('total'));
+
+        // detail
+        $kode_barang_po_in = $this->input->post('kode_barang_po_in');
+        $kode_satuan_in = $this->input->post('kode_satuan');
+        $harga_in       = $this->input->post('harga_in');
+        $qty_in         = $this->input->post('qty_in');
+        $discpr_in      = $this->input->post('discpr_in');
+        $discrp_in      = $this->input->post('discrp_in');
+        $pajakrp_in     = $this->input->post('pajakrp_in');
+        $jumlah_in      = $this->input->post('jumlah_in');
+
+        // cek jumlah detail barang_in
+        $jum            = count($kode_barang_po_in);
+
+        // tampung isi header
+        $isi_header = [
+            'kode_cabang'   => $kode_cabang,
+            'invoice'       => $invoice,
+            'tgl_po'        => $tgl_po,
+            'jam_po'        => $jam_po,
+            'jenis_po'      => $jenis_po,
+            'dari'          => $dari,
+            'menuju'        => $menuju,
+            'pajak'         => $pajak,
+            'diskon'        => $diskon,
+            'subtotal'      => $subtotal,
+            'total'         => $total,
+            'user'          => $this->session->userdata('kode_user'),
+            'shift'         => $shift,
+            'status_po'     => 0,
+        ];
+
+        if ($param == 2) { // jika param = 2
+            aktifitas_user_transaksi('Mutasi', 'mengubah PO', $invoice);
+
+            // jalankan fungsi cek
+            $cek = [
+                $this->M_global->updateData('mutasi_po_header', $isi_header, ['invoice' => $invoice]), // update header
+                $this->M_global->delData('mutasi_po_detail', ['invoice' => $invoice]), // delete detail
+            ];
+        } else { // selain itu
+            aktifitas_user_transaksi('Mutasi', 'menambahkan PO', $invoice);
+
+            // jalankan fungsi cek
+            $cek = $this->M_global->insertData('mutasi_po_header', $isi_header); // insert header
+        }
+
+        if ($cek) { // jika fungsi cek berjalan
+            // lakukan loop
+            for ($x = 0; $x <= ($jum - 1); $x++) {
+                $kode_barang    = $kode_barang_po_in[$x];
+                $kode_satuan    = $kode_satuan_in[$x];
+                $harga          = str_replace(',', '', $harga_in[$x]);
+                $qty            = str_replace(',', '', $qty_in[$x]);
+                $discpr         = str_replace(',', '', $discpr_in[$x]);
+                $discrp         = str_replace(',', '', $discrp_in[$x]);
+                $pajakrp        = str_replace(',', '', $pajakrp_in[$x]);
+                $jumlah         = str_replace(',', '', $jumlah_in[$x]);
+
+                $barang1        = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan' => $kode_satuan]);
+                $barang2        = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan2' => $kode_satuan]);
+                $barang3        = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan3' => $kode_satuan]);
+
+                if ($barang1) {
+                    $qty_satuan = 1;
+                } else if ($barang2) {
+                    $qty_satuan = $barang2->qty_satuan2;
+                } else {
+                    $qty_satuan = $barang3->qty_satuan3;
+                }
+
+                $qty_konversi   = $qty * $qty_satuan;
+
+                // tamping isi detail
+                $isi_detail = [
+                    'invoice'       => $invoice,
+                    'kode_barang'   => $kode_barang,
+                    'kode_satuan'   => $kode_satuan,
+                    'harga'         => $harga,
+                    'qty_konversi'  => $qty_konversi,
+                    'qty'           => $qty,
+                    'qty_terima'    => '0.00',
+                    'discpr'        => $discpr,
+                    'discrp'        => $discrp,
+                    'pajak'         => (($pajakrp > 0) ? 1 : 0),
+                    'pajakrp'       => $pajakrp,
+                    'jumlah'        => $jumlah,
+                ];
+
+                // insert detail
+                $this->M_global->insertData('mutasi_po_detail', $isi_detail);
+            }
+
+            $this->single_print_mutasi_po($invoice, 1);
+
+            // beri nilai status = 1 kirim ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // beri nilai status = 0 kirim ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi print single barang_in
+    public function single_print_mutasi_po($invoice, $yes)
+    {
+        $param          = 1;
+
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        $breaktable     = '<br>';
+        $file = "Pengajuan Mutasi";
+
+        // isi body
+        $header = $this->M_global->getData('mutasi_po_header', ['invoice' => $invoice]);
+
+        if ($header->jenis_po == 0) {
+            $dari = $this->M_global->getData('m_gudang', ['kode_gudang' => $header->dari])->nama;
+            $menuju = $this->M_global->getData('m_gudang', ['kode_gudang' => $header->menuju])->nama;
+        } else {
+            $dari = $this->M_global->getData('cabang', ['kode_cabang' => $header->dari])->cabang;
+            $menuju = $this->M_global->getData('cabang', ['kode_cabang' => $header->menuju])->cabang;
+        }
+
+        // body header
+        $body .= '<table style="width: 100%; font-size: 11px;">
+            <tr>
+                <td style="width: 15%;">Perihal</td>
+                <td style="width: 2%;"> : </td>
+                <td style="width: 33%;">' . $file . '</td>
+                <td style="width: 50%; text-align: right; font-weight: bold; color: white;"><span style="border: 1px solid #0e1d2e; background-color: #0e1d2e;">' . $invoice . '</span></td>
+            </tr>
+            <tr>
+                <td style="width: 15%;">Tgl/Jam PO</td>
+                <td style="width: 2%;"> : </td>
+                <td colspan="2">' . date('d-m-Y', strtotime($header->tgl_po)) . ' / ' . date('H:i:s', strtotime($header->jam_po)) . '</td>
+            </tr>
+            <tr>
+                <td style="width: 15%;">Dari</td>
+                <td style="width: 2%;"> : </td>
+                <td colspan="2">' . $dari . '</td>
+            </tr>
+            <tr>
+                <td style="width: 15%;">Menuju</td>
+                <td style="width: 2%;"> : </td>
+                <td colspan="2">' . $menuju . '</td>
+            </tr>
+            <tr>
+                <td style="width: 15%;">User Input</td>
+                <td style="width: 2%;"> : </td>
+                <td style="width: 33%;">' . $this->M_global->getData('user', ['kode_user' => $header->user])->nama . '</td>
+                <td style="width: 50%; text-align: right;">Pencetak : ' . $pencetak . '</td>
+            </tr>
+        </table>';
+
+        $body .= $breaktable;
+
+        $body .= '<table style="width: 100%; font-size: 10px;" autosize="1" cellpadding="5px">';
+
+        $body .= '<thead>
+            <tr>
+                <th rowspan="2" style="width: 5%; border: 1px solid black; background-color: #0e1d2e; color: white;">#</th>
+                <th rowspan="2" style="width: 20%; border: 1px solid black; background-color: #0e1d2e; color: white;">Barang</th>
+                <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Satuan</th>
+                <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Harga</th>
+                <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Jumlah</th>
+                <th colspan="2" style="width: 20%; border: 1px solid black; background-color: #0e1d2e; color: white;">Diskon</th>
+                <th rowspan="2" style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Pajak</th>
+                <th rowspan="2" style="width: 15%; border: 1px solid black; background-color: #0e1d2e; color: white;">Total</th>
+            </tr>
+            <tr>
+                <th style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">%</th>
+                <th style="width: 10%; border: 1px solid black; background-color: #0e1d2e; color: white;">Rp</th>
+            </tr>
+        </thead>';
+
+        $body .= '<tbody>';
+
+        if ($param == 1) {
+            $total = number_format($header->total);
+        } else {
+            $total = ceil($header->total);
+        }
+        $body .= '<tr style="background-color: skyblue;">
+            <td colspan="7" style="border: 1px solid black; font-weight: bold;">No. Transaksi: ' . $header->invoice . '</td>
+            <td colspan="2" style="border: 1px solid black; font-weight: bold; text-align: right">' . $total . '</td>
+        </tr>';
+
+        // detail barang
+        $detail   = $this->M_global->getDataResult('mutasi_po_detail', ['invoice' => $header->invoice]);
+
+        $no       = 1;
+        $tdiskon  = 0;
+        $tpajak   = 0;
+        $ttotal   = 0;
+        foreach ($detail as $d) {
+            $tdiskon    += $d->discrp;
+            $tpajak     += $d->pajakrp;
+            $ttotal     += $d->jumlah;
+
+            if ($param == 1) {
+                $harga    = number_format($d->harga);
+                $qty      = number_format($d->qty);
+                $discpr   = number_format($d->discpr);
+                $discrp   = number_format($d->discrp);
+                $pajak    = number_format($d->pajakrp);
+                $jumlah   = number_format($d->jumlah);
+
+                $tdiskonx = number_format($tdiskon);
+                $tpajakx  = number_format($tpajak);
+                $ttotalx  = number_format($ttotal);
+            } else {
+                $harga    = ceil($d->harga);
+                $qty      = ceil($d->qty);
+                $discpr   = ceil($d->discpr);
+                $discrp   = ceil($d->discrp);
+                $pajak    = ceil($d->pajakrp);
+                $jumlah   = ceil($d->jumlah);
+
+                $tdiskonx = ceil($tdiskon);
+                $tpajakx  = ceil($tpajak);
+                $ttotalx  = ceil($ttotal);
+            }
+
+            $body .= '<tr>
+                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $d->kode_barang . ' ~ ' . $this->M_global->getData('barang', ['kode_barang' => $d->kode_barang])->nama . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $this->M_global->getData('m_satuan', ['kode_satuan' => $d->kode_satuan])->keterangan . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $harga . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $qty . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $discpr . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $discrp . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $pajak . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $jumlah . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body .= '<tr style="background-color: green;">
+            <td colspan="6" style="border: 1px solid black; font-weight: bold; color: white;">Total</td>
+            <td style="border: 1px solid black; font-weight: bold; color: white; text-align: right">' . $tdiskonx . '</td>
+            <td style="border: 1px solid black; font-weight: bold; color: white; text-align: right">' . $tpajakx . '</td>
+            <td style="border: 1px solid black; font-weight: bold; color: white; text-align: right">' . $ttotalx . '</td>
+        </tr>';
+
+        $body .= '</tbody>';
+
+        $body .= '<tfoot>
+            <tr>
+                <td colspan="6">&nbsp;</td>
+                <td colspan="3" style="text-align: center;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="6" style="width:60%;">&nbsp;</td>
+                <td colspan="3" style="width:40%; text-align: center;">Yogyakarta, ' . strtotime(date('Y-m-d')) . '</td>
+            </tr>
+            <tr>
+                <td colspan="6" style="width:60%;">&nbsp;</td>
+                <td colspan="3" style="width:40%; text-align: center;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="6" style="width:60%;">&nbsp;</td>
+                <td colspan="3" style="width:40%; text-align: center;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="6" style="width:60%;">&nbsp;</td>
+                <td colspan="3" style="width:40%; text-align: center;">' . $pencetak . '</td>
+            </tr>
+        </tfoot>';
+
+        $body .= '</table>';
+
+        $judul = $invoice;
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting, $yes);
+    }
+
+    // fungsi hapus barang po in
+    public function delMutasiPo($invoice)
+    {
+        // jalankan fungsi cek
+        $cek = [
+            $this->M_global->delData('mutasi_po_detail', ['invoice' => $invoice]), // del data detail mutasi
+            $this->M_global->delData('mutasi_po_header', ['invoice' => $invoice]), // del data header mutasi
+        ];
+
+        if ($cek) { // jika fungsi cek berjalan
+            // kirim status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirim status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi acc/re-acc
+    public function accmutasi_po($invoice, $acc)
+    {
+        // header barang by invoice
+        $header = $this->M_global->getData('mutasi_po_header', ['invoice' => $invoice]);
+        // kode_gudang
+        $kode_gudang = $header->kode_gudang;
+
+        // detail barang
+        $detail = $this->M_global->getDataResult('mutasi_po_detail', ['invoice' => $invoice]);
+
+        if ($acc == 0) { // jika acc = 0
+            aktifitas_user_transaksi('Mutasi', 'Reject PO', $invoice);
+
+            // update is_approve jadi 0
+            $cek = $this->M_global->updateData('mutasi_po_header', ['status_po' => 0, 'tgl_approve' => null, 'jam_approve' => null], ['invoice' => $invoice]);
+        } else { // selain itu
+            aktifitas_user_transaksi('Mutasi', 'Confirm PO', $invoice);
+
+            // update is_approve jadi 1
+            $cek = $this->M_global->updateData('mutasi_po_header', ['status_po' => 1, 'tgl_approve' => date('Y-m-d'), 'jam_approve' => date('H:i:s'), 'user_approve' => $this->session->userdata('kode_user')], ['invoice' => $invoice]);
+        }
+
+        if ($cek) { // jika fungsi cek berjalan
+            // kirim status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirim status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
     }
 }

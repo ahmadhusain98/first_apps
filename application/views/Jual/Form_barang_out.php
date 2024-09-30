@@ -1,3 +1,7 @@
+<?php
+$gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
+?>
+
 <form method="post" id="form_barang_out">
     <div class="row">
         <div class="col-md-12">
@@ -88,7 +92,7 @@
                                         $gudang = $this->M_global->getData('m_gudang', ['kode_gudang' => $data_barang_out->kode_gudang])->nama;
                                         echo '<option value="' . $data_barang_out->kode_gudang . '">' . $gudang . '</option>';
                                     else :
-                                        echo '<option value="GUD0000001" selected>Farmasi Tunai</option>';
+                                        echo '<option value="' . $gutama->kode_gudang . '" selected>' . $gutama->nama . '</option>';
                                     endif;
                                     ?>
                                 </select>

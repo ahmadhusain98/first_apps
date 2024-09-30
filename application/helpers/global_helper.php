@@ -484,6 +484,24 @@ function _invoicePO($cabang)
     return $invoice;
 }
 
+function _invoicePOM($cabang)
+{
+    $CI           = &get_instance();
+
+    $now          = date('Y-m-d');
+
+    $lastNumber   = $CI->db->query('SELECT * FROM mutasi_po_header WHERE tgl_po = "' . $now . '" AND kode_cabang = "' . $cabang . '" ORDER BY id DESC LIMIT 1')->row();
+    $number       = 1;
+    if ($lastNumber) {
+        $number   = $CI->db->query('SELECT * FROM mutasi_po_header WHERE tgl_po = "' . $now . '" AND kode_cabang = "' . $cabang . '"')->num_rows() + 1;
+        $invoice  = $CI->session->userdata('init_cabang') . 'MPO-' . date('Ymd') . sprintf("%05d", $number);
+    } else {
+        $number   = 0;
+        $invoice  = $CI->session->userdata('init_cabang') . 'MPO-' . date('Ymd') . "00001";
+    }
+    return $invoice;
+}
+
 function _invoice($cabang)
 {
     $CI           = &get_instance();
