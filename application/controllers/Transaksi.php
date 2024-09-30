@@ -4677,14 +4677,6 @@ class Transaksi extends CI_Controller
     // fungsi acc/re-acc
     public function accmutasi_po($invoice, $acc)
     {
-        // header barang by invoice
-        $header = $this->M_global->getData('mutasi_po_header', ['invoice' => $invoice]);
-        // kode_gudang
-        $kode_gudang = $header->kode_gudang;
-
-        // detail barang
-        $detail = $this->M_global->getDataResult('mutasi_po_detail', ['invoice' => $invoice]);
-
         if ($acc == 0) { // jika acc = 0
             aktifitas_user_transaksi('Mutasi', 'Reject PO', $invoice);
 
