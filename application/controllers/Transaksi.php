@@ -4270,9 +4270,9 @@ class Transaksi extends CI_Controller
             if ($rd->status_po > 0) {
                 $ubah   = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" disabled><i class="fa-regular fa-pen-to-square"></i></button>';
 
-                $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="ACC" disabled><i class="fa-regular fa-circle-check"></i></button>';
-            } else {
                 $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><i class="fa-solid fa-check-to-slot"></i></button>';
+            } else {
+                $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="ACC" onclick="valided(' . "'" . $rd->invoice . "', 1" . ')"><i class="fa-regular fa-circle-check"></i></button>';
 
                 $ubah   = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "', 0" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>';
             }

@@ -8,7 +8,7 @@ echo _lock_so();
         <div class="col-md-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">
-                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar PO Mutasi</span>
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Pengajuan Mutasi</span>
                     <div class="float-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -50,7 +50,7 @@ echo _lock_so();
                                         <tr class="text-center">
                                             <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
                                             <th width="15%">Invoice</th>
-                                            <th width="20%">Tgl/Jam PO</th>
+                                            <th width="20%">Tgl/Jam Pengajuan</th>
                                             <th width="10%">Jenis Mutasi</th>
                                             <th width="10%">Dari</th>
                                             <th width="10%">Menuju</th>
@@ -126,10 +126,10 @@ echo _lock_so();
     // fungsi acc/unacc
     function valided(invoice, param) {
         if (param == 0) {
-            var pesan = "Pengajuan Pembelian ini akan di re-acc!";
+            var pesan = "Pengajuan Mutasi ini akan di re-acc!";
             var pesan2 = "di re-acc!";
         } else {
-            var pesan = "Pengajuan Pembelian ini akan diacc!";
+            var pesan = "Pengajuan Mutasi ini akan diacc!";
             var pesan2 = "diacc!";
         }
         // ajukan pertanyaaan
@@ -159,53 +159,6 @@ echo _lock_so();
                         } else { // selain itu
 
                             Swal.fire("Pengajuan Mutasi", "Gagal " + pesan2 + ", silahkan dicoba kembali", "info");
-                        }
-                    },
-                    error: function(result) { // jika fungsi error
-
-                        error_proccess();
-                    }
-                });
-            }
-        });
-    }
-
-    // fungsi aktif/non-aktif akun
-    function actived(invoice, param) {
-        if (param == 0) {
-            var pesan = "Pengajuan Pembelian ini akan di re-batalkan!";
-            var pesan2 = "di re-batalkan!";
-        } else {
-            var pesan = "Pengajuan Pembelian ini akan dibatalkan!";
-            var pesan2 = "dibatalkan!";
-        }
-        // ajukan pertanyaaan
-        Swal.fire({
-            title: "Kamu yakin?",
-            text: pesan,
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, " + pesan2,
-            cancelButtonText: "Tidak!"
-        }).then((result) => {
-            if (result.isConfirmed) { // jika yakin
-
-                // jalankan fungsi
-                $.ajax({
-                    url: siteUrl + 'Transaksi/activedmutasi_po/' + invoice + '/' + param,
-                    type: 'POST',
-                    dataType: 'JSON',
-                    success: function(result) { // jika fungsi berjalan dengan baik
-
-                        if (result.status == 1) { // jika mendapatkan hasil 1
-                            Swal.fire("Pengajuan Pembelian", "Berhasil " + pesan2, "success").then(() => {
-                                reloadTable();
-                            });
-                        } else { // selain itu
-
-                            Swal.fire("Pengajuan Pembelian", "Gagal " + pesan2 + ", silahkan dicoba kembali", "info");
                         }
                     },
                     error: function(result) { // jika fungsi error

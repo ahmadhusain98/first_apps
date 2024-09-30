@@ -27,11 +27,11 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-6 col-6">
-                                        <label for="tgl_po" class="control-label">Tgl PO</label>
+                                        <label for="tgl_po" class="control-label">Tgl Pengajuan</label>
                                         <input type="date" title="Tgl PO" class="form-control" placeholder="Tgl PO" id="tgl_po" name="tgl_po" value="<?= (!empty($data_mutasi_po) ? date('Y-m-d', strtotime($data_mutasi_po->tgl_po)) : date('Y-m-d')) ?>" readonly>
                                     </div>
                                     <div class="col-md-6 col-6">
-                                        <label for="jam_po" class="control-label">Jam PO</label>
+                                        <label for="jam_po" class="control-label">Jam Pengajuan</label>
                                         <input type="time" title="Jam PO" class="form-control" placeholder="Jam PO" id="jam_po" name="jam_po" value="<?= (!empty($data_mutasi_po) ? date('H:i:s', strtotime($data_mutasi_po->jam_po)) : date('H:i:s')) ?>" readonly>
                                     </div>
                                 </div>
@@ -222,12 +222,12 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-md-12">
-                            <button type="button" class="btn btn-danger" onclick="getUrl('Transaksi/mutasi_po')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+                            <button type="button" class="btn btn-danger" onclick="getUrl('Transaksi/pengajuan_mutasi')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
                             <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
                             <?php if (!empty($data_mutasi_po)) : ?>
                                 <button type="button" class="btn btn-info float-right" onclick="getUrl('Transaksi/form_mutasi_po/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
                             <?php else : ?>
-                                <button type="button" class="btn btn-info float-right" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
+                                <button type="button" class="btn btn-info float-right" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
                             <?php endif ?>
                         </div>
                     </div>
@@ -345,6 +345,7 @@
             "orderable": false,
         }, ],
     });
+
 
     // onload
     if (invoice.val() == '' || invoice.val() == null) {
@@ -691,12 +692,12 @@
         if (y == 1) {
             if (x == menuju) {
                 $('#dari').val('').change();
-                return Swal.fire(q, "Form sudah digunakan oleh Menuju!", "info");
+                return Swal.fire(q, "Pilihan sudah digunakan oleh Menuju!", "info");
             }
         } else {
             if (x == dari) {
                 $('#menuju').val('').change();
-                return Swal.fire(q, "Form sudah digunakan oleh Dari!", "info");
+                return Swal.fire(q, "Pilihan sudah digunakan oleh Dari!", "info");
             }
         }
     }
@@ -934,5 +935,14 @@
                 error_proccess();
             }
         });
+    }
+
+    // fungsi reset
+    function reseting() {
+        $('#jenis_po').val('').change();
+        $('#dari').val('').change();
+        $('#menuju').val('').change();
+        bodyBarangIn.empty();
+        hitung_t();
     }
 </script>
