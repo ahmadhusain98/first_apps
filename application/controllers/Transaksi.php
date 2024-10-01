@@ -3970,16 +3970,16 @@ class Transaksi extends CI_Controller
     }
 
     // fungsi list so
-    public function so_list($param1 = 1, $param2 = '1')
+    public function so_list($param1 = 1, $param2 = '')
     {
         // parameter untuk list table
-        $table            = 'penyesuaian_header';
-        $colum            = ['id', 'invoice', 'tgl_penyesuaian', 'jam_penyesuaian', 'kode_user', 'kode_gudang', 'tipe_penyesuaian', 'acc', 'user_acc', 'tgl_acc', 'jam_acc'];
+        $table            = 'jadwal_so';
+        $colum            = ['id', 'tgl_dari', 'jam_dari', 'tgl_sampai', 'jam_sampai', 'status', 'kode_user', 'shift'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
-        $kondisi_param2   = 'tipe_penyesuaian';
-        $kondisi_param1   = 'tgl_penyesuaian';
+        $kondisi_param2   = '';
+        $kondisi_param1   = 'tgl_dari';
 
         // kondisi role
         $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
@@ -3987,7 +3987,7 @@ class Transaksi extends CI_Controller
         $confirmed        = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->confirmed;
 
         // table server side tampung kedalam variable $list
-        $dat    = explode("~", $param1);
+        $dat              = explode("~", $param1);
 
 
         if ($dat[0] == 1) {
@@ -4009,54 +4009,31 @@ class Transaksi extends CI_Controller
         // loop $list
         foreach ($list as $rd) {
             if ($updated > 0) {
-                if ($rd->acc > 0) {
-                    $upd_diss = 'disabled';
-                } else {
-                    $upd_diss =  _lock_button();
-                }
+                $upd_diss =  '';
             } else {
                 $upd_diss = 'disabled';
             }
 
             if ($deleted > 0) {
-                if ($rd->acc > 0) {
-                    $del_diss = 'disabled';
-                } else {
-                    $del_diss = _lock_button();
-                }
+                $del_diss = '';
             } else {
                 $del_diss = 'disabled';
             }
 
             if ($confirmed > 0) {
-                $confirm_diss = _lock_button();
+                $confirm_diss = '';
             } else {
                 $confirm_diss = 'disabled';
             }
 
             $row    = [];
             $row[]  = $no++;
-            $row[]  = date('d/m/Y', strtotime($rd->tgl_penyesuaian)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_penyesuaian));
-            $row[]  = $rd->invoice . '<span class="float-right">' . (($rd->acc == 1) ? '<span class="badge badge-primary">ACC</span>' : '<span class="badge badge-danger">Belum di ACC</span>') . '</span>';
-            $row[]  = $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->kode_gudang])->nama;
-            $row[]  = '<div class="text-center">' . (($rd->tipe_penyesuaian == 1) ? '<span class="badge badge-primary text-center">SO</span>' : '<span class="badge badge-success text-center">Adjusment</span>') . '</div>';
-            if ($rd->acc < 1) {
-                $valid = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-success" title="ACC" onclick="valided(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '>
-                    <ion-icon name="checkmark-done-circle-outline"></ion-icon>
-                </button>';
-            } else {
-                $valid = '<button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-dark" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '>
-                    <ion-icon name="checkmark-done-circle-outline"></ion-icon>
-                </button>';
-            }
+            $row[]  = date('d/m/Y', strtotime($rd->tgl_dari)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_dari));
+            $row[]  = date('d/m/Y', strtotime($rd->tgl_sampai)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_sampai));
+            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama . '<br><span class="badge badge-danger text-center">Shift: ' . $rd->shift . '</span>';
             $row[]  = '<div class="text-center">
-                ' . $valid . '
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" onclick="ubah(' . "'" . $rd->id . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->id . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
@@ -4090,6 +4067,8 @@ class Transaksi extends CI_Controller
             'jam_sampai'    => $jam_sampai_so,
             'status'        => $status,
             'kode_user'     => $kode_user,
+            'shift'         => $this->session->userdata('shift'),
+            'kode_cabang'   => $this->session->userdata('cabang'),
         ];
 
         if ($id == '' || $id == null) {
@@ -4097,6 +4076,26 @@ class Transaksi extends CI_Controller
         } else {
             $cek = $this->M_global->updateData('jadwal_so', $data_so, ['id' => $id]);
         }
+
+        if ($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // get Data SO
+    public function getDataSo($id)
+    {
+        $so = $this->M_global->getData('jadwal_so', ['id' => $id]);
+
+        echo json_encode($so);
+    }
+
+    // hapus jadwal so
+    public function delJadwalSo($id)
+    {
+        $cek = $this->M_global->delData('jadwal_so', ['id' => $id]);
 
         if ($cek) {
             echo json_encode(['status' => 1]);

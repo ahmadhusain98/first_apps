@@ -21,7 +21,7 @@ echo _lock_so();
                             </ul>
                         </div>
                         <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
-                        <button type="button" class="btn btn-success" onclick="getUrl('Transaksi/form_barang_po_in/0')" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                        <button type="button" class="btn btn-success" onclick="getUrl('Transaksi/form_barang_po_in/0')" <?= (($created == 1) ? _lock_button() : 'disabled') ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
                     </div>
                 </div>
                 <div class="card-footer">

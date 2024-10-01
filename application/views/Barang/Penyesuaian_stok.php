@@ -1,5 +1,6 @@
 <?php
 $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->created;
+echo _lock_so();
 ?>
 
 <form method="post" id="form_penyesuaian_stok">
