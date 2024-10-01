@@ -1431,7 +1431,7 @@ class Kasir extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'pembayaran_uangmuka';
-        $colum            = ['id', 'invoice', 'tgl_pembayaran', 'jam_pembayaran', 'kode_member', 'jenis_pembayaran', 'cash', 'card', 'total'];
+        $colum            = ['id', 'invoice', 'tgl_pembayaran', 'jam_pembayaran', 'kode_member', 'jenis_pembayaran', 'cash', 'card', 'total', 'shift', 'kode_user'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -1482,6 +1482,7 @@ class Kasir extends CI_Controller
             $row[]  = $rd->kode_member . ' ~ ' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama;
             $row[]  = ($rd->jenis_pembayaran == 0 ? 'CASH' : (($rd->jenis_pembayaran == 1) ? 'CARD' : 'CASH & CARD'));
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
+            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama . '<br><span class="badge badge-danger">Shift: ' . $rd->shift . '</span>';
             $row[]  = '<div class="text-center">
                 <button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
                 <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
@@ -1555,6 +1556,7 @@ class Kasir extends CI_Controller
         $card                   = str_replace(',', '', $this->input->post('card'));
         $total                  = str_replace(',', '', $this->input->post('total'));
         $kode_user              = $this->session->userdata('kode_user');
+        $shift                  = $this->session->userdata('shift');
 
         // isi pembayaran
         $isi_pembayaran = [
@@ -1564,6 +1566,7 @@ class Kasir extends CI_Controller
             'jam_pembayaran'    => $jam_pembayaran,
             'total'             => $total,
             'kode_user'         => $kode_user,
+            'shift'             => $shift,
             'jenis_pembayaran'  => $jenis_pembayaran,
             'cash'              => $cash,
             'card'              => $card,

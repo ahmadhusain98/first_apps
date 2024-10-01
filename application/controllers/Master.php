@@ -4457,4 +4457,179 @@ class Master extends CI_Controller
             echo json_encode(['status' => 0]);
         }
     }
+
+    /**
+     * Master tipe_bank
+     * untuk menampilkan, menambahkan, dan mengubah tipe_bank dalam sistem
+     */
+
+    // tipe_bank page
+    public function tipe_bank()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter   = [
+            $this->data,
+            'judul'         => 'Master',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Tipe Bank',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => 'Master/tipe_bank_list',
+            'param1'        => '',
+        ];
+
+        $this->template->load('Template/Content', 'Master/Umum/Tipe', $parameter);
+    }
+
+    // fungsi list tipe_bank
+    public function tipe_bank_list($param1 = '')
+    {
+        // parameter untuk list table
+        $table            = 'tipe_bank';
+        $colum            = ['id', 'kode_tipe', 'keterangan'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['id' => 'asc'];
+        $kondisi_param1   = '';
+
+        // kondisi role
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+
+        if ($updated > 0) {
+            $upd_diss     = '';
+        } else {
+            $upd_diss     = 'disabled';
+        }
+
+        // table server side tampung kedalam variable $list
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($deleted > 0) {
+                $del_diss       = '';
+            } else {
+                $del_diss           = 'disabled';
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->kode_tipe;
+            $row[]  = $rd->keterangan;
+            $row[]  = '<div class="text-center">
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_tipe . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_tipe . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables->count_all($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "recordsFiltered" => $this->M_datatables->count_filtered($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    // fungsi cek tipe_bank berdasarkan keterangan tipe_bank
+    public function cekTipeBank()
+    {
+        // ambil keterangan inputan
+        $keterangan   = $this->input->post('keterangan');
+
+        // cek keterangan pada table tipe_bank
+        $cek          = $this->M_global->jumDataRow('tipe_bank', ['keterangan' => $keterangan]);
+
+        if ($cek < 1) { // jika tidak ada/ kurang dari 1
+            // kirimkan status 1
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi proses simpan/update tipe_bank
+    public function tipe_bank_proses($param)
+    {
+        // variable
+        $keterangan       = $this->input->post('keterangan');
+
+        if ($param == 1) { // jika parameternya 1
+            // maka buat kode baru
+            $kodeTipe   = _kodeTipeBank();
+        } else { // selain itu
+            // ambil kode dari inputan
+            $kodeTipe   = $this->input->post('kodeTipe');
+        }
+
+        // tampung variable kedalam $isi
+        $isi = [
+            'kode_tipe'     => $kodeTipe,
+            'keterangan'    => $keterangan,
+        ];
+
+        if ($param == 1) { // jika parameternya 1
+            // jalankan fungsi simpan
+            $cek = $this->M_global->insertData('tipe_bank', $isi);
+
+            $cek_param = 'menambahkan';
+        } else { // selain itu
+            // jalankan fungsi update
+            $cek = $this->M_global->updateData('tipe_bank', $isi, ['kode_tipe' => $kodeTipe]);
+
+            $cek_param = 'mengubah';
+        }
+
+        if ($cek) { // jika fungsi berjalan
+            aktifitas_user(
+                'Master Tipe Bank',
+                $cek_param,
+                $kodeTipe,
+                $this->M_global->getData('tipe_bank', ['kode_tipe' => $kodeTipe])->keterangan
+            );
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi ambil informasi tipe_bank berdasarkan kode tipe_bank
+    public function getInfoTipe($kode_satuan)
+    {
+        // ambil data tipe berdasarkan kode_tipe
+        $data = $this->M_global->getData('tipe_bank', ['kode_tipe' => $kode_satuan]);
+        // lempar ke view
+        echo json_encode($data);
+    }
+
+    // fungsi hapus tipe berdasarkan kode_tipe
+    public function delTipe($kode_tipe)
+    {
+        // jalankan fungsi hapus tipe berdasarkan kode_tipe
+        aktifitas_user('Master Tipe Bank', 'menghapus', $kode_tipe, $this->M_global->getData('tipe_bank', ['kode_tipe' => $kode_tipe])->keterangan);
+        $cek = $this->M_global->delData('tipe_bank', ['kode_tipe' => $kode_tipe]);
+
+        if ($cek) { // jika fungsi berjalan
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
 }

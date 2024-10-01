@@ -159,6 +159,23 @@ function _kodeSatuan()
     return $kode_user;
 }
 
+function _kodeTipeBank()
+{
+    $CI         = &get_instance();
+
+    $inisial    = "TBK";
+    $lastNumber = $CI->db->query('SELECT * FROM tipe_bank ORDER BY kode_tipe DESC LIMIT 1')->row();
+    $number     = 1;
+    if ($lastNumber) {
+        $number       = count($CI->db->query('SELECT * FROM tipe_bank')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%07d", $number);
+    } else {
+        $number       = 0;
+        $kode_user    = $inisial . "0000001";
+    }
+    return $kode_user;
+}
+
 function _kodeKategori()
 {
     $CI         = &get_instance();

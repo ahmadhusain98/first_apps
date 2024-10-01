@@ -46,9 +46,10 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                             <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
                                             <th width="10%">Invoice</th>
                                             <th width="10%">Tgl/Jam Deposit</th>
-                                            <th width="20%">Member</th>
+                                            <th width="10%">Member</th>
                                             <th width="10%">Jenis Deposit</th>
                                             <th width="10%">Total</th>
+                                            <th width="10%">User</th>
                                             <th width="10%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                         </tr>
                                     </thead>
