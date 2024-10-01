@@ -4513,7 +4513,22 @@ class Master extends CI_Controller
         // loop $list
         foreach ($list as $rd) {
             if ($deleted > 0) {
-                $del_diss       = '';
+                $cek1 = $this->M_global->getDataResult('bayar_um_card_detail', ['kode_tipe' => $rd->kode_tipe]);
+                if (count($cek1) > 0) {
+                    $del_diss       = 'disabled';
+                } else {
+                    $cek2 = $this->M_global->getDataResult('bayar_card_detail', ['kode_tipe' => $rd->kode_tipe]);
+                    if (count($cek2) > 0) {
+                        $del_diss       = 'disabled';
+                    } else {
+                        $cek3 = $this->M_global->getDataResult('bayar_kas_card', ['kode_tipe' => $rd->kode_tipe]);
+                        if (count($cek3) > 0) {
+                            $del_diss       = 'disabled';
+                        } else {
+                            $del_diss       = '';
+                        }
+                    }
+                }
             } else {
                 $del_diss           = 'disabled';
             }
