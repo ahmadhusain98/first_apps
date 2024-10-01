@@ -67,7 +67,7 @@ class Kasir extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'pembayaran';
-        $colum            = ['id', 'approved', 'token_pembayaran', 'invoice', 'inv_jual', 'no_trx', 'tgl_pembayaran', 'jam_pembayaran', 'kembalian', 'total', 'kode_user', 'jenis_pembayaran', 'cash', 'card'];
+        $colum            = ['id', 'approved', 'token_pembayaran', 'invoice', 'inv_jual', 'no_trx', 'tgl_pembayaran', 'jam_pembayaran', 'kembalian', 'total', 'kode_user', 'jenis_pembayaran', 'cash', 'card', 'shift'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -131,7 +131,7 @@ class Kasir extends CI_Controller
             $row[]  = $rd->invoice;
             $row[]  = $rd->no_trx;
             $row[]  = ($rd->jenis_pembayaran == 0 ? 'CASH' : (($rd->jenis_pembayaran == 1) ? 'CARD' : 'CASH & CARD'));
-            $row[]  = $rd->kode_user . ' ~ ' . $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama;
+            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama . '<br><span class="badge badge-danger">Shift: ' . $rd->shift . '</span>';
 
             if ($confirmed > 0) {
                 if ($rd->approved > 0) {
@@ -687,6 +687,7 @@ class Kasir extends CI_Controller
     public function kasir_proses($param)
     {
         $kode_cabang            = $this->session->userdata('cabang');
+        $shift                  = $this->session->userdata('shift');
 
         if ($param == 1) { // jika param 1
             // buat token dan invoice
@@ -761,6 +762,7 @@ class Kasir extends CI_Controller
             'disc_single'       => $disc_single,
             'total'             => $total,
             'kode_user'         => $kode_user,
+            'shift'             => $shift,
             'um_keluar'         => $um_keluar,
             'jenis_pembayaran'  => $jenis_pembayaran,
             'cash'              => $cash,

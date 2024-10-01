@@ -56,8 +56,8 @@ echo _lock_so();
                                             <th width="15%">Tgl/Jam Retur</th>
                                             <th width="15%">Pembeli</th>
                                             <th width="10%">Gudang</th>
-                                            <th width="10%">Peretur</th>
                                             <th width="10%">Total</th>
+                                            <th width="10%">Peretur</th>
                                             <th width="20%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                         </tr>
                                     </thead>

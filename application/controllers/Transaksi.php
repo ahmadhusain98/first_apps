@@ -67,7 +67,7 @@ class Transaksi extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'barang_po_in_header';
-        $colum            = ['id', 'invoice', 'tgl_po', 'jam_po', 'kode_supplier', 'kode_gudang', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid'];
+        $colum            = ['id', 'invoice', 'tgl_po', 'jam_po', 'kode_supplier', 'kode_gudang', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid', 'shift'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -139,8 +139,8 @@ class Transaksi extends CI_Controller
             $row[]  = date('d/m/Y', strtotime($rd->tgl_po)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_po));
             $row[]  = $this->M_global->getData('m_supplier', ['kode_supplier' => $rd->kode_supplier])->nama;
             $row[]  = $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->kode_gudang])->nama;
-            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama;
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
+            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama . '<br><span class="badge badge-danger">Shift: ' . $rd->shift . '</span>';
 
             if ($rd->is_valid < 1) {
                 if ($rd->batal < 1) {
@@ -638,7 +638,7 @@ class Transaksi extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'barang_in_header';
-        $colum            = ['id', 'invoice', 'tgl_beli', 'jam_beli', 'kode_supplier', 'kode_gudang', 'surat_jalan', 'no_faktur', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid'];
+        $colum            = ['id', 'invoice', 'tgl_beli', 'jam_beli', 'kode_supplier', 'kode_gudang', 'surat_jalan', 'no_faktur', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid', 'shift'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -710,8 +710,8 @@ class Transaksi extends CI_Controller
             $row[]  = date('d/m/Y', strtotime($rd->tgl_beli)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_beli));
             $row[]  = $this->M_global->getData('m_supplier', ['kode_supplier' => $rd->kode_supplier])->nama;
             $row[]  = $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->kode_gudang])->nama;
-            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama;
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
+            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama . '<br><span class="badge badge-danger">Shift: ' . $rd->shift . '</span>';
 
             if ($rd->is_valid < 1) {
                 if ($rd->batal < 1) {
@@ -1473,7 +1473,7 @@ class Transaksi extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'barang_in_retur_header';
-        $colum            = ['id', 'invoice', 'invoice_in', 'tgl_retur', 'jam_retur', 'kode_supplier', 'kode_gudang', 'surat_jalan', 'no_faktur', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid'];
+        $colum            = ['id', 'invoice', 'invoice_in', 'tgl_retur', 'jam_retur', 'kode_supplier', 'kode_gudang', 'surat_jalan', 'no_faktur', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid', 'shift'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -1545,8 +1545,8 @@ class Transaksi extends CI_Controller
             $row[]  = date('d/m/Y', strtotime($rd->tgl_retur)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_retur));
             $row[]  = $this->M_global->getData('m_supplier', ['kode_supplier' => $rd->kode_supplier])->nama;
             $row[]  = $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->kode_gudang])->nama;
-            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama;
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
+            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama . '<br><span class="badge badge-danger">Shift: ' . $rd->shift . '</span>';
 
             if ($rd->is_valid < 1) {
                 if ($rd->batal < 1) {
@@ -2229,7 +2229,7 @@ class Transaksi extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'barang_out_header';
-        $colum            = ['id', 'invoice', 'kode_member', 'no_trx', 'tgl_jual', 'jam_jual', 'status_jual', 'kode_gudang', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal'];
+        $colum            = ['id', 'invoice', 'kode_member', 'no_trx', 'tgl_jual', 'jam_jual', 'status_jual', 'kode_gudang', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'shift'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -2306,6 +2306,7 @@ class Transaksi extends CI_Controller
             $row[]  = $rd->kode_member . ' ~ ' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama;
             $row[]  = $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->kode_gudang])->nama;
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
+            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama . '<br><span class="badge badge-danger">Shift: ' . $rd->shift . '</span>';
 
             if ($rd->batal < 1) {
                 $batal = '<button type="button" style="margin-bottom: 5px;" class="btn btn-secondary" title="Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><i class="fa-solid fa-ban"></i></button>';
@@ -2706,6 +2707,7 @@ class Transaksi extends CI_Controller
                 'subtotal'          => $subtotal,
                 'total'             => $total,
                 'kode_user'         => $this->session->userdata('kode_user'),
+                'shift'             => $this->session->userdata('shift'),
                 'batal'             => 0,
             ];
 
@@ -3093,7 +3095,7 @@ class Transaksi extends CI_Controller
     {
         // parameter untuk list table
         $table                      = 'barang_out_retur_header';
-        $colum                      = ['id', 'invoice', 'invoice_jual', 'tgl_retur', 'jam_retur', 'kode_gudang', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid', 'tgl_valid', 'jam_valid', 'kode_member'];
+        $colum                      = ['id', 'invoice', 'invoice_jual', 'tgl_retur', 'jam_retur', 'kode_gudang', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid', 'tgl_valid', 'jam_valid', 'kode_member', 'shift'];
         $order                      = 'id';
         $order2                     = 'desc';
         $order_arr                  = ['id' => 'asc'];
@@ -3165,8 +3167,8 @@ class Transaksi extends CI_Controller
             $row[]  = date('d/m/Y', strtotime($rd->tgl_retur)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_retur));
             $row[]  = $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama;
             $row[]  = $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->kode_gudang])->nama;
-            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama;
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
+            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama . '<br><span class="badge badge-danger">Shift: ' . $rd->shift . '</span>';
 
             if ($rd->is_valid < 1) {
                 if ($rd->batal < 1) {
@@ -3353,6 +3355,7 @@ class Transaksi extends CI_Controller
             'subtotal'      => $subtotal,
             'total'         => $total,
             'kode_user'     => $this->session->userdata('kode_user'),
+            'shift'         => $this->session->userdata('shift'),
             'batal'         => 0,
         ];
 
@@ -4200,7 +4203,7 @@ class Transaksi extends CI_Controller
     {
         // parameter untuk list table
         $table                      = 'mutasi_po_header';
-        $colum                      = ['id', 'invoice', 'tgl_po', 'jam_po', 'jenis_po', 'dari', 'menuju', 'total', 'user', 'status_po'];
+        $colum                      = ['id', 'invoice', 'tgl_po', 'jam_po', 'jenis_po', 'dari', 'menuju', 'total', 'user', 'status_po', 'shift'];
         $order                      = 'id';
         $order2                     = 'desc';
         $order_arr                  = ['id' => 'asc'];
@@ -4266,7 +4269,7 @@ class Transaksi extends CI_Controller
             $row[]  = (($rd->jenis_po > 0) ? $this->M_global->getData('cabang', ['kode_cabang' => $rd->dari])->cabang : $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->dari])->nama);
             $row[]  = (($rd->jenis_po > 0) ? $this->M_global->getData('cabang', ['kode_cabang' => $rd->menuju])->cabang : $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->menuju])->nama);
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
-            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->user])->nama;
+            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->user])->nama . '<br><span class="badge badge-danger">Shift: ' . $rd->shift . '</span>';
 
             if ($rd->status_po > 0) {
                 $ubah   = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" disabled><i class="fa-regular fa-pen-to-square"></i></button>';
@@ -4666,6 +4669,8 @@ class Transaksi extends CI_Controller
     // fungsi hapus barang po in
     public function delMutasiPo($invoice)
     {
+        aktifitas_user_transaksi('Mutasi', 'menghapus Pengajuan', $invoice);
+
         // jalankan fungsi cek
         $cek = [
             $this->M_global->delData('mutasi_po_detail', ['invoice' => $invoice]), // del data detail mutasi
@@ -4735,7 +4740,7 @@ class Transaksi extends CI_Controller
     {
         // parameter untuk list table
         $table                  = 'mutasi_header';
-        $colum                  = ['id', 'invoice', 'tgl', 'jam', 'jenis', 'dari', 'menuju', 'total', 'user', 'status'];
+        $colum                  = ['id', 'invoice', 'tgl', 'jam', 'jenis', 'dari', 'menuju', 'total', 'user', 'status', 'shift'];
         $order                  = 'id';
         $order2                 = 'desc';
         $order_arr              = ['id' => 'asc'];
@@ -4801,7 +4806,7 @@ class Transaksi extends CI_Controller
             $row[]  = (($rd->jenis > 0) ? $this->M_global->getData('cabang', ['kode_cabang' => $rd->dari])->cabang : $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->dari])->nama);
             $row[]  = (($rd->jenis > 0) ? $this->M_global->getData('cabang', ['kode_cabang' => $rd->menuju])->cabang : $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->menuju])->nama);
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
-            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->user])->nama;
+            $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->user])->nama . '<br><span class="badge badge-danger">Shift: ' . $rd->shift . '</span>';
 
             if ($rd->status > 0) {
                 $ubah   = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" disabled><i class="fa-regular fa-pen-to-square"></i></button>';
@@ -5209,6 +5214,8 @@ class Transaksi extends CI_Controller
     // fungsi hapus barang  in
     public function delMutasi($invoice)
     {
+        aktifitas_user_transaksi('Mutasi', 'menghapus Penerimaan', $invoice);
+
         // jalankan fungsi cek
         $cek = [
             $this->M_global->delData(

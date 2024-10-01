@@ -52,12 +52,13 @@ echo _lock_so();
                                     <thead>
                                         <tr class="text-center">
                                             <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
-                                            <th width="25%">Invoice</th>
+                                            <th width="15%">Invoice</th>
                                             <th width="15%">Tgl/Jam Jual</th>
-                                            <th width="15%">Pembeli</th>
-                                            <th width="15%">Gudang</th>
+                                            <th width="10%">Pembeli</th>
+                                            <th width="10%">Gudang</th>
                                             <th width="15%">Total</th>
-                                            <th width="10%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
+                                            <th width="10%">User</th>
+                                            <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                         </tr>
                                     </thead>
                                 </table>

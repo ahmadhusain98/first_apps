@@ -58,6 +58,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                             <th>Poli</th>
                                             <th>Dokter</th>
                                             <th>Antri</th>
+                                            <th>User</th>
                                             <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                         </tr>
                                     </thead>
