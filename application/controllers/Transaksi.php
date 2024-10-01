@@ -4862,7 +4862,7 @@ class Transaksi extends CI_Controller
             'list_data'         => '',
             'data_mutasi'       => $mutasi,
             'mutasi_detail'     => $mutasi_detail,
-            'data_pm'           => $this->M_global->getDataResult('mutasi_po_header', ['kode_cabang' => $kode_cabang, 'status_po' => 1]),
+            'data_pm'           => $this->db->query("SELECT * FROM mutasi_po_header WHERE status_po = 1 AND invoice NOT IN (SELECT invoice_po FROM mutasi_header) AND menuju = '$kode_cabang'")->result(),
             'role'              => $this->M_global->getResult('m_role'),
             'pajak'             => $this->M_global->getData('m_pajak', ['aktif' => 1])->persentase,
             'list_barang'       => $this->M_global->getResult('barang'),
@@ -5204,5 +5204,79 @@ class Transaksi extends CI_Controller
 
         // jalankan fungsi cetak_pdf
         cetak_pdf($judul, $body, $param, $position, $filename, $web_setting, $yes);
+    }
+
+    // fungsi hapus barang  in
+    public function delMutasi($invoice)
+    {
+        // jalankan fungsi cek
+        $cek = [
+            $this->M_global->delData(
+                'mutasi_detail',
+                ['invoice' => $invoice]
+            ), // del data detail mutasi
+            $this->M_global->delData(
+                'mutasi_header',
+                ['invoice' => $invoice]
+            ), // del data header mutasi
+        ];
+
+        if ($cek) { // jika fungsi cek berjalan
+            // kirim status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirim status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi acc/re-acc
+    public function accmutasi($invoice, $acc)
+    {
+        $header         = $this->M_global->getData('mutasi_header', ['invoice' => $invoice]);
+        $detail         = $this->M_global->getDataResult('mutasi_detail', ['invoice' => $invoice]);
+
+        $jenis          = $header->jenis;
+        $kode_cabang    = $header->kode_cabang;
+
+        if ($acc == 0) { // jika acc = 0
+            aktifitas_user_transaksi('Mutasi', 'Reject', $invoice);
+
+            // update is_approve jadi 0
+            $cek = $this->M_global->updateData('mutasi_header', ['status' => 0, 'tgl_approve' => null, 'jam_approve' => null], ['invoice' => $invoice]);
+
+            if ($jenis == 0) { // mutasi gudang
+                foreach ($detail as $d) {
+                    mutasi_gudang_rjt($kode_cabang, $header->dari, $header->menuju, $d->kode_barang, $d->qty_konversi, $header->tgl, $header->jam, $header->invoice, $header->user);
+                }
+            } else { // mutasi cabang
+                foreach ($detail as $d) {
+                    mutasi_cabang_rjt($kode_cabang, $header->dari, $header->menuju, $d->kode_barang, $d->qty_konversi, $header->tgl, $header->jam, $header->invoice, $header->user);
+                }
+            }
+        } else { // selain itu
+            aktifitas_user_transaksi('Mutasi', 'Confirm', $invoice);
+
+            // update is_approve jadi 1
+            $cek = $this->M_global->updateData('mutasi_header', ['status' => 1, 'tgl_approve' => date('Y-m-d'), 'jam_approve' => date('H:i:s'), 'user_approve' => $this->session->userdata('kode_user')], ['invoice' => $invoice]);
+
+            if ($jenis == 0) { // mutasi gudang
+                foreach ($detail as $d) {
+                    mutasi_gudang_acc($kode_cabang, $header->dari, $header->menuju, $d->kode_barang, $d->qty_konversi, $header->tgl, $header->jam, $header->invoice, $header->user);
+                }
+            } else { // mutasi cabang
+                foreach ($detail as $d) {
+                    mutasi_cabang_acc($kode_cabang, $header->dari, $header->menuju, $d->kode_barang, $d->qty_konversi, $header->tgl, $header->jam, $header->invoice, $header->user);
+                }
+            }
+        }
+
+        if ($cek) { // jika fungsi cek berjalan
+            // kirim status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirim status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
     }
 }

@@ -138,7 +138,7 @@
                                                     </td>
                                                     <td>
                                                         <input type="hidden" name="harga_in[]" id="harga_in<?= $no ?>" value="<?= $bd->harga; ?>">
-                                                        <span><?= number_format($bd->harga) ?></span>
+                                                        Rp. <span class="float-right"><?= number_format($bd->harga) ?></span>
                                                     </td>
                                                     <td>
                                                         <input type="text" id="qty_in<?= $no ?>" name="qty_in[]" value="<?= number_format($bd->qty) ?>" class="form-control text-right" onchange="hitung_st('<?= $no ?>'); formatRp(this.value, 'qty_in<?= $no ?>')">
@@ -153,9 +153,9 @@
                                                         <input type="checkbox" id="pajak_in<?= $no ?>" name="pajak_in[]" class="form-control" onclick="hitung_st('<?= $no ?>')" <?= (((int)$bd->pajak > 0) ? 'checked' : '') ?>>
                                                         <input type="hidden" id="pajakrp_in<?= $no ?>" name="pajakrp_in[]" value="<?= number_format($bd->pajakrp) ?>">
                                                     </td>
-                                                    <td class="text-right">
+                                                    <td>
                                                         <input type="hidden" id="jumlah_in<?= $no ?>" name="jumlah_in[]" value="<?= number_format($bd->jumlah) ?>" class="form-control text-right" readonly>
-                                                        <span id="jumlah2_in<?= $no ?>"><?= number_format($bd->jumlah) ?></span>
+                                                        Rp. <span class="float-right" id="jumlah2_in<?= $no ?>"><?= number_format($bd->jumlah) ?></span>
                                                     </td>
                                                 </tr>
                                             <?php $no++;
@@ -381,7 +381,7 @@
                         </td>
                         <td>
                             <input type="hidden" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(Number(value.harga))}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}');" readonly>
-                            <span>${formatRpNoId(Number(value.harga))}</span>
+                            Rp. <span class="float-right">${formatRpNoId(Number(value.harga))}</span>
                         </td>
                         <td>
                             <input type="text" id="qty_in${x}" name="qty_in[]" value="${formatRpNoId(Number(value.qty))}" class="form-control text-right" onchange="hitung_qty('${x}'); formatRp(this.value, 'qty_in${x}')">
@@ -396,9 +396,9 @@
                             <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')" ${cek_pajak}>
                             <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="${formatRpNoId(Number(value.pajakrp))}">
                         </td>
-                        <td class="text-right">
+                        <td>
                             <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(Number(value.jumlah))}" class="form-control text-right" readonly>
-                            <span id="jumlah2_in${x}">${formatRpNoId(Number(value.jumlah))}</span>
+                            Rp. <span class="float-right" id="jumlah2_in${x}">${formatRpNoId(Number(value.jumlah))}</span>
                         </td>
                     </tr>`);
                     hitung_st(x);

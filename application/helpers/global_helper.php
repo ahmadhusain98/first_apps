@@ -1507,3 +1507,219 @@ function _kodeKategoriTarif()
     }
     return $kode;
 }
+
+function mutasi_gudang_acc($kode_cabang, $dari, $menuju, $kode_barang, $qty, $tgl, $jam, $invoice, $kode_user)
+{
+    $CI           = &get_instance();
+
+    // dari itu mengurangi, menuju itu menambah stok
+    $stok_dari      = $CI->M_global->getData('barang_stok', ['kode_barang' => $kode_barang, 'kode_gudang' => $dari, 'kode_cabang' => $kode_cabang]);
+    $stok_menuju    = $CI->M_global->getData('barang_stok', ['kode_barang' => $kode_barang, 'kode_gudang' => $menuju, 'kode_cabang' => $kode_cabang]);
+
+    if ($stok_dari) {
+        $dari       = $CI->db->query("UPDATE barang_stok SET keluar = keluar + $qty, akhir = akhir - $qty WHERE kode_cabang = '$kode_cabang' AND kode_gudang = '$dari' AND kode_barang = '$kode_barang'");
+    } else {
+        $data_dari  = [
+            'kode_cabang'   => $kode_cabang,
+            'kode_barang'   => $kode_barang,
+            'kode_gudang'   => $dari,
+            'masuk'         => 0,
+            'keluar'        => $qty,
+            'so'            => 0,
+            'penyesuaian'   => 0,
+            'akhir'         => 0 - $qty,
+            'last_tgl_trx'  => $tgl,
+            'last_jam_trx'  => $jam,
+            'last_no_trx'   => $invoice,
+            'last_user'     => $kode_user,
+        ];
+
+        $dari       = $CI->M_global->insertData('barang_stok', $data_dari);
+    }
+
+    if ($stok_menuju) {
+        $menuju         = $CI->db->query("UPDATE barang_stok SET masuk = masuk + $qty, akhir = akhir + $qty WHERE kode_cabang = '$kode_cabang' AND kode_gudang = '$menuju' AND kode_barang = '$kode_barang'");
+    } else {
+        $data_menuju    = [
+            'kode_cabang'   => $kode_cabang,
+            'kode_barang'   => $kode_barang,
+            'kode_gudang'   => $menuju,
+            'masuk'         => $qty,
+            'keluar'        => 0,
+            'so'            => 0,
+            'penyesuaian'   => 0,
+            'akhir'         => $qty,
+            'last_tgl_trx'  => $tgl,
+            'last_jam_trx'  => $jam,
+            'last_no_trx'   => $invoice,
+            'last_user'     => $kode_user,
+        ];
+
+        $menuju       = $CI->M_global->insertData('barang_stok', $data_menuju);
+    }
+
+    return true;
+}
+
+function mutasi_cabang_acc($kode_cabang, $dari, $menuju, $kode_barang, $qty, $tgl, $jam, $invoice, $kode_user)
+{
+    $CI           = &get_instance();
+
+    // dari itu mengurangi, menuju itu menambah stok
+    $gutama         = $CI->M_global->getData('m_gudang', ['utama' => 1])->kode_gudang;
+
+    $stok_dari      = $CI->M_global->getData('barang_stok', ['kode_barang' => $kode_barang, 'kode_gudang' => $gutama, 'kode_cabang' => $dari]);
+    $stok_menuju    = $CI->M_global->getData('barang_stok', ['kode_barang' => $kode_barang, 'kode_gudang' => $gutama, 'kode_cabang' => $menuju]);
+
+    if ($stok_dari) {
+        $dari       = $CI->db->query("UPDATE barang_stok SET keluar = keluar + $qty, akhir = akhir - $qty WHERE kode_cabang = '$dari' AND kode_gudang = '$gutama' AND kode_barang = '$kode_barang'");
+    } else {
+        $data_dari  = [
+            'kode_cabang'   => $dari,
+            'kode_barang'   => $kode_barang,
+            'kode_gudang'   => $gutama,
+            'masuk'         => 0,
+            'keluar'        => $qty,
+            'so'            => 0,
+            'penyesuaian'   => 0,
+            'akhir'         => 0 - $qty,
+            'last_tgl_trx'  => $tgl,
+            'last_jam_trx'  => $jam,
+            'last_no_trx'   => $invoice,
+            'last_user'     => $kode_user,
+        ];
+
+        $dari       = $CI->M_global->insertData('barang_stok', $data_dari);
+    }
+
+    if ($stok_menuju) {
+        $menuju         = $CI->db->query("UPDATE barang_stok SET masuk = masuk + $qty, akhir = akhir + $qty WHERE kode_cabang = '$menuju' AND kode_gudang = '$gutama' AND kode_barang = '$kode_barang'");
+    } else {
+        $data_menuju    = [
+            'kode_cabang'   => $menuju,
+            'kode_barang'   => $kode_barang,
+            'kode_gudang'   => $gutama,
+            'masuk'         => $qty,
+            'keluar'        => 0,
+            'so'            => 0,
+            'penyesuaian'   => 0,
+            'akhir'         => $qty,
+            'last_tgl_trx'  => $tgl,
+            'last_jam_trx'  => $jam,
+            'last_no_trx'   => $invoice,
+            'last_user'     => $kode_user,
+        ];
+
+        $menuju       = $CI->M_global->insertData('barang_stok', $data_menuju);
+    }
+
+    return true;
+}
+
+function mutasi_gudang_rjt($kode_cabang, $dari, $menuju, $kode_barang, $qty, $tgl, $jam, $invoice, $kode_user)
+{
+    $CI           = &get_instance();
+
+    // dari itu mengurangi, menuju itu menambah stok
+    $stok_dari      = $CI->M_global->getData('barang_stok', ['kode_barang' => $kode_barang, 'kode_gudang' => $dari, 'kode_cabang' => $kode_cabang]);
+    $stok_menuju    = $CI->M_global->getData('barang_stok', ['kode_barang' => $kode_barang, 'kode_gudang' => $menuju, 'kode_cabang' => $kode_cabang]);
+
+    if ($stok_dari) {
+        $dari       = $CI->db->query("UPDATE barang_stok SET keluar = keluar - $qty, akhir = akhir + $qty WHERE kode_cabang = '$kode_cabang' AND kode_gudang = '$dari' AND kode_barang = '$kode_barang'");
+    } else {
+        $data_dari  = [
+            'kode_cabang'   => $kode_cabang,
+            'kode_barang'   => $kode_barang,
+            'kode_gudang'   => $dari,
+            'masuk'         => 0,
+            'keluar'        => 0 - $qty,
+            'so'            => 0,
+            'penyesuaian'   => 0,
+            'akhir'         => $qty,
+            'last_tgl_trx'  => $tgl,
+            'last_jam_trx'  => $jam,
+            'last_no_trx'   => $invoice,
+            'last_user'     => $kode_user,
+        ];
+
+        $dari       = $CI->M_global->insertData('barang_stok', $data_dari);
+    }
+
+    if ($stok_menuju) {
+        $menuju         = $CI->db->query("UPDATE barang_stok SET masuk = masuk - $qty, akhir = akhir - $qty WHERE kode_cabang = '$kode_cabang' AND kode_gudang = '$menuju' AND kode_barang = '$kode_barang'");
+    } else {
+        $data_menuju    = [
+            'kode_cabang'   => $kode_cabang,
+            'kode_barang'   => $kode_barang,
+            'kode_gudang'   => $menuju,
+            'masuk'         => 0 - $qty,
+            'keluar'        => 0,
+            'so'            => 0,
+            'penyesuaian'   => 0,
+            'akhir'         => 0 - $qty,
+            'last_tgl_trx'  => $tgl,
+            'last_jam_trx'  => $jam,
+            'last_no_trx'   => $invoice,
+            'last_user'     => $kode_user,
+        ];
+
+        $menuju       = $CI->M_global->insertData('barang_stok', $data_menuju);
+    }
+
+    return true;
+}
+
+function mutasi_cabang_rjt($kode_cabang, $dari, $menuju, $kode_barang, $qty, $tgl, $jam, $invoice, $kode_user)
+{
+    $CI           = &get_instance();
+
+    // dari itu mengurangi, menuju itu menambah stok
+    $gutama         = $CI->M_global->getData('m_gudang', ['utama' => 1])->kode_gudang;
+
+    $stok_dari      = $CI->M_global->getData('barang_stok', ['kode_barang' => $kode_barang, 'kode_gudang' => $gutama, 'kode_cabang' => $dari]);
+    $stok_menuju    = $CI->M_global->getData('barang_stok', ['kode_barang' => $kode_barang, 'kode_gudang' => $gutama, 'kode_cabang' => $menuju]);
+
+    if ($stok_dari) {
+        $dari       = $CI->db->query("UPDATE barang_stok SET keluar = keluar - $qty, akhir = akhir + $qty WHERE kode_cabang = '$dari' AND kode_gudang = '$gutama' AND kode_barang = '$kode_barang'");
+    } else {
+        $data_dari  = [
+            'kode_cabang'   => $dari,
+            'kode_barang'   => $kode_barang,
+            'kode_gudang'   => $gutama,
+            'masuk'         => 0,
+            'keluar'        => 0 - $qty,
+            'so'            => 0,
+            'penyesuaian'   => 0,
+            'akhir'         => $qty,
+            'last_tgl_trx'  => $tgl,
+            'last_jam_trx'  => $jam,
+            'last_no_trx'   => $invoice,
+            'last_user'     => $kode_user,
+        ];
+
+        $dari       = $CI->M_global->insertData('barang_stok', $data_dari);
+    }
+
+    if ($stok_menuju) {
+        $menuju         = $CI->db->query("UPDATE barang_stok SET masuk = masuk - $qty, akhir = akhir - $qty WHERE kode_cabang = '$menuju' AND kode_gudang = '$gutama' AND kode_barang = '$kode_barang'");
+    } else {
+        $data_menuju    = [
+            'kode_cabang'   => $menuju,
+            'kode_barang'   => $kode_barang,
+            'kode_gudang'   => $gutama,
+            'masuk'         => 0 - $qty,
+            'keluar'        => 0,
+            'so'            => 0,
+            'penyesuaian'   => 0,
+            'akhir'         => 0 - $qty,
+            'last_tgl_trx'  => $tgl,
+            'last_jam_trx'  => $jam,
+            'last_no_trx'   => $invoice,
+            'last_user'     => $kode_user,
+        ];
+
+        $menuju       = $CI->M_global->insertData('barang_stok', $data_menuju);
+    }
+
+    return true;
+}

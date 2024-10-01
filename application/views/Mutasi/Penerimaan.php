@@ -101,18 +101,18 @@ echo _lock_so();
 
                 // jalankan fungsi
                 $.ajax({
-                    url: siteUrl + 'Transaksi/delMutasiPo/' + invoice,
+                    url: siteUrl + 'Transaksi/delMutasi/' + invoice,
                     type: 'POST',
                     dataType: 'JSON',
                     success: function(result) { // jika fungsi berjalan dengan baik
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
-                            Swal.fire("Pengajuan Mutasi", "Berhasil di hapus!", "success").then(() => {
+                            Swal.fire("Mutasi", "Berhasil di hapus!", "success").then(() => {
                                 reloadTable();
                             });
                         } else { // selain itu
 
-                            Swal.fire("Pengajuan Mutasi", "Gagal di hapus!, silahkan dicoba kembali", "info");
+                            Swal.fire("Mutasi", "Gagal di hapus!, silahkan dicoba kembali", "info");
                         }
                     },
                     error: function(result) { // jika fungsi error

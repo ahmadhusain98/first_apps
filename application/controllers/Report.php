@@ -1840,6 +1840,44 @@ class Report extends CI_Controller
             JOIN barang b ON d.kode_barang = b.kode_barang
             JOIN user s ON h.kode_user = s.kode_user
             WHERE h.acc = 1
+
+            UNION ALL -- Mutasi dari (keluar)
+
+            SELECT
+            CONCAT(DATE_FORMAT(h.tgl, '%d/%m/%Y'), ' ~ ', h.jam) AS record_date,
+            h.invoice,
+            CONCAT('Mutasi ', IF(jenis = 0, 'Gudang', 'Cabang'), ' Keluar ~ ', IF(jenis = 0, (SELECT nama FROM m_gudang WHERE kode_gudang = h.dari), (SELECT cabang FROM cabang WHERE kode_cabang = h.dari)), ' menuju ', IF(jenis = 0, (SELECT nama FROM m_gudang WHERE kode_gudang = h.menuju), (SELECT cabang FROM cabang WHERE kode_cabang = h.menuju))) AS keterangan,
+            0 AS masuk,
+            d.qty_konversi AS keluar,
+            h.tgl AS tgl,
+            h.jam AS jam,
+            d.kode_barang,
+            IF(jenis = 0, h.kode_cabang, h.dari) AS kode_cabang,
+            IF(jenis = 0, h.dari, (SELECT kode_gudang FROM m_gudang WHERE utama = 1)) AS kode_gudang
+            FROM mutasi_header h
+            JOIN mutasi_detail d ON h.invoice = d.invoice
+            JOIN barang b ON d.kode_barang = b.kode_barang
+            JOIN user s ON h.user = s.kode_user
+            WHERE h.status = 1
+
+            UNION ALL -- Mutasi menuju (masuk)
+
+            SELECT
+            CONCAT(DATE_FORMAT(h.tgl, '%d/%m/%Y'), ' ~ ', h.jam) AS record_date,
+            h.invoice,
+            CONCAT('Mutasi ', IF(jenis = 0, 'Gudang', 'Cabang'), ' Masuk ~ ', IF(jenis = 0, (SELECT nama FROM m_gudang WHERE kode_gudang = h.menuju), (SELECT cabang FROM cabang WHERE kode_cabang = h.menuju)), ' dari ', IF(jenis = 0, (SELECT nama FROM m_gudang WHERE kode_gudang = h.dari), (SELECT cabang FROM cabang WHERE kode_cabang = h.dari))) AS keterangan,
+            d.qty_konversi AS masuk,
+            0 AS keluar,
+            h.tgl AS tgl,
+            h.jam AS jam,
+            d.kode_barang,
+            IF(jenis = 0, h.kode_cabang, h.menuju) AS kode_cabang,
+            IF(jenis = 0, h.menuju, (SELECT kode_gudang FROM m_gudang WHERE utama = 1)) AS kode_gudang
+            FROM mutasi_header h
+            JOIN mutasi_detail d ON h.invoice = d.invoice
+            JOIN barang b ON d.kode_barang = b.kode_barang
+            JOIN user s ON h.user = s.kode_user
+            WHERE h.status = 1
         ) AS semua WHERE kode_barang = '$kode_barang' AND kode_gudang = '$kode_gudang' AND kode_cabang = '$kode_cabang' ORDER BY tgl, jam ASC")->result();
 
         $barang = $this->M_global->getData('barang', ['kode_barang' => $kode_barang]);
