@@ -310,16 +310,16 @@ class Kasir extends CI_Controller
 
         $body .= '<tbody>';
 
-        $body .= '<tr>
-            <td style="width: 80%; font-weight: bold;" colspan="3">Tarif Paket</td>
-            <td style="width: 20%; text-align: right; font-weight: bold;">' . (!empty($tarif_paket_pasien) ? number_format($pembayaran->paket) : 0) . '</td>
-        </tr>';
-
-        $body .= '<tr>
-            <td style="width: 100%;" colspan="4"><hr style="margin: 0px;"></td>
-        </tr>';
-
         if (!empty($tarif_paket_pasien)) {
+            $body .= '<tr>
+                <td style="width: 80%; font-weight: bold;" colspan="3">Tarif Paket</td>
+                <td style="width: 20%; text-align: right; font-weight: bold;">' . (!empty($tarif_paket_pasien) ? number_format($pembayaran->paket) : 0) . '</td>
+            </tr>';
+
+            $body .= '<tr>
+                <td style="width: 100%;" colspan="4"><hr style="margin: 0px;"></td>
+            </tr>';
+
             foreach ($tarif_paket_pasien as $tpp) {
                 $m_tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $tpp->kode_tarif]);
                 $tarif_paket = $this->M_global->getData('tarif_paket', ['kode_tarif' => $tpp->kode_tarif, 'kunjungan' => $tpp->kunjungan, 'kode_cabang' => $kode_cabang]);
@@ -337,12 +337,16 @@ class Kasir extends CI_Controller
 
         $disc_paket = 0;
 
-        $body .= '<tr>
-            <td style="width: 80%; font-weight: bold;" colspan="3">Tarif Single</td>
-            <td style="width: 20%; text-align: right; font-weight: bold;">' . (!empty($tarif_single_pasien) ? number_format($pembayaran->single) : 0) . '</td>
-        </tr>';
-
         if (!empty($tarif_single_pasien)) {
+            $body .= '<tr>
+                <td style="width: 80%; font-weight: bold;" colspan="3">Tarif Single</td>
+                <td style="width: 20%; text-align: right; font-weight: bold;">' . (!empty($tarif_single_pasien) ? number_format($pembayaran->single) : 0) . '</td>
+            </tr>';
+
+            $body .= '<tr>
+                <td style="width: 100%;" colspan="4"><hr style="margin: 0px;"></td>
+            </tr>';
+
             foreach ($tarif_single_pasien as $tsp) {
                 $m_tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $tsp->kode_tarif]);
                 $body .= '<tr>
@@ -360,12 +364,16 @@ class Kasir extends CI_Controller
 
         $disc_single = $pembayaran->disc_single;
 
-        $body .= '<tr>
-            <td style="width: 80%; font-weight: bold;" colspan="3">Penjualan Obat</td>
-            <td style="width: 20%; text-align: right; font-weight: bold;">' . (!empty($pembayaran) ? number_format($pembayaran->jual) : 0) . '</td>
-        </tr>';
-
         if (!empty($barang_out_header)) {
+            $body .= '<tr>
+                <td style="width: 80%; font-weight: bold;" colspan="3">Penjualan Obat</td>
+                <td style="width: 20%; text-align: right; font-weight: bold;">' . (!empty($pembayaran) ? number_format($pembayaran->jual) : 0) . '</td>
+            </tr>';
+
+            $body .= '<tr>
+                <td style="width: 100%;" colspan="4"><hr style="margin: 0px;"></td>
+            </tr>';
+
             foreach ($barang_out_detail as $bod) {
                 $barang = $this->M_global->getData('barang', ['kode_barang' => $bod->kode_barang]);
                 $body .= '<tr>
