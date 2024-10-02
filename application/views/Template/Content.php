@@ -155,6 +155,13 @@
             font-size: 12px;
             line-height: 1.42857;
         }
+
+        <?php
+        $color_bg = $this->M_global->getData('web_setting', ['id' => 1])->bg_theme;
+        ?>.active {
+            background-color: #f2f2f4 !important;
+            color: <?= $color_bg ?> !important;
+        }
     </style>
 
     <?php
@@ -341,19 +348,30 @@
                                     <ul class="nav nav-treeview">
                                         <?php
                                         $sub_menu = $this->db->get_where("sub_menu", ["id_menu" => $m->id])->result();
+
                                         foreach ($sub_menu as $sm) :
                                             $cek_submenu2 = $this->db->query("SELECT sm2.* FROM sub_menu2 sm2 JOIN sub_menu sm ON sm2.id_submenu = sm.id WHERE sm.url_submenu IS NULL AND sm2.id_submenu = '$sm->id'")->num_rows();
                                         ?>
                                             <li class="nav-item">
                                                 <?php if ($cek_submenu2 > 0) :
+                                                    $cek_sub_menu = $this->db->query("SELECT s.*, m.nama, m.url, sm2.url_submenu2 FROM sub_menu s JOIN m_menu m ON s.id_menu = m.id JOIN sub_menu2 sm2 ON sm2.id_submenu = s.id WHERE sm2.url_submenu2 = '" . $this->uri->segment('2') . "'")->row();
+
+                                                    if (!empty($cek_sub_menu->submenu)) {
+                                                        if ($cek_sub_menu->submenu == $sm->submenu) {
+                                                            $aktifUrl2 = 'active';
+                                                        } else {
+                                                            $aktifUrl2 = '';
+                                                        }
+                                                    } else {
+                                                        $aktifUrl2 = '';
+                                                    }
+
                                                 ?>
-                                                    <a type="button" class="nav-link">
+                                                    <a type="button" class="nav-link <?= $aktifUrl2 ?>">
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $sm->icon ?>
                                                         <p>
-                                                            <?php
-                                                            echo $sm->submenu;
-                                                            if ($cek_submenu2 > 0) :
-                                                            ?>
+                                                            <?= $sm->submenu; ?>
+                                                            <?php if ($cek_submenu2 > 0) : ?>
                                                                 <i class="right fas fa-angle-left"></i>
                                                             <?php endif; ?>
                                                         </p>
@@ -362,13 +380,7 @@
                                                         <?php
                                                         $sub_menu2 = $this->db->get_where("sub_menu2", ["id_submenu" => $sm->id])->result();
                                                         foreach ($sub_menu2 as $sm2) :
-                                                            if ($sm2->url_submenu2 == $this->uri->segment(2)) { // jika url menu sama dengan segment 1 dari url
-                                                                // aktifkan
-                                                                $aktifUrl3 = 'active';
-                                                            } else { // selain itu
-                                                                // nonaktifkan
-                                                                $aktifUrl3 = '';
-                                                            }
+                                                            $aktifUrl3 = ($sm2->url_submenu2 == $this->uri->segment(2)) ? 'active' : '';
                                                         ?>
                                                             <li class="nav-item">
                                                                 <a type="button" class="nav-link <?= $aktifUrl3 ?>" href="<?= site_url($m->url . '/' . $sm2->url_submenu2) ?>">
@@ -379,17 +391,23 @@
                                                         <?php endforeach; ?>
                                                     </ul>
                                                 <?php else :
+                                                    $cek_sub_menu = $this->db->query("SELECT s.*, m.nama, m.url FROM sub_menu s JOIN m_menu m ON s.id_menu = m.id WHERE s.id = '$sm->id'")->row();
+
+                                                    if (($this->uri->segment(1) == $cek_sub_menu->url) && ($this->uri->segment(2) == $cek_sub_menu->url_submenu)) {
+                                                        $aktifUrl2 = 'active';
+                                                    } else {
+                                                        $aktifUrl2 = '';
+                                                    }
                                                 ?>
-                                                    <a type="button" class="nav-link" href="<?= site_url($m->url . '/' . $sm->url_submenu) ?>">
+                                                    <a type="button" class="nav-link <?= $aktifUrl2 ?>" href="<?= site_url($m->url . '/' . $sm->url_submenu) ?>">
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $sm->icon ?>
-                                                        <p>
-                                                            <?= $sm->submenu; ?>
-                                                        </p>
+                                                        <p><?= $sm->submenu; ?></p>
                                                     </a>
                                                 <?php endif; ?>
                                             </li>
                                         <?php endforeach; ?>
                                     </ul>
+
                                 </li>
                             <?php endif; ?>
                         <?php endforeach; ?>
