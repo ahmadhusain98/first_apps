@@ -255,6 +255,11 @@
                         
                         SELECT id, invoice AS invoice, 'mutasi_gudang' AS url FROM mutasi_po_header
                         WHERE kode_cabang = '$cabang' AND status_po = 1 AND jenis_po = 0 AND invoice NOT IN (SELECT invoice_po FROM mutasi_header)
+
+                        UNION ALL
+
+                        SELECT id, invoice AS invoice, 'pre_order' AS url FROM barang_po_in_header
+                        WHERE kode_cabang = '$cabang' AND is_valid = 1
                     ) AS semuax
                     ORDER BY id DESC LIMIT 10")->result();
                     ?>
@@ -277,6 +282,8 @@
                                         $par_url = 'Transaksi/form_mutasi/0?invoice=' . $s->invoice;
                                     } else if ($s->url == 'mutasi_gudang') {
                                         $par_url = 'Transaksi/form_mutasi/0?invoice=' . $s->invoice;
+                                    } else if ($s->url == 'pre_order') {
+                                        $par_url = 'Transaksi/form_barang_in/0?invoice=' . $s->invoice;
                                     } else {
                                         $par_url = '';
                                     }

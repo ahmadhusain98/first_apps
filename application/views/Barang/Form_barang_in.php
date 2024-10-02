@@ -680,91 +680,96 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
         hitung_t();
     }
 
-    // fungsi untuk ambil data po berdasarkan nomor po
-    function getPo(param) {
-        if (param) {
-            $.ajax({
-                url: siteUrl + 'Transaksi/getPengajuan/' + param,
-                type: "POST",
-                data: form.serialize(),
-                dataType: "JSON",
-                success: function(result) {
-                    if (result[0].status == 1) {
-                        $('#kode_supplier').html(`<option value="${result[0]['header'].kode_supplier}">${result[0]['header'].nama_supplier}</option>`);
+    var cek_param = "<?= $this->input->get('invoice') ?>";
 
-                        $('#kode_gudang').html(`<option value="${result[0]['header'].kode_gudang}">${result[0]['header'].nama_gudang}</option>`);
-
-                        jumlahBarisBarang.val(result[1].length);
-
-                        var x = 1;
-                        $.each(result[1], function(index, value) {
-                            if (value.pajak > 0) {
-                                var cek_pajak = 'checked';
-                            } else {
-                                var cek_pajak = '';
-                            }
-
-                            bodyBarangIn.append(`<tr id="rowBarangIn${x}">
-                                <td class="text-center">
-                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')">
-                                        <i class="fa-solid fa-delete-left"></i>
-                                    </button>
-                                </td>
-                                <td>
-                                    <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${value.kode_barang}">
-                                    <span>${value.kode_barang} ~ ${value.nama}</span>
-                                </td>
-                                <td>
-                                    <input type="hidden" id="kode_satuan${x}" name="kode_satuan[]" value="${value.satuan_default}">
-                                    <input type="text" id="kode_satuanx${x}" name="kode_satuanx[]" class="form-control" readonly value="${value.nama_satuan}">
-                                </td>
-                                <td>
-                                    <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(value.harga)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
-                                </td>
-                                <td>
-                                    <input type="text" id="qty_in${x}" name="qty_in[]" value="${formatRpNoId(value.qty_po)}" class="form-control text-right" onchange="hitung_dpr('${x}'); formatRp(this.value, 'qty_in${x}')">
-                                </td>
-                                <td>
-                                    <input type="text" id="discpr_in${x}" name="discpr_in[]" value="${formatRpNoId(value.discpr)}" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">
-                                </td>
-                                <td>
-                                    <input type="text" id="discrp_in${x}" name="discrp_in[]" value="${formatRpNoId(value.discrp)}" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_in${x}')">
-                                </td>
-                                <td class="text-center">
-                                    <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')" ${cek_pajak}>
-                                    <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="${formatRpNoId(value.pajakrp)}">
-                                </td>
-                                <td class="text-right">
-                                    <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(value.jumlah)}" class="form-control text-right" readonly>
-                                    <span id="jumlah2_in${x}">${formatRpNoId(value.jumlah)}</span>
-                                </td>
-                            </tr>`);
-
-                            $(".select2_global").select2({
-                                placeholder: $(this).data('placeholder'),
-                                width: '100%',
-                                allowClear: true,
-                            });
-
-                            // jalankan fungsi
-                            hitung_st(x);
-
-                            x++;
-                        });
-                    } else {
-                        $('#bodyBarangIn').html('');
-
-                        $('#jumlahBarisBarang').val(1);
-
-                        hitung_t();
-                    }
-                },
-                error: function(result) {
-                    error_proccess();
-                }
-            });
-        }
+    if (cek_param && cek_param !== '0') {
+        // alert(cek_param)
+        document.getElementById('cek_po').checked = true;
+        cekPo('cek_po');
+        $('#invoice_po').val(cek_param).change();
     }
+
+    // Function to fetch PO data based on the PO number
+    function getPo(param) {
+        if (!param) {
+            return Swal.fire("Invoice PO", "Form sudah dipilih?", "info");
+        }
+
+        $.ajax({
+            url: siteUrl + 'Transaksi/getPengajuan/' + param,
+            type: "POST",
+            data: form.serialize(),
+            dataType: "JSON",
+            success: function(result) {
+                if (result[0].status === 1) {
+                    $('#kode_supplier').html(`<option value="${result[0]['header'].kode_supplier}">${result[0]['header'].nama_supplier}</option>`);
+                    $('#kode_gudang').html(`<option value="${result[0]['header'].kode_gudang}">${result[0]['header'].nama_gudang}</option>`);
+                    jumlahBarisBarang.val(result[1].length);
+
+                    let x = 1;
+                    $.each(result[1], function(index, value) {
+                        const cek_pajak = value.pajak > 0 ? 'checked' : '';
+
+                        bodyBarangIn.append(`
+                        <tr id="rowBarangIn${x}">
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')">
+                                    <i class="fa-solid fa-delete-left"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <input type="hidden" id="kode_barang_in${x}" name="kode_barang_in[]" value="${value.kode_barang}">
+                                <span>${value.kode_barang} ~ ${value.nama}</span>
+                            </td>
+                            <td>
+                                <input type="hidden" id="kode_satuan${x}" name="kode_satuan[]" value="${value.satuan_default}">
+                                <span>${value.nama_satuan}</span>
+                            </td>
+                            <td>
+                                <input type="text" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(value.harga)}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}'); cekHarga(this.value, ${x})">
+                            </td>
+                            <td>
+                                <input type="text" id="qty_in${x}" name="qty_in[]" value="${formatRpNoId(value.qty_po)}" class="form-control text-right" onchange="hitung_dpr('${x}'); formatRp(this.value, 'qty_in${x}')">
+                            </td>
+                            <td>
+                                <input type="text" id="discpr_in${x}" name="discpr_in[]" value="${formatRpNoId(value.discpr)}" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">
+                            </td>
+                            <td>
+                                <input type="text" id="discrp_in${x}" name="discrp_in[]" value="${formatRpNoId(value.discrp)}" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_in${x}')">
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')" ${cek_pajak}>
+                                <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="${formatRpNoId(value.pajakrp)}">
+                            </td>
+                            <td class="text-right">
+                                <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(value.jumlah)}" class="form-control text-right" readonly>
+                                <span id="jumlah2_in${x}">${formatRpNoId(value.jumlah)}</span>
+                            </td>
+                        </tr>
+                    `);
+
+                        $(".select2_global").select2({
+                            placeholder: $(this).data('placeholder'),
+                            width: '100%',
+                            allowClear: true,
+                        });
+
+                        // Call the function
+                        hitung_st(x);
+                        x++;
+                    });
+                } else {
+                    $('#bodyBarangIn').html('');
+                    $('#jumlahBarisBarang').val(1);
+                    hitung_t();
+                }
+            },
+            error: function() {
+                error_proccess();
+            }
+        });
+    }
+
 
     // fungsi ubah satuan untuk ubah harga
     function ubahSatuan(param, id) {
