@@ -270,36 +270,40 @@
                         <?php endif ?>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header"><?= number_format(count($sintak)) ?> Transaksi Belum Dibayar</span>
+                        <span class="dropdown-item dropdown-header"><?= number_format(count($sintak)) ?> Notifikasi</span>
                         <div class="dropdown-divider"></div>
                         <a type="button" class="dropdown-item">
                             <?php
                             if (count($sintak) > 0) :
                                 foreach ($sintak as $s) :
                                     if ($s->url == 'kasir') {
+                                        $msg = 'Pbr.Ksr';
                                         $par_url = 'Kasir/form_kasir/0';
                                     } else if ($s->url == 'mutasi_cabang') {
+                                        $msg = 'Mts.Cab';
                                         $par_url = 'Transaksi/form_mutasi/0?invoice=' . $s->invoice;
                                     } else if ($s->url == 'mutasi_gudang') {
+                                        $msg = 'Mts.Gud';
                                         $par_url = 'Transaksi/form_mutasi/0?invoice=' . $s->invoice;
                                     } else if ($s->url == 'pre_order') {
+                                        $msg = 'Trm.Brg';
                                         $par_url = 'Transaksi/form_barang_in/0?invoice=' . $s->invoice;
                                     } else {
                                         $par_url = '';
                                     }
                             ?>
-                                    <a type="button" href="<?= site_url($par_url) ?>" class="pl-3 text-primary" style="text-decoration: none; margin-left: 3vw;">
-                                        <i class="fas fa-envelope"></i> <?= $s->invoice ?>
+                                    <a type="button" href="<?= site_url($par_url) ?>" class="pl-3 text-primary" style="text-decoration: none; margin-bottom: 10px;">
+                                        <?= $msg ?> | <?= $s->invoice ?>
                                     </a>
                                 <?php
                                 endforeach;
                             else : ?>
-                                <span style="color: grey;">Tidak Ada Transaksi</span>
+                                <span style="color: grey; margin-bottom: 10px;">Tidak Ada Notifikasi</span>
                             <?php endif;
                             ?>
                         </a>
-                        <div class="dropdown-divider"></div>
-                        <a type="button" class="dropdown-item dropdown-footer" href="<?= site_url('Transaksi/barang_out') ?>">Lihat Semua Penjualan</a>
+                        <!-- <div class="dropdown-divider"></div>
+                        <a type="button" class="dropdown-item dropdown-footer" href="<?= site_url('Transaksi/barang_out') ?>">Lihat Semua Notifikasi</a> -->
                     </div>
                 </li>
                 <li class="nav-item dropdown">
