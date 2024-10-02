@@ -259,7 +259,7 @@
                         UNION ALL
 
                         SELECT id, invoice AS invoice, 'pre_order' AS url FROM barang_po_in_header
-                        WHERE kode_cabang = '$cabang' AND is_valid = 1
+                        WHERE kode_cabang = '$cabang' AND is_valid = 1 AND invoice NOT IN (SELECT invoice_po FROM barang_in_header WHERE kode_cabang = '$cabang')
                     ) AS semuax
                     ORDER BY id DESC LIMIT 10")->result();
                     ?>

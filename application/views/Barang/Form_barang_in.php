@@ -691,17 +691,17 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
 
     // Function to fetch PO data based on the PO number
     function getPo(param) {
-        if (!param) {
+        if (param == '' || param == null) {
             return Swal.fire("Invoice PO", "Form sudah dipilih?", "info");
         }
 
         $.ajax({
-            url: siteUrl + 'Transaksi/getPengajuan/' + param,
+            url: '<?= site_url() ?>Transaksi/getPengajuan/' + param,
             type: "POST",
             data: form.serialize(),
             dataType: "JSON",
             success: function(result) {
-                if (result[0].status === 1) {
+                if (result[0]['status'] == 1) {
                     $('#kode_supplier').html(`<option value="${result[0]['header'].kode_supplier}">${result[0]['header'].nama_supplier}</option>`);
                     $('#kode_gudang').html(`<option value="${result[0]['header'].kode_gudang}">${result[0]['header'].nama_gudang}</option>`);
                     jumlahBarisBarang.val(result[1].length);
@@ -741,9 +741,9 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
                                 <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')" ${cek_pajak}>
                                 <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="${formatRpNoId(value.pajakrp)}">
                             </td>
-                            <td class="text-right">
+                            <td>
                                 <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(value.jumlah)}" class="form-control text-right" readonly>
-                                <span id="jumlah2_in${x}">${formatRpNoId(value.jumlah)}</span>
+                                Rp. <span class="float-right" id="jumlah2_in${x}">${formatRpNoId(value.jumlah)}</span>
                             </td>
                         </tr>
                     `);

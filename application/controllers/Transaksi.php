@@ -133,9 +133,11 @@ class Transaksi extends CI_Controller
                 $confirm_diss = 'disabled';
             }
 
+            $cek_bin = $this->M_global->getData('barang_in_header', ['invoice_po' => $rd->invoice]);
+
             $row    = [];
             $row[]  = $no++;
-            $row[]  = $rd->invoice . '<br>' . (($rd->batal == 0) ? (($rd->is_valid > 0) ? '<span class="badge badge-primary">ACC</span>' : '<span class="badge badge-success">Buka</span>') : '<span class="badge badge-danger">Batal</span>');
+            $row[]  = $rd->invoice . '<br>' . (($rd->batal == 0) ? (($rd->is_valid > 0) ? '<span class="badge badge-primary">ACC</span>' : '<span class="badge badge-success">Buka</span>') : '<span class="badge badge-danger">Batal</span>') . (($cek_bin) ? (($cek_bin->is_valid == 1) ? ' <span class="badge badge-info">Sudah diproses</span>' : ' <span class="badge badge-warning">Belum diapprove</span>') : ' <span class="badge badge-danger">Belum diproses</span>');
             $row[]  = date('d/m/Y', strtotime($rd->tgl_po)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_po));
             $row[]  = $this->M_global->getData('m_supplier', ['kode_supplier' => $rd->kode_supplier])->nama;
             $row[]  = $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->kode_gudang])->nama;
@@ -157,7 +159,11 @@ class Transaksi extends CI_Controller
                     $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="ACC" disabled><i class="fa-regular fa-circle-check"></i></button>';
                 }
             } else {
-                $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><i class="fa-solid fa-check-to-slot"></i></button>';
+                if ($cek_bin) {
+                    $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Re-ACC" disabled><i class="fa-solid fa-check-to-slot"></i></button>';
+                } else {
+                    $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" title="Re-ACC" onclick="valided(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><i class="fa-solid fa-check-to-slot"></i></button>';
+                }
 
                 $ubah = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" disabled><i class="fa-regular fa-pen-to-square"></i></button>';
 
@@ -1031,8 +1037,6 @@ class Transaksi extends CI_Controller
         $header = $this->db->query('SELECT bpo.*, (SELECT nama FROM m_supplier WHERE kode_supplier = bpo.kode_supplier) AS nama_supplier, (SELECT nama FROM m_gudang WHERE kode_gudang = bpo.kode_gudang) AS nama_gudang FROM barang_po_in_header bpo WHERE bpo.invoice = "' . $invoice . '"')->row();
 
         if ($header) {
-            $cek_bh = $this->M_global->getData('barang_in_header', ['invoice_po' => $invoice]);
-
             $detail = $this->db->query('SELECT hpo.invoice, dpo.kode_barang, dpo.kode_satuan AS satuan_default,
             dpo.qty - dpo.qty_terima AS qty_po, b.nama, b.kode_satuan, b.kode_satuan2, b.kode_satuan3,
             dpo.harga, dpo.discpr, dpo.discrp, dpo.pajak, dpo.pajakrp, dpo.jumlah, (SELECT keterangan FROM m_satuan WHERE kode_satuan = dpo.kode_satuan) AS nama_satuan
@@ -1058,7 +1062,7 @@ class Transaksi extends CI_Controller
 
             echo json_encode([['status' => 1, 'header' => $header], $detail, $satuan]);
         } else {
-            echo json_encode(['status' => 0]);
+            echo json_encode([['status' => 0]]);
         }
     }
 
