@@ -327,8 +327,17 @@
         });
     }
 
+    var cek_param = "<?= $this->input->get('invoice') ?>";
+
+    if (cek_param !== '' && cek_param !== '0') {
+        $('#invoice_po').val(cek_param).change();
+        // alert(cek_param)
+    }
+
+
     // get data pengajuan mutasi
     function getPengajuanMutasi(param) {
+
         bodyBarangIn.empty();
         hitung_t();
         $('#dari').val('').change();
@@ -343,68 +352,72 @@
             type: 'POST',
             dataType: 'JSON',
             success: function(result) {
-                $('#jenis').val(result[0]['header'].jenis_po);
-                if (result[0]['header'].jenis_po == 0) {
-                    $('#jenisx').val('Mutasi Gudang');
-                } else {
-                    $('#jenisx').val('Mutasi Cabang');
-                }
-                $('#dari').val(result[0]['header'].dari);
-                $('#darix').val(result[0]['header'].dari_nama);
-                $('#menuju').val(result[0]['header'].menuju);
-                $('#menujux').val(result[0]['header'].menuju_nama);
-
-                jumlahBarisBarang.val(result[1].length);
-
-                var x = 1;
-
-                $.each(result[1], function(index, value) {
-                    if (value.pajak > 0) {
-                        var cek_pajak = 'checked';
+                if (result[0]['status'] == 1) {
+                    $('#jenis').val(result[0]['header'].jenis_po);
+                    if (result[0]['header'].jenis_po == 0) {
+                        $('#jenisx').val('Mutasi Gudang');
                     } else {
-                        var cek_pajak = '';
+                        $('#jenisx').val('Mutasi Cabang');
                     }
+                    $('#dari').val(result[0]['header'].dari);
+                    $('#darix').val(result[0]['header'].dari_nama);
+                    $('#menuju').val(result[0]['header'].menuju);
+                    $('#menujux').val(result[0]['header'].menuju_nama);
 
-                    bodyBarangIn.append(`<tr id="rowBarangIn${x}">
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')">
-                                <i class="fa-solid fa-delete-left"></i>
-                            </button>
-                        </td>
-                        <td>
-                            <input type="hidden" id="kode_barang_po_in${x}" name="kode_barang_po_in[]" value="${value.kode_barang}">
-                            <span>${value.kode_barang} ~ ${value.nama_barang}</span>
-                        </td>
-                        <td>
-                            <input type="hidden" id="kode_satuan${x}" name="kode_satuan[]" value="${value.kode_satuan}">
-                            <span>${value.nama_satuan}</span>
-                        </td>
-                        <td>
-                            <input type="hidden" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(Number(value.harga))}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}');" readonly>
-                            Rp. <span class="float-right">${formatRpNoId(Number(value.harga))}</span>
-                        </td>
-                        <td>
-                            <input type="text" id="qty_in${x}" name="qty_in[]" value="${formatRpNoId(Number(value.qty))}" class="form-control text-right" onchange="hitung_qty('${x}'); formatRp(this.value, 'qty_in${x}')">
-                        </td>
-                        <td>
-                            <input type="text" id="discpr_in${x}" name="discpr_in[]" value="${formatRpNoId(Number(value.discpr))}" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">
-                        </td>
-                        <td>
-                            <input type="text" id="discrp_in${x}" name="discrp_in[]" value="${formatRpNoId(Number(value.discrp))}" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_in${x}')">
-                        </td>
-                        <td class="text-center">
-                            <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')" ${cek_pajak}>
-                            <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="${formatRpNoId(Number(value.pajakrp))}">
-                        </td>
-                        <td>
-                            <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(Number(value.jumlah))}" class="form-control text-right" readonly>
-                            Rp. <span class="float-right" id="jumlah2_in${x}">${formatRpNoId(Number(value.jumlah))}</span>
-                        </td>
-                    </tr>`);
-                    hitung_st(x);
+                    jumlahBarisBarang.val(result[1].length);
 
-                    x++;
-                });
+                    var x = 1;
+
+                    $.each(result[1], function(index, value) {
+                        if (value.pajak > 0) {
+                            var cek_pajak = 'checked';
+                        } else {
+                            var cek_pajak = '';
+                        }
+
+                        bodyBarangIn.append(`<tr id="rowBarangIn${x}">
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')">
+                                    <i class="fa-solid fa-delete-left"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <input type="hidden" id="kode_barang_po_in${x}" name="kode_barang_po_in[]" value="${value.kode_barang}">
+                                <span>${value.kode_barang} ~ ${value.nama_barang}</span>
+                            </td>
+                            <td>
+                                <input type="hidden" id="kode_satuan${x}" name="kode_satuan[]" value="${value.kode_satuan}">
+                                <span>${value.nama_satuan}</span>
+                            </td>
+                            <td>
+                                <input type="hidden" id="harga_in${x}" name="harga_in[]" value="${formatRpNoId(Number(value.harga))}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_in${x}');" readonly>
+                                Rp. <span class="float-right">${formatRpNoId(Number(value.harga))}</span>
+                            </td>
+                            <td>
+                                <input type="text" id="qty_in${x}" name="qty_in[]" value="${formatRpNoId(Number(value.qty))}" class="form-control text-right" onchange="hitung_qty('${x}'); formatRp(this.value, 'qty_in${x}')">
+                            </td>
+                            <td>
+                                <input type="text" id="discpr_in${x}" name="discpr_in[]" value="${formatRpNoId(Number(value.discpr))}" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_in${x}')">
+                            </td>
+                            <td>
+                                <input type="text" id="discrp_in${x}" name="discrp_in[]" value="${formatRpNoId(Number(value.discrp))}" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_in${x}')">
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" id="pajak_in${x}" name="pajak_in[]" class="form-control" onclick="hitung_st('${x}')" ${cek_pajak}>
+                                <input type="hidden" id="pajakrp_in${x}" name="pajakrp_in[]" value="${formatRpNoId(Number(value.pajakrp))}">
+                            </td>
+                            <td>
+                                <input type="hidden" id="jumlah_in${x}" name="jumlah_in[]" value="${formatRpNoId(Number(value.jumlah))}" class="form-control text-right" readonly>
+                                Rp. <span class="float-right" id="jumlah2_in${x}">${formatRpNoId(Number(value.jumlah))}</span>
+                            </td>
+                        </tr>`);
+                        hitung_st(x);
+
+                        x++;
+                    });
+                } else {
+                    Swal.fire("Mutasi", "Tidak ditemukan!", "info");
+                }
             },
             error: function(error) {
                 error_proccess();

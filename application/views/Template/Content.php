@@ -242,7 +242,21 @@
                 <li class="nav-item dropdown">
                     <?php
                     $cabang = $this->session->userdata('cabang');
-                    $sintak = $this->db->query("SELECT * FROM barang_out_header WHERE kode_cabang = '$cabang' AND status_jual = 0 ORDER BY id DESC LIMIT 10")->result();
+                    $sintak = $this->db->query("SELECT * FROM (
+                        SELECT id, invoice AS invoice, 'kasir' AS url FROM barang_out_header 
+                        WHERE kode_cabang = '$cabang' AND status_jual = 0 
+
+                        UNION ALL 
+                        
+                        SELECT id, invoice AS invoice, 'mutasi_cabang' AS url FROM mutasi_po_header
+                        WHERE dari = '$cabang' AND status_po = 1 AND jenis_po = 1 AND invoice NOT IN (SELECT invoice_po FROM mutasi_header)
+
+                        UNION ALL 
+                        
+                        SELECT id, invoice AS invoice, 'mutasi_gudang' AS url FROM mutasi_po_header
+                        WHERE kode_cabang = '$cabang' AND status_po = 1 AND jenis_po = 0 AND invoice NOT IN (SELECT invoice_po FROM mutasi_header)
+                    ) AS semuax
+                    ORDER BY id DESC LIMIT 10")->result();
                     ?>
                     <a class="nav-link" data-toggle="dropdown" type="button">
                         <i class="fa-regular fa-bell"></i>&nbsp;&nbsp;Notifikasi&nbsp;&nbsp;
@@ -257,8 +271,17 @@
                             <?php
                             if (count($sintak) > 0) :
                                 foreach ($sintak as $s) :
+                                    if ($s->url == 'kasir') {
+                                        $par_url = 'Kasir/form_kasir/0';
+                                    } else if ($s->url == 'mutasi_cabang') {
+                                        $par_url = 'Transaksi/form_mutasi/0?invoice=' . $s->invoice;
+                                    } else if ($s->url == 'mutasi_gudang') {
+                                        $par_url = 'Transaksi/form_mutasi/0?invoice=' . $s->invoice;
+                                    } else {
+                                        $par_url = '';
+                                    }
                             ?>
-                                    <a type="button" href="<?= site_url('Kasir/form_kasir/0') ?>" class="pl-3 text-primary" style="text-decoration: none; margin-left: 3vw;">
+                                    <a type="button" href="<?= site_url($par_url) ?>" class="pl-3 text-primary" style="text-decoration: none; margin-left: 3vw;">
                                         <i class="fas fa-envelope"></i> <?= $s->invoice ?>
                                     </a>
                                 <?php

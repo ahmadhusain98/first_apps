@@ -4260,9 +4260,11 @@ class Transaksi extends CI_Controller
                 $confirm_diss       = 'disabled';
             }
 
+            $cek_mutasi = $this->M_global->getData('mutasi_header', ['invoice_po' => $rd->invoice]);
+
             $row    = [];
             $row[]  = $no++;
-            $row[]  = $rd->invoice . '<br>' . (($rd->status_po > 0) ? '<span class="badge badge-primary">ACC</span>' : '<span class="badge badge-success">Buka</span>');
+            $row[]  = $rd->invoice . '<br>' . (($rd->status_po > 0) ? '<span class="badge badge-primary">ACC</span>' : '<span class="badge badge-success">Buka</span>') . (($cek_mutasi) ? (($cek_mutasi->status == 1) ? ' <span class="badge badge-info">Sudah diproses</span>' : ' <span class="badge badge-warning">Belum diapprove</span>') : ' <span class="badge badge-danger">Belum diproses</span>');
             $row[]  = date('d/m/Y', strtotime($rd->tgl_po)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_po));
             $row[]  = '<div class="text-center">' . (($rd->jenis_po > 0) ? '<span class="badge badge-primary">Mutasi Cabang</span>' : '<span class="badge badge-success">Mutasi Gudang</span>') . '</div>';
             $row[]  = (($rd->jenis_po > 0) ? $this->M_global->getData('cabang', ['kode_cabang' => $rd->dari])->cabang : $this->M_global->getData('m_gudang', ['kode_gudang' => $rd->dari])->nama);
@@ -4272,8 +4274,6 @@ class Transaksi extends CI_Controller
 
             if ($rd->status_po > 0) {
                 $ubah   = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" disabled><i class="fa-regular fa-pen-to-square"></i></button>';
-
-                $cek_mutasi = $this->M_global->getData('mutasi_header', ['invoice_po' => $rd->invoice]);
 
                 if ($cek_mutasi) {
                     $accept = '<button type="button" style="margin-bottom: 5px;" class="btn btn-info" disabled><i class="fa-solid fa-check-to-slot"></i></button>';
@@ -4866,7 +4866,7 @@ class Transaksi extends CI_Controller
             'list_data'         => '',
             'data_mutasi'       => $mutasi,
             'mutasi_detail'     => $mutasi_detail,
-            'data_pm'           => $this->db->query("SELECT * FROM mutasi_po_header WHERE status_po = 1 AND invoice NOT IN (SELECT invoice_po FROM mutasi_header) AND menuju = '$kode_cabang'")->result(),
+            'data_pm'           => $this->db->query("SELECT * FROM mutasi_po_header WHERE status_po = 1 AND invoice NOT IN (SELECT invoice_po FROM mutasi_header) AND IF(jenis_po = 1, dari, kode_cabang) = '$kode_cabang'")->result(),
             'role'              => $this->M_global->getResult('m_role'),
             'pajak'             => $this->M_global->getData('m_pajak', ['aktif' => 1])->persentase,
             'list_barang'       => $this->M_global->getResult('barang'),
@@ -4880,15 +4880,19 @@ class Transaksi extends CI_Controller
     {
         $mutasi_po = $this->M_global->getData('mutasi_po_header', ['invoice' => $invoice_po]);
 
-        if ($mutasi_po->jenis_po == 0) {
-            $mutasi_po_header = $this->db->query("SELECT h.*, (SELECT nama FROM m_gudang WHERE kode_gudang = h.dari) AS dari_nama, (SELECT nama FROM m_gudang WHERE kode_gudang = h.menuju) AS menuju_nama FROM mutasi_po_header h WHERE invoice = '$invoice_po'")->row();
+        if ($mutasi_po) {
+            if ($mutasi_po->jenis_po == 0) {
+                $mutasi_po_header = $this->db->query("SELECT h.*, (SELECT nama FROM m_gudang WHERE kode_gudang = h.dari) AS dari_nama, (SELECT nama FROM m_gudang WHERE kode_gudang = h.menuju) AS menuju_nama FROM mutasi_po_header h WHERE invoice = '$invoice_po'")->row();
+            } else {
+                $mutasi_po_header = $this->db->query("SELECT h.*, (SELECT cabang FROM cabang WHERE kode_cabang = h.dari) AS dari_nama, (SELECT cabang FROM cabang WHERE kode_cabang = h.menuju) AS menuju_nama FROM mutasi_po_header h WHERE invoice = '$invoice_po'")->row();
+            }
+
+            $mutasi_po_detail = $this->db->query("SELECT d.*, (SELECT nama FROM barang WHERE kode_barang = d.kode_barang) AS nama_barang, s.keterangan AS nama_satuan FROM mutasi_po_detail AS d JOIN m_satuan s ON d.kode_satuan = s.kode_satuan WHERE d.invoice = '$invoice_po'")->result();
+
+            echo json_encode([['status' => 1, 'header' => $mutasi_po_header], $mutasi_po_detail]);
         } else {
-            $mutasi_po_header = $this->db->query("SELECT h.*, (SELECT cabang FROM cabang WHERE kode_cabang = h.dari) AS dari_nama, (SELECT cabang FROM cabang WHERE kode_cabang = h.menuju) AS menuju_nama FROM mutasi_po_header h WHERE invoice = '$invoice_po'")->row();
+            echo json_encode([['status' => 0]]);
         }
-
-        $mutasi_po_detail = $this->db->query("SELECT d.*, (SELECT nama FROM barang WHERE kode_barang = d.kode_barang) AS nama_barang, s.keterangan AS nama_satuan FROM mutasi_po_detail AS d JOIN m_satuan s ON d.kode_satuan = s.kode_satuan WHERE d.invoice = '$invoice_po'")->result();
-
-        echo json_encode([['status' => 1, 'header' => $mutasi_po_header], $mutasi_po_detail]);
     }
 
     // fungsi insert/update proses mutasi
