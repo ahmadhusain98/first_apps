@@ -13,14 +13,14 @@ class Marketing extends CI_Controller
         $this->load->model("M_auth");
 
         if (!empty($this->session->userdata("email"))) { // jika session email masih ada
-            
+
             $id_menu = $this->M_global->getData('m_menu', ['url' => 'Marketing'])->id;
 
             // ambil isi data berdasarkan email session dari table user, kemudian tampung ke variable $user
             $user = $this->M_global->getData("user", ["email" => $this->session->userdata("email")]);
 
             $cek_akses_menu = $this->M_global->getData('akses_menu', ['id_menu' => $id_menu, 'kode_role' => $user->kode_role]);
-            if($cek_akses_menu) {
+            if ($cek_akses_menu) {
                 // tampung data ke variable data public
                 $this->data = [
                     'nama'      => $user->nama,
@@ -35,7 +35,6 @@ class Marketing extends CI_Controller
                 // kirimkan kembali ke Auth
                 redirect('Where');
             }
-
         } else { // selain itu
             // kirimkan kembali ke Auth
             redirect('Auth');
@@ -70,7 +69,7 @@ class Marketing extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != 0) {
+        if ($param != '0') {
             $promo = $this->M_global->getData('m_promo', ['kode_promo' => $param]);
         } else {
             $promo = null;
@@ -111,6 +110,7 @@ class Marketing extends CI_Controller
     // fungsi proses ismpan/update
     public function promo_proses($param)
     {
+        $kode_cabang = $this->session->userdata('cabang');
         // header
         if ($param == 1) { // jika param = 1
             $kode_promo = _code_promo();
@@ -126,6 +126,7 @@ class Marketing extends CI_Controller
         $discpr       = str_replace(',', '', $this->input->post('discpr'));
 
         $isi = [
+            'kode_cabang'   => $kode_cabang,
             'kode_promo'    => $kode_promo,
             'nama'          => $nama,
             'tgl_mulai'     => $tgl_mulai,
@@ -222,12 +223,8 @@ class Marketing extends CI_Controller
             $row[]  = '<span class="float-right">' . number_format($rd->discpr) . ' %</span>';
             $row[]  = (($rd->tgl_selesai < $now) ? '<span class="badge badge-danger">Promo Berakhir</span>' : '<span class="badge badge-success">Promo Berjalan</span>');
             $row[]  = '<div class="text-center">
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-secondary" title="Ubah" onclick="ubah(' . "'" . $rd->kode_promo . "'" . ')" ' . $upd_diss . '>
-                    <ion-icon name="create-outline"></ion-icon>
-                </button>
-                <button style="margin-bottom: 5px;" type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_promo . "'" . ')" ' . $del_diss . '>
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" onclick="ubah(' . "'" . $rd->kode_promo . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->kode_promo . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
             $data[] = $row;
         }
