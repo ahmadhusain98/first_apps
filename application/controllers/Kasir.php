@@ -557,6 +557,7 @@ class Kasir extends CI_Controller
     // form kasir page
     public function form_kasir($param)
     {
+        $kode_cabang = $this->session->userdata('cabang');
         // website config
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
@@ -597,6 +598,8 @@ class Kasir extends CI_Controller
             'web_version'       => $web_version->version,
             'list_data'         => '',
             'data_pembayaran'   => $pembayaran,
+            'pendaftaran'       => $this->M_global->getDataResult('pendaftaran', ['kode_cabang' => $kode_cabang, 'status_trx' => 0]),
+            'data_penjualan'    => $this->M_global->getDataResult('barang_out_header', ['kode_cabang' => $kode_cabang, 'status_jual' => 0]),
             'bayar_detail'      => $bayar_detail,
             'tarif_paket'       => $tarif_paket,
             'riwayat'           => $riwayat,
@@ -606,6 +609,17 @@ class Kasir extends CI_Controller
         ];
 
         $this->template->load('Template/Content', 'Kasir/Form_pembayaran', $parameter);
+    }
+
+    public function cekPendaftaran($notrx)
+    {
+        $cek = $this->M_global->getData('pendaftaran', ['no_trx' => $notrx]);
+
+        if ($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
     }
 
     public function getJual($invoice)

@@ -243,8 +243,13 @@
                     <?php
                     $cabang = $this->session->userdata('cabang');
                     $sintak = $this->db->query("SELECT * FROM (
+                        SELECT id, no_trx AS invoice, 'pembayaran' AS url FROM pendaftaran
+                        WHERE kode_cabang = '$cabang' AND status_trx = 0
+
+                        UNION ALL
+
                         SELECT id, invoice AS invoice, 'kasir' AS url FROM barang_out_header 
-                        WHERE kode_cabang = '$cabang' AND status_jual = 0 
+                        WHERE kode_cabang = '$cabang' AND status_jual = 0 AND no_trx IS NULL
 
                         UNION ALL 
                         
@@ -278,7 +283,10 @@
                                 foreach ($sintak as $s) :
                                     if ($s->url == 'kasir') {
                                         $msg = 'Pbr.Ksr';
-                                        $par_url = 'Kasir/form_kasir/0';
+                                        $par_url = 'Kasir/form_kasir/0?invoice=' . $s->invoice;
+                                    } else if ($s->url == 'pembayaran') {
+                                        $msg = 'Pbr.Ksr';
+                                        $par_url = 'Kasir/form_kasir/0?invoice=' . $s->invoice;
                                     } else if ($s->url == 'mutasi_cabang') {
                                         $msg = 'Mts.Cab';
                                         $par_url = 'Transaksi/form_mutasi/0?invoice=' . $s->invoice;
@@ -289,6 +297,7 @@
                                         $msg = 'Trm.Brg';
                                         $par_url = 'Transaksi/form_barang_in/0?invoice=' . $s->invoice;
                                     } else {
+                                        $msg = '';
                                         $par_url = '';
                                     }
                             ?>

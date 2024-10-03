@@ -30,23 +30,37 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="">Pendaftaran</label>
-                                        <select name="no_trx" id="no_trx" class="form-control select2_terdaftar" data-placeholder="Pilih Pendaftaran" onchange="getPendaftaran(this.value)">
+                                        <!-- <select name="no_trx" id="no_trx" class="form-control select2_terdaftar" data-placeholder="Pilih Pendaftaran" onchange="getPendaftaran(this.value)">
                                             <?php if (!empty($data_pembayaran)) :
                                                 $daftar = $this->M_global->getData('pendaftaran', ['no_trx' => $data_pembayaran->no_trx]);
                                             ?>
                                                 <option value="<?= $data_pembayaran->no_trx ?>"><?= $data_pembayaran->no_trx . ' | Tgl/Jam: ' . $daftar->tgl_daftar . '/' . $daftar->jam_daftar . ' | Poli/Dokter: ' . $this->M_global->getData('m_poli', ['kode_poli' => $daftar->kode_poli])->keterangan . '/' . $this->M_global->getData('dokter', ['kode_dokter' => $daftar->kode_dokter])->nama ?></option>
                                             <?php endif; ?>
+                                        </select> -->
+
+                                        <select name="no_trx" id="no_trx" class="form-control select2_global" data-placeholder="~ Pilih Pendaftaran" onchange="getPendaftaran(this.value)">
+                                            <option value="">~ Pilih Pendaftaran</option>
+                                            <?php foreach ($pendaftaran as $p): ?>
+                                                <option value="<?= $p->no_trx ?>" <?= (!empty($data_pembayaran) ? (($data_pembayaran->no_trx == $p->no_trx) ? 'selected' : '') : '') ?>><?= $p->no_trx . ' | Tgl/Jam: ' . $p->tgl_daftar . '/' . $p->jam_daftar . ' | Poli/Dokter: ' . $this->M_global->getData('m_poli', ['kode_poli' => $p->kode_poli])->keterangan . '/' . $this->M_global->getData('dokter', ['kode_dokter' => $p->kode_dokter])->nama ?></option>
+                                            <?php endforeach ?>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="">Penjualan</label>
-                                        <select name="inv_jual" id="inv_jual" class="form-control select2_penjualan" data-placeholder="~ Pilih Penjualan" onchange="cekJual(this.value)">
+                                        <!-- <select name="inv_jual" id="inv_jual" class="form-control select2_penjualan" data-placeholder="~ Pilih Penjualan" onchange="cekJual(this.value)">
                                             <?php
                                             if (!empty($data_pembayaran)) :
                                                 $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $data_pembayaran->no_trx]);
                                                 echo '<option value="' . $data_pembayaran->inv_jual . '">' . $data_pembayaran->inv_jual . ' ~ Kode Member: ' . $pendaftaran->kode_member . ' | Nama Member: ' . $this->M_global->getData('member', ['kode_member' => $pendaftaran->kode_member])->nama . '</option>';
                                             endif;
                                             ?>
+                                        </select> -->
+
+                                        <select name="inv_jual" id="inv_jual" class="form-control select2_global" data-placeholder="~ Pilih Penjualan" onchange="cekJual(this.value)">
+                                            <option value="">~ Pilih Penjualan</option>
+                                            <?php foreach ($data_penjualan as $dp): ?>
+                                                <option value="<?= $dp->invoice ?>" <?= (!empty($data_pembayaran) ? (($data_pembayaran->inv_jual == $dp->invoice) ? 'selected' : '') : '') ?>><?= $dp->invoice . ' ~ Kode Member: ' . $dp->kode_member . ' | Nama Member: ' . $this->M_global->getData('member', ['kode_member' => $dp->kode_member])->nama ?></option>
+                                            <?php endforeach ?>
                                         </select>
                                     </div>
                                 </div>
@@ -323,6 +337,7 @@
                                     <input type="text" class="form-control text-right" placeholder="Pembayaran Cash" id="cash" name="cash" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->cash) : '0') ?>" onkeyup="hitung_bayar()">
                                 </div>
                             </div>
+                            <br>
                             <div class="row" id="fortableCard">
                                 <div class="col-md-12">
                                     <div class="row">
@@ -544,7 +559,7 @@
         }
 
         $.ajax({
-            url: siteUrl + 'Master_show/cek_promo/' + kopro,
+            url: '<?= site_url() ?>Master_show/cek_promo/' + kopro,
             type: 'POST',
             dataType: 'JSON',
             success: function(result) { // jika fungsi berjalan
@@ -576,9 +591,34 @@
         $('#total_kurang').val(formatRpNoId((0 - new_total_jual)));
     }
 
+    var cek_param = "<?= $this->input->get('invoice') ?>";
+
+    if (cek_param !== '' && cek_param !== '0') {
+        cekPendaftaran(cek_param);
+        // alert(cek_param)
+    }
+
+    function cekPendaftaran(param) {
+        $.ajax({
+            url: '<?= site_url() ?>Kasir/cekPendaftaran/' + param,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(result) {
+                if (result.status == 1) {
+                    $('#no_trx').val(param).change();
+                } else {
+                    $('#inv_jual').val(param).change();
+                }
+            },
+            error: function(error) {
+                error_proccess();
+            }
+        });
+    }
+
     function getPendaftaran(notrx) {
-        if (!notrx || notrx === null) {
-            return
+        if (notrx == '' || notrx == null) {
+            return Swal.fire("Pendaftaran", "Form sudah dipilih?", "info");
         }
 
         cekPaket(notrx);
@@ -592,7 +632,7 @@
 
         // jalankan fungsi
         $.ajax({
-            url: siteUrl + 'Kasir/getInfoJual/' + x,
+            url: '<?= site_url() ?>Kasir/getInfoJual/' + x,
             type: 'POST',
             dataType: 'JSON',
             success: function(result) { // jika fungsi berjalan dengan baik
@@ -637,7 +677,7 @@
         }
 
         $.ajax({
-            url: siteUrl + 'Kasir/getJual/' + x,
+            url: '<?= site_url() ?>Kasir/getJual/' + x,
             type: 'POST',
             dataType: 'JSON',
             success: function(result) {
@@ -645,26 +685,26 @@
 
                 $.each(result, function(index, value) {
                     $('#bodyJual').append(`<tr id="rowJual${row}">
-                        <td style="text-align: right;">
-                            <label style="font-weight: normal;">${row}</label>
+                        <td>
+                            <span style="font-weight: normal;">${row}</span>
                         </td>
                         <td>
-                            <label style="font-weight: normal;">(${value.kode_barang}) ${value.nama_barang}</label>
+                            <span style="font-weight: normal;">(${value.kode_barang}) ${value.nama_barang}</span>
                         </td>
                         <td>
-                            <label style="font-weight: normal;">${value.nama_satuan}</label>
+                            <span style="font-weight: normal;">${value.nama_satuan}</span>
                         </td>
-                        <td style="text-align: right;">
-                            <label style="font-weight: normal;">${formatRpNoId(value.qty)}</label>
+                        <td>
+                            <span class="float-right" style="font-weight: normal;">${formatRpNoId(value.qty)}</span>
                         </td>
-                        <td style="text-align: right;">
-                            <label style="font-weight: normal;">${formatRpNoId(value.harga)}</label>
+                        <td>
+                            Rp. <span class="float-right" style="font-weight: normal;">${formatRpNoId(value.harga)}</span>
                         </td>
-                        <td style="text-align: right;">
-                            <label style="font-weight: normal;">${formatRpNoId(value.discrp)}</label>
+                        <td>
+                            Rp. <span class="float-right" style="font-weight: normal;">${formatRpNoId(value.discrp)}</span>
                         </td>
-                        <td style="text-align: right;">
-                            <label style="font-weight: normal;">${formatRpNoId(value.jumlah)}</label>
+                        <td>
+                            Rp. <span class="float-right" style="font-weight: normal;">${formatRpNoId(value.jumlah)}</span>
                         </td>
                     </tr>`);
 
@@ -679,7 +719,7 @@
 
     function cekPaket(notrx) {
         $.ajax({
-            url: siteUrl + 'Kasir/getPaket/' + notrx,
+            url: '<?= site_url() ?>Kasir/getPaket/' + notrx,
             type: 'POST',
             dataType: 'JSON',
             success: function(result) { // jika fungsi berjalan dengan baik
@@ -786,7 +826,7 @@
         }
 
         $.ajax({
-            url: siteUrl + 'Kasir/getTarifSingle/' + kdtarif,
+            url: '<?= site_url() ?>Kasir/getTarifSingle/' + kdtarif,
             type: 'POST',
             dataType: 'JSON',
             success: function(result) {
@@ -892,7 +932,7 @@
         }
 
         $.ajax({
-            url: siteUrl + 'Kasir/getInfoUM/' + x,
+            url: '<?= site_url() ?>Kasir/getInfoUM/' + x,
             type: 'POST',
             dataType: 'JSON',
             success: function(result) { // jika fungsi berjalan dengan baik
@@ -1090,7 +1130,7 @@
 
         // jalankan proses dengan param insert/update
         $.ajax({
-            url: siteUrl + 'kasir/kasir_proses/' + param,
+            url: '<?= site_url() ?>kasir/kasir_proses/' + param,
             type: "POST",
             data: form.serialize(),
             dataType: "JSON",
@@ -1128,7 +1168,7 @@
             cancelButtonText: "Tidak!"
         }).then((result) => {
             if (result.isConfirmed) { // jika yakin
-                window.open(siteUrl + 'Kasir/print_kwitansi/' + x + '/0', '_blank');
+                window.open('<?= site_url() ?>Kasir/print_kwitansi/' + x + '/0', '_blank');
                 getUrl('Kasir');
             } else {
                 getUrl('Kasir');
