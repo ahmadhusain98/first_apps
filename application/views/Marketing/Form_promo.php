@@ -1,9 +1,9 @@
-<div class="row">
-    <div class="col-md-12">
-        <form method="post" id="form_promo">
-            <div class="card">
+<form method="post" id="form_promo">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-outline card-primary">
                 <div class="card-header">
-                    <h4 class="card-title"><b># Form Promo</b></h4>
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -22,14 +22,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label for="nama">Nama <span class="text-danger">**</span></label>
-                                                <div class="input-group mb-3">
-                                                    <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama" onkeyup="ubah_nama(this.value, 'nama')" value="<?= (!empty($promo) ? $promo->nama : '') ?>">
-                                                    <div class="input-group-append">
-                                                        <div class="input-group-text">
-                                                            <ion-icon name="document-attach-outline"></ion-icon>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama" onkeyup="ubah_nama(this.value, 'nama')" value="<?= (!empty($promo) ? $promo->nama : '') ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -39,14 +32,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label for="tgl_mulai" class="control-label">Tanggal Mulai <span class="text-danger">**</span></label>
-                                                <div class="input-group mb-3">
-                                                    <input type="date" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tanggal Mulai" id="tgl_mulai" name="tgl_mulai" value="<?= (!empty($promo) ? date('Y-m-d', strtotime($promo->tgl_mulai)) : date('Y-m-d')) ?>">
-                                                    <div class="input-group-append">
-                                                        <div class="input-group-text">
-                                                            <ion-icon name="calendar-outline"></ion-icon>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <input type="date" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tanggal Mulai" id="tgl_mulai" name="tgl_mulai" value="<?= (!empty($promo) ? date('Y-m-d', strtotime($promo->tgl_mulai)) : date('Y-m-d')) ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -54,14 +40,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label for="tgl_selesai" class="control-label">Tanggal Selesai <span class="text-danger">**</span></label>
-                                                <div class="input-group mb-3">
-                                                    <input type="date" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tanggal Selesai" id="tgl_selesai" name="tgl_selesai" value="<?= (!empty($promo) ? date('Y-m-d', strtotime($promo->tgl_selesai)) : date('Y-m-d')) ?>">
-                                                    <div class="input-group-append">
-                                                        <div class="input-group-text">
-                                                            <ion-icon name="calendar-outline"></ion-icon>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <input type="date" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tanggal Selesai" id="tgl_selesai" name="tgl_selesai" value="<?= (!empty($promo) ? date('Y-m-d', strtotime($promo->tgl_selesai)) : date('Y-m-d')) ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -71,14 +50,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label for="discpr" class="control-label">Diskon (%) <span class="text-danger">**</span></label>
-                                                <div class="input-group mb-3">
-                                                    <input type="text" class="form-control text-right" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Diskon (%)" id="discpr" name="discpr" value="<?= (!empty($promo) ? number_format($promo->discpr) : '0') ?>" onchange="formatRp(this.value, 'discpr')">
-                                                    <div class="input-group-append">
-                                                        <div class="input-group-text">
-                                                            <ion-icon name="balloon-outline"></ion-icon>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <input type="text" class="form-control text-right" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Diskon (%)" id="discpr" name="discpr" value="<?= (!empty($promo) ? number_format($promo->discpr) : '0') ?>" onchange="formatRp(this.value, 'discpr')">
                                             </div>
                                         </div>
                                     </div>
@@ -86,14 +58,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label for="min_buy" class="control-label">Minimal Pembelian (Rp) <span class="text-danger">**</span></label>
-                                                <div class="input-group mb-3">
-                                                    <input type="text" class="form-control text-right" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Minimal Pembelian (Rp)" id="min_buy" name="min_buy" value="<?= (!empty($promo) ? number_format($promo->min_buy) : '0') ?>" onchange="formatRp(this.value, 'min_buy')">
-                                                    <div class="input-group-append">
-                                                        <div class="input-group-text">
-                                                            <ion-icon name="balloon-outline"></ion-icon>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <input type="text" class="form-control text-right" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Minimal Pembelian (Rp)" id="min_buy" name="min_buy" value="<?= (!empty($promo) ? number_format($promo->min_buy) : '0') ?>" onchange="formatRp(this.value, 'min_buy')">
                                             </div>
                                         </div>
                                     </div>
@@ -103,14 +68,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label for="keterangan">Keterangan <span class="text-danger">**</span></label>
-                                                <div class="input-group mb-3">
-                                                    <textarea name="keterangan" id="keterangan" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Keterangan" onkeyup="ubah_nama(this.value, 'keterangan')"><?= (!empty($promo) ? ($promo->keterangan) : '') ?></textarea>
-                                                    <div class="input-group-append">
-                                                        <div class="input-group-text">
-                                                            <ion-icon name="newspaper-outline"></ion-icon>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <textarea name="keterangan" id="keterangan" class="form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Keterangan" onkeyup="ubah_nama(this.value, 'keterangan')"><?= (!empty($promo) ? ($promo->keterangan) : '') ?></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -118,22 +76,24 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="card-footer">
                     <div class="row">
                         <div class="col-md-12">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="getUrl('Marketing/promo')" id="btnKembali"><ion-icon name="play-back-outline"></ion-icon> Kembali</button>
-                            <button type="button" class="btn btn-dark float-right btn-sm ml-2" onclick="save()" id="btnSimpan"><ion-icon name="save-outline"></ion-icon> <?= (!empty($promo) ? 'Perbarui' : 'Simpan') ?></button>
+                            <button type="button" class="btn btn-danger" onclick="getUrl('Marketing/promo')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+                            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
                             <?php if (!empty($promo)) : ?>
-                                <button type="button" class="btn btn-success float-right btn-sm" onclick="getUrl('Marketing/form_promo/0')" id="btnBaru"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                                <button type="button" class="btn btn-info float-right" onclick="getUrl('Marketing/form_promo/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Baru</button>
                             <?php else : ?>
-                                <button type="button" class="btn btn-info float-right btn-sm" onclick="reset()" id="btnReset"><ion-icon name="refresh-outline"></ion-icon> Reset</button>
+                                <button type="button" class="btn btn-info float-right" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
                             <?php endif ?>
                         </div>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
 <script>
     var table;
@@ -292,7 +252,7 @@
     }
 
     // fungsi reset form
-    function reset() {
+    function reseting() {
         if (kodePromo.val() == '' || kodePromo.val() == null) { // jika kode_promonya tidak ada isi/ null
             // kosongkan
             kodePromo.val('');

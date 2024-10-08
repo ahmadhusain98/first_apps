@@ -5,42 +5,52 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 <div class="row">
     <div class="col-md-12">
         <form method="post" id="form_promo">
-            <div class="card">
+            <div class="card card-outline card-primary">
                 <div class="card-header">
-                    <span class="font-weight-bold h4"># Promo</span>
-                    <button type="button" class="btn btn-sm float-right mb-1 btn-success ml-1" onclick="getUrl('Marketing/form_promo/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
-                    <button type="button" class="btn btn-sm float-right mb-1 btn-primary ml-1" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Promo</span>
+                    <div class="float-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="preview('promo')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="print('promo')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="excel('promo')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                        <button type="button" class="btn btn-success" onclick="getUrl('Marketing/form_promo/0')" <?= (($created == 1) ? _lock_button() : 'disabled') ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-5 col-5">
+                            <input type="date" name="dari" id="dari" class="form-control" value="<?= date('Y-m-d') ?>">
+                        </div>
+                        <div class="col-md-5 col-5">
+                            <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
+                        </div>
+                        <div class="col-md-2 col-2">
+                            <button type="button" style="width: 100%;" class="btn btn-info" onclick="filter('')"><i class="fa-solid fa-sort"></i>&nbsp;&nbsp;Filter</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6 offset-6 col-12">
-                            <div class="row float-right">
-                                <div class="col-md-5 col-5 mb-3">
-                                    <input type="date" name="dari" id="dari" class="form-control" value="<?= date('Y-m-d') ?>">
-                                </div>
-                                <div class="col-md-5 col-5 mb-3">
-                                    <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
-                                </div>
-                                <div class="col-md-2 col-2 mb-3">
-                                    <button type="button" class="btn btn-secondary btn-sm float-right" onclick="filter('')" title="Filter" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom"><ion-icon name="filter-outline"></ion-icon></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover table-bordered" id="tablePromo" width="100%">
+                                <table class="table table-hover table-bordered" id="tablePromo" width="100%" style="border-radius: 10px;">
                                     <thead>
                                         <tr class="text-center">
-                                            <th width="5%">#</th>
+                                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
                                             <th width="15%">Tanggal</th>
                                             <th width="10%">Nama</th>
                                             <th>Keterangan</th>
                                             <th>Persyaratan</th>
                                             <th width="15%">Diskon</th>
                                             <th>Status</th>
-                                            <th width="15%">Aksi</th>
+                                            <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                         </tr>
                                     </thead>
                                 </table>
