@@ -211,7 +211,7 @@ class Backdoor extends CI_Controller
             'web'               => $web_setting,
             'web_version'       => $web_version->version,
             'kunjungan_poli'    => $this->db->query("SELECT p.keterangan AS poli, COUNT(boh.kode_poli) AS jumlah FROM pembayaran buy JOIN barang_out_header boh ON buy.inv_jual = boh.invoice JOIN m_poli p ON boh.kode_poli = p.kode_poli GROUP BY boh.kode_poli")->result(),
-            'backup_db'         => $this->M_global->getResult('backup_db'),
+            'backup_db'         => $this->db->query('SELECT * FROM backup_db ORDER BY id DESC')->result(),
         ];
 
         $this->template->load('Template/Content', 'Backdoor/Data_db', $parameter);

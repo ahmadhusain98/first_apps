@@ -21,16 +21,22 @@
                                         <optgroup label="Transaksi Pembelian">
                                             <option value="1">1.1) Pembelian</option>
                                             <option value="1.1">1.2) Pembelian Detail</option>
-                                            <option value="2">2.1) Retur Pembelian</option>
-                                            <option value="2.1">2.2) Retur Pembelian Detail</option>
-                                            <option value="3">3.1) Riwayat Stok Pembelian</option>
+                                            <option value="2">1.3) Retur Pembelian</option>
+                                            <option value="2.1">1.4) Retur Pembelian Detail</option>
+                                            <option value="3">1.5) Riwayat Stok Pembelian</option>
                                         </optgroup>
                                         <optgroup label="Transaksi Penjualan">
-                                            <option value="4">1.1) Penjualan</option>
-                                            <option value="4.1">1.2) Penjualan Detail</option>
-                                            <option value="5">2.1) Retur Penjualan</option>
-                                            <option value="5.1">2.2) Retur Penjualan Detail</option>
-                                            <option value="6">3.1) Riwayat Stok Penjualan</option>
+                                            <option value="4">2.1) Penjualan</option>
+                                            <option value="4.1">2.2) Penjualan Detail</option>
+                                            <option value="5">2.3) Retur Penjualan</option>
+                                            <option value="5.1">2.4) Retur Penjualan Detail</option>
+                                            <option value="6">2.5) Riwayat Stok Penjualan</option>
+                                        </optgroup>
+                                        <optgroup label="Pembayaran">
+                                            <option value="7">3.1) Harian Kasir</option>
+                                            <!-- <option value="7.1">3.2) Penjualan Poli</option>
+                                            <option value="8">3.3) Retur Penjualan</option>
+                                            <option value="9">3.4) Harian</option> -->
                                         </optgroup>
                                     </select>
                                 </div>
@@ -80,6 +86,14 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="row mb-3" id="user">
+                                <label for="kode_user" class="control-label col-md-3 m-auto">User</label>
+                                <div class="col-md-9">
+                                    <select name="kode_user" id="kode_user" class="form-control select2_user" data-placeholder="~ Pilih User">
+                                        <option value="">~ Pilih User</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -117,50 +131,67 @@
     var idGudang = $('#idGudang');
     var idPoli = $('#idPoli');
     var idBarang = $('#idBarang');
+    var user = $('#user');
+    var kode_user = $('#kode_user');
+    var idUser = $('#idUser');
 
     barang.hide();
     poli.hide();
     idPoli.hide();
+    user.hide();
 
     // fungsi cek report
     function cekReport(param) {
         if (param == 0 || param == '0' || param == '0.1' || param == '0.2') {
-            poli.fadeIn(0);
-            idSupplier.fadeOut(0);
-            idGudang.fadeOut(0);
-            gudang.fadeOut(0);
-            barang.fadeOut(0);
-            pemasok.fadeOut(0);
+            poli.show();
+            idSupplier.hide();
+            idGudang.hide();
+            gudang.hide();
+            barang.hide();
+            pemasok.hide();
+            user.hide();
         } else if (param == 1 || param == '1.1' || param == 2 || param == '2.1') {
-            idSupplier.fadeOut(0);
-            idGudang.fadeOut(0);
-            barang.fadeOut(0);
-            pemasok.fadeIn(0);
-            poli.fadeOut(0);
+            idSupplier.hide();
+            idGudang.hide();
+            barang.hide();
+            pemasok.show();
+            poli.hide();
+            user.hide();
         } else if (param == 3) {
-            pemasok.fadeOut(0);
-            idSupplier.fadeOut(0);
-            idGudang.fadeIn(0);
-            barang.fadeIn(0);
-            poli.fadeOut(0);
+            pemasok.hide();
+            idSupplier.hide();
+            idGudang.show();
+            barang.show();
+            poli.hide();
+            user.hide();
         } else if (param == 4 || param == '4.1') {
-            pemasok.fadeOut(0);
-            idSupplier.fadeOut(0);
-            idGudang.fadeOut(0);
-            barang.fadeOut(0);
-            poli.fadeOut(0);
+            pemasok.hide();
+            idSupplier.hide();
+            idGudang.hide();
+            barang.hide();
+            poli.hide();
+            user.hide();
+        } else if (param == 7 || param == '7.1' || param == 8 || param == 9) {
+            idSupplier.hide();
+            idGudang.hide();
+            barang.hide();
+            gudang.hide();
+            pemasok.hide();
+            poli.hide();
+            user.show();
         } else {
-            pemasok.fadeIn(0);
-            idSupplier.fadeIn(0);
-            idGudang.fadeIn(0);
-            barang.fadeOut(0);
-            poli.fadeOut(0);
+            pemasok.show();
+            idSupplier.show();
+            idGudang.show();
+            barang.hide();
+            poli.hide();
+            user.hide();
         }
     }
 
     // fungsi cetak
     function cetak(param) {
-        if (laporan.val() == 0 || laporan.val() == '0.1' || laporan.val() == '0.2' || laporan.val() == 1 || laporan.val() == '1' || laporan.val() == '1.1' || laporan.val() == 2 || laporan.val() == '2' || laporan.val() == '2.1' || laporan.val() == 4 || laporan.val() == '4' || laporan.val() == '4.1') {} else if (laporan.val() == 3 || laporan.val() == '3') {
+        if (laporan.val() == 0 || laporan.val() == '0.1' || laporan.val() == '0.2' || laporan.val() == 1 || laporan.val() == '1' || laporan.val() == '1.1' || laporan.val() == 2 || laporan.val() == '2' || laporan.val() == '2.1' || laporan.val() == 4 || laporan.val() == '4' || laporan.val() == '4.1' || laporan.val() == 7 || laporan.val() == '7.1' || laporan.val() == 8 || laporan.val() == 9) {} else if (laporan.val() == 3 || laporan.val() == '3') {
             if (kode_barang.val() == '' || kode_barang.val() == null) {
                 return Swal.fire("Barang", "Form sudah diisi?", "question");
             }
@@ -178,7 +209,7 @@
             }
         }
 
-        var parameterString = `/${param}?laporan=${laporan.val()}&dari=${dari.val()}&sampai=${sampai.val()}&kode_supplier=${kode_supplier.val()}&kode_gudang=${kode_gudang.val()}&kode_barang=${kode_barang.val()}&kode_poli=${kode_poli.val()}`;
+        var parameterString = `/${param}?laporan=${laporan.val()}&dari=${dari.val()}&sampai=${sampai.val()}&kode_supplier=${kode_supplier.val()}&kode_gudang=${kode_gudang.val()}&kode_barang=${kode_barang.val()}&kode_poli=${kode_poli.val()}&kode_user=${kode_user.val()}`;
         window.open(`${siteUrl}Laporan/report_print${parameterString}`, '_blank');
     }
 </script>
