@@ -34,8 +34,8 @@
                                         </optgroup>
                                         <optgroup label="Pembayaran">
                                             <option value="7">3.1) Harian Kasir</option>
-                                            <!-- <option value="7.1">3.2) Penjualan Poli</option>
-                                            <option value="8">3.3) Retur Penjualan</option>
+                                            <option value="7.1">3.2) Record Uang Muka</option>
+                                            <!-- <option value="8">3.3) Retur Penjualan</option>
                                             <option value="9">3.4) Harian</option> -->
                                         </optgroup>
                                     </select>

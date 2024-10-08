@@ -1610,6 +1610,156 @@ class Laporan extends CI_Controller
 
             $body .= '</tbody>';
             $body .= '</table>';
+        } else if ($laporan == '7.1') {
+            $file = 'Laporan Record Uang Muka';
+            $position = 'P';
+
+            // isi body
+            if (
+                $kode_user == '' || $kode_user == null || $kode_user == 'null'
+            ) {
+                $sel_user = "";
+            } else {
+                $sel_user = "WHERE kode_user = '$kode_user'";
+            }
+
+            $detail = $this->db->query("SELECT * FROM (
+                SELECT pembayaran.invoice AS inv,
+                'UM MASUK' AS keterangan,
+                IF(cek_um = 1, um_masuk, 0) AS um_masuk,
+                0 AS um_keluar,
+                pembayaran.kode_user AS user,
+                pembayaran.inv_jual,
+                if(pendaftaran.kode_member IS NULL, barang_out_header.kode_member, pendaftaran.kode_member) AS kode_member
+                FROM pembayaran
+                JOIN pendaftaran ON pembayaran.no_trx = pendaftaran.no_trx
+                JOIN barang_out_header ON pembayaran.inv_jual = barang_out_header.invoice
+                WHERE approved = 1
+                AND cek_um > 0
+
+                UNION ALL
+
+                SELECT pembayaran.invoice AS inv,
+                'UM KELUAR' AS keterangan,
+                0 AS um_masuk,
+                um_keluar AS um_keluar,
+                pembayaran.kode_user AS user,
+                pembayaran.inv_jual,
+                if(pendaftaran.kode_member IS NULL, barang_out_header.kode_member, pendaftaran.kode_member) AS kode_member
+                FROM pembayaran
+                JOIN pendaftaran ON pembayaran.no_trx = pendaftaran.no_trx
+                JOIN barang_out_header ON pembayaran.inv_jual = barang_out_header.invoice
+                WHERE approved = 1
+                AND um_keluar > 0
+
+                UNION ALL
+
+                SELECT invoice AS inv,
+                'UM MASUK' AS keterangan,
+                total AS um_masuk,
+                0 AS um_keluar,
+                kode_user AS user,
+                '' AS inv_jual,
+                kode_member
+                FROM pembayaran_uangmuka
+            ) AS semua $sel_user")->result();
+
+            // body header
+            $body .= '<table style="width: 100%; font-size: 14px;">
+                <tr>
+                    <td style="width: 15%;">Perihal</td>
+                    <td style="width: 2%;"> : </td>
+                    <td colspan="2">' . $file . '</td>
+                </tr>
+                <tr>
+                    <td style="width: 15%;">Periode</td>
+                    <td style="width: 2%;"> : </td>
+                    <td colspan="2">' . date('d-m-Y', strtotime($dari)) . ' ~ ' . date('d-m-Y', strtotime($sampai)) . '</td>
+                </tr>
+                <tr>
+                    <td style="width: 15%;">Kasir</td>
+                    <td style="width: 2%;"> : </td>
+                    <td style="width: 33%;">' . $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama . '</td>
+                    <td style="width: 50%; text-align: right;">Pencetak : ' . $pencetak . '</td>
+                </tr>
+            </table>';
+
+            $body .= $breaktable;
+
+            $tipe_bank = $this->M_global->getResult('tipe_bank');
+
+            $body .= '<table style="width: 100%; font-size: 14px;" autosize="2" cellpadding="5px">';
+            $body .= '<thead>';
+
+            $body .= '<tr>
+                <th rowspan="2" style="width: 5%; border: 1px solid black; background-color: #0e1d2e; color: white;">#</th>
+                <th rowspan="2" style="width: 25%; border: 1px solid black; background-color: #0e1d2e; color: white;">Kwitansi</th>
+                <th rowspan="2" style="width: 25%; border: 1px solid black; background-color: #0e1d2e; color: white;">Member</th>
+                <th colspan="2" style="width: 30%; border: 1px solid black; background-color: #0e1d2e; color: white;">Uang Muka</th>
+                <th rowspan="2" style="width: 15%; border: 1px solid black; background-color: #0e1d2e; color: white;">Total Uang Muka</th>
+            </tr>';
+
+            $body .= '<tr>';
+
+            $body .= '<th style="width: 15%; border: 1px solid black; background-color: #0e1d2e; color: white;">Masuk</th>';
+            $body .= '<th style="width: 15%; border: 1px solid black; background-color: #0e1d2e; color: white;">Keluar</th>';
+
+            $body .= '</tr>';
+
+            $body .= '</thead>';
+            $body .= '<tbody>';
+
+            if (
+                count($detail) < 1
+            ) {
+                $body .= '<tr>
+                    <td colspan="6" style="border: 1px solid black; text-align: center;">Data Tidak Tersedia</td>
+                </tr>';
+            } else {
+                $no = 1;
+                $sisa_um = 0;
+                foreach ($detail as $d) {
+                    $sisa_um += ($d->um_masuk - $d->um_keluar);
+                    $cek_member = $this->M_global->getData('barang_out_header', ['invoice' => $d->inv_jual]);
+
+                    if ($cek_member) {
+                        $member = $this->M_global->getData('member', ['kode_member' => $d->kode_member])->nama;
+
+                        $memberx = $cek_member->kode_member . ' ~ ' . $member;
+                    } else {
+                        $member = 'Masyarakat Umum';
+                        $memberx = $member;
+                    }
+
+                    if (
+                        $param == 1
+                    ) {
+                        $um_masuk = number_format($d->um_masuk);
+                        $um_keluar = number_format($d->um_keluar);
+                        $um_total = number_format($sisa_um);
+                    } else {
+                        $um_masuk = ceil($d->um_masuk);
+                        $um_keluar = ceil($d->um_keluar);
+                        $um_total = ceil($sisa_um);
+                    }
+
+                    $body .= '<tr>';
+
+                    $body .= '<td style="border: 1px solid black; text-align: right;">' . $no . '</td>
+                        <td style="border: 1px solid black;">' . $d->inv . '</td>
+                        <td style="border: 1px solid black;">' . $memberx . '</td>
+                        <td style="border: 1px solid black; text-align: right;">' . $um_masuk . '</td>
+                        <td style="border: 1px solid black; text-align: right;">' . $um_keluar . '</td>
+                        <td style="border: 1px solid black; text-align: right;">' . $um_total . '</td>';
+
+                    $body .= '</tr>';
+
+                    $no++;
+                }
+            }
+
+            $body .= '</tbody>';
+            $body .= '</table>';
         }
 
         $judul = $file;
