@@ -11,7 +11,7 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label for="id" class="control-label">ID <span class="text-danger">**</span></label>
+                                        <label for="id" class="control-label">ID</label>
                                         <input type="text" class="form-control" id="kodeSupplier" name="kodeSupplier" placeholder="Otomatis" readonly value="<?= (!empty($supplier) ? $supplier->kode_supplier : '') ?>">
                                     </div>
                                 </div>
@@ -212,5 +212,43 @@
         nohp.val('');
         fax.val('');
         alamat.val('');
+    }
+
+    function showGuide() {
+        // clean text
+        $('#modal_mgLabel').text(``);
+        $('#modal-isi').text(``);
+
+        $('#modal_mg').modal('show'); // show modal
+
+        // isi text
+        $('#modal_mgLabel').append(`Manual Guide Master Pemasok`);
+        $('#modal-isi').append(`
+            <ol>
+                <li style="font-weight: bold;">Tambah Data</li>
+                <p>
+                    <ul>
+                        <li>Klik tombol Tambah</li>
+                        <li>Selanjutnya isikan Form yang tersedia<br>Tanda (<span style="color: red;">**</span>) mengartikan wajib terisi</li>
+                        <li>Klik tombol Proses</li>
+                    </ul>
+                </p>
+                <li style="font-weight: bold;">Ubah Data</li>
+                <p>
+                    <ul>
+                        <li>Klik tombol Ubah pada list data yang ingin di ubah</li>
+                        <li>Ubah isi Form yang akan di ubah<br>Tanda (<span style="color: red;">**</span>) mengartikan wajib terisi</li>
+                        <li>Klik tombol Proses</li>
+                    </ul>
+                </p>
+                <li style="font-weight: bold;">Hapus Data</li>
+                <p>
+                    <ul>
+                        <li>Klik tombol Hapus pada list data yang ingin di hapus</li>
+                        <li>Saat Muncul Pop Up, klik "Ya, Hapus"</li>
+                    </ul>
+                </p>
+            </ol>
+        `);
     }
 </script>

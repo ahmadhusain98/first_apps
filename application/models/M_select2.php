@@ -4,6 +4,8 @@ class M_select2 extends CI_Model
     // fungsi Cabang
     function getCabang($key, $email)
     {
+        $now = date('Y-m-d');
+
         $limit = ' LIMIT 50';
 
         if ($email == null || $email == "" || $email == "null") {
@@ -15,7 +17,7 @@ class M_select2 extends CI_Model
                 $add_sintak = ' ORDER BY c.cabang ASC';
             }
 
-            $sintak = $this->db->query('SELECT cu.kode_cabang AS id, c.cabang AS text FROM cabang_user cu JOIN cabang c USING (kode_cabang) WHERE cu.email = "' . $email . '" ' . $add_sintak . $limit)->result();
+            $sintak = $this->db->query('SELECT cu.kode_cabang AS id, c.cabang AS text FROM cabang_user cu JOIN cabang c USING (kode_cabang) WHERE c.aktif_sampai > "' . $now . '" AND cu.email = "' . $email . '" ' . $add_sintak . $limit)->result();
         }
 
         return $sintak;

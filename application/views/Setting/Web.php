@@ -246,4 +246,26 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
             $("#lock_pass").show();
         }
     }
+
+    function showGuide() {
+        // clean text
+        $('#modal_mgLabel').text(``);
+        $('#modal-isi').text(``);
+
+        $('#modal_mg').modal('show'); // show modal
+
+        // isi text
+        $('#modal_mgLabel').append(`Manual Guide Setting Apps`);
+        $('#modal-isi').append(`
+            <ol>
+                <li style="font-weight: bold;">Update Setting</li>
+                <p>
+                    <ul>
+                        <li>Ubah isi Form yang akan di ubah<br>Tanda (<span style="color: red;">**</span>) mengartikan wajib terisi</li>
+                        <li>Klik tombol Proses</li>
+                    </ul>
+                </p>
+            </ol>
+        `);
+    }
 </script>

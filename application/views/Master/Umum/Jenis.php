@@ -242,4 +242,42 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
             }
         });
     }
+
+    function showGuide() {
+        // clean text
+        $('#modal_mgLabel').text(``);
+        $('#modal-isi').text(``);
+
+        $('#modal_mg').modal('show'); // show modal
+
+        // isi text
+        $('#modal_mgLabel').append(`Manual Guide Master Jenis Obat`);
+        $('#modal-isi').append(`
+            <ol>
+                <li style="font-weight: bold;">Tambah Data</li>
+                <p>
+                    <ul>
+                        <li>Pastikan Form ID kosong</li>
+                        <li>Isi Form Keterangan</li>
+                        <li>Klik tombol Proses</li>
+                    </ul>
+                </p>
+                <li style="font-weight: bold;">Ubah Data</li>
+                <p>
+                    <ul>
+                        <li>Klik tombol Ubah pada list data yang ingin di ubah</li>
+                        <li>Ubah isi Form Keterangan</li>
+                        <li>Klik tombol Proses</li>
+                    </ul>
+                </p>
+                <li style="font-weight: bold;">Hapus Data</li>
+                <p>
+                    <ul>
+                        <li>Klik tombol Hapus pada list data yang ingin di hapus</li>
+                        <li>Saat Muncul Pop Up, klik "Ya, Hapus"</li>
+                    </ul>
+                </p>
+            </ol>
+        `);
+    }
 </script>

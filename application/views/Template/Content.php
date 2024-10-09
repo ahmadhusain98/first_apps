@@ -162,6 +162,42 @@
             background-color: #f2f2f4 !important;
             color: <?= $color_bg ?> !important;
         }
+
+        .letter {
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            margin: 26px auto 0;
+            max-width: 550px;
+            min-height: 300px;
+            padding: 24px;
+            position: relative;
+            width: 80%;
+        }
+
+        .letter:before,
+        .letter:after {
+            content: "";
+            height: 98%;
+            position: absolute;
+            width: 100%;
+            z-index: -1;
+        }
+
+        .letter:before {
+            background: #fafafa;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+            left: -5px;
+            top: 4px;
+            transform: rotate(-2.5deg);
+        }
+
+        .letter:after {
+            background: #f6f6f6;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+            right: -3px;
+            top: 1px;
+            transform: rotate(1.4deg);
+        }
     </style>
 
     <?php
@@ -207,6 +243,9 @@
             <ul class="navbar-nav ml-auto">
 
                 <!-- Messages Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    <?= ($this->uri->segment(1) == 'Home' ? '' : '<button class="btn" onclick="showGuide()"><i class="fa-solid fa-circle-question"></i>&nbsp;&nbsp;Manual Guide</button>') ?>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" type="button" readonly>
                         <span class="badge badge-info"><?= 'Shift ~ ke: ' . $this->data["shift"] ?></span>
@@ -512,6 +551,20 @@
         <br>
         <br>
         <br>
+
+        <!-- modal manual guide -->
+        <div class="modal fade" id="modal_mg" tabindex="-1" aria-labelledby="modal_mgLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content letter" style="border-radius: 0px;">
+                    <div class="modal-header text-primary">
+                        <h5 class="modal-title" style="font-weight: bold;" id="modal_mgLabel"></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="modal-isi"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- footer -->
         <footer class="main-footer fixed-bottom shadow-lg">
