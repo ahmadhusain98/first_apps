@@ -65,9 +65,11 @@ class Kasir extends CI_Controller
     // fungsi list pembayaran
     public function pembayaran_list($param1 = 1, $param2 = '')
     {
+        $date_now         = date('Y-m-d');
+
         // parameter untuk list table
         $table            = 'pembayaran';
-        $colum            = ['id', 'approved', 'token_pembayaran', 'invoice', 'inv_jual', 'no_trx', 'tgl_pembayaran', 'jam_pembayaran', 'kembalian', 'total', 'kode_user', 'jenis_pembayaran', 'cash', 'card', 'shift'];
+        $colum            = ['id', 'approved', 'token_pembayaran', 'invoice', 'inv_jual', 'no_trx', 'tgl_pembayaran', 'jam_pembayaran', 'kembalian', 'total', 'kode_user', 'jenis_pembayaran', 'cash', 'card', 'shift', 'um_masuk'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -129,15 +131,18 @@ class Kasir extends CI_Controller
             $row[]  = $no++;
             $row[]  = date('d/m/Y', strtotime($rd->tgl_pembayaran)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_pembayaran)) . '<br>' . (($rd->approved > 0) ? '<span class="badge badge-primary">Acc</span>' : '<span class="badge badge-danger">Belum diAcc</span>');
             $row[]  = $rd->invoice;
-            $row[]  = $rd->no_trx;
+            $row[]  = ($rd->no_trx == null) ? 'UMUM' : $rd->no_trx;
             $row[]  = ($rd->jenis_pembayaran == 0 ? 'CASH' : (($rd->jenis_pembayaran == 1) ? 'CARD' : 'CASH & CARD'));
+            $row[]  = 'Rp. ' . '<span class="float-right">' . number_format($rd->total - $rd->kembalian - $rd->um_masuk) . '</span>';
             $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama . '<br><span class="badge badge-danger">Shift: ' . $rd->shift . '</span>';
 
             if ($confirmed > 0) {
+                $cek_date = (strtotime($date_now) <= strtotime($rd->tgl_pembayaran)) ? '' : 'disabled';
+
                 if ($rd->approved > 0) {
-                    $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-dark" onclick="actived(' . "'" . $rd->token_pembayaran . "', 1" . ')" ' . $confirm_diss . '><i class="fa-solid fa-circle-xmark"></i></button>';
+                    $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-dark" onclick="actived(' . "'" . $rd->token_pembayaran . "', 1" . ')" ' . $confirm_diss . ' ' . $cek_date . '><i class="fa-solid fa-circle-xmark"></i></button>';
                 } else {
-                    $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-primary" onclick="actived(' . "'" . $rd->token_pembayaran . "', 0" . ')" ' . $confirm_diss . '><i class="fa-solid fa-circle-check"></i></button>';
+                    $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-primary" onclick="actived(' . "'" . $rd->token_pembayaran . "', 0" . ')" ' . $confirm_diss . ' ' . $cek_date . '><i class="fa-solid fa-circle-check"></i></button>';
                 }
             } else {
                 $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-primary" disabled><i class="fa-solid fa-circle-check"></i></button>';
@@ -569,10 +574,14 @@ class Kasir extends CI_Controller
             $tarif_paket    = null;
             $single_tarif   = null;
             $penjualan      = null;
+
+            $pendaftaranx   = $this->M_global->getDataResult('pendaftaran', ['kode_cabang' => $kode_cabang, 'status_trx' => 0]);
+            $jualx          = $this->M_global->getDataResult('barang_out_header', ['kode_cabang' => $kode_cabang, 'status_jual' => 0]);
         } else {
             $bayar_detail   = $this->M_global->getDataResult('bayar_card_detail', ['token_pembayaran' => $param]);
             $pembayaran     = $this->M_global->getData('pembayaran', ['token_pembayaran' => $param]);
             $pendaftaran    = $this->M_global->getData('pendaftaran', ['no_trx' => $pembayaran->no_trx]);
+            $jualx          = $this->M_global->getDataResult('barang_out_header', ['kode_cabang' => $kode_cabang, 'invoice' => $pembayaran->inv_jual]);
             if (!empty($pendaftaran)) {
                 $tarif_paket    = $this->M_global->getDataResult('tarif_paket_pasien', ['no_trx' => $pendaftaran->no_trx]);
 
@@ -581,11 +590,14 @@ class Kasir extends CI_Controller
                 $riwayat        = $this->M_global->getDataResult('pendaftaran', ['kode_member' => $kode_member]);
                 $single_tarif   = $this->M_global->getDataResult('pembayaran_tarif_single', ['token_pembayaran' => $param]);
                 $penjualan      = $this->db->query("SELECT bo.*, b.nama AS nama_barang, s.keterangan AS nama_satuan FROM barang_out_detail bo JOIN barang b ON b.kode_barang = bo.kode_barang JOIN m_satuan s ON s.kode_satuan = bo.kode_satuan WHERE bo.invoice = '$pembayaran->inv_jual'")->result();
+
+                $pendaftaranx   = $this->M_global->getDataResult('pendaftaran', ['kode_cabang' => $kode_cabang, 'no_trx' => $pembayaran->no_trx]);
             } else {
                 $tarif_paket    = null;
                 $riwayat        = null;
                 $single_tarif   = null;
                 $penjualan      = null;
+                $pendaftaranx   = null;
             }
         }
 
@@ -598,14 +610,15 @@ class Kasir extends CI_Controller
             'web_version'       => $web_version->version,
             'list_data'         => '',
             'data_pembayaran'   => $pembayaran,
-            'pendaftaran'       => $this->M_global->getDataResult('pendaftaran', ['kode_cabang' => $kode_cabang, 'status_trx' => 0]),
-            'data_penjualan'    => $this->M_global->getDataResult('barang_out_header', ['kode_cabang' => $kode_cabang, 'status_jual' => 0]),
+            'pendaftaran'       => $pendaftaranx,
+            'data_penjualan'    => $jualx,
             'bayar_detail'      => $bayar_detail,
             'tarif_paket'       => $tarif_paket,
             'riwayat'           => $riwayat,
             'single_tarif'      => $single_tarif,
             'penjualan'         => $penjualan,
             'role'              => $this->M_global->getResult('m_role'),
+            'promo'             => $this->M_global->getDataResult('m_promo', ['kode_cabang' => $kode_cabang]),
         ];
 
         $this->template->load('Template/Content', 'Kasir/Form_pembayaran', $parameter);
@@ -791,8 +804,8 @@ class Kasir extends CI_Controller
             'card'              => $card,
             'kode_promo'        => $kode_promo,
             'discpr_promo'      => $discpr_promo,
-            'kembalian'         => $kembalian,
-            'um_masuk'          => $kembalian,
+            'kembalian'         => ($cek_um > 0) ? 0 : $kembalian,
+            'um_masuk'          => ($cek_um > 0) ? $kembalian : 0,
             'cek_um'            => $cek_um,
         ];
 

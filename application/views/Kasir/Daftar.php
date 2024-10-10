@@ -51,9 +51,10 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                         <tr class="text-center">
                                             <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
                                             <th width="15%">Tgl/Jam Pembayaran</th>
-                                            <th width="20%">Invoice</th>
+                                            <th width="15%">Invoice</th>
                                             <th width="15%">No. Transaksi</th>
                                             <th width="15%">Jenis Pembayaran</th>
+                                            <th width="10%">Total</th>
                                             <th width="10%">Penerima</th>
                                             <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                         </tr>

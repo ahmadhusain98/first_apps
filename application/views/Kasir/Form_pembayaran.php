@@ -99,13 +99,10 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="kode_promo">Promo</label>
-                                <select name="kode_promo" id="kode_promo" class="form-control select2_promo" data-placeholder="~ Pilih Promo" onchange="cek_promo(this.value)">
-                                    <?php
-                                    if (!empty($data_pembayaran)) :
-                                        $m_promo = $this->M_global->getData('m_promo', ['kode_promo' => $data_pembayaran->kode_promo]);
-                                        echo '<option value="' . $data_pembayaran->kode_promo . '">' . $data_pembayaran->nama . '</option>';
-                                    endif;
-                                    ?>
+                                <select name="kode_promo" id="kode_promo" class="form-control select2_global" data-placeholder="~ Pilih Promo" onchange="cek_promo(this.value)">
+                                    <?php foreach ($promo as $p) : ?>
+                                        <option value="<?= $p->kode_promo ?>" <?= (!empty($data_pembayaran) ? (($data_pembayaran->kode_promo == $p->kode_promo) ? 'selected' : '') : '') ?>><?= $p->nama ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="col-md-6">
@@ -120,7 +117,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="">Kekurangan Dibayar <?= (!empty($data_pembayaran) ? (($data_pembayaran->cek_um == 1) ? '<span class="badge badge-primary">Masuk Ke Uang Muka</span>' : '') : '') ?></label>
-                                <input type="text" class="form-control text-right font-weight-bold" placeholder="Kekurangan" id="total_kurang" name="total_kurang" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->kembalian) : '0') ?>" readonly>
+                                <input type="text" class="form-control text-right font-weight-bold" placeholder="Kekurangan" id="total_kurang" name="total_kurang" value="<?= (!empty($data_pembayaran) ? number_format(($data_pembayaran->cek_um > 0) ? $data_pembayaran->um_masuk : $data_pembayaran->kembalian) : '0') ?>" readonly>
                             </div>
                         </div>
                     </div>
