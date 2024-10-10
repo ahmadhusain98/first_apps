@@ -9,42 +9,42 @@
                     <div class="form-group">
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="nik">NIK</label>
+                                <label for="nik">NIK <sup class="text-danger">**</sup></label>
                                 <input type="number" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="NIK" class="form-control" placeholder="NIK" id="nik" name="nik" value="<?= ((!empty($data_member)) ? $data_member->nik : '') ?>" onchange="getAddress(this.value, 'nik')" <?= (!empty($data_member) ? 'readonly' : '') ?>>
                             </div>
                             <div class="col-md-6">
-                                <label for="nama">Nama</label>
+                                <label for="nama">Nama <sup class="text-danger">**</sup></label>
                                 <input type="hidden" class="form-control" id="kodeMember" name="kodeMember" value="<?= ((!empty($data_member)) ? $data_member->kode_member : '') ?>">
                                 <input type="text" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Nama Lengkap" class="form-control" placeholder="Nama Lengkap" id="nama" name="nama" value="<?= ((!empty($data_member)) ? $data_member->nama : '') ?>" onkeyup="ubah_nama(this.value, 'nama')">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="email">Email</label>
+                                <label for="email">Email <sup class="text-danger">**</sup></label>
                                 <input type="email" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Email" class="form-control" placeholder="Email" id="email" name="email" onchange="cekEmail('email')" value="<?= ((!empty($data_member)) ? $data_member->email : '') ?>">
                             </div>
                             <div class="col-md-6">
-                                <label for="nohp">No. Hp</label>
+                                <label for="nohp">No. Hp <sup class="text-danger">**</sup></label>
                                 <input type="number" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="No. HP" class="form-control" placeholder="No. Hp" id="nohp" name="nohp" value="<?= ((!empty($data_member)) ? $data_member->nohp : '') ?>">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="tmp_lahir">Tempat Lahir</label>
+                                <label for="tmp_lahir">Tempat Lahir <sup class="text-danger">**</sup></label>
                                 <input type="text" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Tempat Lahir" class="form-control" placeholder="Tempat Lahir" id="tmp_lahir" name="tmp_lahir" value="<?= ((!empty($data_member)) ? $data_member->tmp_lahir : '') ?>" onkeyup="ubah_nama(this.value, 'tmp_lahir')">
                             </div>
                             <div class="col-md-6">
-                                <label for="tgl_lahir">Tanggal Lahir</label>
+                                <label for="tgl_lahir">Tanggal Lahir <sup class="text-danger">**</sup></label>
                                 <input type="date" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Tgl Lahir" class="form-control" placeholder="Tgl Lahir" id="tgl_lahir" name="tgl_lahir" value="<?= ((!empty($data_member)) ? (isset($data_member->tgl_lahir) ? date('Y-m-d', strtotime($data_member->tgl_lahir)) : date('Y-m-d')) : date('Y-m-d')) ?>">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="password">Sandi</label>
+                                <label for="password">Sandi <sup class="text-danger">**</sup></label>
                                 <input type="password" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Sandi" class="form-control" placeholder="Sandi" id="password" name="password" value="<?= ((!empty($data_member)) ? $data_member->secondpass : '') ?>">
                             </div>
                             <div class="col-md-6">
-                                <label for="pendidikan">Pendidikan</label>
+                                <label for="pendidikan">Pendidikan <sup class="text-danger">**</sup></label>
                                 <select name="pendidikan" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Pendidikan" id="pendidikan" class="select2_pendidikan" data-placeholder="~ Pilih Pendidikan">
                                     <?php
                                     if (!empty($data_member)) {
@@ -57,7 +57,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="pekerjaan">Pekerjaan</label>
+                                <label for="pekerjaan">Pekerjaan <sup class="text-danger">**</sup></label>
                                 <select name="pekerjaan" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Pekerjaan" id="pekerjaan" class="select2_pekerjaan" data-placeholder="~ Pilih Pekerjaan">
                                     <?php
                                     if (!empty($data_member)) {
@@ -68,7 +68,7 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label for="agama">Agama</label>
+                                <label for="agama">Agama <sup class="text-danger">**</sup></label>
                                 <select name="agama" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Agama" id="agama" class="select2_agama" data-placeholder="~ Pilih Agama">
                                     <?php
                                     if (!empty($data_member)) {
@@ -81,7 +81,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="jkel">Jenis Kelamin</label>
+                                <label for="jkel">Jenis Kelamin <sup class="text-danger">**</sup></label>
                                 <select name="jkel" id="jkel" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Gender" class="form-control select2_global" data-placeholder="~ Pilih Gender">
                                     <option value="">~ Pilih Gender</option>
                                     <option value="P" <?= (!empty($data_member) ? (($data_member->jkel == 'P') ? 'selected' : '') : '') ?>>Laki-laki</option>
@@ -89,7 +89,7 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label for="provinsi">Provinsi</label>
+                                <label for="provinsi">Provinsi <sup class="text-danger">**</sup></label>
                                 <select name="provinsi" id="provinsi" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Provinsi" class="form-control select2_provinsi" data-placeholder="~ Pilih Provinsi" onchange="getKabupaten(this.value)">
                                     <?php
                                     if (!empty($data_member)) {
@@ -102,7 +102,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="kabupaten">Kabupaten</label>
+                                <label for="kabupaten">Kabupaten <sup class="text-danger">**</sup></label>
                                 <select name="kabupaten" id="kabupaten" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Kabupaten" class="form-control select2_kabupaten" data-placeholder="~ Pilih Kabupaten" onchange="getKecamatan(this.value)">
                                     <?php
                                     if (!empty($data_member)) {
@@ -113,7 +113,7 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label for="kecamatan">Kecamatan</label>
+                                <label for="kecamatan">Kecamatan <sup class="text-danger">**</sup></label>
                                 <select name="kecamatan" id="kecamatan" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Kecamatan" class="form-control select2_kecamatan" data-placeholder="~ Pilih Kecamatan">
                                     <?php
                                     if (!empty($data_member)) {
@@ -126,21 +126,21 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="desa">Desa</label>
+                                <label for="desa">Desa <sup class="text-danger">**</sup></label>
                                 <input type="text" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Desa" class="form-control" placeholder="Desa" id="desa" name="desa" value="<?= ((!empty($data_member)) ? $data_member->desa : '') ?>" onkeyup="ubah_nama(this.value, 'desa')">
                             </div>
                             <div class="col-md-6">
-                                <label for="kodepos">Kode POS</label>
+                                <label for="kodepos">Kode POS <sup class="text-danger">**</sup></label>
                                 <input type="number" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Kode Pos" class="form-control" placeholder="Kode Pos" id="kodepos" name="kodepos" value="<?= ((!empty($data_member)) ? $data_member->kodepos : '') ?>" onkeyup="cekLength(this.value, 'kodepos')">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="rt">RT</label>
+                                <label for="rt">RT <sup class="text-danger">**</sup></label>
                                 <input type="text" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="RT" class="form-control" placeholder="RT" id="rt" name="rt" value="<?= ((!empty($data_member)) ? $data_member->rt : '') ?>">
                             </div>
                             <div class="col-md-6">
-                                <label for="rw">RW</label>
+                                <label for="rw">RW <sup class="text-danger">**</sup></label>
                                 <input type="number" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="RW" class="form-control" placeholder="RW" id="rw" name="rw" value="<?= ((!empty($data_member)) ? $data_member->rw : '') ?>">
                             </div>
                         </div>
@@ -408,5 +408,43 @@
         kodepos.val('');
         rt.val('');
         rw.val('');
+    }
+
+    function showGuide() {
+        // clean text
+        $('#modal_mgLabel').text(``);
+        $('#modal-isi').text(``);
+
+        $('#modal_mg').modal('show'); // show modal
+
+        // isi text
+        $('#modal_mgLabel').append(`Manual Guide Pendaftaran Member`);
+        $('#modal-isi').append(`
+            <ol>
+                <li style="font-weight: bold;">Tambah Data</li>
+                <p>
+                    <ul>
+                        <li>Klik tombol Tambah</li>
+                        <li>Selanjutnya isikan Form yang tersedia<br>Tanda (<span style="color: red;">**</span>) mengartikan wajib terisi</li>
+                        <li>Klik tombol Proses</li>
+                    </ul>
+                </p>
+                <li style="font-weight: bold;">Ubah Data</li>
+                <p>
+                    <ul>
+                        <li>Klik tombol Ubah pada list data yang ingin di ubah</li>
+                        <li>Ubah isi Form yang akan di ubah<br>Tanda (<span style="color: red;">**</span>) mengartikan wajib terisi</li>
+                        <li>Klik tombol Proses</li>
+                    </ul>
+                </p>
+                <li style="font-weight: bold;">Hapus Data</li>
+                <p>
+                    <ul>
+                        <li>Klik tombol Hapus pada list data yang ingin di hapus</li>
+                        <li>Saat Muncul Pop Up, klik "Ya, Hapus"</li>
+                    </ul>
+                </p>
+            </ol>
+        `);
     }
 </script>
