@@ -550,6 +550,10 @@
     }
 
     function showGuide() {
+        // ubah ukuran modal
+        $('.modal-dialog').removeClass('modal-lg')
+        $('.modal-dialog').addClass('modal-xl')
+
         // clean text
         $('#modal_mgLabel').text(``);
         $('#modal-isi').text(``);
@@ -564,7 +568,17 @@
                 <p>
                     <ul>
                         <li>Klik tombol Tambah</li>
-                        <li>Selanjutnya isikan Form yang tersedia<br>Tanda (<span style="color: red;">**</span>) mengartikan wajib terisi</li>
+                        <li>Selanjutnya isikan Form berikut:</li>
+                        <p>
+                            <ul>
+                                <li>Cari Member yang akan didaftarkan<br>(jika ingin update data member, klik tombol Update di kanan form member)</li>
+                                <li>Pilih Ruangan/Bed</li>
+                                <li>Pilih Poli</li>
+                                <li>Pilih Dokter, dan</li>
+                                <li>Pilih Tarif Paket jika menggunakan Tarif Paket, jika tidak maka tidak perlu di pilih</li>
+                            </ul>
+                        </p>
+                        <li>Tanda (<span style="color: red;">**</span>) mengartikan wajib terisi</li>
                         <li>Klik tombol Proses</li>
                     </ul>
                 </p>
@@ -572,7 +586,17 @@
                 <p>
                     <ul>
                         <li>Klik tombol Ubah pada list data yang ingin di ubah</li>
-                        <li>Ubah isi Form yang akan di ubah<br>Tanda (<span style="color: red;">**</span>) mengartikan wajib terisi</li>
+                        <li>Selanjutnya ubah Form yang ingin diubah, diantaranya:</li>
+                        <p>
+                            <ul>
+                                <li>Form Member yang akan didaftarkan<br>(jika ingin update data member, klik tombol Update di kanan form member)</li>
+                                <li>Form Ruangan/Bed</li>
+                                <li>Form Poli</li>
+                                <li>Form Dokter, dan</li>
+                                <li>Form Tarif Paket jika menggunakan Tarif Paket, jika tidak maka tidak perlu di pilih</li>
+                            </ul>
+                        </p>
+                        <li>Tanda (<span style="color: red;">**</span>) mengartikan wajib terisi</li>
                         <li>Klik tombol Proses</li>
                     </ul>
                 </p>

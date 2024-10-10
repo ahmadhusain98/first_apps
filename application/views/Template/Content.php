@@ -167,7 +167,6 @@
             background: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             margin: 26px auto 0;
-            max-width: 550px;
             min-height: 300px;
             padding: 24px;
             position: relative;
