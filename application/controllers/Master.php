@@ -1472,7 +1472,27 @@ class Master extends CI_Controller
         }
 
         if ($cek) { // jika fungsi berjalan
-            aktifitas_user('Master Barang', $cek_param, $kodeBarang, $this->M_global->getData('barang', ['kode_barang' => $kodeBarang])->nama, $isi);
+            $isi_detail = [
+                'kode_barang'       => 'kode: ' . $kodeBarang,
+                'nama'              => 'nama: ' . $nama,
+                'kode_satuan'       => 'satuan1: ' . $kode_satuan . '/' . $this->M_global->getData('m_satuan', ['kode_satuan' => $kode_satuan])->keterangan,
+                'kode_satuan2'      => 'satuan2: ' . $kode_satuan2 . '/' . $this->M_global->getData('m_satuan', ['kode_satuan' => $kode_satuan2])->keterangan,
+                'kode_satuan3'      => 'satuan3: ' . $kode_satuan3 . '/' . $this->M_global->getData('m_satuan', ['kode_satuan' => $kode_satuan3])->keterangan,
+                'qty_satuan2'       => 'qty_satuan2: ' . $qty_satuan2,
+                'qty_satuan3'       => 'qty_satuan3: ' . $qty_satuan3,
+                'opsi_hpp'          => 'opsi_hpp: ' . $opsi_hpp,
+                'persentase_hpp'    => 'prosentase_hpp: ' . $persentase_hpp,
+                'kode_kategori'     => 'kategori: ' . $kode_kategori . '/' . $this->M_global->getData('m_kategori', ['kode_kategori' => $kode_kategori])->keterangan,
+                'image'             => 'iamge: ' . $image,
+                'hna'               => 'hna: ' . number_format($hna),
+                'hpp'               => 'hpp: ' . number_format($hpp),
+                'harga_jual'        => 'harga_jual: ' . number_format($harga_jual),
+                'nilai_persediaan'  => 'nilai_persediaan: ' . number_format($nilai_persediaan),
+                'stok_min'          => 'stok_min: ' . number_format($stok_min),
+                'stok_max'          => 'stok_max: ' . number_format($stok_max),
+            ];
+
+            aktifitas_user('Master Barang', $cek_param, $kodeBarang, $this->M_global->getData('barang', ['kode_barang' => $kodeBarang])->nama, $isi_detail);
 
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);

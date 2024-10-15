@@ -2,7 +2,13 @@
     .dataTables_filter {
         display: none;
     }
+
+    [data-toggle="tab"].active {
+        background-color: #007bff !important;
+        color: white !important;
+    }
 </style>
+
 <?php
 if ($data_user->on_off == 1) {
     $status = 'Aktif';
@@ -15,10 +21,11 @@ if ($data_user->on_off == 1) {
     $on_off = '';
 }
 ?>
+
 <section class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="card card-primary card-outline">
                     <div class="card-body box-profile">
                         <div class="text-center">
@@ -52,7 +59,7 @@ if ($data_user->on_off == 1) {
                     </div>
                 </div>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-10">
                 <div class="card">
                     <div class="card-header p-2">
                         <ul class="nav nav-pills">
@@ -62,10 +69,10 @@ if ($data_user->on_off == 1) {
                         </ul>
                     </div>
                     <div class="card-body">
-                        <div class="tab-content">
+                        <div class="tab-content bg-white">
                             <div class="active tab-pane" id="activity">
-                                <div class="row">
-                                    <div class="col">
+                                <div class="row bg-white">
+                                    <div class="col-12">
                                         <div class="table-responsive">
                                             <div class="h4 text-primary font-weight-bold">Masuk & Keluar Sistem</div>
                                             <table class="table table-bordered" width="100%" style="border-radius: 10px;">
@@ -176,9 +183,8 @@ if ($data_user->on_off == 1) {
                                         </div>
                                     </div>
                                 </div>
-                                <hr class="border-primary">
-                                <div class="row">
-                                    <div class="col">
+                                <div class="row bg-white">
+                                    <div class="col-12">
                                         <div class="row">
                                             <div class="col-sm-9" style="margin-bottom: 5px;">
                                                 <div class="h4 text-primary font-weight-bold">Aktifitas Ketika di dalam Sistem</div>
@@ -235,7 +241,7 @@ if ($data_user->on_off == 1) {
                                 </div>
                             </div>
                             <div class="tab-pane" id="settings">
-                                <form class="form-horizontal" id="form-profile" method="POST">
+                                <form class="form-horizontal bg-white" id="form-profile" method="POST">
                                     <div class="form-group row">
                                         <label for="inputName" class="col-sm-2 col-form-label">Profile</label>
                                         <div class="col-sm-10">
@@ -289,7 +295,7 @@ if ($data_user->on_off == 1) {
                                 </form>
                             </div>
                             <div class="tab-pane" id="password">
-                                <form method="post" id="form-password">
+                                <form method="post" id="form-password" class="bg-white">
                                     <div class="form-group row">
                                         <label for="inputName" class="col-sm-2 col-form-label">Password Baru</label>
                                         <div class="input-group col-sm-10">
