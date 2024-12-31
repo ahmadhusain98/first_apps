@@ -151,4 +151,36 @@ class M_global extends CI_Model
 
         return $sintax;
     }
+
+    function getDataSampah() {
+        $sintak = $this->db->query("SELECT * FROM (
+        -- master
+        SELECT 
+        kode_satuan AS id,
+        'Master ~ Satuan' AS menu,
+        keterangan AS nama,
+        tgl_hapus AS tgl,
+        jam_hapus AS jam,
+        'm_satuan' AS tabel
+        FROM m_satuan
+        WHERE hapus > 0
+
+        UNION ALL
+
+        SELECT 
+        kode_kategori AS id,
+        'Master ~ Kategori' AS menu,
+        keterangan AS nama,
+        tgl_hapus AS tgl,
+        jam_hapus AS jam,
+        'm_kategori' AS tabel
+        FROM m_kategori
+        WHERE hapus > 0
+
+        -- end master
+        ) AS query_all
+        ORDER BY tgl, jam DESC")->result();
+
+        return $sintak;
+    }
 }

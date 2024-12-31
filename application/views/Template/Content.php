@@ -412,7 +412,7 @@
                                 <li class="nav-item">
                                     <a type="button" class="nav-link <?= $aktifUrl ?>" onclick="getUrl('<?= $m->url ?>')">
                                         &nbsp;<?= $m->icon ?>
-                                        <p>
+                                        <p class="<?= ($m->nama == 'Sampah') ? 'text-danger font-weight-bold' : '' ?>">
                                             <?= $m->nama ?>
                                         </p>
                                     </a>
@@ -421,7 +421,7 @@
                                 <li class="nav-item">
                                     <a type="button" class="nav-link <?= $aktifUrl ?>">
                                         &nbsp;<?= $m->icon ?>
-                                        <p>
+                                        <p class="<?= ($m->nama == 'Sampah') ? 'text-danger font-weight-bold' : '' ?>">
                                             <?= $m->nama ?>
                                             <i class="right fas fa-angle-left"></i>
                                         </p>

@@ -61,15 +61,15 @@ class Master extends CI_Controller
             'page'          => 'Satuan',
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
-            'list_data'     => 'Master/satuan_list',
-            'param1'        => '',
+            'list_data'     => 'Master/satuan_list/',
+            'param1'        => '1',
         ];
 
         $this->template->load('Template/Content', 'Master/Umum/Satuan', $parameter);
     }
 
     // fungsi list satuan
-    public function satuan_list($param1 = '')
+    public function satuan_list($param1)
     {
         // parameter untuk list table
         $table            = 'm_satuan';
@@ -77,7 +77,7 @@ class Master extends CI_Controller
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
-        $kondisi_param1   = '';
+        $kondisi_param1   = 'hapus < ';
 
         // kondisi role
         $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
@@ -213,7 +213,8 @@ class Master extends CI_Controller
     {
         // jalankan fungsi hapus satuan berdasarkan kode_satuan
         aktifitas_user('Master Satuan', 'menghapus', $kode_satuan, $this->M_global->getData('m_satuan', ['kode_satuan' => $kode_satuan])->keterangan);
-        $cek = $this->M_global->delData('m_satuan', ['kode_satuan' => $kode_satuan]);
+        // $cek = $this->M_global->delData('m_satuan', ['kode_satuan' => $kode_satuan]);
+        $cek = $this->M_global->updateData('m_satuan', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_satuan' => $kode_satuan]);
 
         if ($cek) { // jika fungsi berjalan
 
@@ -247,7 +248,7 @@ class Master extends CI_Controller
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
             'list_data'     => 'Master/kategori_list',
-            'param1'        => '',
+            'param1'        => '1',
         ];
 
         $this->template->load('Template/Content', 'Master/Umum/Kategori', $parameter);
@@ -262,7 +263,7 @@ class Master extends CI_Controller
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
-        $kondisi_param1   = '';
+        $kondisi_param1   = 'hapus < ';
 
         // kondisi role
         $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
@@ -391,7 +392,8 @@ class Master extends CI_Controller
     {
         // jalankan fungsi hapus kategori berdasarkan kode_kategori
         aktifitas_user('Master Kategori', 'menghapus', $kode_kategori, $this->M_global->getData('m_kategori', ['kode_kategori' => $kode_kategori])->keterangan);
-        $cek = $this->M_global->delData('m_kategori', ['kode_kategori' => $kode_kategori]);
+        // $cek = $this->M_global->delData('m_kategori', ['kode_kategori' => $kode_kategori]);
+        $cek = $this->M_global->updateData('m_kategori', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_kategori' => $kode_kategori]);
 
         if ($cek) { // jika fungsi berjalan
 
