@@ -155,78 +155,114 @@ class M_global extends CI_Model
     function getDataSampah()
     {
         $sintak = $this->db->query("SELECT * FROM (
-        -- master
-        SELECT 
-        kode_satuan AS id,
-        'Master ~ Satuan' AS menu,
-        keterangan AS nama,
-        tgl_hapus AS tgl,
-        jam_hapus AS jam,
-        'm_satuan' AS tabel
-        FROM m_satuan
-        WHERE hapus > 0
+            -- master
+            SELECT 
+            kode_satuan AS id,
+            'Master ~ Satuan' AS menu,
+            keterangan AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'm_satuan' AS tabel
+            FROM m_satuan
+            WHERE hapus > 0
 
-        UNION ALL
+            UNION ALL
 
-        SELECT 
-        kode_kategori AS id,
-        'Master ~ Kategori' AS menu,
-        keterangan AS nama,
-        tgl_hapus AS tgl,
-        jam_hapus AS jam,
-        'm_kategori' AS tabel
-        FROM m_kategori
-        WHERE hapus > 0
+            SELECT 
+            kode_kategori AS id,
+            'Master ~ Kategori' AS menu,
+            keterangan AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'm_kategori' AS tabel
+            FROM m_kategori
+            WHERE hapus > 0
 
-        UNION ALL
+            UNION ALL
 
-        SELECT 
-        kode_jenis AS id,
-        'Master ~ jenis' AS menu,
-        keterangan AS nama,
-        tgl_hapus AS tgl,
-        jam_hapus AS jam,
-        'm_jenis' AS tabel
-        FROM m_jenis
-        WHERE hapus > 0
+            SELECT 
+            kode_jenis AS id,
+            'Master ~ jenis' AS menu,
+            keterangan AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'm_jenis' AS tabel
+            FROM m_jenis
+            WHERE hapus > 0
 
-        UNION ALL
+            UNION ALL
 
-        SELECT 
-        kode_supplier AS id,
-        'Master ~ supplier' AS menu,
-        nama AS nama,
-        tgl_hapus AS tgl,
-        jam_hapus AS jam,
-        'm_supplier' AS tabel
-        FROM m_supplier
-        WHERE hapus > 0
+            SELECT 
+            kode_supplier AS id,
+            'Master ~ supplier' AS menu,
+            nama AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'm_supplier' AS tabel
+            FROM m_supplier
+            WHERE hapus > 0
 
-        UNION ALL
+            UNION ALL
 
-        SELECT 
-        kode_bank AS id,
-        'Master ~ bank' AS menu,
-        keterangan AS nama,
-        tgl_hapus AS tgl,
-        jam_hapus AS jam,
-        'm_bank' AS tabel
-        FROM m_bank
-        WHERE hapus > 0
+            SELECT 
+            kode_bank AS id,
+            'Master ~ bank' AS menu,
+            keterangan AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'm_bank' AS tabel
+            FROM m_bank
+            WHERE hapus > 0
 
-        UNION ALL
+            UNION ALL
 
-        SELECT 
-        kode_pekerjaan AS id,
-        'Master ~ pekerjaan' AS menu,
-        keterangan AS nama,
-        tgl_hapus AS tgl,
-        jam_hapus AS jam,
-        'm_pekerjaan' AS tabel
-        FROM m_pekerjaan
-        WHERE hapus > 0
+            SELECT 
+            kode_pekerjaan AS id,
+            'Master ~ pekerjaan' AS menu,
+            keterangan AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'm_pekerjaan' AS tabel
+            FROM m_pekerjaan
+            WHERE hapus > 0
 
-        -- end master
+            UNION ALL
+
+            SELECT 
+            kode_agama AS id,
+            'Master ~ agama' AS menu,
+            keterangan AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'm_agama' AS tabel
+            FROM m_agama
+            WHERE hapus > 0
+
+            UNION ALL
+
+            SELECT 
+            kode_pendidikan AS id,
+            'Master ~ pendidikan' AS menu,
+            keterangan AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'm_pendidikan' AS tabel
+            FROM m_pendidikan
+            WHERE hapus > 0
+
+            UNION ALL
+
+            SELECT 
+            kode_poli AS id,
+            'Master ~ poli' AS menu,
+            keterangan AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'm_poli' AS tabel
+            FROM m_poli
+            WHERE hapus > 0
+
+            -- end master
         ) AS query_all
         ORDER BY tgl, jam DESC")->result();
 

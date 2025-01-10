@@ -2071,14 +2071,14 @@ class Master extends CI_Controller
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
             'list_data'     => 'Master/agama_list',
-            'param1'        => '',
+            'param1'        => '1',
         ];
 
         $this->template->load('Template/Content', 'Master/Umum/Agama', $parameter);
     }
 
     // fungsi list agama
-    public function agama_list($param1 = '')
+    public function agama_list($param1)
     {
         // parameter untuk list table
         $table                  = 'm_agama';
@@ -2086,7 +2086,7 @@ class Master extends CI_Controller
         $order                  = 'id';
         $order2                 = 'desc';
         $order_arr              = ['id' => 'asc'];
-        $kondisi_param1         = '';
+        $kondisi_param1         = 'hapus < ';
 
         // kondisi role
         $updated                = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
@@ -2214,7 +2214,8 @@ class Master extends CI_Controller
     {
         // jalankan fungsi hapus agama berdasarkan kode_agama
         aktifitas_user('Master Agama', 'menghapus', $kode_agama, $this->M_global->getData('m_agama', ['kode_agama' => $kode_agama])->keterangan);
-        $cek = $this->M_global->delData('m_agama', ['kode_agama' => $kode_agama]);
+        // $cek = $this->M_global->delData('m_agama', ['kode_agama' => $kode_agama]);
+        $cek = $this->M_global->updateData('m_agama', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_agama' => $kode_agama]);
 
         if ($cek) { // jika fungsi berjalan
 
@@ -2248,7 +2249,7 @@ class Master extends CI_Controller
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
             'list_data'     => 'Master/pendidikan_list',
-            'param1'        => '',
+            'param1'        => '1',
         ];
 
         $this->template->load('Template/Content', 'Master/Umum/Pendidikan', $parameter);
@@ -2263,7 +2264,7 @@ class Master extends CI_Controller
         $order                  = 'id';
         $order2                 = 'desc';
         $order_arr              = ['id' => 'asc'];
-        $kondisi_param1         = '';
+        $kondisi_param1         = 'hapus < ';
 
         // kondisi role
         $updated                = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
@@ -2391,7 +2392,8 @@ class Master extends CI_Controller
     {
         // jalankan fungsi hapus pendidikan berdasarkan kode_pendidikan
         aktifitas_user('Master Pendidikan', 'menghapus', $kode_pendidikan, $this->M_global->getData('m_pendidikan', ['kode_pendidikan' => $kode_pendidikan])->keterangan);
-        $cek = $this->M_global->delData('m_pendidikan', ['kode_pendidikan' => $kode_pendidikan]);
+        // $cek = $this->M_global->delData('m_pendidikan', ['kode_pendidikan' => $kode_pendidikan]);
+        $cek = $this->M_global->updateData('m_pendidikan', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_pendidikan' => $kode_pendidikan]);
 
         if ($cek) { // jika fungsi berjalan
 
@@ -2425,7 +2427,7 @@ class Master extends CI_Controller
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
             'list_data'     => 'Master/poli_list',
-            'param1'        => '',
+            'param1'        => '1',
         ];
 
         $this->template->load('Template/Content', 'Master/Umum/Poli', $parameter);
@@ -2440,7 +2442,7 @@ class Master extends CI_Controller
         $order                    = 'id';
         $order2                   = 'desc';
         $order_arr                = ['id' => 'asc'];
-        $kondisi_param1           = '';
+        $kondisi_param1           = 'hapus < ';
 
         // kondisi role
         $updated                  = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
@@ -2573,7 +2575,8 @@ class Master extends CI_Controller
     {
         // jalankan fungsi hapus poli berdasarkan kode_poli
         aktifitas_user('Master Poli', 'menghapus', $kode_poli, $this->M_global->getData('m_poli', ['kode_poli' => $kode_poli])->keterangan);
-        $cek = $this->M_global->delData('m_poli', ['kode_poli' => $kode_poli]);
+        // $cek = $this->M_global->delData('m_poli', ['kode_poli' => $kode_poli]);
+        $cek = $this->M_global->updateData('m_poli', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_poli' => $kode_poli]);
 
         if ($cek) { // jika fungsi berjalan
 
