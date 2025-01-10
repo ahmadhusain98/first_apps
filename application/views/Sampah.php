@@ -12,8 +12,8 @@
                     <div style="overflow-x: auto; white-space: nowrap; display: flex; text-decoration: none; text-align: center; max-width: 100%;">
                         <?php foreach ($menu as $m) : ?>
                             <button class="btn btn-danger m-1" id="id_checkbox<?= $m->id ?>" onclick="check_on('<?= $m->id ?>')" type="button">
-                                <input type="checkbox" name="id_menu[]" id="id_menu<?= $m->id ?>"> <?= $m->nama ?>
-                                <input type="hidden" name="id_menu2[]" id="id_menu2<?= $m->id ?>" value="0">
+                                <input type="checkbox" name="id_menu[]" id="id_menu<?= $m->id ?>" <?= ($check == $m->id) ? 'checked' : '' ?>> <?= $m->nama ?>
+                                <input type="hidden" name="id_menu2[]" id="id_menu2<?= $m->id ?>" value="<?= ($check != '') ? '1' : '0' ?>">
                             </button>
                         <?php endforeach; ?>
                     </div>
@@ -220,5 +220,7 @@
             document.getElementById('id_menu' + params).checked = false
             $('#id_menu2' + params).val(0)
         }
+
+        location.href = '<?= site_url("Sampah?param=") ?>' + params
     }
 </script>

@@ -152,8 +152,14 @@ class M_global extends CI_Model
         return $sintax;
     }
 
-    function getDataSampah()
+    function getDataSampah($bagian = '')
     {
+        if (!$bagian) {
+            $where = "";
+        } else {
+            $where = "WHERE bagian = '" . $bagian . "'";
+        }
+
         $sintak = $this->db->query("SELECT * FROM (
             -- master
             SELECT 
@@ -162,7 +168,8 @@ class M_global extends CI_Model
             keterangan AS nama,
             tgl_hapus AS tgl,
             jam_hapus AS jam,
-            'm_satuan' AS tabel
+            'm_satuan' AS tabel,
+            3 AS bagian
             FROM m_satuan
             WHERE hapus > 0
 
@@ -174,7 +181,8 @@ class M_global extends CI_Model
             keterangan AS nama,
             tgl_hapus AS tgl,
             jam_hapus AS jam,
-            'm_kategori' AS tabel
+            'm_kategori' AS tabel,
+            3 AS bagian
             FROM m_kategori
             WHERE hapus > 0
 
@@ -186,7 +194,8 @@ class M_global extends CI_Model
             keterangan AS nama,
             tgl_hapus AS tgl,
             jam_hapus AS jam,
-            'm_jenis' AS tabel
+            'm_jenis' AS tabel,
+            3 AS bagian
             FROM m_jenis
             WHERE hapus > 0
 
@@ -198,7 +207,8 @@ class M_global extends CI_Model
             nama AS nama,
             tgl_hapus AS tgl,
             jam_hapus AS jam,
-            'm_supplier' AS tabel
+            'm_supplier' AS tabel,
+            3 AS bagian
             FROM m_supplier
             WHERE hapus > 0
 
@@ -210,7 +220,8 @@ class M_global extends CI_Model
             keterangan AS nama,
             tgl_hapus AS tgl,
             jam_hapus AS jam,
-            'm_bank' AS tabel
+            'm_bank' AS tabel,
+            3 AS bagian
             FROM m_bank
             WHERE hapus > 0
 
@@ -222,7 +233,8 @@ class M_global extends CI_Model
             keterangan AS nama,
             tgl_hapus AS tgl,
             jam_hapus AS jam,
-            'm_pekerjaan' AS tabel
+            'm_pekerjaan' AS tabel,
+            3 AS bagian
             FROM m_pekerjaan
             WHERE hapus > 0
 
@@ -234,7 +246,8 @@ class M_global extends CI_Model
             keterangan AS nama,
             tgl_hapus AS tgl,
             jam_hapus AS jam,
-            'm_agama' AS tabel
+            'm_agama' AS tabel,
+            3 AS bagian
             FROM m_agama
             WHERE hapus > 0
 
@@ -246,7 +259,8 @@ class M_global extends CI_Model
             keterangan AS nama,
             tgl_hapus AS tgl,
             jam_hapus AS jam,
-            'm_pendidikan' AS tabel
+            'm_pendidikan' AS tabel,
+            3 AS bagian
             FROM m_pendidikan
             WHERE hapus > 0
 
@@ -258,12 +272,66 @@ class M_global extends CI_Model
             keterangan AS nama,
             tgl_hapus AS tgl,
             jam_hapus AS jam,
-            'm_poli' AS tabel
+            'm_poli' AS tabel,
+            3 AS bagian
             FROM m_poli
+            WHERE hapus > 0
+
+            UNION ALL
+
+            SELECT 
+            kode_kas_bank AS id,
+            'Master ~ kas bank' AS menu,
+            nama AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'kas_bank' AS tabel,
+            3 AS bagian
+            FROM kas_bank
+            WHERE hapus > 0
+
+            UNION ALL
+
+            SELECT 
+            kode_pajak AS id,
+            'Master ~ pajak' AS menu,
+            nama AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'm_pajak' AS tabel,
+            3 AS bagian
+            FROM m_pajak
+            WHERE hapus > 0
+
+            UNION ALL
+
+            SELECT 
+            kode_akun AS id,
+            'Master ~ akun' AS menu,
+            nama_akun AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'm_akun' AS tabel,
+            3 AS bagian
+            FROM m_akun
+            WHERE hapus > 0
+
+            UNION ALL
+
+            SELECT 
+            kode_tipe AS id,
+            'Master ~ tipe akun' AS menu,
+            keterangan AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'tipe_bank' AS tabel,
+            3 AS bagian
+            FROM tipe_bank
             WHERE hapus > 0
 
             -- end master
         ) AS query_all
+        $where
         ORDER BY tgl, jam DESC")->result();
 
         return $sintak;

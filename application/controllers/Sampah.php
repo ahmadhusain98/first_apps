@@ -47,6 +47,9 @@ class Sampah extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
+        // parameter
+        $param = $this->input->get('param');
+
         $parameter = [
             $this->data,
             'judul'         => 'Sampah',
@@ -57,7 +60,8 @@ class Sampah extends CI_Controller
             'list_data'     => 'Sampah/sampah_list/',
             'param1'        => '',
             'menu'          => $this->M_global->getDataResult('m_menu', ['id < ' => '999', 'id > ' => '2']),
-            'query_master'  => $this->M_global->getDataSampah(),
+            'query_master'  => $this->M_global->getDataSampah($param),
+            'check'         => $param,
         ];
 
         $this->template->load('Template/Content', 'Sampah', $parameter);
@@ -105,6 +109,14 @@ class Sampah extends CI_Controller
                     $where = ['kode_pendidikan' => $_invoice];
                 } else if ($_tabel == 'm_poli') {
                     $where = ['kode_poli' => $_invoice];
+                } else if ($_tabel == 'kas_bank') {
+                    $where = ['kode_kas_bank' => $_invoice];
+                } else if ($_tabel == 'm_pajak') {
+                    $where = ['kode_pajak' => $_invoice];
+                } else if ($_tabel == 'm_akun') {
+                    $where = ['kode_akun' => $_invoice];
+                } else if ($_tabel == 'tipe_bank') {
+                    $where = ['kode_tipe' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -163,6 +175,14 @@ class Sampah extends CI_Controller
                     $where = ['kode_pendidikan' => $_invoice];
                 } else if ($_tabel == 'm_poli') {
                     $where = ['kode_poli' => $_invoice];
+                } else if ($_tabel == 'kas_bank') {
+                    $where = ['kode_kas_bank' => $_invoice];
+                } else if ($_tabel == 'm_pajak') {
+                    $where = ['kode_pajak' => $_invoice];
+                } else if ($_tabel == 'm_akun') {
+                    $where = ['kode_akun' => $_invoice];
+                } else if ($_tabel == 'tipe_bank') {
+                    $where = ['kode_tipe' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;

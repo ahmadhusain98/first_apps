@@ -3351,14 +3351,14 @@ class Master extends CI_Controller
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
             'list_data'     => 'Master/kas_bank_list',
-            'param1'        => '',
+            'param1'        => '1',
         ];
 
         $this->template->load('Template/Content', 'Master/Umum/Kas_bank', $parameter);
     }
 
     // fungsi list kas_bank
-    public function kas_bank_list($param1 = '')
+    public function kas_bank_list($param1)
     {
         // parameter untuk list table
         $table            = 'kas_bank';
@@ -3366,7 +3366,7 @@ class Master extends CI_Controller
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
-        $kondisi_param1   = '';
+        $kondisi_param1   = 'hapus < ';
 
         // kondisi role
         $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
@@ -3522,7 +3522,8 @@ class Master extends CI_Controller
     {
         // jalankan fungsi hapus kas_bank berdasarkan kode_kas_bank
         aktifitas_user('Master Kas & Bank', 'menghapus', $kode_kas_bank, $this->M_global->getData('kas_bank', ['kode_kas_bank' => $kode_kas_bank])->nama);
-        $cek = $this->M_global->delData('kas_bank', ['kode_kas_bank' => $kode_kas_bank]);
+        // $cek = $this->M_global->delData('kas_bank', ['kode_kas_bank' => $kode_kas_bank]);
+        $cek = $this->M_global->updateData('kas_bank', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_kas_bank' => $kode_kas_bank]);
 
         if ($cek) { // jika fungsi berjalan
 
@@ -3554,7 +3555,7 @@ class Master extends CI_Controller
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
             'list_data'     => 'Master/pajak_list',
-            'param1'        => '',
+            'param1'        => '1',
         ];
 
         $this->template->load('Template/Content', 'Master/Umum/Pajak', $parameter);
@@ -3569,7 +3570,7 @@ class Master extends CI_Controller
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
-        $kondisi_param1   = '';
+        $kondisi_param1   = 'hapus < ';
 
         // kondisi role
         $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
@@ -3589,7 +3590,11 @@ class Master extends CI_Controller
         // loop $list
         foreach ($list as $rd) {
             if ($deleted > 0) {
-                $del_diss = '';
+                if ($rd->aktif == 1) {
+                    $del_diss = 'disabled';
+                } else {
+                    $del_diss = '';
+                }
             } else {
                 $del_diss = 'disabled';
             }
@@ -3715,7 +3720,8 @@ class Master extends CI_Controller
     {
         // jalankan fungsi hapus pajak berdasarkan kode_pajak
         aktifitas_user('Master Pajak', 'menghapus', $kode_pajak, $this->M_global->getData('m_pajak', ['kode_pajak' => $kode_pajak])->nama);
-        $cek = $this->M_global->delData('m_pajak', ['kode_pajak' => $kode_pajak]);
+        // $cek = $this->M_global->delData('m_pajak', ['kode_pajak' => $kode_pajak]);
+        $cek = $this->M_global->updateData('m_pajak', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_pajak' => $kode_pajak]);
 
         if ($cek) { // jika fungsi berjalan
 
@@ -4303,7 +4309,7 @@ class Master extends CI_Controller
             'web_version'   => $web_version->version,
             'akun'          => $this->M_global->getResult('m_akun'),
             'list_data'     => 'Master/akun_list',
-            'param1'        => '',
+            'param1'        => '1',
         ];
 
         $this->template->load('Template/Content', 'Master/Umum/Akun', $parameter);
@@ -4318,7 +4324,7 @@ class Master extends CI_Controller
         $order                    = 'id';
         $order_dir                = 'desc';
         $order_arr                = ['id' => 'asc'];
-        $param_condition          = '';
+        $param_condition          = 'hapus < ';
 
         // Kondisi role
         $role                     = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']]);
@@ -4479,7 +4485,12 @@ class Master extends CI_Controller
     {
         // jalankan fungsi hapus akun berdasarkan kode_akun
         aktifitas_user('Master Akun', 'menghapus', $kode_akun, $this->M_global->getData('m_akun', ['kode_akun' => $kode_akun])->nama_akun);
-        $cek = $this->M_global->delData('m_akun', ['kode_akun' => $kode_akun]);
+        // $cek = $this->M_global->delData('m_akun', ['kode_akun' => $kode_akun]);
+        $cek = $this->M_global->updateData('m_akun', [
+            'hapus' => 1,
+            'tgl_hapus' => date('Y-m-d'),
+            'jam_hapus' => date('H:i:s')
+        ], ['kode_akun' => $kode_akun]);
 
         if ($cek) { // jika fungsi berjalan
 
@@ -4511,7 +4522,7 @@ class Master extends CI_Controller
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
             'list_data'     => 'Master/tipe_bank_list',
-            'param1'        => '',
+            'param1'        => '1',
         ];
 
         $this->template->load('Template/Content', 'Master/Umum/Tipe', $parameter);
@@ -4526,7 +4537,7 @@ class Master extends CI_Controller
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
-        $kondisi_param1   = '';
+        $kondisi_param1   = 'hapus < ';
 
         // kondisi role
         $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
@@ -4669,7 +4680,12 @@ class Master extends CI_Controller
     {
         // jalankan fungsi hapus tipe berdasarkan kode_tipe
         aktifitas_user('Master Tipe Bank', 'menghapus', $kode_tipe, $this->M_global->getData('tipe_bank', ['kode_tipe' => $kode_tipe])->keterangan);
-        $cek = $this->M_global->delData('tipe_bank', ['kode_tipe' => $kode_tipe]);
+        // $cek = $this->M_global->delData('tipe_bank', ['kode_tipe' => $kode_tipe]);
+        $cek = $this->M_global->updateData('tipe_bank', [
+            'hapus' => 1,
+            'tgl_hapus' => date('Y-m-d'),
+            'jam_hapus' => date('H:i:s')
+        ], ['kode_tipe' => $kode_tipe]);
 
         if ($cek) { // jika fungsi berjalan
 
