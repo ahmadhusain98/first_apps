@@ -41,7 +41,7 @@ class Sampah extends CI_Controller
         }
     }
 
-    public function index() 
+    public function index()
     {
         // website config
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
@@ -77,7 +77,7 @@ class Sampah extends CI_Controller
             return;
         }
 
-        for($x = 0; $x <= ($jum - 1); $x++) {
+        for ($x = 0; $x <= ($jum - 1); $x++) {
             $_cek = $cek[$x];
             $_invoice = $invoice[$x];
             $_tabel = $tabel[$x];
@@ -85,19 +85,27 @@ class Sampah extends CI_Controller
             if ($_cek == 1) {
                 // Define update parameters
                 $updateData = ['hapus' => 0, 'tgl_hapus' => null, 'jam_hapus' => null];
-    
+
                 // Handle specific table updates
                 if ($_tabel == 'm_satuan') {
                     $where = ['kode_satuan' => $_invoice];
                 } else if ($_tabel == 'm_kategori') {
                     $where = ['kode_kategori' => $_invoice];
+                } else if ($_tabel == 'm_jenis') {
+                    $where = ['kode_jenis' => $_invoice];
+                } else if ($_tabel == 'm_supplier') {
+                    $where = ['kode_supplier' => $_invoice];
+                } else if ($_tabel == 'm_bank') {
+                    $where = ['kode_bank' => $_invoice];
+                } else if ($_tabel == 'm_pekerjaan') {
+                    $where = ['kode_pekerjaan' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
                 }
 
                 $this->M_global->updateData($_tabel, $updateData, $where);
-    
+
                 $no++;
             }
         }
@@ -124,7 +132,7 @@ class Sampah extends CI_Controller
             return;
         }
 
-        for($x = 0; $x <= ($jum - 1); $x++) {
+        for ($x = 0; $x <= ($jum - 1); $x++) {
             $_cek = $cek[$x];
             $_invoice = $invoice[$x];
             $_tabel = $tabel[$x];
@@ -135,13 +143,21 @@ class Sampah extends CI_Controller
                     $where = ['kode_satuan' => $_invoice];
                 } else if ($_tabel == 'm_kategori') {
                     $where = ['kode_kategori' => $_invoice];
+                } else if ($_tabel == 'm_jenis') {
+                    $where = ['kode_jenis' => $_invoice];
+                } else if ($_tabel == 'm_supplier') {
+                    $where = ['kode_supplier' => $_invoice];
+                } else if ($_tabel == 'm_bank') {
+                    $where = ['kode_bank' => $_invoice];
+                } else if ($_tabel == 'm_pekerjaan') {
+                    $where = ['kode_pekerjaan' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
                 }
 
                 $this->M_global->delData($_tabel, $where);
-    
+
                 $no++;
             }
         }
@@ -153,5 +169,4 @@ class Sampah extends CI_Controller
             echo json_encode(['status' => 1]);
         }
     }
-
 }

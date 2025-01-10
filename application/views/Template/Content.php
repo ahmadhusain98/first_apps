@@ -413,7 +413,16 @@
                                     <a type="button" class="nav-link <?= $aktifUrl ?>" onclick="getUrl('<?= $m->url ?>')">
                                         &nbsp;<?= $m->icon ?>
                                         <p class="<?= ($m->nama == 'Sampah') ? 'text-danger font-weight-bold' : '' ?>">
-                                            <?= $m->nama ?>
+                                            <?php
+                                            $data_sampah = $this->M_global->getDataSampah();
+
+                                            if (count($data_sampah) > 0) {
+                                                $count_sampah = ' <sup class="badge badge-primary">' . count($data_sampah) . '</sup>';
+                                            } else {
+                                                $count_sampah = '';
+                                            }
+                                            ?>
+                                            <?= ($m->nama == 'Sampah') ? $m->nama . $count_sampah : $m->nama ?>
                                         </p>
                                     </a>
                                 </li>
