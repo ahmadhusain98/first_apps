@@ -676,27 +676,24 @@ class Backdoor extends CI_Controller
             } else {
                 $isi = ['created' => 1];
             }
-        } else if ($param == 2) { // tambah
+        } else if ($param == 2) { // ubah
             if ($query->updated == 1) {
                 $isi = ['updated' => 0];
             } else {
                 $isi = ['updated' => 1];
             }
-        } else if ($param == 3) { // tambah
+        } else if ($param == 3) { // hapus
             if ($query->deleted == 1) {
                 $isi = ['deleted' => 0];
             } else {
                 $isi = ['deleted' => 1];
             }
-        } else if ($param == 4) { // tambah
+        } else { // konfirmasi
             if ($query->confirmed == 1) {
                 $isi = ['confirmed' => 0];
             } else {
                 $isi = ['confirmed' => 1];
             }
-        } else {
-            echo json_encode(['status' => 0]);
-            return;
         }
 
         $cek = $this->M_global->updateData($table, $isi, $kondisi);
