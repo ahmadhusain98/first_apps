@@ -671,29 +671,13 @@ class Backdoor extends CI_Controller
         $query = $this->M_global->getData($table, $kondisi);
 
         if ($param == 1) { // tambah
-            if ($query->created == 1) {
-                $isi = ['created' => 0];
-            } else {
-                $isi = ['created' => 1];
-            }
+            $isi = ($query->created == 1) ? ['created' => 0] : ['created' => 1];
         } else if ($param == 2) { // ubah
-            if ($query->updated == 1) {
-                $isi = ['updated' => 0];
-            } else {
-                $isi = ['updated' => 1];
-            }
+            $isi = ($query->updated == 1) ? ['updated' => 0] : ['updated' => 1];
         } else if ($param == 3) { // hapus
-            if ($query->deleted == 1) {
-                $isi = ['deleted' => 0];
-            } else {
-                $isi = ['deleted' => 1];
-            }
+            $isi = ($query->deleted == 1) ? ['deleted' => 0] : ['deleted' => 1];
         } else { // konfirmasi
-            if ($query->confirmed == 1) {
-                $isi = ['confirmed' => 0];
-            } else {
-                $isi = ['confirmed' => 1];
-            }
+            $isi = ($query->confirmed == 1) ? ['confirmed' => 0] : ['confirmed' => 1];
         }
 
         $cek = $this->M_global->updateData($table, $isi, $kondisi);
