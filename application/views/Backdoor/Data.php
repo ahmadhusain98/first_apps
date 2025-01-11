@@ -64,6 +64,19 @@
     </div>
 </div>
 
+<div class="row mb-1">
+    <div class="col-lg-4 col-4" type="button" onclick="getUrl('Backdoor/user_role')">
+        <div class="small-box bg-primary" style="height: 20vh;">
+            <div class="inner">
+                <h4>Akses Role</h4>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-user-tie"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     function empty_trx() {
         Swal.fire({

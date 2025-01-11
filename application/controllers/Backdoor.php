@@ -643,4 +643,68 @@ class Backdoor extends CI_Controller
             echo json_encode(['status' => 0]);
         }
     }
+
+    public function user_role()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'             => 'Backup Database',
+            'nama_apps'         => $web_setting->nama,
+            'page'              => 'Backdoor',
+            'web'               => $web_setting,
+            'web_version'       => $web_version->version,
+            'kunjungan_poli'    => $this->db->query("SELECT p.keterangan AS poli, COUNT(boh.kode_poli) AS jumlah FROM pembayaran buy JOIN barang_out_header boh ON buy.inv_jual = boh.invoice JOIN m_poli p ON boh.kode_poli = p.kode_poli GROUP BY boh.kode_poli")->result(),
+            'role'              => $this->db->query('SELECT * FROM m_role ORDER BY keterangan ASC')->result(),
+        ];
+
+        $this->template->load('Template/Content', 'Backdoor/Data_role', $parameter);
+    }
+
+    public function setRole($param, $id)
+    {
+        $table = 'm_role';
+        $kondisi = ['id' => $id];
+        $query = $this->M_global->getData($table, $kondisi);
+
+        if ($param == 1) { // tambah
+            if ($query->created == 1) {
+                $isi = ['created' => 0];
+            } else {
+                $isi = ['created' => 1];
+            }
+        } else if ($param == 2) { // tambah
+            if ($query->updated == 1) {
+                $isi = ['updated' => 0];
+            } else {
+                $isi = ['updated' => 1];
+            }
+        } else if ($param == 3) { // tambah
+            if ($query->deleted == 1) {
+                $isi = ['deleted' => 0];
+            } else {
+                $isi = ['deleted' => 1];
+            }
+        } else if ($param == 4) { // tambah
+            if ($query->confirmed == 1) {
+                $isi = ['confirmed' => 0];
+            } else {
+                $isi = ['confirmed' => 1];
+            }
+        } else {
+            echo json_encode(['status' => 0]);
+            return;
+        }
+
+        $cek = $this->M_global->updateData($table, $isi, $kondisi);
+
+        if ($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
 }
