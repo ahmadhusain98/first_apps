@@ -136,6 +136,51 @@ class Sampah extends CI_Controller
         }
     }
 
+    public function restore_one($id, $table)
+    {
+        $updateData = ['hapus' => 0, 'tgl_hapus' => null, 'jam_hapus' => null];
+
+        // Handle specific table updates
+        if ($table == 'm_satuan') {
+            $where = ['kode_satuan' => $id];
+        } else if ($table == 'm_kategori') {
+            $where = ['kode_kategori' => $id];
+        } else if ($table == 'm_jenis') {
+            $where = ['kode_jenis' => $id];
+        } else if ($table == 'm_supplier') {
+            $where = ['kode_supplier' => $id];
+        } else if ($table == 'm_bank') {
+            $where = ['kode_bank' => $id];
+        } else if ($table == 'm_pekerjaan') {
+            $where = ['kode_pekerjaan' => $id];
+        } else if ($table == 'm_agama') {
+            $where = ['kode_agama' => $id];
+        } else if ($table == 'm_pendidikan') {
+            $where = ['kode_pendidikan' => $id];
+        } else if ($table == 'm_poli') {
+            $where = ['kode_poli' => $id];
+        } else if ($table == 'kas_bank') {
+            $where = ['kode_kas_bank' => $id];
+        } else if ($table == 'm_pajak') {
+            $where = ['kode_pajak' => $id];
+        } else if ($table == 'm_akun') {
+            $where = ['kode_akun' => $id];
+        } else if ($table == 'tipe_bank') {
+            $where = ['kode_tipe' => $id];
+        } else {
+            echo json_encode(['status' => 0]);
+            return;
+        }
+
+        $cek = $this->M_global->updateData($table, $updateData, $where);
+
+        if ($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
+
     public function deleted()
     {
         $cek = $this->input->post('check_onex'); // Checkbox data
@@ -199,6 +244,48 @@ class Sampah extends CI_Controller
             echo json_encode(['status' => 0]);
         } else {
             echo json_encode(['status' => 1]);
+        }
+    }
+
+    public function deleted_one($id, $table)
+    {
+        if ($table == 'm_satuan') {
+            $where = ['kode_satuan' => $id];
+        } else if ($table == 'm_kategori') {
+            $where = ['kode_kategori' => $id];
+        } else if ($table == 'm_jenis') {
+            $where = ['kode_jenis' => $id];
+        } else if ($table == 'm_supplier') {
+            $where = ['kode_supplier' => $id];
+        } else if ($table == 'm_bank') {
+            $where = ['kode_bank' => $id];
+        } else if ($table == 'm_pekerjaan') {
+            $where = ['kode_pekerjaan' => $id];
+        } else if ($table == 'm_agama') {
+            $where = ['kode_agama' => $id];
+        } else if ($table == 'm_pendidikan') {
+            $where = ['kode_pendidikan' => $id];
+        } else if ($table == 'm_poli') {
+            $where = ['kode_poli' => $id];
+        } else if ($table == 'kas_bank') {
+            $where = ['kode_kas_bank' => $id];
+        } else if ($table == 'm_pajak') {
+            $where = ['kode_pajak' => $id];
+        } else if ($table == 'm_akun') {
+            $where = ['kode_akun' => $id];
+        } else if ($table == 'tipe_bank') {
+            $where = ['kode_tipe' => $id];
+        } else {
+            echo json_encode(['status' => 0]);
+            return;
+        }
+
+        $cek = $this->M_global->delData($table, $where);
+
+        if ($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
         }
     }
 }
