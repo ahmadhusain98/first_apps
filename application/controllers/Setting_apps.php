@@ -71,6 +71,7 @@ class Setting_apps extends CI_Controller
         $nama                     = $this->input->post('nama_web');
         $bg_theme                 = $this->input->post('bg_theme');
         $alamat                   = $this->input->post('alamat_web');
+        $limit_trash_web          = $this->input->post('limit_trash_web');
 
         // configurasi upload file
         $config['upload_path']    = 'assets/img/web/';
@@ -113,14 +114,15 @@ class Setting_apps extends CI_Controller
 
         // masukan variable ke dalam variable $isi untuk di update
         $isi = [
-            'nama'          => $nama,
-            'email'         => $email,
-            'kode_email'    => $kode_email,
-            'nohp'          => $nohp,
-            'alamat'        => $alamat,
-            'logo'          => $gambar,
-            'bg_theme'      => $bg_theme,
-            'watermark'     => $theme,
+            'nama'              => $nama,
+            'email'             => $email,
+            'kode_email'        => $kode_email,
+            'nohp'              => $nohp,
+            'alamat'            => $alamat,
+            'logo'              => $gambar,
+            'bg_theme'          => $bg_theme,
+            'watermark'         => $theme,
+            'limit_trash_web'   => $limit_trash_web,
         ];
 
         // jalankan fungsi update berdasarkan id

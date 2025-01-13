@@ -52,6 +52,12 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                         <textarea name="alamat_web" id="alamat_web" class="form-control"><?= $web->alamat ?></textarea>
                                     </div>
                                 </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="limit_trash_web" class="control-label">Limit Sampah (Hari) <span class="text-danger">**</span></label>
+                                        <input type="number" name="limit_trash_web" id="limit_trash_web" class="form-control" value="<?= $web->limit_trash_web ?>" placeholder="x Hari">
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-6 col-12">
                                 <div class="row mb-3">
