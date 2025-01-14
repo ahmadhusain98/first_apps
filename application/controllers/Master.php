@@ -1822,7 +1822,7 @@ class Master extends CI_Controller
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
             'list_data'     => 'Master/user_list',
-            'param1'        => '',
+            'param1'        => '1',
         ];
 
         $this->template->load('Template/Content', 'Master/Internal/Pengguna', $parameter);
@@ -1837,7 +1837,7 @@ class Master extends CI_Controller
         $order                  = 'id';
         $order2                 = 'desc';
         $order_arr              = ['id' => 'asc'];
-        $kondisi_param1         = '';
+        $kondisi_param1         = 'hapus < ';
 
         // kondisi role
         $updated                = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
@@ -2044,7 +2044,12 @@ class Master extends CI_Controller
     {
         // jalankan fungsi hapus user berdasarkan kode_user
         aktifitas_user('Master Pengguna', 'menghapus', $kode_user, $this->M_global->getData('user', ['kode_user' => $kode_user])->email);
-        $cek = $this->M_global->delData('user', ['kode_user' => $kode_user]);
+        // $cek = $this->M_global->delData('user', ['kode_user' => $kode_user]);
+        $cek = $this->M_global->updateData(
+            'user',
+            ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')],
+            ['kode_user' => $kode_user]
+        );
 
         if ($cek) { // jika fungsi berjalan
 
@@ -2858,10 +2863,15 @@ class Master extends CI_Controller
     {
         // jalankan fungsi hapus dokter berdasarkan kode_dokter
         aktifitas_user('Master Dokter', 'menghapus', $kode_dokter, $this->M_global->getData('dokter', ['kode_dokter' => $kode_dokter])->nama);
-        $cek = [
-            $this->M_global->delData('dokter', ['kode_dokter' => $kode_dokter]),
-            $this->M_global->delData('dokter_poli', ['kode_dokter' => $kode_dokter]),
-        ];
+        // $cek = [
+        //     $this->M_global->delData('dokter', ['kode_dokter' => $kode_dokter]),
+        //     $this->M_global->delData('dokter_poli', ['kode_dokter' => $kode_dokter]),
+        // ];
+        $cek = $this->M_global->updateData(
+            'dokter',
+            ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')],
+            ['kode_dokter' => $kode_dokter]
+        );
 
         if ($cek) { // jika fungsi berjalan
 
@@ -3143,10 +3153,15 @@ class Master extends CI_Controller
     {
         // jalankan fungsi hapus perawat berdasarkan kode_perawat
         aktifitas_user('Master Perawat', 'menghapus', $kode_perawat, $this->M_global->getData('perawat', ['kode_perawat' => $kode_perawat])->nama);
-        $cek = [
-            $this->M_global->delData('perawat', ['kode_perawat' => $kode_perawat]),
-            $this->M_global->delData('perawat_poli', ['kode_perawat' => $kode_perawat]),
-        ];
+        // $cek = [
+        //     $this->M_global->delData('perawat', ['kode_perawat' => $kode_perawat]),
+        //     $this->M_global->delData('perawat_poli', ['kode_perawat' => $kode_perawat]),
+        // ];
+        $cek = $this->M_global->updateData(
+            'perawat',
+            ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')],
+            ['kode_perawat' => $kode_perawat]
+        );
 
         if ($cek) { // jika fungsi berjalan
 

@@ -52,7 +52,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="nohp">No. HP <sup class="text-danger">**</sup></label>
-                                <input type="text" name="nohp" id="nohp" class="form-control text-right" placeholder="08xxx">
+                                <input type="text" name="nohp" id="nohp" class="form-control text-right" value="<?= ((!empty($data_user)) ? $data_user->nohp : '') ?>" placeholder="08xxx">
                             </div>
                         </div>
                     </div>

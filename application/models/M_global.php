@@ -368,6 +368,45 @@ class M_global extends CI_Model
             FROM logistik
             WHERE hapus > 0
 
+            UNION ALL
+
+            SELECT 
+            kode_user AS id,
+            'Master ~ pengguna' AS menu,
+            nama AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'user' AS tabel,
+            3 AS bagian
+            FROM user
+            WHERE hapus > 0
+
+            UNION ALL
+
+            SELECT 
+            kode_dokter AS id,
+            'Master ~ dokter' AS menu,
+            nama AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'dokter' AS tabel,
+            3 AS bagian
+            FROM dokter
+            WHERE hapus > 0
+
+            UNION ALL
+
+            SELECT 
+            kode_perawat AS id,
+            'Master ~ perawat' AS menu,
+            nama AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'perawat' AS tabel,
+            3 AS bagian
+            FROM perawat
+            WHERE hapus > 0
+
             -- end master
         ) AS query_all
         $where

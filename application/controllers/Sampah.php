@@ -123,6 +123,12 @@ class Sampah extends CI_Controller
                     $where = ['kode_barang' => $_invoice];
                 } else if ($_tabel == 'logistik') {
                     $where = ['kode_logistik' => $_invoice];
+                } else if ($_tabel == 'user') {
+                    $where = ['kode_user' => $_invoice];
+                } else if ($_tabel == 'dokter') {
+                    $where = ['kode_dokter' => $_invoice];
+                } else if ($_tabel == 'perawat') {
+                    $where = ['kode_perawat' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -179,6 +185,12 @@ class Sampah extends CI_Controller
             $where = ['kode_barang' => $id];
         } else if ($table == 'logistik') {
             $where = ['kode_logistik' => $id];
+        } else if ($table == 'user') {
+            $where = ['kode_user' => $id];
+        } else if ($table == 'dokter') {
+            $where = ['kode_dokter' => $id];
+        } else if ($table == 'perawat') {
+            $where = ['kode_perawat' => $id];
         } else {
             echo json_encode(['status' => 0]);
             return;
@@ -251,6 +263,20 @@ class Sampah extends CI_Controller
                     $where = ['kode_logistik' => $_invoice];
 
                     $this->M_global->delData('logistik_cabang', ['kode_barang' => $_invoice]);
+                } else if ($table == 'user') {
+                    $where = ['kode_user' => $_invoice];
+
+                    $user = $this->M_global->getData('user', $where);
+
+                    $this->M_global->delData('user_token', ['email' => $user->email]);
+                } else if ($_tabel == 'dokter') {
+                    $where = ['kode_dokter' => $_invoice];
+
+                    $this->M_global->delData('dokter_poli', ['kode_dokter' => $_invoice]);
+                } else if ($_tabel == 'perawat') {
+                    $where = ['kode_perawat' => $_invoice];
+
+                    $this->M_global->delData('perawat_poli', ['kode_perawat' => $_invoice]);
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -309,6 +335,20 @@ class Sampah extends CI_Controller
             $where = ['kode_logistik' => $id];
 
             $this->M_global->delData('logistik_cabang', ['kode_barang' => $id]);
+        } else if ($table == 'user') {
+            $where = ['kode_user' => $id];
+
+            $user = $this->M_global->getData('user', $where);
+
+            $this->M_global->delData('user_token', ['email' => $user->email]);
+        } else if ($table == 'dokter') {
+            $where = ['kode_dokter' => $id];
+
+            $this->M_global->delData('dokter_poli', ['kode_dokter' => $id]);
+        } else if ($table == 'perawat') {
+            $where = ['kode_perawat' => $id];
+
+            $this->M_global->delData('perawat_poli', ['kode_perawat' => $id]);
         } else {
             echo json_encode(['status' => 0]);
             return;
