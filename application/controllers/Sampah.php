@@ -69,11 +69,11 @@ class Sampah extends CI_Controller
 
     public function restore()
     {
-        $cek = $this->input->post('check_onex'); // Checkbox data
-        $invoice = $this->input->post('invoice'); // Invoice value
-        $tabel = $this->input->post('tabel'); // Table name
-        $jum = count($cek);
-        $no = 0; // Counter for successful updates
+        $cek        = $this->input->post('check_onex'); // Checkbox data
+        $invoice    = $this->input->post('invoice'); // Invoice value
+        $tabel      = $this->input->post('tabel'); // Table name
+        $jum        = count($cek);
+        $no         = 0; // Counter for successful updates
 
         // Validate inputs
         if (!$cek || !$invoice || !$tabel) {
@@ -82,9 +82,9 @@ class Sampah extends CI_Controller
         }
 
         for ($x = 0; $x <= ($jum - 1); $x++) {
-            $_cek = $cek[$x];
-            $_invoice = $invoice[$x];
-            $_tabel = $tabel[$x];
+            $_cek       = $cek[$x];
+            $_invoice   = $invoice[$x];
+            $_tabel     = $tabel[$x];
 
             if ($_cek == 1) {
                 // Define update parameters
@@ -183,11 +183,11 @@ class Sampah extends CI_Controller
 
     public function deleted()
     {
-        $cek = $this->input->post('check_onex'); // Checkbox data
-        $invoice = $this->input->post('invoice'); // Invoice value
-        $tabel = $this->input->post('tabel'); // Table name
-        $jum = count($cek);
-        $no = 0; // Counter for successful updates
+        $cek        = $this->input->post('check_onex'); // Checkbox data
+        $invoice    = $this->input->post('invoice'); // Invoice value
+        $tabel      = $this->input->post('tabel'); // Table name
+        $jum        = count($cek);
+        $no         = 0; // Counter for successful updates
 
         // Validate inputs
         if (!$cek || !$invoice || !$tabel) {
@@ -196,9 +196,9 @@ class Sampah extends CI_Controller
         }
 
         for ($x = 0; $x <= ($jum - 1); $x++) {
-            $_cek = $cek[$x];
-            $_invoice = $invoice[$x];
-            $_tabel = $tabel[$x];
+            $_cek       = $cek[$x];
+            $_invoice   = $invoice[$x];
+            $_tabel     = $tabel[$x];
 
             if ($_cek == 1) {
                 // Handle specific table updates
