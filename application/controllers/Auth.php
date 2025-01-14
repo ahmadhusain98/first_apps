@@ -82,6 +82,7 @@ class Auth extends CI_Controller
         } else { // selain itu
             // update token baru dan email ke table member_token
             $this->M_auth->update("member_token", $isi, ["email" => $email]);
+            $this->M_auth->update("user_token", $isi, ["email" => $email]);
         }
 
         // cek parameter dari view
