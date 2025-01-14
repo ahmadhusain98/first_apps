@@ -119,6 +119,10 @@ class Sampah extends CI_Controller
                     $where = ['kode_tipe' => $_invoice];
                 } else if ($_tabel == 'm_gudang') {
                     $where = ['kode_gudang' => $_invoice];
+                } else if ($_tabel == 'barang') {
+                    $where = ['kode_barang' => $_invoice];
+                } else if ($_tabel == 'logistik') {
+                    $where = ['kode_logistik' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -171,6 +175,10 @@ class Sampah extends CI_Controller
             $where = ['kode_tipe' => $id];
         } else if ($table == 'm_gudang') {
             $where = ['kode_gudang' => $id];
+        } else if ($table == 'barang') {
+            $where = ['kode_barang' => $id];
+        } else if ($table == 'logistik') {
+            $where = ['kode_logistik' => $id];
         } else {
             echo json_encode(['status' => 0]);
             return;
@@ -234,6 +242,15 @@ class Sampah extends CI_Controller
                     $where = ['kode_tipe' => $_invoice];
                 } else if ($_tabel == 'm_gudang') {
                     $where = ['kode_gudang' => $_invoice];
+                } else if ($_tabel == 'barang') {
+                    $where = ['kode_barang' => $_invoice];
+
+                    $this->M_global->delData('barang_cabang', ['kode_barang' => $_invoice]);
+                    $this->M_global->delData('barang_jenis', ['kode_barang' => $_invoice]);
+                } else if ($_tabel == 'logistik') {
+                    $where = ['kode_logistik' => $_invoice];
+
+                    $this->M_global->delData('logistik_cabang', ['kode_barang' => $_invoice]);
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -283,6 +300,15 @@ class Sampah extends CI_Controller
             $where = ['kode_tipe' => $id];
         } else if ($table == 'm_gudang') {
             $where = ['kode_gudang' => $id];
+        } else if ($table == 'barang') {
+            $where = ['kode_barang' => $id];
+
+            $this->M_global->delData('barang_cabang', ['kode_barang' => $id]);
+            $this->M_global->delData('barang_jenis', ['kode_barang' => $id]);
+        } else if ($table == 'logistik') {
+            $where = ['kode_logistik' => $id];
+
+            $this->M_global->delData('logistik_cabang', ['kode_barang' => $id]);
         } else {
             echo json_encode(['status' => 0]);
             return;

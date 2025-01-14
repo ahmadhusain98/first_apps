@@ -355,6 +355,19 @@ class M_global extends CI_Model
             FROM barang
             WHERE hapus > 0
 
+            UNION ALL
+
+            SELECT 
+            kode_logistik AS id,
+            'Master ~ logistik' AS menu,
+            nama AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'logistik' AS tabel,
+            3 AS bagian
+            FROM logistik
+            WHERE hapus > 0
+
             -- end master
         ) AS query_all
         $where

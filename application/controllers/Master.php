@@ -1522,11 +1522,12 @@ class Master extends CI_Controller
             echo json_encode(['status' => 2]);
         } else {
             aktifitas_user('Master Barang', 'menghapus', $kode_barang, $this->M_global->getData('barang', ['kode_barang' => $kode_barang])->nama);
-            $cek = [
-                $this->M_global->delData('barang', ['kode_barang' => $kode_barang]),
-                $this->M_global->delData('barang_cabang', ['kode_barang' => $kode_barang]),
-                $this->M_global->delData('barang_jenis', ['kode_barang' => $kode_barang]),
-            ];
+            // $cek = [
+            //     $this->M_global->delData('barang', ['kode_barang' => $kode_barang]),
+            //     $this->M_global->delData('barang_cabang', ['kode_barang' => $kode_barang]),
+            //     $this->M_global->delData('barang_jenis', ['kode_barang' => $kode_barang]),
+            // ];
+            $cek = $this->M_global->updateData('barang', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_barang' => $kode_barang]);
 
             if ($cek) { // jika fungsi berjalan
 
@@ -1778,10 +1779,15 @@ class Master extends CI_Controller
             echo json_encode(['status' => 2]);
         } else {
             aktifitas_user('Master Logistik', 'menghapus', $kode_logistik, $this->M_global->getData('logistik', ['kode_logistik' => $kode_logistik])->nama);
-            $cek = [
-                $this->M_global->delData('logistik', ['kode_logistik' => $kode_logistik]),
-                $this->M_global->delData('logistik_cabang', ['kode_barang' => $kode_logistik]),
-            ];
+            // $cek = [
+            //     $this->M_global->delData('logistik', ['kode_logistik' => $kode_logistik]),
+            //     $this->M_global->delData('logistik_cabang', ['kode_barang' => $kode_logistik]),
+            // ];
+            $cek = $this->M_global->updateData(
+                'logistik',
+                ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')],
+                ['kode_logistik' => $kode_logistik]
+            );
 
             if ($cek) { // jika fungsi berjalan
 
