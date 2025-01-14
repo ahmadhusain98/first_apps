@@ -33,6 +33,11 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-md-12">
+                            <span class="text-danger font-weight-bold">Limit Hapus Sampah Permanen: <?= number_format($web->limit_trash_web) ?> Hari</span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
                             <div class="table-responsive">
                                 <table class="table table-hover table-bordered" id="tableSampah" width="100%">
                                     <thead>

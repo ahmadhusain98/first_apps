@@ -217,7 +217,26 @@
     $aktif_cabang = $jarak / 60 / 60 / 24;
 
     cek_so();
+
+    // Hapus sampah otomatis
+
+    $web_setting = $this->M_global->getData('web_setting', ['id' => $this->session->userdata('web_id')]); //ambil setting web
+
+    $limit_trash = $web_setting->limit_trash_web; // ambil limit trash
+
+    $sampah = $this->M_global->getDataSampah(); // ambil data sampah
+
+    if (count($sampah) > 0) { // cek jika ada data sampah
+        foreach ($sampah as $s) { // lakukan loop
+            $date_trash = date('Y-m-d', strtotime($s->tgl . ' + ' . $limit_trash . ' days')); // tgl sampah ditambahkan dengan limit hari sampah
+
+            if (date('Y-m-d') == $date_trash) { // jika hari ini sama dengan tgl sampah yang di tambah limit hari sampah
+                $this->M_global->delData($s->tabel, ['tgl_hapus < ' => $date_trash]); // hapus data sampah dimana tgl hapus kurang dari tgl sampah yang di tambah limit hari sampah
+            }
+        }
+    }
     ?>
+
 
     <div class="wrapper">
 
