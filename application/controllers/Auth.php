@@ -457,4 +457,24 @@ class Auth extends CI_Controller
         // arahkan ke auth
         redirect('Auth');
     }
+
+    public function ganti_shift()
+    {
+        $email = $this->session->userdata('email');
+        $shift = $this->input->get('shift');
+        $password = $this->input->get('password');
+
+        $cek = $this->M_global->getData('user', ['email' => $email]);
+
+        if ($cek->password == md5($password)) {
+            aktifitas_user('Shift', 'mengubah shift ' . $this->session->userdata('shift') . ' ke shift ' . $shift, 'Cabang: ' . $this->session->userdata('cabang'), '');
+
+            $this->session->unset_userdata('shift');
+            $this->session->set_userdata('shift', $shift);
+
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
 }

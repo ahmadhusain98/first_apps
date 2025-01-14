@@ -266,7 +266,7 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" type="button" readonly>
-                        <span class="badge badge-info"><?= 'Shift ~ ke: ' . $this->data["shift"] ?></span>
+                        <span class="badge badge-info" type="button" onclick="ganti_shift()"><?= 'Shift ~ ke: ' . $this->data["shift"] ?></span>
                     </a>
                 </li>
                 <!-- <li class="nav-item dropdown">
@@ -631,6 +631,79 @@
         });
 
         display_ct();
+
+        function ganti_shift() {
+            $('#modal_mgLabel').text(``);
+            $('#modal-isi').text(``);
+
+            $('#modal_mg').modal('show');
+            $('#modal_mgLabel').html('Ganti Shift');
+            $('#modal-isi').append(`
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label>Shift</label>
+                        <div class="form-group">
+                            <select class="form-control select2_new_shift" id="new_shift" name="new_shift" placeholder="Pilih Shift">
+                                <option value="1" <?= ($this->session->userdata('shift') == 1) ? 'selected' : '' ?>>Shift 1</option>
+                                <option value="2" <?= ($this->session->userdata('shift') == 2) ? 'selected' : '' ?>>Shift 2</option>
+                                <option value="3" <?= ($this->session->userdata('shift') == 3) ? 'selected' : '' ?>>Shift 3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Password</label>
+                        <input type="password" class="form-control" id="shift_password" name="shift_password" placeholder="Password" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-primary float-right" onclick="simpan_shift()">Update Shift</button>
+                    </div>
+                </div>
+                `);
+
+            $(".select2_new_shift").select2({
+                placeholder: $(this).data('placeholder'),
+                width: '100%',
+                allowClear: true,
+                dropdownParent: $("#modal_mg")
+            });
+        }
+
+
+        function simpan_shift() {
+            $('#modal_mg').modal('hide');
+
+            var new_shift = $('#new_shift').val();
+            var shift_password = $('#shift_password').val();
+
+            $.ajax({
+                url: siteUrl + 'Auth/ganti_shift?shift=' + new_shift + '&password=' + shift_password,
+                type: 'POST',
+                dataType: 'JSON',
+                success: function(result) {
+                    if (result.status == 1) {
+                        Swal.fire({
+                            title: "Shift",
+                            text: "Berhasil di ganti!",
+                            icon: "success"
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Shift",
+                            text: "Gagal di ganti!",
+                            icon: "info"
+                        });
+                    }
+                },
+                error: function(result) { // jika fungsi error
+                    // jalankan fungsi error
+                    error_proccess();
+                }
+            })
+        }
 
         // fungsi clean db
         function clean_db() {
