@@ -329,6 +329,32 @@ class M_global extends CI_Model
             FROM tipe_bank
             WHERE hapus > 0
 
+            UNION ALL
+
+            SELECT 
+            kode_gudang AS id,
+            'Master ~ gudang' AS menu,
+            nama AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'm_gudang' AS tabel,
+            3 AS bagian
+            FROM m_gudang
+            WHERE hapus > 0
+
+            UNION ALL
+
+            SELECT 
+            kode_barang AS id,
+            'Master ~ barang' AS menu,
+            nama AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'barang' AS tabel,
+            3 AS bagian
+            FROM barang
+            WHERE hapus > 0
+
             -- end master
         ) AS query_all
         $where

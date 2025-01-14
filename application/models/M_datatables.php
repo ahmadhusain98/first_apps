@@ -15,6 +15,7 @@ class M_datatables extends CI_Model
     {
         $this->db->select($columns);
         $this->db->from($table);
+        $this->db->where(['hapus < ' => 1]);
 
         if (!empty($param1) && $param1 != 'semua') {
             $this->db->where([$kondisi_param1 => $param1]);

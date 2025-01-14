@@ -835,7 +835,8 @@ class Master extends CI_Controller
     {
         // jalankan fungsi hapus gudang berdasarkan kode_gudang
         aktifitas_user('Master Gudang', 'menghapus', $kode_gudang, $this->M_global->getData('m_gudang', ['kode_gudang' => $kode_gudang])->nama);
-        $cek = $this->M_global->delData('m_gudang', ['kode_gudang' => $kode_gudang]);
+        // $cek = $this->M_global->delData('m_gudang', ['kode_gudang' => $kode_gudang]);
+        $cek = $this->M_global->updateData('m_gudang', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_gudang' => $kode_gudang]);
 
         if ($cek) { // jika fungsi berjalan
 
@@ -1485,10 +1486,10 @@ class Master extends CI_Controller
                 'kode_barang'       => 'kode: ' . $kodeBarang,
                 'nama'              => 'nama: ' . $nama,
                 'kode_satuan'       => 'satuan1: ' . $kode_satuan . '/' . $this->M_global->getData('m_satuan', ['kode_satuan' => $kode_satuan])->keterangan,
-                'kode_satuan2'      => 'satuan2: ' . $kode_satuan2 . '/' . $this->M_global->getData('m_satuan', ['kode_satuan' => $kode_satuan2])->keterangan,
-                'kode_satuan3'      => 'satuan3: ' . $kode_satuan3 . '/' . $this->M_global->getData('m_satuan', ['kode_satuan' => $kode_satuan3])->keterangan,
-                'qty_satuan2'       => 'qty_satuan2: ' . $qty_satuan2,
-                'qty_satuan3'       => 'qty_satuan3: ' . $qty_satuan3,
+                'kode_satuan2'      => 'satuan2: ' . (($kode_satuan2) ? $kode_satuan2 : '') . '/' . (($kode_satuan2) ? $this->M_global->getData('m_satuan', ['kode_satuan' => $kode_satuan2])->keterangan : ''),
+                'kode_satuan3'      => 'satuan3: ' . (($kode_satuan3) ? $kode_satuan3 : '') . '/' . (($kode_satuan3) ? $this->M_global->getData('m_satuan', ['kode_satuan' => $kode_satuan3])->keterangan : ''),
+                'qty_satuan2'       => 'qty_satuan2: ' . ($qty_satuan2) ? $qty_satuan2 : 0,
+                'qty_satuan3'       => 'qty_satuan3: ' . ($qty_satuan3) ? $qty_satuan3 : 0,
                 'opsi_hpp'          => 'opsi_hpp: ' . $opsi_hpp,
                 'persentase_hpp'    => 'prosentase_hpp: ' . $persentase_hpp,
                 'kode_kategori'     => 'kategori: ' . $kode_kategori . '/' . $this->M_global->getData('m_kategori', ['kode_kategori' => $kode_kategori])->keterangan,

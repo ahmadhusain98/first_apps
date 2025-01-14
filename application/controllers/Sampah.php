@@ -117,6 +117,8 @@ class Sampah extends CI_Controller
                     $where = ['kode_akun' => $_invoice];
                 } else if ($_tabel == 'tipe_bank') {
                     $where = ['kode_tipe' => $_invoice];
+                } else if ($_tabel == 'm_gudang') {
+                    $where = ['kode_gudang' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -167,6 +169,8 @@ class Sampah extends CI_Controller
             $where = ['kode_akun' => $id];
         } else if ($table == 'tipe_bank') {
             $where = ['kode_tipe' => $id];
+        } else if ($table == 'm_gudang') {
+            $where = ['kode_gudang' => $id];
         } else {
             echo json_encode(['status' => 0]);
             return;
@@ -228,6 +232,8 @@ class Sampah extends CI_Controller
                     $where = ['kode_akun' => $_invoice];
                 } else if ($_tabel == 'tipe_bank') {
                     $where = ['kode_tipe' => $_invoice];
+                } else if ($_tabel == 'm_gudang') {
+                    $where = ['kode_gudang' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -275,6 +281,8 @@ class Sampah extends CI_Controller
             $where = ['kode_akun' => $id];
         } else if ($table == 'tipe_bank') {
             $where = ['kode_tipe' => $id];
+        } else if ($table == 'm_gudang') {
+            $where = ['kode_gudang' => $id];
         } else {
             echo json_encode(['status' => 0]);
             return;
