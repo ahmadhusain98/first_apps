@@ -486,7 +486,8 @@ class M_global extends CI_Model
             kode_cabang AS cabang
             FROM pendaftaran
             WHERE hapus > 0
-            -- manajemen depan
+            
+            -- endmanajemen depan
 
         ) AS query_all
         $where
