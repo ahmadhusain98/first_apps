@@ -34,6 +34,7 @@ class M_tarif extends CI_Model
 
         $this->db->where("m.jenis", $param);
         $this->db->where("tj.kode_cabang", $this->session->userdata("cabang"));
+        $this->db->where("tj.hapus < ", 1);
 
         $this->db->order_by('id', 'asc');
 
@@ -98,6 +99,7 @@ class M_tarif extends CI_Model
 
         $this->db->where("m.jenis", $param);
         $this->db->where("tj.kode_cabang", $this->session->userdata("cabang"));
+        $this->db->where("tj.hapus < ", 1);
 
         $this->db->order_by('id', 'asc');
 

@@ -154,10 +154,12 @@ class M_global extends CI_Model
 
     function getDataSampah($bagian = '')
     {
+        $cabang = $this->session->userdata('cabang');
+
         if (!$bagian) {
-            $where = "";
+            $where = "WHERE (cabang = '" . $cabang . "' OR cabang = '')";
         } else {
-            $where = "WHERE bagian = '" . $bagian . "'";
+            $where = "WHERE (cabang = '" . $cabang . "' OR cabang = '') AND bagian = '" . $bagian . "'";
         }
 
         $sintak = $this->db->query("SELECT * FROM (
@@ -169,7 +171,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'm_satuan' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM m_satuan
             WHERE hapus > 0
 
@@ -182,7 +185,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'm_kategori' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM m_kategori
             WHERE hapus > 0
 
@@ -195,7 +199,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'm_jenis' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM m_jenis
             WHERE hapus > 0
 
@@ -208,7 +213,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'm_supplier' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM m_supplier
             WHERE hapus > 0
 
@@ -221,7 +227,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'm_bank' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM m_bank
             WHERE hapus > 0
 
@@ -234,7 +241,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'm_pekerjaan' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM m_pekerjaan
             WHERE hapus > 0
 
@@ -247,7 +255,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'm_agama' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM m_agama
             WHERE hapus > 0
 
@@ -260,7 +269,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'm_pendidikan' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM m_pendidikan
             WHERE hapus > 0
 
@@ -273,7 +283,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'm_poli' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM m_poli
             WHERE hapus > 0
 
@@ -286,7 +297,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'kas_bank' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM kas_bank
             WHERE hapus > 0
 
@@ -299,7 +311,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'm_pajak' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM m_pajak
             WHERE hapus > 0
 
@@ -312,7 +325,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'm_akun' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM m_akun
             WHERE hapus > 0
 
@@ -325,7 +339,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'tipe_bank' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM tipe_bank
             WHERE hapus > 0
 
@@ -338,7 +353,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'm_gudang' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM m_gudang
             WHERE hapus > 0
 
@@ -347,12 +363,13 @@ class M_global extends CI_Model
             SELECT 
             kode_barang AS id,
             'Master ~ barang' AS menu,
-            nama AS nama,
+            (SELECT nama FROM barang WHERE kode_barang = barang_cabang.kode_barang) AS nama,
             tgl_hapus AS tgl,
             jam_hapus AS jam,
-            'barang' AS tabel,
-            3 AS bagian
-            FROM barang
+            'barang_cabang' AS tabel,
+            3 AS bagian,
+            kode_cabang AS cabang
+            FROM barang_cabang
             WHERE hapus > 0
 
             UNION ALL
@@ -364,7 +381,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'logistik' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM logistik
             WHERE hapus > 0
 
@@ -377,7 +395,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'user' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM user
             WHERE hapus > 0
 
@@ -390,7 +409,8 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'dokter' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM dokter
             WHERE hapus > 0
 
@@ -403,8 +423,23 @@ class M_global extends CI_Model
             tgl_hapus AS tgl,
             jam_hapus AS jam,
             'perawat' AS tabel,
-            3 AS bagian
+            3 AS bagian,
+            '' AS cabang
             FROM perawat
+            WHERE hapus > 0
+
+            UNION ALL
+
+            SELECT 
+            kode_tarif AS id,
+            'Master ~ tarif single' AS menu,
+            (SELECT nama FROM m_tarif WHERE kode_tarif = tarif_jasa.kode_tarif) AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'tarif_jasa' AS tabel,
+            3 AS bagian,
+            kode_cabang AS cabang
+            FROM tarif_jasa
             WHERE hapus > 0
 
             -- end master

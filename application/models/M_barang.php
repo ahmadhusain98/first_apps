@@ -59,7 +59,7 @@ class M_barang extends CI_Model
         $this->db->join("m_jenis j", "j.kode_jenis = bj.kode_jenis", "LEFT");
 
         $this->db->where("bc.kode_cabang", $this->session->userdata("cabang"));
-        $this->db->where("b.hapus < ", 1);
+        $this->db->where("bc.hapus < ", 1);
 
         if (!empty($param)) {
             $this->db->where("b.kode_kategori", $param);
@@ -122,7 +122,7 @@ class M_barang extends CI_Model
         $this->db->join("m_jenis j", "j.kode_jenis = bj.kode_jenis", "LEFT");
 
         $this->db->where("bc.kode_cabang", $this->session->userdata("cabang"));
-        $this->db->where("b.hapus < ", 1);
+        $this->db->where("bc.hapus < ", 1);
 
         if (!empty($param)) {
             $this->db->where("b.kode_kategori", $param);

@@ -1527,7 +1527,7 @@ class Master extends CI_Controller
             //     $this->M_global->delData('barang_cabang', ['kode_barang' => $kode_barang]),
             //     $this->M_global->delData('barang_jenis', ['kode_barang' => $kode_barang]),
             // ];
-            $cek = $this->M_global->updateData('barang', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_barang' => $kode_barang]);
+            $cek = $this->M_global->updateData('barang_cabang', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_barang' => $kode_barang, 'kode_cabang' => $this->session->userdata('cabang')]);
 
             if ($cek) { // jika fungsi berjalan
 
@@ -4014,11 +4014,12 @@ class Master extends CI_Controller
     {
         aktifitas_user('Master Tarif Single', 'hapus Tarif Single', $kode_tarif, $this->M_global->getData('m_tarif', ['kode_tarif' => $kode_tarif])->nama);
 
-        $cek = [
-            $this->M_global->delData('tarif_single_bhp', ['kode_tarif' => $kode_tarif]),
-            $this->M_global->delData('tarif_jasa', ['kode_tarif' => $kode_tarif]),
-            $this->M_global->delData('m_tarif', ['kode_tarif' => $kode_tarif]),
-        ];
+        // $cek = [
+        //     $this->M_global->delData('tarif_single_bhp', ['kode_tarif' => $kode_tarif]),
+        //     $this->M_global->delData('tarif_jasa', ['kode_tarif' => $kode_tarif]),
+        //     $this->M_global->delData('m_tarif', ['kode_tarif' => $kode_tarif]),
+        // ];
+        $cek = $this->M_global->updateData('tarif_jasa', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_tarif' => $kode_tarif, 'kode_cabang' => $this->session->userdata('cabang')]);
 
         if ($cek) {
             echo json_encode(['status' => 1]);
