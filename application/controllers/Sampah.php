@@ -129,7 +129,7 @@ class Sampah extends CI_Controller
                     $where = ['kode_dokter' => $_invoice];
                 } else if ($_tabel == 'perawat') {
                     $where = ['kode_perawat' => $_invoice];
-                } else if ($_tabel == 'tarif_jasa') {
+                } else if ($_tabel == 'tarif_jasa' || $_tabel == 'tarif_paket') {
                     $where = ['kode_tarif' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')];
                 } else {
                     echo json_encode(['status' => 0]);
@@ -193,7 +193,7 @@ class Sampah extends CI_Controller
             $where = ['kode_dokter' => $id];
         } else if ($table == 'perawat') {
             $where = ['kode_perawat' => $id];
-        } else if ($table == 'tarif_jasa') {
+        } else if ($table == 'tarif_jasa' || $table == 'tarif_paket') {
             $where = ['kode_tarif' => $id, 'kode_cabang' => $this->session->userdata('cabang')];
         } else {
             echo json_encode(['status' => 0]);
@@ -298,6 +298,15 @@ class Sampah extends CI_Controller
                         $this->M_global->delData('tarif_single_bhp', ['kode_tarif' => $_invoice]);
                         $this->M_global->delData('m_tarif', ['kode_tarif' => $_invoice]);
                     }
+                } else if ($_tabel == 'tarif_paket') {
+                    $where = ['kode_tarif' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')];
+
+                    $tarif_paket = $this->M_global->getDataResult('tarif_paket', ['kode_tarif' => $_invoice, 'hapus' => 0]);
+
+                    if (count($tarif_paket) < 1) {
+                        $this->M_global->delData('tarif_paket_bhp', ['kode_tarif' => $_invoice]);
+                        $this->M_global->delData('m_tarif', ['kode_tarif' => $_invoice]);
+                    }
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -385,6 +394,15 @@ class Sampah extends CI_Controller
 
             if (count($tarif_jasa) < 1) {
                 $this->M_global->delData('tarif_single_bhp', ['kode_tarif' => $id]);
+                $this->M_global->delData('m_tarif', ['kode_tarif' => $id]);
+            }
+        } else if ($table == 'tarif_paket') {
+            $where = ['kode_tarif' => $id, 'kode_cabang' => $this->session->userdata('cabang')];
+
+            $tarif_paket = $this->M_global->getDataResult('tarif_paket', ['kode_tarif' => $id, 'hapus' => 0]);
+
+            if (count($tarif_paket) < 1) {
+                $this->M_global->delData('tarif_paket_bhp', ['kode_tarif' => $id]);
                 $this->M_global->delData('m_tarif', ['kode_tarif' => $id]);
             }
         } else {

@@ -442,6 +442,20 @@ class M_global extends CI_Model
             FROM tarif_jasa
             WHERE hapus > 0
 
+            UNION ALL
+
+            SELECT 
+            kode_tarif AS id,
+            'Master ~ tarif single' AS menu,
+            (SELECT nama FROM m_tarif WHERE kode_tarif = tarif_paket.kode_tarif) AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'tarif_paket' AS tabel,
+            3 AS bagian,
+            kode_cabang AS cabang
+            FROM tarif_paket
+            WHERE hapus > 0
+
             -- end master
         ) AS query_all
         $where

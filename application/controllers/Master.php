@@ -4294,11 +4294,12 @@ class Master extends CI_Controller
     {
         aktifitas_user('Master Tarif Paket', 'hapus Tarif Paket', $kode_tarif, $this->M_global->getData('m_tarif', ['kode_tarif' => $kode_tarif])->nama);
 
-        $cek = [
-            $this->M_global->delData('tarif_paket_bhp', ['kode_tarif' => $kode_tarif]),
-            $this->M_global->delData('tarif_paket', ['kode_tarif' => $kode_tarif]),
-            $this->M_global->delData('m_tarif', ['kode_tarif' => $kode_tarif]),
-        ];
+        // $cek = [
+        //     $this->M_global->delData('tarif_paket_bhp', ['kode_tarif' => $kode_tarif]),
+        //     $this->M_global->delData('tarif_paket', ['kode_tarif' => $kode_tarif]),
+        //     $this->M_global->delData('m_tarif', ['kode_tarif' => $kode_tarif]),
+        // ];
+        $cek = $this->M_global->updateData('tarif_paket', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_tarif' => $kode_tarif, 'kode_cabang' => $this->session->userdata('cabang')]);
 
         if ($cek) {
             echo json_encode(['status' => 1]);
