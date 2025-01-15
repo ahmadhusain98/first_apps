@@ -301,7 +301,7 @@
                     $cabang = $this->session->userdata('cabang');
                     $sintak = $this->db->query("SELECT * FROM (
                         SELECT id, no_trx AS invoice, 'pembayaran' AS url FROM pendaftaran
-                        WHERE kode_cabang = '$cabang' AND status_trx = 0
+                        WHERE kode_cabang = '$cabang' AND status_trx = 0 AND hapus = 0
 
                         UNION ALL
 

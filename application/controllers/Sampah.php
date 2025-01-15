@@ -119,9 +119,7 @@ class Sampah extends CI_Controller
                     $where = ['kode_tipe' => $_invoice];
                 } else if ($_tabel == 'm_gudang') {
                     $where = ['kode_gudang' => $_invoice];
-                } else if ($_tabel == 'barang_cabang') {
-                    $where = ['kode_barang' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')];
-                } else if ($_tabel == 'logistik_cabang') {
+                } else if ($_tabel == 'barang_cabang' || $_tabel == 'logistik_cabang') {
                     $where = ['kode_barang' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')];
                 } else if ($_tabel == 'user') {
                     $where = ['kode_user' => $_invoice];
@@ -133,6 +131,8 @@ class Sampah extends CI_Controller
                     $where = ['kode_tarif' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')];
                 } else if ($_tabel == 'member') {
                     $where = ['kode_member' => $_invoice];
+                } else if ($_tabel == 'pendaftaran') {
+                    $where = ['no_trx' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -185,9 +185,7 @@ class Sampah extends CI_Controller
             $where = ['kode_tipe' => $id];
         } else if ($table == 'm_gudang') {
             $where = ['kode_gudang' => $id];
-        } else if ($table == 'barang_cabang') {
-            $where = ['kode_barang' => $id, 'kode_cabang' => $this->session->userdata('cabang')];
-        } else if ($table == 'logistik_cabang') {
+        } else if ($table == 'barang_cabang' || $table == 'logistik_cabang') {
             $where = ['kode_barang' => $id, 'kode_cabang' => $this->session->userdata('cabang')];
         } else if ($table == 'user') {
             $where = ['kode_user' => $id];
@@ -199,6 +197,8 @@ class Sampah extends CI_Controller
             $where = ['kode_tarif' => $id, 'kode_cabang' => $this->session->userdata('cabang')];
         } else if ($table == 'member') {
             $where = ['kode_member' => $id];
+        } else if ($table == 'pendaftaran') {
+            $where = ['no_trx' => $id];
         } else {
             echo json_encode(['status' => 0]);
             return;
@@ -313,6 +313,20 @@ class Sampah extends CI_Controller
                     }
                 } else if ($_tabel == 'member') {
                     $where = ['kode_member' => $_invoice];
+                } else if ($_tabel == 'pendaftaran') {
+                    $where = ['no_trx' => $_invoice];
+
+                    $this->M_global->delData('tarif_paket_pasien', ['no_trx' => $_invoice]);
+
+                    $member = $this->M_global->getData('pendaftaran', ['no_trx' => $_invoice]);
+
+                    $last = $this->db->query("SELECT * FROM pendaftaran WHERE kode_member = '$member->kode_member' AND no_trx <> '$_invoice' ORDER BY id DESC LIMIT 1")->row();
+
+                    if ($last) {
+                        $this->M_global->updateData('member', ['last_regist' => $last->no_trx, 'status_regist' => 0], ['kode_member' => $member->kode_member]);
+                    } else {
+                        $this->M_global->updateData('member', ['last_regist' => null, 'status_regist' => 0], ['kode_member' => $member->kode_member]);
+                    }
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -413,6 +427,20 @@ class Sampah extends CI_Controller
             }
         } else if ($table == 'member') {
             $where = ['kode_member' => $id];
+        } else if ($table == 'pendaftaran') {
+            $where = ['no_trx' => $id];
+
+            $this->M_global->delData('tarif_paket_pasien', ['no_trx' => $id]);
+
+            $member = $this->M_global->getData('pendaftaran', ['no_trx' => $id]);
+
+            $last = $this->db->query("SELECT * FROM pendaftaran WHERE kode_member = '$member->kode_member' AND no_trx <> '$id' ORDER BY id DESC LIMIT 1")->row();
+
+            if ($last) {
+                $this->M_global->updateData('member', ['last_regist' => $last->no_trx, 'status_regist' => 0], ['kode_member' => $member->kode_member]);
+            } else {
+                $this->M_global->updateData('member', ['last_regist' => null, 'status_regist' => 0], ['kode_member' => $member->kode_member]);
+            }
         } else {
             echo json_encode(['status' => 0]);
             return;

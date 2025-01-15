@@ -1146,22 +1146,19 @@ class Health extends CI_Controller
 
         aktifitas_user_transaksi('Pendaftaran', 'menghapus Pendaftaran Member ' . $member->kode_member, $no_trx);
 
-        $cek = [
-            $this->M_global->delData('pendaftaran', ['no_trx' => $no_trx]),
-            $this->M_global->delData('tarif_paket_pasien', ['no_trx' => $no_trx]),
-        ];
+        // $cek = [
+        //     $this->M_global->delData('pendaftaran', ['no_trx' => $no_trx]),
+        //     $this->M_global->delData('tarif_paket_pasien', ['no_trx' => $no_trx]),
+        // ];
+        $cek = $this->M_global->updateData('pendaftaran', [
+            'hapus' => 1,
+            'tgl_hapus' => date('Y-m-d'),
+            'jam_hapus' => date('H:i:s')
+        ], ['no_trx' => $no_trx]);
 
         if ($cek) { // jika fungsi berjalan
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
-
-            $last = $this->db->query("SELECT * FROM pendaftaran WHERE kode_member = '$member->kode_member' AND no_trx <> '$no_trx' ORDER BY id DESC LIMIT 1")->row();
-
-            if ($last) {
-                $this->M_global->updateData('member', ['last_regist' => $last->no_trx, 'status_regist' => 0], ['kode_member' => $member->kode_member]);
-            } else {
-                $this->M_global->updateData('member', ['last_regist' => null, 'status_regist' => 0], ['kode_member' => $member->kode_member]);
-            }
         } else { // selain itu
             // kirimkan status 0 ke view
             echo json_encode(['status' => 0]);
