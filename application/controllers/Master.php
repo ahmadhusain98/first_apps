@@ -1516,27 +1516,27 @@ class Master extends CI_Controller
     public function delBar($kode_barang)
     {
         // jalankan fungsi hapus barang berdasarkan kode_barang
-        $barang_cabang = count($this->M_global->getDataResult('barang_cabang', ['kode_barang' => $kode_barang, 'kode_cabang <> ' => $this->session->userdata('cabang')]));
+        // $barang_cabang = count($this->M_global->getDataResult('barang_cabang', ['kode_barang' => $kode_barang, 'kode_cabang <> ' => $this->session->userdata('cabang')]));
 
-        if ($barang_cabang > 0) {
-            echo json_encode(['status' => 2]);
-        } else {
-            aktifitas_user('Master Barang', 'menghapus', $kode_barang, $this->M_global->getData('barang', ['kode_barang' => $kode_barang])->nama);
-            // $cek = [
-            //     $this->M_global->delData('barang', ['kode_barang' => $kode_barang]),
-            //     $this->M_global->delData('barang_cabang', ['kode_barang' => $kode_barang]),
-            //     $this->M_global->delData('barang_jenis', ['kode_barang' => $kode_barang]),
-            // ];
-            $cek = $this->M_global->updateData('barang_cabang', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_barang' => $kode_barang, 'kode_cabang' => $this->session->userdata('cabang')]);
+        // if ($barang_cabang > 0) {
+        //     echo json_encode(['status' => 2]);
+        // } else {
+        // }
+        aktifitas_user('Master Barang', 'menghapus', $kode_barang, $this->M_global->getData('barang', ['kode_barang' => $kode_barang])->nama);
+        // $cek = [
+        //     $this->M_global->delData('barang', ['kode_barang' => $kode_barang]),
+        //     $this->M_global->delData('barang_cabang', ['kode_barang' => $kode_barang]),
+        //     $this->M_global->delData('barang_jenis', ['kode_barang' => $kode_barang]),
+        // ];
+        $cek = $this->M_global->updateData('barang_cabang', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_barang' => $kode_barang, 'kode_cabang' => $this->session->userdata('cabang')]);
 
-            if ($cek) { // jika fungsi berjalan
+        if ($cek) { // jika fungsi berjalan
 
-                // kirimkan status 1 ke view
-                echo json_encode(['status' => 1]);
-            } else { // selain itu
-                // kirimkan status 0 ke view
-                echo json_encode(['status' => 0]);
-            }
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
         }
     }
 
@@ -1606,10 +1606,10 @@ class Master extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'logistik';
-        $colum            = ['id', 'kode_logistik', 'nama', 'kode_satuan', 'kode_kategori', 'hna', 'hpp', 'harga_jual', 'nilai_persediaan'];
-        $order            = 'id';
+        $colum            = ['logistik.id', 'logistik.kode_logistik', 'nama', 'kode_satuan', 'kode_kategori', 'hna', 'hpp', 'harga_jual', 'nilai_persediaan'];
+        $order            = 'logistik.id';
         $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
+        $order_arr        = ['logistik.id' => 'asc'];
         $kondisi_param1   = 'kode_kategori';
 
         // kondisi role
@@ -1773,30 +1773,26 @@ class Master extends CI_Controller
     public function delLog($kode_logistik)
     {
         // jalankan fungsi hapus logistik berdasarkan kode_logistik
-        $barang_cabang = count($this->M_global->getDataResult('logistik_cabang', ['kode_barang' => $kode_logistik, 'kode_cabang <> ' => $this->session->userdata('cabang')]));
+        // $barang_cabang = count($this->M_global->getDataResult('logistik_cabang', ['kode_barang' => $kode_logistik, 'kode_cabang <> ' => $this->session->userdata('cabang')]));
 
-        if ($barang_cabang > 0) {
-            echo json_encode(['status' => 2]);
-        } else {
-            aktifitas_user('Master Logistik', 'menghapus', $kode_logistik, $this->M_global->getData('logistik', ['kode_logistik' => $kode_logistik])->nama);
-            // $cek = [
-            //     $this->M_global->delData('logistik', ['kode_logistik' => $kode_logistik]),
-            //     $this->M_global->delData('logistik_cabang', ['kode_barang' => $kode_logistik]),
-            // ];
-            $cek = $this->M_global->updateData(
-                'logistik',
-                ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')],
-                ['kode_logistik' => $kode_logistik]
-            );
+        // if ($barang_cabang > 0) {
+        //     echo json_encode(['status' => 2]);
+        // } else {
+        // }
+        aktifitas_user('Master Logistik', 'menghapus', $kode_logistik, $this->M_global->getData('logistik', ['kode_logistik' => $kode_logistik])->nama);
+        // $cek = [
+        //     $this->M_global->delData('logistik', ['kode_logistik' => $kode_logistik]),
+        //     $this->M_global->delData('logistik_cabang', ['kode_barang' => $kode_logistik]),
+        // ];
+        $cek = $this->M_global->updateData('logistik_cabang', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_barang' => $kode_logistik, 'kode_cabang' => $this->session->userdata('cabang')]);
 
-            if ($cek) { // jika fungsi berjalan
+        if ($cek) { // jika fungsi berjalan
 
-                // kirimkan status 1 ke view
-                echo json_encode(['status' => 1]);
-            } else { // selain itu
-                // kirimkan status 0 ke view
-                echo json_encode(['status' => 0]);
-            }
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
         }
     }
 

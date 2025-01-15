@@ -375,15 +375,15 @@ class M_global extends CI_Model
             UNION ALL
 
             SELECT 
-            kode_logistik AS id,
+            kode_barang AS id,
             'Master ~ logistik' AS menu,
-            nama AS nama,
+            (SELECT nama FROM logistik WHERE kode_logistik = logistik_cabang.kode_barang) AS nama,
             tgl_hapus AS tgl,
             jam_hapus AS jam,
-            'logistik' AS tabel,
+            'logistik_cabang' AS tabel,
             3 AS bagian,
-            '' AS cabang
-            FROM logistik
+            kode_cabang AS cabang
+            FROM logistik_cabang
             WHERE hapus > 0
 
             UNION ALL

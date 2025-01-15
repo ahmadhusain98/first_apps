@@ -121,8 +121,8 @@ class Sampah extends CI_Controller
                     $where = ['kode_gudang' => $_invoice];
                 } else if ($_tabel == 'barang_cabang') {
                     $where = ['kode_barang' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')];
-                } else if ($_tabel == 'logistik') {
-                    $where = ['kode_logistik' => $_invoice];
+                } else if ($_tabel == 'logistik_cabang') {
+                    $where = ['kode_barang' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')];
                 } else if ($_tabel == 'user') {
                     $where = ['kode_user' => $_invoice];
                 } else if ($_tabel == 'dokter') {
@@ -185,8 +185,8 @@ class Sampah extends CI_Controller
             $where = ['kode_gudang' => $id];
         } else if ($table == 'barang_cabang') {
             $where = ['kode_barang' => $id, 'kode_cabang' => $this->session->userdata('cabang')];
-        } else if ($table == 'logistik') {
-            $where = ['kode_logistik' => $id];
+        } else if ($table == 'logistik_cabang') {
+            $where = ['kode_barang' => $id, 'kode_cabang' => $this->session->userdata('cabang')];
         } else if ($table == 'user') {
             $where = ['kode_user' => $id];
         } else if ($table == 'dokter') {
@@ -267,10 +267,14 @@ class Sampah extends CI_Controller
                         $this->M_global->delData('barang_cabang', ['kode_barang' => $_invoice]);
                         $this->M_global->delData('barang_jenis', ['kode_barang' => $_invoice]);
                     }
-                } else if ($_tabel == 'logistik') {
-                    $where = ['kode_logistik' => $_invoice];
+                } else if ($_tabel == 'logistik_cabang') {
+                    $where = ['kode_barang' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')];
 
-                    $this->M_global->delData('logistik_cabang', ['kode_barang' => $_invoice]);
+                    $logistik_cabang = $this->M_global->getDataResult('logistik_cabang', ['kode_barang' => $_invoice, 'hapus' => 0]);
+
+                    if (count($logistik_cabang) < 1) {
+                        $this->M_global->delData('logistik', ['kode_logistik' => $_invoice]);
+                    }
                 } else if ($_tabel == 'user') { // Fixed the typo here from $table to $_tabel
                     $where = ['kode_user' => $_invoice];
 
@@ -344,7 +348,7 @@ class Sampah extends CI_Controller
         } else if ($table == 'm_gudang') {
             $where = ['kode_gudang' => $id];
         } else if ($table == 'barang_cabang') {
-            $where = ['kode_barang' => $id];
+            $where = ['kode_barang' => $id, 'kode_cabang' => $this->session->userdata('cabang')];
 
             $barang_cabang = $this->M_global->getDataResult('barang_cabang', ['kode_barang' => $id, 'hapus' => 0]);
 
@@ -352,10 +356,14 @@ class Sampah extends CI_Controller
                 $this->M_global->delData('barang_jenis', ['kode_barang' => $id]);
                 $this->M_global->delData('barang', ['kode_barang' => $id]);
             }
-        } else if ($table == 'logistik') {
-            $where = ['kode_logistik' => $id];
+        } else if ($table == 'logistik_cabang') {
+            $where = ['kode_barang' => $id, 'kode_cabang' => $this->session->userdata('cabang')];
 
-            $this->M_global->delData('logistik_cabang', ['kode_barang' => $id]);
+            $logistik_cabang = $this->M_global->getDataResult('logistik_cabang', ['kode_barang' => $id, 'hapus' => 0]);
+
+            if (count($logistik_cabang) < 1) {
+                $this->M_global->delData('logistik', ['kode_logistik' => $id]);
+            }
         } else if ($table == 'user') {
             $where = ['kode_user' => $id];
 
