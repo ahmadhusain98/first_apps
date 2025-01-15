@@ -94,8 +94,8 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
             }
         },
         "lengthMenu": [
-            [5, 15, 20, -1],
-            [5, 15, 20, "Semua"]
+            [10, 25, 50, 75, 100, -1],
+            [10, 25, 50, 75, 100, "Semua"]
         ],
         "columnDefs": [{
             "targets": [-1],
