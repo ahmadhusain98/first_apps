@@ -10,6 +10,9 @@
                 </div>
                 <div class="card-footer text-center">
                     <div> <!--  style="overflow-x: auto; white-space: nowrap; display: flex; text-decoration: none; text-align: center; max-width: 100%;" -->
+                        <button class="btn btn-primary m-1" id="id_menu0" <?= ($check == 0 || $check == '' || $check == null || empty($check)) ? 'disabled' : '' ?> onclick="check_on('0')" type="button">
+                            Semua
+                        </button>
                         <?php foreach ($menu as $m) : ?>
                             <button class="btn btn-danger m-1" id="id_menu<?= $m->id ?>" <?= ($check == $m->id) ? 'disabled' : '' ?> onclick="check_on('<?= $m->id ?>')" type="button">
                                 <?= $m->nama ?>
@@ -33,7 +36,7 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <span class="text-danger font-weight-bold">Limit Hapus Sampah Permanen: <?= number_format($web->limit_trash_web) ?> Hari</span>
+                            <span class="text-danger font-weight-bold">Limit Hapus Sampah Permanen: <?= number_format($web->limit_trash_web) ?> Hari setelah penghapusan</span>
                         </div>
                     </div>
                     <div class="row mb-3">

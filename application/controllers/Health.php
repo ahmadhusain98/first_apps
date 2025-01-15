@@ -410,7 +410,8 @@ class Health extends CI_Controller
     public function delMember($kode_member)
     {
         // jalankan fungsi hapus member berdasarkan kode_member
-        $cek = $this->M_global->delData('member', ['kode_member' => $kode_member]);
+        // $cek = $this->M_global->delData('member', ['kode_member' => $kode_member]);
+        $cek = $this->M_global->updateData('member', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_member' => $kode_member]);
 
         if ($cek) { // jika fungsi berjalan
             // kirimkan status 1 ke view

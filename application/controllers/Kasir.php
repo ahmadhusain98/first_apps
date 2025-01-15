@@ -459,7 +459,7 @@ class Kasir extends CI_Controller
             <tr>
                 <td style="width: 38%;">Kembalian</td>
                 <td style="width: 2%;">: </td>
-                <td style="text-align: right; font-weight: bold; width: 60%;">' . number_format($pembayaran->kembalian) . '</td>
+                <td style="text-align: right; font-weight: bold; width: 60%;">' . (($pembayaran->cek_um == 1) ? number_format($pembayaran->um_masuk) : number_format($pembayaran->kembalian)) . '</td>
             </tr>
             <tr>
                 <td colspan="3">' . $umopen . '&nbsp;&nbsp;' . $umclose . '</td>

@@ -156,7 +156,7 @@ class M_global extends CI_Model
     {
         $cabang = $this->session->userdata('cabang');
 
-        if (!$bagian) {
+        if (!$bagian || $bagian == '' || $bagian == '0') {
             $where = "WHERE (cabang = '" . $cabang . "' OR cabang = '')";
         } else {
             $where = "WHERE (cabang = '" . $cabang . "' OR cabang = '') AND bagian = '" . $bagian . "'";
@@ -454,6 +454,20 @@ class M_global extends CI_Model
             3 AS bagian,
             kode_cabang AS cabang
             FROM tarif_paket
+            WHERE hapus > 0
+
+            UNION ALL
+
+            SELECT 
+            kode_member AS id,
+            'Manajemen Depan ~ daftar member' AS menu,
+            nama AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'member' AS tabel,
+            4 AS bagian,
+            '' AS cabang
+            FROM member
             WHERE hapus > 0
 
             -- end master
