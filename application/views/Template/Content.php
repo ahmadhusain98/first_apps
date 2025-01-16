@@ -847,7 +847,7 @@
 
         // cek panjang karakter
         function cekLength(param, forid) {
-            if (forid == 'kodepos') { // jika id nya kodepos
+            if (forid == 'kodepos' || forid == 'kode_pos') { // jika id nya kodepos
 
                 // jalankan fungsi
                 if (param.length > 5) { // jika panjang karakter lebih dari 5

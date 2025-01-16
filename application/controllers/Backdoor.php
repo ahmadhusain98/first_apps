@@ -872,4 +872,223 @@ class Backdoor extends CI_Controller
             echo json_encode(['status' => 0]);
         }
     }
+
+    public function for_cabang()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'             => 'Backdoor',
+            'nama_apps'         => $web_setting->nama,
+            'page'              => 'cabang',
+            'web'               => $web_setting,
+            'web_version'       => $web_version->version,
+            'list_data'         => 'Backdoor/cabang_list/',
+            'param1'            => '',
+        ];
+
+        $this->template->load('Template/Content', 'Backdoor/Data_cabang', $parameter);
+    }
+
+    // fungsi list cabang
+    public function cabang_list($param1 = '')
+    {
+        // parameter untuk list table
+        $table            = 'cabang';
+        $colum            = ['id', 'kode_cabang', 'inisial_cabang', 'cabang', 'email', 'kontak', 'owner', 'provinsi', 'kabupaten', 'kecamatan', 'desa', 'kode_pos', 'rt', 'rw', 'aktif_dari', 'aktif_sampai'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['id' => 'asc'];
+        $kondisi_param1   = '';
+
+        // kondisi role
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+
+        if ($updated > 0) {
+            $upd_diss     = '';
+        } else {
+            $upd_diss     = 'disabled';
+        }
+
+        // table server side tampung kedalam variable $list
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            $prov   = ($rd->provinsi == null) ? '-' : $this->M_global->getData('m_provinsi', ['kode_provinsi' => $rd->provinsi])->provinsi;
+            $kab    = ($rd->kabupaten == null) ? '-' : $this->M_global->getData('kabupaten', ['kode_kabupaten' => $rd->kabupaten])->kabupaten;
+            $kec    = ($rd->kecamatan == null) ? '-' : $this->M_global->getData('kecamatan', ['kode_kecamatan' => $rd->kecamatan])->kecamatan;
+
+            if ($deleted > 0) {
+                (date('Y-m-d') < $rd->aktif_sampai) ? $del_diss = '' : $del_diss = 'disabled';
+            } else {
+                $del_diss           = 'disabled';
+            }
+
+            $tgl1 = strtotime(date('Y-m-d'));
+            $tgl2 = strtotime($rd->aktif_sampai);
+
+            $jarak = ($tgl2 - $tgl1);
+
+            $aktif_cabang = $jarak / 60 / 60 / 24;
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->inisial_cabang;
+            $row[]  = $rd->cabang;
+            $row[]  = '<span class="text-primary font-weight-bold">' . $rd->owner . '</span><br>Email: <span class="float-right">' . $rd->email . '</span><br>Hp: <span class="float-right">' . $rd->kontak . '</span>';
+            $row[]  = 'Prov. ' . $prov . ',<br>' . $kab . ',<br>Kec. ' . $kec . ',<br>Ds. ' . (($rd->desa == null) ? '-' : $rd->desa) . ',<br>(POS: ' . (($rd->kode_pos == null) ? '-' : $rd->kode_pos) . '), RT.' . (($rd->rt == null) ? '-' : $rd->rt) . '/RW.' . (($rd->rw == null) ? '-' : $rd->rw);
+            $row[]  = 'Dari: <span class="float-right">' . $rd->aktif_dari . '</span><br>Sampai: <span class="float-right">' . $rd->aktif_sampai . '</span><br><br><span class="float-right text-danger font-weight-bold">' . $aktif_cabang . ' Hari Lagi</span>';
+            $row[]  = '<div class="text-center">
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_cabang . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_cabang . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables->count_all($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "recordsFiltered" => $this->M_datatables->count_filtered($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    // form cabang page
+    public function form_cabang($param)
+    {
+        // website config
+        $web_setting  = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version  = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        if ($param != '0') {
+            $cabang = $this->M_global->getData('cabang', ['kode_cabang' => $param]);
+        } else {
+            $cabang = null;
+        }
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Backdoor',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Cabang',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => '',
+            'cabang'        => $cabang,
+        ];
+
+        $this->template->load('Template/Content', 'Backdoor/Form_cabang', $parameter);
+    }
+
+    public function cekCabang()
+    {
+        // ambil cabang inputan
+        $cabang = $this->input->post('cabang');
+
+        // cek cabang pada table cabang
+        $cek  = $this->M_global->jumDataRow('cabang', ['cabang' => $cabang]);
+
+        if ($cek < 1) { // jika tidak ada/ kurang dari 1
+            // kirimkan status 1
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    public function cabang_proses($param)
+    {
+        // variable
+        $inisial_cabang   = $this->input->post('inisial_cabang');
+        $cabang           = $this->input->post('cabang');
+        $kontak           = $this->input->post('kontak');
+        $email            = $this->input->post('email');
+        $owner            = $this->input->post('owner');
+        $provinsi         = $this->input->post('provinsi');
+        $kabupaten        = $this->input->post('kabupaten');
+        $kecamatan        = $this->input->post('kecamatan');
+        $desa             = $this->input->post('desa');
+        $kode_pos         = $this->input->post('kode_pos');
+        $rt               = $this->input->post('rt');
+        $rw               = $this->input->post('rw');
+        $aktif_dari       = $this->input->post('aktif_dari');
+        $aktif_sampai     = $this->input->post('aktif_sampai');
+
+        if ($param == 1) { // jika parameternya 1
+            // maka buat kode baru
+            $kode_cabang = _kodeCabang();
+        } else { // selain itu
+            // ambil kode dari inputan
+            $kode_cabang = $this->input->post('kode_cabang');
+        }
+
+        // tampung variable kedalam $isi
+        $isi = [
+            'kode_cabang'       => $kode_cabang,
+            'inisial_cabang'    => $inisial_cabang,
+            'cabang'            => $cabang,
+            'kontak'            => $kontak,
+            'email'             => $email,
+            'owner'             => $owner,
+            'provinsi'          => $provinsi,
+            'kabupaten'         => $kabupaten,
+            'kecamatan'         => $kecamatan,
+            'desa'              => $desa,
+            'kode_pos'          => $kode_pos,
+            'rt'                => $rt,
+            'rw'                => $rw,
+            'aktif_dari'        => $aktif_dari,
+            'aktif_sampai'      => $aktif_sampai,
+        ];
+
+        if ($param == 1) { // jika parameternya 1
+            // jalankan fungsi simpan
+            $cek          = $this->M_global->insertData('cabang', $isi);
+
+            $cek_param    = 'menambahkan';
+        } else { // selain itu
+            // jalankan fungsi update
+            $cek          = $this->M_global->updateData('cabang', $isi, ['kode_cabang' => $kode_cabang]);
+
+            $cek_param    = 'mengubah';
+        }
+
+        if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Backdoor Cabang', $cek_param, $kode_cabang, $this->M_global->getData('cabang', ['kode_cabang' => $kode_cabang])->cabang);
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi hapus cabang berdasarkan kode_cabang
+    public function delCabang($kode_cabang)
+    {
+        // jalankan fungsi hapus cabang berdasarkan kode_cabang
+        aktifitas_user('Backdoor Cabang', 'menghapus', $kode_cabang, $this->M_global->getData('cabang', ['kode_cabang' => $kode_cabang])->cabang);
+        $cek = $this->M_global->delData('cabang', ['kode_cabang' => $kode_cabang]);
+
+        if ($cek) { // jika fungsi berjalan
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
 }
