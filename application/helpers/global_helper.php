@@ -164,6 +164,23 @@ function _kodeSatuan()
     return $kode_user;
 }
 
+function _kodeRole()
+{
+    $CI         = &get_instance();
+
+    $inisial    = "R";
+    $lastNumber = $CI->db->query('SELECT * FROM m_role ORDER BY kode_role DESC LIMIT 1')->row();
+    $number     = 1;
+    if ($lastNumber) {
+        $number       = count($CI->db->query('SELECT * FROM m_role')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%04d", $number);
+    } else {
+        $number       = 0;
+        $kode_user    = $inisial . "0001";
+    }
+    return $kode_user;
+}
+
 function _kodeTipeBank()
 {
     $CI         = &get_instance();

@@ -75,6 +75,16 @@
             </div>
         </div>
     </div>
+    <div class="col-lg-4 col-4" type="button" onclick="getUrl('Backdoor/for_role')">
+        <div class="small-box bg-dark" style="height: 20vh;">
+            <div class="inner">
+                <h4>Role/Akses</h4>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-user-secret"></i>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>

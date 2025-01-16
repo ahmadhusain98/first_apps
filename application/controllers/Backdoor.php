@@ -377,7 +377,7 @@ class Backdoor extends CI_Controller
             $nor = 1;
             foreach ($role as $r) {
                 $row[] = '<div class="text-center">
-                    <input type="checkbox" class="form-control" id="krole' . $no . '_' . $nor . '" ' . (($r->kode_role == $rd->kode_role) ? 'checked' : '') . ' name="krole[]" value="' . $r->kode_role . '" onclick="changeRole(' . "'" . $rd->kode_user . "', '" . $r->kode_role . "', '" . $no . "', '" . $nor . "', '" . $rd->nama . "', '" . $r->keterangan . "'" . ')">
+                    <input type="checkbox" class="form-control" id="krole' . $no . '_' . $nor . '" ' . (($r->kode_role == $rd->kode_role) ? 'checked' : '') . ' name="krole[]" value="' . $r->kode_role . '" onclick="changeRole(' . "'" . $rd->kode_user . "', '" . $r->kode_role . "', '" . $no . "', '" . $nor . "', '" . $rd->nama . "', '" . $r->keterangan . "'" . ')" ' . (($r->kode_role == $rd->kode_role) ? 'disabled' : '') . '>
                 </div>';
                 $nor++;
             }
@@ -685,6 +685,190 @@ class Backdoor extends CI_Controller
         if ($cek) {
             echo json_encode(['status' => 1]);
         } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    public function for_role()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'             => 'Backdoor',
+            'nama_apps'         => $web_setting->nama,
+            'page'              => 'Role',
+            'web'               => $web_setting,
+            'web_version'       => $web_version->version,
+            'list_data'         => 'Backdoor/role_list/',
+            'param1'            => '',
+        ];
+
+        $this->template->load('Template/Content', 'Backdoor/Data_akses_role', $parameter);
+    }
+
+    // fungsi list role
+    public function role_list($param1 = '')
+    {
+        // parameter untuk list table
+        $table            = 'm_role';
+        $colum            = ['id', 'kode_role', 'keterangan'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['id' => 'asc'];
+        $kondisi_param1   = '';
+
+        // kondisi role
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+
+        if ($updated > 0) {
+            $upd_diss     = '';
+        } else {
+            $upd_diss     = 'disabled';
+        }
+
+        // table server side tampung kedalam variable $list
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($deleted > 0) {
+                $user             = $this->M_global->getResult('user');
+
+                $role             = [];
+                foreach ($user as $u) {
+                    $role[]       = [
+                        $u->kode_role
+                    ];
+                }
+
+                $flattened_role   = array_merge(...$role);
+
+                if (in_array($rd->kode_role, $flattened_role)) {
+                    $del_diss       = 'disabled';
+                } else {
+                    $del_diss       = '';
+                }
+            } else {
+                $del_diss           = 'disabled';
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->kode_role;
+            $row[]  = $rd->keterangan;
+            $row[]  = '<div class="text-center">
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_role . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_role . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables->count_all($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "recordsFiltered" => $this->M_datatables->count_filtered($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    // fungsi cek role berdasarkan keterangan role
+    public function cekRole()
+    {
+        // ambil keterangan inputan
+        $keterangan   = $this->input->post('keterangan');
+
+        // cek keterangan pada table m_role
+        $cek          = $this->M_global->jumDataRow('m_role', ['keterangan' => $keterangan]);
+
+        if ($cek < 1) { // jika tidak ada/ kurang dari 1
+            // kirimkan status 1
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi proses simpan/update role
+    public function role_proses($param)
+    {
+        // variable
+        $keterangan       = $this->input->post('keterangan');
+
+        if ($param == 1) { // jika parameternya 1
+            // maka buat kode baru
+            $kodeRole   = _kodeRole();
+        } else { // selain itu
+            // ambil kode dari inputan
+            $kodeRole   = $this->input->post('kodeRole');
+        }
+
+        // tampung variable kedalam $isi
+        $isi = [
+            'kode_role'   => $kodeRole,
+            'keterangan'    => $keterangan,
+        ];
+
+        if ($param == 1) { // jika parameternya 1
+            // jalankan fungsi simpan
+            $cek = $this->M_global->insertData('m_role', $isi);
+
+            $cek_param = 'menambahkan';
+        } else { // selain itu
+            // jalankan fungsi update
+            $cek = $this->M_global->updateData('m_role', $isi, ['kode_role' => $kodeRole]);
+
+            $cek_param = 'mengubah';
+        }
+
+        if ($cek) { // jika fungsi berjalan
+            aktifitas_user(
+                'Backdoor Role',
+                $cek_param,
+                $kodeRole,
+                $this->M_global->getData('m_role', ['kode_role' => $kodeRole])->keterangan
+            );
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi ambil informasi role berdasarkan kode role
+    public function getInfoRole($kode_role)
+    {
+        // ambil data role berdasarkan kode_role
+        $data = $this->M_global->getData('m_role', ['kode_role' => $kode_role]);
+        // lempar ke view
+        echo json_encode($data);
+    }
+
+    // fungsi hapus role berdasarkan kode_role
+    public function delRole($kode_role)
+    {
+        // jalankan fungsi hapus role berdasarkan kode_role
+        aktifitas_user('Backdoor Role', 'menghapus', $kode_role, $this->M_global->getData('m_role', ['kode_role' => $kode_role])->keterangan);
+        $cek = $this->M_global->delData('m_role', ['kode_role' => $kode_role]);
+
+        if ($cek) { // jika fungsi berjalan
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
             echo json_encode(['status' => 0]);
         }
     }
