@@ -52,9 +52,9 @@ class Sampah extends CI_Controller
 
         $parameter = [
             $this->data,
-            'judul'         => 'Sampah',
+            'judul'         => 'Sampah Master',
             'nama_apps'     => $web_setting->nama,
-            'page'          => 'Sampah',
+            'page'          => 'Sampah Master',
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
             'list_data'     => 'Sampah/sampah_list/',
@@ -129,10 +129,6 @@ class Sampah extends CI_Controller
                     $where = ['kode_perawat' => $_invoice];
                 } else if ($_tabel == 'tarif_jasa' || $_tabel == 'tarif_paket') {
                     $where = ['kode_tarif' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')];
-                } else if ($_tabel == 'member') {
-                    $where = ['kode_member' => $_invoice];
-                } else if ($_tabel == 'pendaftaran') {
-                    $where = ['no_trx' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -195,10 +191,6 @@ class Sampah extends CI_Controller
             $where = ['kode_perawat' => $id];
         } else if ($table == 'tarif_jasa' || $table == 'tarif_paket') {
             $where = ['kode_tarif' => $id, 'kode_cabang' => $this->session->userdata('cabang')];
-        } else if ($table == 'member') {
-            $where = ['kode_member' => $id];
-        } else if ($table == 'pendaftaran') {
-            $where = ['no_trx' => $id];
         } else {
             echo json_encode(['status' => 0]);
             return;
@@ -311,22 +303,6 @@ class Sampah extends CI_Controller
                         $this->M_global->delData('tarif_paket_bhp', ['kode_tarif' => $_invoice]);
                         $this->M_global->delData('m_tarif', ['kode_tarif' => $_invoice]);
                     }
-                } else if ($_tabel == 'member') {
-                    $where = ['kode_member' => $_invoice];
-                } else if ($_tabel == 'pendaftaran') {
-                    $where = ['no_trx' => $_invoice];
-
-                    $this->M_global->delData('tarif_paket_pasien', ['no_trx' => $_invoice]);
-
-                    $member = $this->M_global->getData('pendaftaran', ['no_trx' => $_invoice]);
-
-                    $last = $this->db->query("SELECT * FROM pendaftaran WHERE kode_member = '$member->kode_member' AND no_trx <> '$_invoice' ORDER BY id DESC LIMIT 1")->row();
-
-                    if ($last) {
-                        $this->M_global->updateData('member', ['last_regist' => $last->no_trx, 'status_regist' => 0], ['kode_member' => $member->kode_member]);
-                    } else {
-                        $this->M_global->updateData('member', ['last_regist' => null, 'status_regist' => 0], ['kode_member' => $member->kode_member]);
-                    }
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -424,22 +400,6 @@ class Sampah extends CI_Controller
             if (count($tarif_paket) < 1) {
                 $this->M_global->delData('tarif_paket_bhp', ['kode_tarif' => $id]);
                 $this->M_global->delData('m_tarif', ['kode_tarif' => $id]);
-            }
-        } else if ($table == 'member') {
-            $where = ['kode_member' => $id];
-        } else if ($table == 'pendaftaran') {
-            $where = ['no_trx' => $id];
-
-            $this->M_global->delData('tarif_paket_pasien', ['no_trx' => $id]);
-
-            $member = $this->M_global->getData('pendaftaran', ['no_trx' => $id]);
-
-            $last = $this->db->query("SELECT * FROM pendaftaran WHERE kode_member = '$member->kode_member' AND no_trx <> '$id' ORDER BY id DESC LIMIT 1")->row();
-
-            if ($last) {
-                $this->M_global->updateData('member', ['last_regist' => $last->no_trx, 'status_regist' => 0], ['kode_member' => $member->kode_member]);
-            } else {
-                $this->M_global->updateData('member', ['last_regist' => null, 'status_regist' => 0], ['kode_member' => $member->kode_member]);
             }
         } else {
             echo json_encode(['status' => 0]);

@@ -301,7 +301,7 @@
                     $cabang = $this->session->userdata('cabang');
                     $sintak = $this->db->query("SELECT * FROM (
                         SELECT id, no_trx AS invoice, 'pembayaran' AS url FROM pendaftaran
-                        WHERE kode_cabang = '$cabang' AND status_trx = 0 AND hapus = 0
+                        WHERE kode_cabang = '$cabang' AND status_trx = 0
 
                         UNION ALL
 
@@ -392,11 +392,15 @@
             <div class="sidebar" style="backdrop-filter: blur(10px);">
                 <!-- Sidebar user panel -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex ms-auto">
-                    <div class="image">
+                    <div class="image my-auto mr-2">
                         <img src="<?= base_url('assets/user/') . $this->data["foto"] ?>" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info ms-auto">
-                        <a type="button" href="<?= site_url('Profile') ?>" class="d-block"><?= $this->data["nama"] ?></a>
+                        <a type="button" href="<?= site_url('Profile') ?>" class="d-block">
+                            <?= $this->data["nama"] ?>
+                            <br>
+                            <span style="font-size: 10px;" class="text-white"><?= $this->M_global->getData('m_role', ['kode_role' => $this->data["kode_role"]])->keterangan ?></span>
+                        </a>
                     </div>
                 </div>
 
@@ -431,7 +435,7 @@
                                 <li class="nav-item">
                                     <a type="button" class="nav-link <?= $aktifUrl ?>" onclick="getUrl('<?= $m->url ?>')">
                                         &nbsp;<?= $m->icon ?>
-                                        <p class="<?= ($m->nama == 'Sampah') ? 'text-danger font-weight-bold' : '' ?>">
+                                        <p class="<?= ($m->nama == 'Sampah Master') ? 'text-danger font-weight-bold' : '' ?>">
                                             <?php
                                             $data_sampah = $this->M_global->getDataSampah();
 
@@ -441,7 +445,7 @@
                                                 $count_sampah = '';
                                             }
                                             ?>
-                                            <?= ($m->nama == 'Sampah') ? $m->nama . $count_sampah : $m->nama ?>
+                                            <?= ($m->nama == 'Sampah Master') ? $m->nama . $count_sampah : $m->nama ?>
                                         </p>
                                     </a>
                                 </li>

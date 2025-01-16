@@ -457,37 +457,6 @@ class M_global extends CI_Model
             WHERE hapus > 0
 
             -- end master
-            -- manajemen depan
-
-            UNION ALL
-
-            SELECT 
-            kode_member AS id,
-            'Manajemen Depan ~ daftar member' AS menu,
-            nama AS nama,
-            tgl_hapus AS tgl,
-            jam_hapus AS jam,
-            'member' AS tabel,
-            4 AS bagian,
-            '' AS cabang
-            FROM member
-            WHERE hapus > 0
-
-            UNION ALL
-
-            SELECT 
-            no_trx AS id,
-            'Manajemen Depan ~ pendaftaran' AS menu,
-            (SELECT nama FROM member WHERE kode_member = pendaftaran.kode_member) AS nama,
-            tgl_hapus AS tgl,
-            jam_hapus AS jam,
-            'pendaftaran' AS tabel,
-            4 AS bagian,
-            kode_cabang AS cabang
-            FROM pendaftaran
-            WHERE hapus > 0
-            
-            -- endmanajemen depan
 
         ) AS query_all
         $where

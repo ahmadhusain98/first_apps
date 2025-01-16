@@ -410,8 +410,7 @@ class Health extends CI_Controller
     public function delMember($kode_member)
     {
         // jalankan fungsi hapus member berdasarkan kode_member
-        // $cek = $this->M_global->delData('member', ['kode_member' => $kode_member]);
-        $cek = $this->M_global->updateData('member', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_member' => $kode_member]);
+        $cek = $this->M_global->delData('member', ['kode_member' => $kode_member]);
 
         if ($cek) { // jika fungsi berjalan
             // kirimkan status 1 ke view
@@ -1146,15 +1145,10 @@ class Health extends CI_Controller
 
         aktifitas_user_transaksi('Pendaftaran', 'menghapus Pendaftaran Member ' . $member->kode_member, $no_trx);
 
-        // $cek = [
-        //     $this->M_global->delData('pendaftaran', ['no_trx' => $no_trx]),
-        //     $this->M_global->delData('tarif_paket_pasien', ['no_trx' => $no_trx]),
-        // ];
-        $cek = $this->M_global->updateData('pendaftaran', [
-            'hapus' => 1,
-            'tgl_hapus' => date('Y-m-d'),
-            'jam_hapus' => date('H:i:s')
-        ], ['no_trx' => $no_trx]);
+        $cek = [
+            $this->M_global->delData('pendaftaran', ['no_trx' => $no_trx]),
+            $this->M_global->delData('tarif_paket_pasien', ['no_trx' => $no_trx]),
+        ];
 
         if ($cek) { // jika fungsi berjalan
             // kirimkan status 1 ke view

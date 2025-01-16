@@ -8,31 +8,6 @@
                         <button type="button" class="btn btn-primary" onclick="getUrl('Sampah')"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
                     </div>
                 </div>
-                <div class="card-footer text-center">
-                    <div> <!--  style="overflow-x: auto; white-space: nowrap; display: flex; text-decoration: none; text-align: center; max-width: 100%;" -->
-                        <button class="btn btn-primary m-1" id="id_menu0" <?= ($check == 0 || $check == '' || $check == null || empty($check)) ? 'disabled' : '' ?> onclick="check_on('0')" type="button">
-                            Semua
-                        </button>
-                        <?php foreach ($menu as $m) : ?>
-                            <button class="btn btn-danger m-1" id="id_menu<?= $m->id ?>" <?= ($check == $m->id) ? 'disabled' : '' ?> onclick="check_on('<?= $m->id ?>')" type="button">
-                                <?= $m->nama ?>
-                            </button>
-                        <?php endforeach; ?>
-                    </div>
-                    <!-- <select name="id_menu[]" id="id_menu" class="form-control select2_global" data-placeholder="~ Pilih Menu" multiple="multiple">
-                        <option value="">~ Pilih Menu</option>
-                        <?php if (!empty($menu)) :
-                            $me_arr = [];
-                            foreach ($menu as $me) :
-                                $me_arr[] = $me->id;
-                            endforeach;
-                        endif;
-                        ?>
-                        <?php foreach ($menu as $m) : ?>
-                            <option value="<?= $m->id ?>" <?= (!empty($menu) ? (in_array($m->id, $me_arr) ? '' : 'selected') : '') ?>><?= $m->nama ?></option>
-                        <?php endforeach; ?>
-                    </select> -->
-                </div>
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-md-12">
@@ -306,9 +281,5 @@
 
             no++;
         });
-    }
-
-    function check_on(params) {
-        location.href = '<?= site_url("Sampah?param=") ?>' + params
     }
 </script>
