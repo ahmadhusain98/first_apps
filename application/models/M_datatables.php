@@ -26,7 +26,7 @@ class M_datatables extends CI_Model
             $this->db->join('logistik_cabang', 'logistik_cabang.kode_barang = logistik.kode_logistik');
         }
 
-        if (($this->uri->segment(1) === 'Health') || ($this->uri->segment(1) === 'Backdoor')) {
+        if (($this->uri->segment(1) === 'Health') || ($this->uri->segment(1) === 'Backdoor') || ($this->uri->segment(1) === 'Kasir')) {
         } else {
             $this->db->where(['hapus < ' => 1]);
         }
@@ -98,7 +98,7 @@ class M_datatables extends CI_Model
             $this->db->group_by('logistik_cabang.kode_barang');
         }
 
-        if (($this->uri->segment(1) === 'Health') || ($this->uri->segment(1) === 'Backdoor')) {
+        if (($this->uri->segment(1) === 'Health') || ($this->uri->segment(1) === 'Backdoor') || ($this->uri->segment(1) === 'Kasir')) {
         } else {
             $this->db->where(['hapus' => 1]);
         }
