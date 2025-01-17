@@ -1,124 +1,130 @@
 <form method="post" id="form_mutasi">
     <div class="row">
         <div class="col-md-12">
-            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir Mutasi</span>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="invoice" class="control-label">Invoice</label>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Otomatis" id="invoice" name="invoice" value="<?= (!empty($data_mutasi) ? $data_mutasi->invoice : '') ?>" readonly>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <ion-icon name="id-card-outline"></ion-icon>
-                            </div>
-                        </div>
-                    </div>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
                 </div>
-                <div class="col-md-6">
-                    <label for="">Tgl/Jam Mutasi</label>
+                <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="input-group mb-3">
-                                <input type="date" class="form-control" placeholder="Tgl Mutasi" id="tgl_mutasi" name="tgl_mutasi" value="<?= (!empty($data_mutasi) ? date('Y-m-d', strtotime($data_mutasi->tgl_mutasi)) : date('Y-m-d')) ?>" readonly>
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <ion-icon name="calendar-number-outline"></ion-icon>
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="invoice" class="control-label">Invoice</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Otomatis" id="invoice" name="invoice" value="<?= (!empty($data_mutasi) ? $data_mutasi->invoice : '') ?>" readonly>
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <ion-icon name="id-card-outline"></ion-icon>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="">Tgl/Jam Mutasi</label>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="input-group mb-3">
+                                                <input type="date" class="form-control" placeholder="Tgl Mutasi" id="tgl_mutasi" name="tgl_mutasi" value="<?= (!empty($data_mutasi) ? date('Y-m-d', strtotime($data_mutasi->tgl_mutasi)) : date('Y-m-d')) ?>" readonly>
+                                                <div class="input-group-append">
+                                                    <div class="input-group-text">
+                                                        <ion-icon name="calendar-number-outline"></ion-icon>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="input-group mb-3">
+                                                <input type="time" class="form-control" placeholder="Jam Mutasi" id="jam_mutasi" name="jam_mutasi" value="<?= (!empty($data_mutasi) ? date('H:i:s', strtotime($data_mutasi->jam_mutasi)) : date('H:i:s')) ?>" readonly>
+                                                <div class="input-group-append">
+                                                    <div class="input-group-text">
+                                                        <ion-icon name="time-outline"></ion-icon>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="invoice" class="control-label">Mutasi Dari <sup class="text-danger">**</sup></label>
+                                    <div class="input-group mb-3">
+                                        <select name="dari" id="dari" class="form-control select2_kas_bank" data-placeholder="~ Pilih Kas & Bank" onchange="get_saldo(this.value)">
+                                            <?php if (!empty($data_mutasi)) : ?>
+                                                <?php
+                                                $bank = $this->M_global->getData('kas_bank', ['kode_kas_bank' => $data_mutasi->dari]);
+                                                if ($bank) {
+                                                    $dari = $bank->nama;
+                                                } else {
+                                                    $dari = '** KAS UTAMA **';
+                                                }
+                                                ?>
+                                                <option value="<?= $data_mutasi->dari ?>"><?= $dari ?></option>
+                                            <?php endif; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="invoice" class="control-label">Saldo Kas Dari</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control text-right" placeholder="0" id="saldo_dari" name="saldo_dari" value="<?= (!empty($data_mutasi) ? number_format($data_mutasi->saldo_dari) : 0) ?>" readonly>
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <ion-icon name="id-card-outline"></ion-icon>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="invoice" class="control-label">Mutasi Menuju <sup class="text-danger">**</sup></label>
+                                    <div class="input-group mb-3">
+                                        <select name="menuju" id="menuju" class="form-control select2_kas_bank" data-placeholder="~ Pilih Kas & Bank" onchange="cek_kas(this.value)">
+                                            <?php if (!empty($data_mutasi)) : ?>
+                                                <?php
+                                                $bank2 = $this->M_global->getData('kas_bank', ['kode_kas_bank' => $data_mutasi->menuju]);
+                                                if ($bank2) {
+                                                    $menuju = $bank2->nama;
+                                                } else {
+                                                    $menuju = '** KAS UTAMA **';
+                                                }
+                                                ?>
+                                                <option value="<?= $data_mutasi->menuju ?>"><?= $menuju ?></option>
+                                            <?php endif; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="invoice" class="control-label">Saldo Kas Menuju <sup class="text-danger">**</sup></label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control text-right" placeholder="0" id="saldo_menuju" name="saldo_menuju" value="<?= (!empty($data_mutasi) ? number_format($data_mutasi->saldo_menuju) : 0) ?>" onchange="cek_saldo_dari(this.value)">
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <ion-icon name="id-card-outline"></ion-icon>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="input-group mb-3">
-                                <input type="time" class="form-control" placeholder="Jam Mutasi" id="jam_mutasi" name="jam_mutasi" value="<?= (!empty($data_mutasi) ? date('H:i:s', strtotime($data_mutasi->jam_mutasi)) : date('H:i:s')) ?>" readonly>
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <ion-icon name="time-outline"></ion-icon>
-                                    </div>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-danger" onclick="getUrl('Accounting/mutasi_kas')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
+                            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                            <?php if (!empty($data_mutasi_kas)) : ?>
+                                <button type="button" class="btn btn-info float-right" onclick="getUrl('Accounting/form_mutasi_kas/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Baru</button>
+                            <?php else : ?>
+                                <button type="button" class="btn btn-info float-right" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
+                            <?php endif ?>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="invoice" class="control-label">Mutasi Dari <sup class="text-danger">**</sup></label>
-                    <div class="input-group mb-3">
-                        <select name="dari" id="dari" class="form-control select2_kas_bank" data-placeholder="~ Pilih Kas & Bank" onchange="get_saldo(this.value)">
-                            <?php if (!empty($data_mutasi)) : ?>
-                                <?php
-                                $bank = $this->M_global->getData('kas_bank', ['kode_kas_bank' => $data_mutasi->dari]);
-                                if ($bank) {
-                                    $dari = $bank->nama;
-                                } else {
-                                    $dari = '** KAS UTAMA **';
-                                }
-                                ?>
-                                <option value="<?= $data_mutasi->dari ?>"><?= $dari ?></option>
-                            <?php endif; ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label for="invoice" class="control-label">Saldo Kas Dari</label>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control text-right" placeholder="0" id="saldo_dari" name="saldo_dari" value="<?= (!empty($data_mutasi) ? number_format($data_mutasi->saldo_dari) : 0) ?>" readonly>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <ion-icon name="id-card-outline"></ion-icon>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="invoice" class="control-label">Mutasi Menuju <sup class="text-danger">**</sup></label>
-                    <div class="input-group mb-3">
-                        <select name="menuju" id="menuju" class="form-control select2_kas_bank" data-placeholder="~ Pilih Kas & Bank" onchange="cek_kas(this.value)">
-                            <?php if (!empty($data_mutasi)) : ?>
-                                <?php
-                                $bank2 = $this->M_global->getData('kas_bank', ['kode_kas_bank' => $data_mutasi->menuju]);
-                                if ($bank2) {
-                                    $menuju = $bank2->nama;
-                                } else {
-                                    $menuju = '** KAS UTAMA **';
-                                }
-                                ?>
-                                <option value="<?= $data_mutasi->menuju ?>"><?= $menuju ?></option>
-                            <?php endif; ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label for="invoice" class="control-label">Saldo Kas Menuju <sup class="text-danger">**</sup></label>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control text-right" placeholder="0" id="saldo_menuju" name="saldo_menuju" value="<?= (!empty($data_mutasi) ? number_format($data_mutasi->saldo_menuju) : 0) ?>" onchange="cek_saldo_dari(this.value)">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <ion-icon name="id-card-outline"></ion-icon>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-12">
-            <button type="button" class="btn btn-danger" onclick="getUrl('Accounting/mutasi_kas')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
-            <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
-            <?php if (!empty($data_mutasi_kas)) : ?>
-                <button type="button" class="btn btn-info float-right" onclick="getUrl('Accounting/form_mutasi_kas/0')" id="btnBaru"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Baru</button>
-            <?php else : ?>
-                <button type="button" class="btn btn-info float-right" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
-            <?php endif ?>
         </div>
     </div>
 </form>
