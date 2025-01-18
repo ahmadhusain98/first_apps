@@ -476,9 +476,16 @@ class Kasir extends CI_Controller
         $pembayaran = $this->M_global->getData('pembayaran', ['token_pembayaran' => $token_pembayaran]);
 
         if ($batal == 0) { // jika batal = 0
+            // cek um keluar
+            if ($pembayaran->um_keluar > 0) {
+                $um_keluar = $pembayaran->um_keluar;
+                $this->db->query("UPDATE uang_muka SET uang_keluar = uang_keluar + '$um_keluar', uang_sisa = uang_sisa - '$um_keluar' WHERE last_invoice = '$pembayaran->invoice'");
+            }
+
+            // cek um_masuk
             if ($pembayaran->cek_um > 0) {
                 $um_masuk = $pembayaran->um_masuk;
-                $this->db->query("UPDATE uang_muka SET uang_masuk = uang_masuk + $um_masuk, uang_sisa = uang_sisa + $um_masuk WHERE last_invoice = '$pembayaran->invoice'");
+                $this->db->query("UPDATE uang_muka SET uang_masuk = uang_masuk + '$um_masuk', uang_sisa = uang_sisa + '$um_masuk' WHERE last_invoice = '$pembayaran->invoice'");
             }
 
             // update batal jadi 0
@@ -487,9 +494,16 @@ class Kasir extends CI_Controller
                 $this->M_global->updateData('tarif_paket_pasien', ['status' => 1], ['no_trx' => $pembayaran->no_trx]),
             ];
         } else { // selain itu
+            // cek um keluar
+            if ($pembayaran->um_keluar > 0) {
+                $um_keluar = $pembayaran->um_keluar;
+                $this->db->query("UPDATE uang_muka SET uang_keluar = uang_keluar - '$um_keluar', uang_sisa = uang_sisa + '$um_keluar' WHERE last_invoice = '$pembayaran->invoice'");
+            }
+
+            // cek um_masuk
             if ($pembayaran->cek_um > 0) {
                 $um_masuk = $pembayaran->um_masuk;
-                $this->db->query("UPDATE uang_muka SET uang_masuk = uang_masuk - $um_masuk, uang_sisa = uang_sisa - $um_masuk WHERE last_invoice = '$pembayaran->invoice'");
+                $this->db->query("UPDATE uang_muka SET uang_masuk = uang_masuk - '$um_masuk', uang_sisa = uang_sisa - '$um_masuk' WHERE last_invoice = '$pembayaran->invoice'");
             }
 
             // update batal jadi 1
@@ -769,7 +783,13 @@ class Kasir extends CI_Controller
             $this->M_global->updateData('pendaftaran', ['status_trx' => 1, 'tgl_keluar' => $tgl_pembayaran, 'jam_keluar' => $jam_pembayaran], ['no_trx' => $no_trx]);
         } else { // selain itu
             // notrx null
-            $kode_member        = null;
+            // cek kode member
+            $penjualan          = $this->M_global->getData('barang_out_header', ['invoice' => $inv_jual]);
+            if ($penjualan) {
+                $kode_member    = $penjualan->kode_member;
+            } else {
+                $kode_member    = null;
+            }
             $no_trx             = null;
         }
 
@@ -1083,6 +1103,7 @@ class Kasir extends CI_Controller
             $row[]  = 'Rp. <span class="float-right">' . number_format($rd->total) . '</span>';
             $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama . '<br><span class="badge badge-danger">Shift: ' . $rd->shift . '</span>';
             $row[]  = '<div class="text-center">
+            <button type="button" style="margin-bottom: 5px;" class="btn btn-secondary" onclick="cetak(' . "'" . $rd->invoice . "', 0" . ')"><i class="fa-solid fa-file-pdf"></i></button>
                 <button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
                 <button type="button" style="margin-bottom: 5px;" class="btn btn-danger" title="Hapus" onclick="hapus(' . "'" . $rd->invoice . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
             </div>';
@@ -1277,5 +1298,152 @@ class Kasir extends CI_Controller
         } else {
             echo json_encode(['status' => 0]);
         }
+    }
+
+    // fungsi cetak uangmuka
+    public function print_uangmuka($invoice, $yes)
+    {
+        $kode_cabang          = $this->session->userdata('cabang');
+        $web_setting          = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position             = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body                 = '';
+        $body                 .= '<br><br>'; // beri jarak antara kop dengan body
+
+        $pembayaran_uangmuka  = $this->M_global->getData('pembayaran_uangmuka', ['invoice' => $invoice]);
+        $um_awal              = $this->db->query("SELECT * FROM pembayaran_uangmuka WHERE kode_member = '$pembayaran_uangmuka->kode_member' AND invoice <> '$invoice' ORDER BY id DESC LIMIT 1")->row();
+        $um_masuk             = $pembayaran_uangmuka->total;
+        $um_total             = $um_awal->total + $um_masuk;
+
+
+        $bayar_um_card_detail = $this->M_global->getData('bayar_um_card_detail', ['invoice' => $invoice]);
+        $member               = $this->M_global->getData('member', ['kode_member' => $pembayaran_uangmuka->kode_member]);
+        $bayar_um_card_detail = $this->M_global->getDataResult('bayar_um_card_detail', ['invoice' => $invoice]);
+
+        $judul                = 'Deposit Uang Muka ' . $pembayaran_uangmuka->invoice;
+
+        $body .= '<table style="width: 100%; font-size: 9px;" cellpadding="2px">';
+
+        $body .= '<tr>
+            <td style="text-align: center;">' . date('d/m/Y') . ' ~ ' . date('H:i:s') . '</td>
+        </tr>';
+
+        $body .= '</table>';
+
+        $body .= '<table style="width: 100%; font-size: 9px;" cellpadding="2px">';
+
+        $body .= '<tr>
+            <td style="width: 23%;">Invoice</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 75%;">' . $pembayaran_uangmuka->invoice . '</td>
+        </tr>
+        <tr>
+            <td style="width: 23%;">Kasir</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 75%;">' . $this->M_global->getData('user', ['kode_user' => $pembayaran_uangmuka->kode_user])->nama . '</td>
+        </tr>
+        <tr>
+            <td style="width: 23%;">Member</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 75%;">' . $member->nama . ' (' . $member->jkel . ', ' . hitung_umur($member->tgl_lahir) . ')</td>
+        </tr>
+        <tr>
+            <td style="width: 23%;">Alamat</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 75%;">' . $this->M_global->getData('m_provinsi', ['kode_provinsi' => $member->provinsi])->provinsi . ', ' . $this->M_global->getData('kabupaten', ['kode_kabupaten' => $member->kabupaten])->kabupaten . ', ' . $this->M_global->getData('kecamatan', ['kode_kecamatan' => $member->kecamatan])->kecamatan . '</td>
+        </tr>
+        <tr>
+            <td style="width: 23%;"></td>
+            <td style="width: 2%;"></td>
+            <td style="width: 75%;">' . $member->desa . ' (' . $member->kodepos . '), RT/RW (' . $member->rt . '/' . $member->rw . ')</td>
+        </tr>
+        <tr>
+            <td style="width: 23%;">Pembayaran</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 75%;">' . (($pembayaran_uangmuka->jenis_pembayaran == 0) ? 'Cash' : (($pembayaran_uangmuka->jenis_pembayaran == 1) ? 'Card' : 'Cash & Card')) . '</td>
+        </tr>';
+
+        $body .= '<tr>
+            <td style="width: 100%;" colspan="3">&nbsp;</td>
+        </tr>';
+
+        $body .= '</table>';
+
+        $body .= '<table style="width: 100%; font-size: 9px;" cellpadding="2px">';
+
+        $body .= '<tbody>
+            <tr>
+                <td style="width: 60%; font-weight: bold;" colspan="2">Uang Muka</td>
+                <td style="width: 40%; text-align: right; font-weight: bold;">Rp. ' . number_format($um_total) . '</td>
+            </tr>
+            <tr>
+                <td style="width: 100%;" colspan="3"><hr style="margin: 0px;"></td>
+            </tr>
+            <tr>
+                <td style="width: 20%;">Rp.' . number_format($um_awal->total) . '</td>
+                <td style="text-align: right; width: 40%;">' . ' @ Rp. ' . number_format($um_masuk) . '</td>
+                <td style="text-align: right; width: 40%;">Rp.' . number_format(($um_total)) . '</td>
+            </tr>
+            <tr>
+                <td style="width: 100%;" colspan="3"><hr style="margin: 0px;"></td>
+            </tr>
+            <tr>
+                <td style="width: 60%; text-align: right; font-weight: bold;" colspan="2">Awal: Rp.</td>
+                <td style="width: 40%; text-align: right; text-align: right;">' . number_format($um_awal->total) . '</td>
+            </tr>
+            <tr>
+                <td style="width: 60%; text-align: right; font-weight: bold;" colspan="2">Masuk: Rp.</td>
+                <td style="width: 40%; text-align: right; text-align: right;">' . number_format($um_masuk) . '</td>
+            </tr>
+            <tr>
+                <td style="width: 60%; text-align: right; font-weight: bold;" colspan="2">Total: Rp.</td>
+                <td style="width: 40%; text-align: right; text-align: right;">' . number_format($um_total) . '</td>
+            </tr>
+            <tr>
+                <td style="width: 100%;" colspan="3"></td>
+            </tr>
+            <tr>
+                <td style="width: 60%; font-weight: bold;" colspan="2">Detail Pembayaran</td>
+                <td style="width: 40%; text-align: right; font-weight: bold;"></td>
+            </tr>
+            <tr>
+                <td style="width: 100%;" colspan="3"><hr style="margin: 0px;"></td>
+            </tr>
+            <tr>
+                <td style="width: 60%;" colspan="2">Cash: Rp.</td>
+                <td style="width: 40%; text-align: right; font-weight: bold;">' . number_format($pembayaran_uangmuka->cash) . '</td>
+            </tr>
+            <tr>
+                <td style="width: 20%; padding-top: 0px;">Card: Rp.</td>
+                <td style="width: 80%; text-align: right; padding-right: 0px;" colspan="2">
+                    <table style="padding: 0px;">';
+
+        foreach ($bayar_um_card_detail as $card) {
+            $body .= '<tr>
+                <td style="width: 50%;">' . $this->M_global->getData('m_bank', ['kode_bank' => $card->kode_bank])->keterangan . '</td>
+                <td style="width: 50%; text-align: right; padding: 0px;">' . number_format($card->jumlah) . '</td>
+            </tr>';
+        }
+
+        $body .= '<tr>
+                <td style="width: 50%;"></td>
+                <td style="width: 50%;">
+                    <hr style="margin: 0px;">
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 100%; text-align: right; font-weight: bold;" colspan="2">' . number_format($pembayaran_uangmuka->card) . '</td>
+            </tr>';
+
+        $body .= '</table>
+                </td>
+            </tr>
+        <tbody>';
+
+        $body .= '</table>';
+
+        cetak_pdf_small($judul, $body, 1, $position, $judul, $web_setting, $yes);
     }
 }

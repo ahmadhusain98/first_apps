@@ -656,7 +656,7 @@
                     } else {
                         // ambil uangmuka
                         $('.not_umum').show();
-                        get_um(result[0].kode_member, cek_retur);
+                        get_um(result[0].kode_member, '');
                     }
                 }
             },

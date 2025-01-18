@@ -66,6 +66,11 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 <script>
     var table = $('#tableUangMukaDepo');
 
+    // fungsi cetak
+    function cetak(x, y) {
+        printsingle('Kasir/print_uangmuka/' + x + '/' + y);
+    }
+
     // fungsi hapus berdasarkan invoice
     function hapus(inv) {
         // ajukan pertanyaaan

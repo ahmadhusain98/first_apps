@@ -61,9 +61,9 @@ class Accounting extends CI_Controller
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
             'hutang_num'    => (($hutang_num > 0) ? $hutang_num : 0),
-            'hutang'        => (!empty($hutang) ? $hutang->hutang : 0),
-            'piutang'       => (!empty($piutang) ? abs($piutang->piutang) : 0),
-            'piutang_num'   => (($piutang_num > 0) ? abs($piutang_num) : 0),
+            'hutang'        => (($hutang) ? $hutang->hutang : 0),
+            'piutang'       => ($piutang) ? $piutang->piutang : 0,
+            'piutang_num'   => ($piutang_num > 0) ? $piutang_num : 0,
             'list_data'     => 'Accounting/piutang_list/',
             'param1'        => '',
         ];
@@ -143,7 +143,7 @@ class Accounting extends CI_Controller
             if ($rd->jumlah > 0) {
                 $link = 'onclick="printsingle(\'' . htmlspecialchars('Transaksi/single_print_bin/' . $rd->referensi . '/0', ENT_QUOTES, 'UTF-8') . '\')"';
             } else {
-                $link = 'onclick="printsingle(\'' . htmlspecialchars('Transaksi/single_print_bin_ret/' . $rd->referensi . '/0', ENT_QUOTES, 'UTF-8') . '\')"';
+                $link = 'onclick="printsingle(\'' . htmlspecialchars('Kasir/print_uangmuka/' . $rd->referensi . '/0', ENT_QUOTES, 'UTF-8') . '\')"';
             }
 
             $row    = [];
@@ -152,7 +152,7 @@ class Accounting extends CI_Controller
             $row[]  = '<div class="text-center">' . (($rd->tanggal_bayar == null) ? 'xx/xx/xxxx' : date('d/m/Y', strtotime($rd->tanggal_bayar))) . ' ~ ' . (($rd->jam_bayar == null) ? '00:00:00' : date('H:i:s', strtotime($rd->jam_bayar))) . '</div>';
             $row[]  = $x->nama;
             $row[]  = (($rd->jumlah > 0) ? '<span class="badge badge-warning">Hutang</span>' : '<span class="badge badge-info">Piutang</span>');
-            $row[]  = 'Rp. <span class="float-right">' . number_format(abs($rd->jumlah)) . '</span>';
+            $row[]  = 'Rp. <span class="float-right">' . number_format($rd->jumlah) . '</span>';
             $row[]  = '<div class="text-center">' . (($rd->status > 0) ? '<span class="badge badge-success">Terbayarkan</span>' : '<span class="badge badge-danger">Belum dibayar</span>') . '</div>';
             $row[]  = '<div class="text-center">
                 <button class="btn btn-success" type="button" ' . $confirm_diss . ' title="Bayar #' . $rd->referensi . '" onclick="bayar(' . "'" . $rd->piutang_no . "', '" . $rd->referensi . "'" . ')"><i class="fa-solid fa-circle-dollar-to-slot"></i></button>
