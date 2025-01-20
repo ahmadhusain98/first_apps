@@ -1,3 +1,29 @@
+<style>
+    table {
+        border-collapse: separate;
+        border: solid #dee2e6 0.5px;
+        border-radius: 6px;
+    }
+
+    td,
+    th {
+        border-left: solid #dee2e6 0.5px;
+        border-top: solid #dee2e6 0.5px;
+        padding: 15px;
+    }
+
+    th {
+        border-top: none;
+        padding: 15px;
+    }
+
+    td:first-child,
+    th:first-child {
+        border-left: none;
+        padding: 15px;
+    }
+</style>
+
 <form method="post" id="form_sampah">
     <div class="row">
         <div class="col-md-12">
@@ -17,7 +43,7 @@
                     <div class="row mb-3">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-hover table-bordered" id="tableSampah" width="100%">
+                                <table class="" id="tableSampah" width="100%">
                                     <thead>
                                         <tr class="text-center">
                                             <th style="width: 5%;"><input type="checkbox" class="form-control" name="check_all" id="check_all" onclick="sel_all()"></th>
