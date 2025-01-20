@@ -376,6 +376,7 @@ class Accounting extends CI_Controller
             'card'              => $card,
             'jenis_pembayaran'  => $jenis_pembayaran,
             'kode_user'         => $this->session->userdata('kode_user'),
+            'shift'             => $this->session->userdata('shift'),
         ];
 
         $kas_utama          = $this->M_global->getData('kas_utama', $where_kas_utama);
@@ -396,9 +397,15 @@ class Accounting extends CI_Controller
 
             aktifitas_user_transaksi('Accounting', 'mengubah Deposit Kas/Bank', $token);
         } else {
+            if ($kas_utama) {
+                $cek1 = $this->db->query("UPDATE kas_utama SET masuk = masuk + '$total', sisa = sisa + '$total' WHERE kode_cabang = '$cabang'");
+            } else {
+                $cek1 = $this->db->query("INSERT INTO kas_utama (kode_cabang, masuk, sisa) VALUES ('$cabang', '$total', '$total')");
+            }
+
             $cek = [
                 $this->M_global->insertData('deposit_kas', $isi),
-                $this->db->query("UPDATE kas_utama SET masuk = masuk + '$total', sisa = sisa + '$total' WHERE kode_cabang = '$cabang'"),
+                $cek1,
             ];
 
             aktifitas_user_transaksi('Accounting', 'menambahkan Deposit Kas/Bank', $token);
