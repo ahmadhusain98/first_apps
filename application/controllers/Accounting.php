@@ -436,7 +436,7 @@ class Accounting extends CI_Controller
             }
 
             if ($param == 1) {
-                aktifitas_user_transaksi('Accounting', 'deposit Kas/Bank', $token);
+                aktifitas_user_transaksi('Accounting', 'menambahkan deposit Kas/Bank', $token);
             } else {
                 aktifitas_user_transaksi('Accounting', 'mengubah deposit Kas/Bank', $token);
             }
