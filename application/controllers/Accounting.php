@@ -128,6 +128,7 @@ class Accounting extends CI_Controller
 
             $jual               = $this->M_global->getData('barang_in_header', ['invoice' => $rd->referensi]);
             $retur_jual         = $this->M_global->getData('barang_in_retur_header', ['invoice' => $rd->referensi]);
+            $pembayaran         = $this->M_global->getData('pembayaran', ['invoice' => $rd->referensi]);
 
             if ($jual) {
                 $supplier       = $jual->kode_supplier;
@@ -135,6 +136,9 @@ class Accounting extends CI_Controller
             } else if ($retur_jual) {
                 $supplier       = $retur_jual->kode_supplier;
                 $x              = $this->M_global->getData('m_supplier', ['kode_supplier' => $supplier]);
+            } else if ($pembayaran) {
+                $supplier       = $this->M_global->getData('pembayaran', ['invoice' => $rd->referensi])->kode_user;
+                $x              = $this->M_global->getData('member', ['kode_member' => $supplier]);
             } else {
                 $supplier       = $this->M_global->getData('pembayaran_uangmuka', ['invoice' => $rd->referensi])->kode_user;
                 $x              = $this->M_global->getData('member', ['kode_member' => $supplier]);

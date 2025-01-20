@@ -100,7 +100,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="kabupaten">Kabupaten <sup class="text-danger">**</sup></label>
                                 <select name="kabupaten" id="kabupaten" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Kabupaten" class="form-control select2_kabupaten" data-placeholder="~ Pilih Kabupaten" onchange="getKecamatan(this.value)">

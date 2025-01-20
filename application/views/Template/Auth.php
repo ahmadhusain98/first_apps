@@ -216,9 +216,15 @@
         initailizeSelect2_cabang(param = '');
 
         function select2_default(param) {
+            var mymessage = "Data kosong";
             $("." + param).select2({
                 placeholder: $(this).data('placeholder'),
                 width: '100%',
+                language: {
+                    noResults: function() {
+                        return mymessage;
+                    }
+                },
             });
         }
 

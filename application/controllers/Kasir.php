@@ -480,6 +480,8 @@ class Kasir extends CI_Controller
             if ($pembayaran->um_keluar > 0) {
                 $um_keluar = $pembayaran->um_keluar;
                 $this->db->query("UPDATE uang_muka SET uang_keluar = uang_keluar + '$um_keluar', uang_sisa = uang_sisa - '$um_keluar' WHERE last_invoice = '$pembayaran->invoice'");
+
+                $this->db->query("UPDATE piutang SET status = 1, tanggal_bayar = '" . date('Y-m-d') . "', jam_bayar = '" . date('H:i:s') . "' WHERE referensi = '$pembayaran->invoice'");
             }
 
             // cek um_masuk
@@ -498,6 +500,8 @@ class Kasir extends CI_Controller
             if ($pembayaran->um_keluar > 0) {
                 $um_keluar = $pembayaran->um_keluar;
                 $this->db->query("UPDATE uang_muka SET uang_keluar = uang_keluar - '$um_keluar', uang_sisa = uang_sisa + '$um_keluar' WHERE last_invoice = '$pembayaran->invoice'");
+
+                $this->db->query("UPDATE piutang SET status = 0, tanggal_bayar = null, jam_bayar = null WHERE referensi = '$pembayaran->invoice'");
             }
 
             // cek um_masuk
@@ -856,6 +860,13 @@ class Kasir extends CI_Controller
                 }
             }
         } else { // selain itu
+            // delete piutang
+            $cek_piutang = $this->M_global->getData('piutang', ['referensi' => $invoice]);
+
+            if ($cek_piutang) { // jika ada piutang
+                $this->M_global->delData('piutang', ['referensi' => $invoice]);
+            }
+
             if (isset($kode_tarif)) {
                 $this->M_global->updateData('tarif_paket_pasien', ['status' => 0], ['no_trx' => $no_trx]);
 
@@ -877,6 +888,24 @@ class Kasir extends CI_Controller
                 $this->M_global->delData('bayar_card_detail', ['token_pembayaran' => $token_pembayaran]),
                 $this->M_global->delData('pembayaran_tarif_single', ['token_pembayaran' => $token_pembayaran]),
             ];
+        }
+
+        if ($um_keluar > 0) { // jika ada penggunaan um
+            // buat data piutang
+            $data_piutang = [
+                'kode_cabang'   => $kode_cabang,
+                'piutang_no'    => _noPiutang($kode_cabang),
+                'tanggal'       => $tgl_pembayaran,
+                'jam'           => $jam_pembayaran,
+                'referensi'     => $invoice,
+                'jumlah'        => $um_keluar,
+                'status'        => 1,
+                'tanggal_bayar' => $tgl_pembayaran,
+                'jam_bayar'     => $jam_pembayaran,
+            ];
+
+            // insert ke piutang
+            $this->M_global->insertData('piutang', $data_piutang);
         }
 
         if ($cek) { // jika fungsi cek berjalan

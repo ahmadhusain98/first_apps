@@ -1550,9 +1550,15 @@
         }
 
         function select2_default(param) {
+            var mymessage = "Data tidak ditemukan";
             $("." + param).select2({
                 placeholder: $(this).data('placeholder'),
                 width: '100%',
+                language: {
+                    noResults: function() {
+                        return mymessage;
+                    }
+                },
             });
         }
 
@@ -1571,6 +1577,9 @@
                     language: {
                         inputTooShort: function() {
                             return 'Ketikan Nomor minimal 1 huruf';
+                        },
+                        noResults: function() {
+                            return "This is your <strong>no results</strong> message.";
                         }
                     },
                     ajax: {
@@ -1583,7 +1592,6 @@
                                 searchTerm: result.term
                             };
                         },
-
                         processResults: function(result) {
                             return {
                                 results: result
