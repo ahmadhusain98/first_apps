@@ -8,7 +8,9 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
             <div class="card">
                 <div class="card-header">
                     <span class="font-weight-bold h4"># Daftar Member</span>
-                    <button type="button" class="btn btn-sm float-right mb-1 btn-success ml-1" onclick="getUrl('Member/form_daftar/0')" <?= (($created > 0) ? '' : 'disabled') ?>><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                    <?php if ($created == 1) : ?>
+                        <button type="button" class="btn btn-sm float-right mb-1 btn-success ml-1" onclick="getUrl('Member/form_daftar/0')"><ion-icon name="add-circle-outline"></ion-icon> Baru</button>
+                    <?php endif; ?>
                     <button type="button" class="btn btn-sm float-right mb-1 btn-primary ml-1" onclick="reloadTable()"><ion-icon name="rocket-outline"></ion-icon> Refresh</button>
                 </div>
                 <div class="card-body">

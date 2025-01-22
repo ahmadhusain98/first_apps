@@ -62,7 +62,9 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-md-12">
-                            <button type="button" class="btn btn-danger float-right" id="btnSchedule" onclick="buat_schedule()"><i class="fa fa-fw fa-server"></i> Jalankan Proses SO</button>
+                            <?php if ($created == 1) : ?>
+                                <button type="button" class="btn btn-danger float-right" id="btnSchedule" onclick="buat_schedule()"><i class="fa fa-fw fa-server"></i> Jalankan Proses SO</button>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

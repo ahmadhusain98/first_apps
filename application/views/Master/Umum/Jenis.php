@@ -39,7 +39,9 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 <div class="card-footer">
                     <div class="float-right">
                         <button type="button" class="btn btn-info" onclick="reset()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
-                        <button type="button" class="btn btn-success" onclick="save()" id="btnSimpan" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                        <?php if ($created == 1) : ?>
+                            <button type="button" class="btn btn-success" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

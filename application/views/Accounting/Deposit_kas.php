@@ -20,7 +20,9 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                             </ul>
                         </div>
                         <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
-                        <button type="button" class="btn btn-success" onclick="getUrl('Accounting/form_deposit_kas/0')" <?= (($created == 1) ? _lock_button() : 'disabled') ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                        <?php if ($created == 1): ?>
+                            <button type="button" class="btn btn-success" onclick="getUrl('Accounting/form_deposit_kas/0')" <?= _lock_button() ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                        <?php endif ?>
                     </div>
                 </div>
                 <div class="card-body">

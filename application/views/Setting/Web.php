@@ -109,7 +109,9 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-md-12 text-right">
-                            <button type="button" class="btn btn-success" id="btnSimpan" onclick="simpan()" <?= (($created > 0) ? '' : 'disabled') ?>><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                            <?php if ($created == 1) : ?>
+                                <button type="button" class="btn btn-success" id="btnSimpan" onclick="simpan()"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
