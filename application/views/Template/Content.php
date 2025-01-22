@@ -1187,6 +1187,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 1 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1221,6 +1224,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 1 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1255,6 +1261,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 1 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1289,6 +1298,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 1 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1323,6 +1335,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 1 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1356,6 +1371,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 1 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1390,6 +1408,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1424,6 +1445,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1458,6 +1482,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1492,6 +1519,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1526,6 +1556,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1579,7 +1612,7 @@
                             return 'Ketikan Nomor minimal 1 huruf';
                         },
                         noResults: function() {
-                            return "This is your <strong>no results</strong> message.";
+                            return 'Data Tidak Ditemukan';
                         }
                     },
                     ajax: {
@@ -1618,6 +1651,9 @@
                     language: {
                         inputTooShort: function() {
                             return 'Ketikan Nomor minimal 1 huruf';
+                        },
+                        noResults: function() {
+                            return 'Data Tidak Ditemukan';
                         }
                     },
                     ajax: {
@@ -1653,6 +1689,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1687,6 +1726,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1721,6 +1763,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1759,6 +1804,9 @@
                     language: {
                         inputTooShort: function() {
                             return 'Ketikan Nomor minimal 1 huruf';
+                        },
+                        noResults: function() {
+                            return 'Data Tidak Ditemukan';
                         }
                     },
                     ajax: {
@@ -1794,6 +1842,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1828,6 +1879,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1862,6 +1916,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1896,6 +1953,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1930,6 +1990,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1964,6 +2027,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -1998,6 +2064,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -2032,6 +2101,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -2066,6 +2138,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -2100,6 +2175,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -2134,6 +2212,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -2168,6 +2249,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -2202,6 +2286,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
@@ -2236,6 +2323,9 @@
                 language: {
                     inputTooShort: function() {
                         return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
                     }
                 },
                 ajax: {
