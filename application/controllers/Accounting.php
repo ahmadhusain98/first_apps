@@ -623,23 +623,34 @@ class Accounting extends CI_Controller
 
     public function getSaldo($kode)
     {
-        $kas_utama = $this->M_global->getData('kas_utama', ['kode_kas' => $kode]);
+        $cabang = $this->session->userdata('cabang');
 
-        if ($kas_utama) {
-            $kas = $kas_utama;
-            $nama = 'KAS UTAMA';
+        if ($kode == 'KB00000000') {
+            $saldo_awal = $this->M_global->getData('kas_utama', ['kode_cabang' => $cabang]);
+
+            $nama = '** SALDO UTAMA **';
+            $saldo = $saldo_awal->sisa;
         } else {
-            $kas = $this->M_global->getData('kas_second', ['kode_kas' => $kode]);
-            if ($kas) {
-                $kas_bank = $this->M_global->getData('kas_bank', ['kode_kas_bank' => $kode]);
-                $nama = $kas_bank->nama;
+            $kas_utama = $this->M_global->getData('kas_utama', ['kode_kas' => $kode]);
+
+            if ($kas_utama) {
+                $saldo = $kas_utama->sisa;
+                $nama = 'KAS UTAMA';
             } else {
-                $nama = 'Tidak Ada';
+                $kas = $this->M_global->getData('kas_second', ['kode_kas' => $kode]);
+                if ($kas) {
+                    $saldo = $kas->sisa;
+                    $kas_bank = $this->M_global->getData('kas_bank', ['kode_kas_bank' => $kode]);
+                    $nama = $kas_bank->nama;
+                } else {
+                    $nama = 'Tidak Ada';
+                    $saldo = 0;
+                }
             }
         }
 
-        if ($kas) {
-            echo json_encode(['status' => 1, 'nama' => $nama, 'saldo' => $kas->sisa]);
+        if ($saldo > 0) {
+            echo json_encode(['status' => 1, 'nama' => $nama, 'saldo' => $saldo]);
         } else {
             echo json_encode(['status' => 0, 'nama' => $nama, 'saldo' => 0]);
         }
