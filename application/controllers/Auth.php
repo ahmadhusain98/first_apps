@@ -135,12 +135,14 @@ class Auth extends CI_Controller
     public function regist_proses()
     {
         // variable
-        $nama       = htmlspecialchars($this->input->post("nama"));
-        $email      = htmlspecialchars($this->input->post("email"));
-        $nohp       = htmlspecialchars($this->input->post("nohp"));
-        $password   = htmlspecialchars($this->input->post("password"));
-        $kode       = htmlspecialchars($this->input->post("kode"));
-        $jkel       = htmlspecialchars($this->input->post("jkel"));
+        $nama           = htmlspecialchars($this->input->post("nama"));
+        $email          = htmlspecialchars($this->input->post("email"));
+        $nohp           = htmlspecialchars($this->input->post("nohp"));
+        $password       = htmlspecialchars($this->input->post("password"));
+        $kode           = htmlspecialchars($this->input->post("kode"));
+        $jkel           = htmlspecialchars($this->input->post("jkel"));
+        // ambil kode member berdasarkan nama awal dan 5 digit kedepan secara berurutan
+        $kode_member    = _codeMember($nama);
 
         if ($jkel == 'P') { // jika gender laki-laki
             // fotonya pria
@@ -150,8 +152,6 @@ class Auth extends CI_Controller
             $foto = 'wanita.png';
         }
 
-        // ambil kode member berdasarkan nama awal dan 5 digit kedepan secara berurutan
-        $kode_member  = _codeMember($nama);
 
         // cek email di table member_token
         $cek_member_token = $this->M_auth->jumRow("member_token", ["email" => $email]);
@@ -202,10 +202,10 @@ class Auth extends CI_Controller
     public function cekRole()
     {
         // variable email
-        $email = $this->input->get('email');
+        $email    = $this->input->get('email');
 
         // ambil data user berdasarkan email
-        $user = $this->M_global->getData('user', ['email' => $email]);
+        $user     = $this->M_global->getData('user', ['email' => $email]);
 
         if ($user) {
             $user = $user;
@@ -231,11 +231,13 @@ class Auth extends CI_Controller
         $shift        = htmlspecialchars($this->input->post("shift"));
         $cabang       = htmlspecialchars($this->input->post("cabang"));
 
+        // ambil data user berdasarkan email
         $cek          = $this->M_auth->getRow('user', ['email' => $email]);
 
-        if (empty($cek)) {
+        // cek ada usernya atau tidak
+        if (empty($cek)) { // jika tidak ada
             $this->login_member($email, $password, $shift, $cabang);
-        } else {
+        } else { // jika ada
             $this->login_user($email, $password, $shift, $cabang);
         }
     }
@@ -293,7 +295,7 @@ class Auth extends CI_Controller
     public function login_user($email, $password, $shift, $cabang)
     {
         // cek email di table user
-        $cek_user = $this->M_auth->jumRow("user", ["email" => $email]);
+        $cek_user   = $this->M_auth->jumRow("user", ["email" => $email]);
 
         $date       = date("Y-m-d");
         $jam        = date("H:i:s");
@@ -395,7 +397,7 @@ class Auth extends CI_Controller
         $kode     = $this->input->post('kode');
 
         // ambil token yang ada pada user dengan email di table user_token
-        $token = $this->M_auth->getRow('user_token', ['email' => $email])->token;
+        $token    = $this->M_auth->getRow('user_token', ['email' => $email])->token;
 
         if ($token == $kode) { // jika token sesuai dengan kode yang di masukan
             // lakukan proses
@@ -420,13 +422,13 @@ class Auth extends CI_Controller
     // fungsi keluar sistem
     public function logout()
     {
-        $date = date('Y-m-d');
-        $jam = date('H:i:s');
+        $date           = date('Y-m-d');
+        $jam            = date('H:i:s');
 
         // session
-        $sess = $this->session->userdata('email');
-        $init_cabang = $this->session->userdata('init_cabang');
-        $shift = $this->session->userdata('shift');
+        $sess           = $this->session->userdata('email');
+        $init_cabang    = $this->session->userdata('init_cabang');
+        $shift          = $this->session->userdata('shift');
 
         $aktifitas = [
             'email'         => $sess,
@@ -461,20 +463,22 @@ class Auth extends CI_Controller
 
     public function ganti_shift()
     {
-        $email = $this->session->userdata('email');
-        $shift = $this->input->get('shift');
+        $email    = $this->session->userdata('email');
+        $shift    = $this->input->get('shift');
         $password = $this->input->get('password');
 
-        $cek = $this->M_global->getData('user', ['email' => $email]);
+        // ambil data user berdasarkan email
+        $cek      = $this->M_global->getData('user', ['email' => $email]);
 
-        if ($cek->password == md5($password)) {
+        // cek password
+        if ($cek->password == md5($password)) { // jika password sesuai
             aktifitas_user('Shift', 'mengubah shift ' . $this->session->userdata('shift') . ' ke shift ' . $shift, 'Cabang: ' . $this->session->userdata('cabang'), '');
 
             $this->session->unset_userdata('shift');
             $this->session->set_userdata('shift', $shift);
 
             echo json_encode(['status' => 1]);
-        } else {
+        } else { // jika tidak sesuai
             echo json_encode(['status' => 0]);
         }
     }
