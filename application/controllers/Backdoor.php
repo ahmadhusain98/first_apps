@@ -109,6 +109,7 @@ class Backdoor extends CI_Controller
             $this->db->query("TRUNCATE TABLE deposit_kas"),
             $this->db->query("TRUNCATE TABLE kas_second"),
             $this->db->query("TRUNCATE TABLE kas_utama"),
+            $this->db->query("TRUNCATE TABLE jadwal_dokter"),
             $this->db->query("UPDATE member SET last_regist = '', status_regist = 0"),
             $this->db->query("TRUNCATE TABLE mutasi_kas"),
             $this->db->query("TRUNCATE TABLE m_promo"),
@@ -171,6 +172,7 @@ class Backdoor extends CI_Controller
                     'm_provinsi',
                     'm_role',
                     'm_ruang', // cek lagi
+                    'jadwal_dokter',
                     'sub_menu',
                     'sub_menu2',
                     'user',
