@@ -288,6 +288,20 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                         });
                     }
                 });
+            },
+            eventMouseEnter: function(info) { // saat di hover
+                $(info.el).tooltip({
+                    title: 'Nama Dokter: ' + info.event.extendedProps.nama_dokter + '<br>Mulai: ' + info.event.startStr + '<br>Selesai: ' + info.event.endStr + '<br>Catatan: ' + info.event.extendedProps.comment,
+                    html: true,
+                    placement: 'top'
+                });
+
+                // tampilkan tooltip
+                $(info.el).tooltip('show');
+            },
+            eventMouseLeave: function(info) { // saat tidak di hover
+                // sembunyikan tooltip
+                $(info.el).tooltip('hide');
             }
         });
         calendar.render();

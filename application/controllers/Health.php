@@ -1211,6 +1211,7 @@ class Health extends CI_Controller
                 'status_dokter' => $event->status,
                 'nama_dokter'   => $event->nama,
                 'kode_dokter'   => $event->kode_dokter,
+                'comment'       => (($event->comment == '') ? 'Tidak ada catatan' : $event->comment),
             ];
         }
 
