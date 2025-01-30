@@ -306,6 +306,7 @@ class M_select2 extends CI_Model
     // fungsi dokter_poli
     function getDokterPoli($key, $kode_poli)
     {
+        $now = date('Y-m-d');
         $limit = ' LIMIT 50';
 
         if ($kode_poli == null || $kode_poli == "" || $kode_poli == "null") {
@@ -317,7 +318,14 @@ class M_select2 extends CI_Model
                 $add_sintak = ' ORDER BY dp.kode_dokter ASC';
             }
 
-            $sintak = $this->db->query('SELECT dp.kode_dokter AS id, CONCAT("Dr. ", d.nama) AS text FROM dokter_poli dp JOIN dokter d ON dp.kode_dokter = d.kode_dokter JOIN m_poli p ON p.kode_poli = dp.kode_poli WHERE dp.kode_poli = "' . $kode_poli . '" ' . $add_sintak . $limit)->result();
+            $sintak = $this->db->query(
+                'SELECT dp.kode_dokter AS id, CONCAT("Dr. ", d.nama) AS text 
+                FROM dokter_poli dp 
+                JOIN dokter d ON dp.kode_dokter = d.kode_dokter 
+                JOIN m_poli p ON p.kode_poli = dp.kode_poli
+                JOIN jadwal_dokter jd ON jd.kode_dokter = d.kode_dokter 
+                WHERE jd.status = 1 AND jd.kode_cabang = "' . $this->session->userdata('cabang') . '" AND jd.date_start <= "' . $now . '" AND jd.date_end >= "' . $now . '" AND dp.kode_poli = "' . $kode_poli . '" ' . $add_sintak . $limit
+            )->result();
         }
 
         return $sintak;

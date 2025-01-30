@@ -1192,9 +1192,10 @@ class Health extends CI_Controller
     {
         // sintak untuk tampil ke view
         $events = $this->db->query(
-            'SELECT CONCAT("Dokter: ", d.nama) AS title, d.nama,
+            'SELECT CONCAT("Dokter: ", d.nama, ", Cabang: ", c.cabang) AS title, d.nama,
              jd.id, jd.kode_dokter, jd.kode_cabang, jd.status, jd.date_start AS start_date, jd.date_end AS end_date, jd.time_start, jd.time_end, jd.comment
             FROM jadwal_dokter jd
+            JOIN cabang c ON c.kode_cabang = jd.kode_cabang
             JOIN dokter d ON d.kode_dokter = jd.kode_dokter'
         )->result();
 
