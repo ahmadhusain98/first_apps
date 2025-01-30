@@ -1158,4 +1158,32 @@ class Health extends CI_Controller
             echo json_encode(['status' => 0]);
         }
     }
+
+    // ############################################################################################################################################################################
+
+    /**
+     * Jadwal Dokter
+     * untuk menampilkan, menambahkan, dan mengubah jadwal dokter dalam sistem
+     */
+
+    // jadwal_dokter page
+    public function jadwal_dokter()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter = [
+            $this->data,
+            'judul'         => 'Healt Management',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Jadwal Dokter',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => 'Health/jadwal_list',
+            'param1'        => '',
+        ];
+
+        $this->template->load('Template/Content', 'Pendaftaran/Jadwal_dokter', $parameter);
+    }
 }

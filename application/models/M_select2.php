@@ -323,6 +323,22 @@ class M_select2 extends CI_Model
         return $sintak;
     }
 
+    // fungsi dokter_all
+    function getDokterAll($key)
+    {
+        $limit = ' LIMIT 50';
+
+        if (!empty($key)) {
+            $add_sintak = ' WHERE (dp.kode_dokter LIKE "%' . $key . '%" OR dp.nik LIKE "%' . $key . '%" OR dp.npwp LIKE "%' . $key . '%" OR dp.nama LIKE "%' . $key . '%") ORDER BY dp.nama ASC';
+        } else {
+            $add_sintak = ' ORDER BY dp.nama ASC';
+        }
+
+        $sintak = $this->db->query('SELECT dp.kode_dokter AS id, CONCAT("Dr. ", dp.nama) AS text FROM dokter dp ' . $add_sintak . $limit)->result();
+
+        return $sintak;
+    }
+
     // fungsi ruang
     function getRuang($key)
     {

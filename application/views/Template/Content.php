@@ -62,6 +62,9 @@
     <script src="<?= base_url() ?>assets/plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="<?= base_url() ?>assets/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <link rel="icon" href="<?= base_url('assets/img/web/') . $web->logo ?>" type="image/ico">
+
+    <!-- full calendar -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -1147,6 +1150,7 @@
         initailizeSelect2_user();
         initailizeSelect2_poli();
         initailizeSelect2_dokter_poli(param = 'POL0000001');
+        initailizeSelect2_dokter_all();
         initailizeSelect2_ruang();
         initailizeSelect2_supplier();
         initailizeSelect2_gudang_int();
@@ -1829,6 +1833,42 @@
                     }
                 });
             }
+        }
+
+        function initailizeSelect2_dokter_all() {
+            $(".select2_dokter_all").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Dokter',
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 1 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataDokterAll',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
         }
 
         function initailizeSelect2_ruang() {
