@@ -1192,7 +1192,7 @@ class Health extends CI_Controller
     {
         // sintak untuk tampil ke view
         $events = $this->db->query(
-            'SELECT CONCAT("Dokter: ", d.nama, ", Catatan: ", IF(jd.comment = "", "-", jd.comment)) AS title, d.nama,
+            'SELECT CONCAT("Dokter: ", d.nama) AS title, d.nama,
              jd.id, jd.kode_dokter, jd.kode_cabang, jd.status, jd.date_start AS start_date, jd.date_end AS end_date, jd.time_start, jd.time_end, jd.comment
             FROM jadwal_dokter jd
             JOIN dokter d ON d.kode_dokter = jd.kode_dokter'
@@ -1211,7 +1211,7 @@ class Health extends CI_Controller
                 'time_start'    => date('H:i', strtotime($event->time_start)),
                 'time_end'      => date('H:i', strtotime($event->time_end)),
                 'status_dokter' => $event->status,
-                'nama_dokter'   => $event->nama,
+                'nama_dokter'   => "Dr. " . $event->nama,
                 'kode_dokter'   => $event->kode_dokter,
                 'comment'       => (($event->comment == '') ? 'Tidak ada catatan' : $event->comment),
             ];
