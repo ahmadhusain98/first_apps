@@ -1186,4 +1186,132 @@ class Health extends CI_Controller
 
         $this->template->load('Template/Content', 'Pendaftaran/Jadwal_dokter', $parameter);
     }
+
+    // jadwal list
+    public function jadwal_list()
+    {
+        // sintak untuk tampil ke view
+        $events = $this->db->query(
+            'SELECT CONCAT("Dokter: ", d.nama, ", Catatan: ", IF(jd.comment = "", "-", jd.comment)) AS title, d.nama,
+             jd.id, jd.kode_dokter, jd.kode_cabang, jd.status, jd.date_start AS start_date, jd.date_end AS end_date, jd.time_start, jd.time_end, jd.comment
+            FROM jadwal_dokter jd
+            JOIN dokter d ON d.kode_dokter = jd.kode_dokter'
+        )->result();
+
+        // buat data untuk menampung data array
+        $data = [];
+        foreach ($events as $event) { // lakukan loop untuk mengambil data
+
+            // simpan kedalam array
+            $data[] = [
+                'id'            => $event->id,
+                'title'         => $event->title,
+                'start'         => $event->start_date,
+                'end'           => $event->end_date,
+                'status_dokter' => $event->status,
+                'nama_dokter'   => $event->nama,
+                'kode_dokter'   => $event->kode_dokter,
+            ];
+        }
+
+        // lempar ke view dengan json
+        echo json_encode($data);
+    }
+
+    // jadwal proses
+    public function jadwal_insert()
+    {
+        // ambil semua data dari veiw
+        $kodeJadwal   = $this->input->post('kodeJadwal');
+        $kode_dokter  = $this->input->post('kode_dokter');
+        $kode_cabang  = $this->input->post('kode_cabang');
+        $status       = $this->input->post('status_dokter');
+        $date_start   = $this->input->post('date_start');
+        $date_end     = $this->input->post('date_end');
+        $time_start   = $this->input->post('time_start');
+        $time_end     = $this->input->post('time_end');
+        $comment      = $this->input->post('comment');
+
+        // ambil data dokter dari table dokter berdasarkan kode_dokter
+        $dokter       = $this->M_global->getData('dokter', ['kode_dokter' => $kode_dokter]);
+
+        // simpan semua data lemparan kedalam array
+        $data = [
+            'kode_dokter'   => $kode_dokter,
+            'kode_cabang'   => $kode_cabang,
+            'status'        => $status,
+            'date_start'    => $date_start,
+            'date_end'      => $date_end,
+            'time_start'    => $time_start,
+            'time_end'      => $time_end,
+            'comment'       => $comment,
+        ];
+
+        $cek = $this->M_global->insertData('jadwal_dokter', $data);
+
+        if ($cek) { // jika function cek berjalan, lempar status 1 ke view
+            // simpan aktifitas user
+            aktifitas_user('Jadwal Dokter', 'Menambahkan', $kodeJadwal, "Jadwal dokter: " . $dokter->nama . " Start: " . $date_start . " End: " . $date_end);
+
+            echo json_encode(['status' => 1]);
+        } else { // selain itu lempar status 0 ke veiw
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // update jadwal
+    public function jadwal_update()
+    {
+        // ambil data
+        $id           = $this->input->post('kode_jadwal');
+        $kode_dokter  = $this->input->post('kode_dokter');
+        $date_start   = date('Y-m-d', strtotime($this->input->post('date_start')));
+        $date_end     = date('Y-m-d', strtotime($this->input->post('date_end')));
+
+        // ambil data dokter by kode_dokter
+        $dokter       = $this->M_global->getData('dokter', ['kode_dokter' => $kode_dokter]);
+
+        // tampung ke dalam array
+        $data = [
+            'date_start'    => $date_start,
+            'date_end'      => $date_end,
+        ];
+
+        // buat fungsi cek untuk update data
+        $cek = $this->M_global->updateData('jadwal_dokter', $data, ['id' => $id]);
+
+        if ($cek) { // jika fungsi cek berjalan, lempar status 1 ke view
+            // simpan aktifitas user
+            aktifitas_user('Jadwal Dokter', 'Mengubah', $id, "Jadwal dokter: " . $dokter->nama . " Start: " . $date_start . " End: " . $date_end);
+
+            echo json_encode(['status' => 1]);
+        } else { // selain itu lempar status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // hapus jadwal
+    public function jadwal_delete()
+    {
+        // ambild data
+        $id             = $this->input->post('kode_jadwal');
+        $kode_dokter    = $this->input->post('kode_dokter');
+
+        // ambil data jadwal_dokter by id
+        $jadwal_dokter  = $this->M_global->getData('jadwal_dokter', ['id' => $id]);
+        // ambil data dokter by kode_dokter
+        $dokter         = $this->M_global->getData('dokter', ['kode_dokter' => $kode_dokter]);
+
+        // buat fungsi cek untuk menjalankan fungsi hapus
+        $cek            = $this->M_global->delData('jadwal_dokter', ['id' => $id]);
+
+        if ($cek) { // jika fungsi cek berjalan, lempar status 1 ke view
+            // simpan aktifitas user
+            aktifitas_user('Jadwal Dokter', 'Menghapus', $id, "Jadwal dokter: " . $dokter->nama . " Start: " . $jadwal_dokter->date_start . " End: " . $jadwal_dokter->date_end);
+
+            echo json_encode(['status' => 1]);
+        } else { // selain itu lempar status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
 }

@@ -387,7 +387,7 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: <?= $web->bg_theme ?>;">
             <!-- Brand Logo -->
             <a type="button" href="<?= site_url('Home') ?>" class="brand-link" style="backdrop-filter: blur(10px);">
-                <img src="<?= base_url('assets/img/web/') . $web->logo ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <img src="<?= base_url('assets/img/web/') . $web->logo ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8;">
                 <span class="brand-text font-weight-light"><?= $nama_apps ?></span>
             </a>
 
