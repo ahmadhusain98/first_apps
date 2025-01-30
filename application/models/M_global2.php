@@ -1,5 +1,5 @@
 <?php
-class M_global extends CI_Model
+class M_global2 extends CI_Model
 {
     function __construct()
     {

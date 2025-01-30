@@ -11,15 +11,17 @@ class Laporan extends CI_Controller
         parent::__construct();
         // load model M_auth
         $this->load->model("M_auth");
+        // load db2
+        $this->db2 = $this->load->database('second', TRUE);
 
         if (!empty($this->session->userdata("email"))) { // jika session email masih ada
 
-            $id_menu = $this->M_global->getData('m_menu', ['url' => 'Laporan'])->id;
+            $id_menu = $this->M_global2->getData('m_menu', ['url' => 'Laporan'])->id;
 
             // ambil isi data berdasarkan email session dari table user, kemudian tampung ke variable $user
-            $user = $this->M_global->getData("user", ["email" => $this->session->userdata("email")]);
+            $user = $this->M_global2->getData("user", ["email" => $this->session->userdata("email")]);
 
-            $cek_akses_menu = $this->M_global->getData('akses_menu', ['id_menu' => $id_menu, 'kode_role' => $user->kode_role]);
+            $cek_akses_menu = $this->M_global2->getData('akses_menu', ['id_menu' => $id_menu, 'kode_role' => $user->kode_role]);
             if ($cek_akses_menu) {
                 // tampung data ke variable data public
                 $this->data = [
@@ -49,8 +51,8 @@ class Laporan extends CI_Controller
     public function index()
     {
         // website config
-        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
-        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+        $web_setting = $this->M_global2->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global2->getData('web_version', ['id_web' => $web_setting->id]);
 
         $parameter = [
             $this->data,
@@ -69,7 +71,7 @@ class Laporan extends CI_Controller
     function report_print($param)
     {
         // param website
-        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_setting    = $this->M_global2->getData('web_setting', ['id' => 1]);
 
         $position       = 'L'; // cek posisi l/p
 
@@ -78,7 +80,7 @@ class Laporan extends CI_Controller
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
         // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+        $pencetak       = $this->M_global2->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
         $laporan        = $this->input->get('laporan');
         $dari           = $this->input->get('dari');
         $sampai         = $this->input->get('sampai');
@@ -97,9 +99,9 @@ class Laporan extends CI_Controller
 
             // isi body
             if ($kode_poli == '') {
-                $header     = $this->db->query("SELECT p.* FROM pendaftaran p WHERE p.kode_cabang = '$kode_cabang' AND tgl_daftar >= '$dari' AND tgl_daftar <= '$sampai'")->result();
+                $header     = $this->db2->query("SELECT p.* FROM pendaftaran p WHERE p.kode_cabang = '$kode_cabang' AND tgl_daftar >= '$dari' AND tgl_daftar <= '$sampai'")->result();
             } else {
-                $header     = $this->db->query("SELECT p.* FROM pendaftaran p WHERE p.kode_cabang = '$kode_cabang' AND tgl_daftar >= '$dari' AND tgl_daftar <= '$sampai' AND kode_poli = '$kode_poli'")->result();
+                $header     = $this->db2->query("SELECT p.* FROM pendaftaran p WHERE p.kode_cabang = '$kode_cabang' AND tgl_daftar >= '$dari' AND tgl_daftar <= '$sampai' AND kode_poli = '$kode_poli'")->result();
             }
 
             // body header
@@ -139,9 +141,9 @@ class Laporan extends CI_Controller
             if ($header) {
                 $no = 1;
                 foreach ($header as $h) {
-                    $member = $this->M_global->getData('member', ['kode_member' => $h->kode_member]);
-                    $poli = $this->M_global->getData('m_poli', ['kode_poli' => $h->kode_poli]);
-                    $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $h->kode_dokter]);
+                    $member = $this->M_global2->getData('member', ['kode_member' => $h->kode_member]);
+                    $poli = $this->M_global2->getData('m_poli', ['kode_poli' => $h->kode_poli]);
+                    $dokter = $this->M_global2->getData('dokter', ['kode_dokter' => $h->kode_dokter]);
 
                     $data_member = $member->nama . ' ~ ' . ($member->jkel == 'W' ? 'Wanita' : 'Pria') . '<br>' . hitung_umur($member->tgl_lahir) . ')';
 
@@ -153,7 +155,7 @@ class Laporan extends CI_Controller
                         <td style="border: 1px solid black;">' . $data_member . '</td>
                         <td style="border: 1px solid black;">' . $poli->keterangan . '</td>
                         <td style="border: 1px solid black;">Dr. ' . $dokter->nama . '</td>
-                        <td style="border: 1px solid black;">' . $this->M_global->getData('user', ['kode_user' => $h->kode_user])->nama . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global2->getData('user', ['kode_user' => $h->kode_user])->nama . '</td>
                         <td style="border: 1px solid black; text-align: center;">' . $h->shift . '</td>
                     </tr>';
 
@@ -197,9 +199,9 @@ class Laporan extends CI_Controller
 
             // isi body
             if ($kode_poli == '') {
-                $header     = $this->db->query("SELECT p.* FROM pendaftaran p WHERE p.kode_cabang = '$kode_cabang' AND tgl_daftar >= '$dari' AND tgl_daftar <= '$sampai' AND no_trx NOT IN (SELECT no_trx FROM tarif_paket_pasien)")->result();
+                $header     = $this->db2->query("SELECT p.* FROM pendaftaran p WHERE p.kode_cabang = '$kode_cabang' AND tgl_daftar >= '$dari' AND tgl_daftar <= '$sampai' AND no_trx NOT IN (SELECT no_trx FROM tarif_paket_pasien)")->result();
             } else {
-                $header     = $this->db->query("SELECT p.* FROM pendaftaran p WHERE p.kode_cabang = '$kode_cabang' AND tgl_daftar >= '$dari' AND tgl_daftar <= '$sampai' AND no_trx NOT IN (SELECT no_trx FROM tarif_paket_pasien) AND kode_poli = '$kode_poli'")->result();
+                $header     = $this->db2->query("SELECT p.* FROM pendaftaran p WHERE p.kode_cabang = '$kode_cabang' AND tgl_daftar >= '$dari' AND tgl_daftar <= '$sampai' AND no_trx NOT IN (SELECT no_trx FROM tarif_paket_pasien) AND kode_poli = '$kode_poli'")->result();
             }
 
             // body header
@@ -239,9 +241,9 @@ class Laporan extends CI_Controller
             if ($header) {
                 $no = 1;
                 foreach ($header as $h) {
-                    $member = $this->M_global->getData('member', ['kode_member' => $h->kode_member]);
-                    $poli = $this->M_global->getData('m_poli', ['kode_poli' => $h->kode_poli]);
-                    $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $h->kode_dokter]);
+                    $member = $this->M_global2->getData('member', ['kode_member' => $h->kode_member]);
+                    $poli = $this->M_global2->getData('m_poli', ['kode_poli' => $h->kode_poli]);
+                    $dokter = $this->M_global2->getData('dokter', ['kode_dokter' => $h->kode_dokter]);
 
                     $data_member = $member->nama . ' ~ ' . ($member->jkel == 'W' ? 'Wanita' : 'Pria') . '<br>' . hitung_umur($member->tgl_lahir) . ')';
 
@@ -253,7 +255,7 @@ class Laporan extends CI_Controller
                         <td style="border: 1px solid black;">' . $data_member . '</td>
                         <td style="border: 1px solid black;">' . $poli->keterangan . '</td>
                         <td style="border: 1px solid black;">Dr. ' . $dokter->nama . '</td>
-                        <td style="border: 1px solid black;">' . $this->M_global->getData('user', ['kode_user' => $h->kode_user])->nama . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global2->getData('user', ['kode_user' => $h->kode_user])->nama . '</td>
                         <td style="border: 1px solid black; text-align: center;">' . $h->shift . '</td>
                     </tr>';
 
@@ -297,9 +299,9 @@ class Laporan extends CI_Controller
 
             // isi body
             if ($kode_poli == '') {
-                $header     = $this->db->query("SELECT p.* FROM pendaftaran p WHERE p.kode_cabang = '$kode_cabang' AND tgl_daftar >= '$dari' AND tgl_daftar <= '$sampai' AND no_trx IN (SELECT no_trx FROM tarif_paket_pasien)")->result();
+                $header     = $this->db2->query("SELECT p.* FROM pendaftaran p WHERE p.kode_cabang = '$kode_cabang' AND tgl_daftar >= '$dari' AND tgl_daftar <= '$sampai' AND no_trx IN (SELECT no_trx FROM tarif_paket_pasien)")->result();
             } else {
-                $header     = $this->db->query("SELECT p.* FROM pendaftaran p WHERE p.kode_cabang = '$kode_cabang' AND tgl_daftar >= '$dari' AND tgl_daftar <= '$sampai' AND no_trx IN (SELECT no_trx FROM tarif_paket_pasien) AND kode_poli = '$kode_poli'")->result();
+                $header     = $this->db2->query("SELECT p.* FROM pendaftaran p WHERE p.kode_cabang = '$kode_cabang' AND tgl_daftar >= '$dari' AND tgl_daftar <= '$sampai' AND no_trx IN (SELECT no_trx FROM tarif_paket_pasien) AND kode_poli = '$kode_poli'")->result();
             }
 
             // body header
@@ -339,9 +341,9 @@ class Laporan extends CI_Controller
             if ($header) {
                 $no = 1;
                 foreach ($header as $h) {
-                    $member = $this->M_global->getData('member', ['kode_member' => $h->kode_member]);
-                    $poli = $this->M_global->getData('m_poli', ['kode_poli' => $h->kode_poli]);
-                    $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $h->kode_dokter]);
+                    $member = $this->M_global2->getData('member', ['kode_member' => $h->kode_member]);
+                    $poli = $this->M_global2->getData('m_poli', ['kode_poli' => $h->kode_poli]);
+                    $dokter = $this->M_global2->getData('dokter', ['kode_dokter' => $h->kode_dokter]);
 
                     $data_member = $member->nama . ' ~ ' . ($member->jkel == 'W' ? 'Wanita' : 'Pria') . '<br>' . hitung_umur($member->tgl_lahir) . ')';
 
@@ -353,7 +355,7 @@ class Laporan extends CI_Controller
                         <td style="border: 1px solid black;">' . $data_member . '</td>
                         <td style="border: 1px solid black;">' . $poli->keterangan . '</td>
                         <td style="border: 1px solid black;">Dr. ' . $dokter->nama . '</td>
-                        <td style="border: 1px solid black;">' . $this->M_global->getData('user', ['kode_user' => $h->kode_user])->nama . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global2->getData('user', ['kode_user' => $h->kode_user])->nama . '</td>
                         <td style="border: 1px solid black; text-align: center;">' . $h->shift . '</td>
                     </tr>';
 
@@ -397,14 +399,14 @@ class Laporan extends CI_Controller
 
             // isi body
             if ($kode_gudang == '' && $kode_supplier == '') {
-                $header     = $this->M_global->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_cabang' => $kode_cabang]);
+                $header     = $this->M_global2->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_cabang' => $kode_cabang]);
             } else {
                 if ($kode_gudang == '' && $kode_supplier != '') {
-                    $header     = $this->M_global->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_cabang' => $kode_cabang]);
+                    $header     = $this->M_global2->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_cabang' => $kode_cabang]);
                 } else if ($kode_gudang != '' && $kode_supplier == '') {
-                    $header     = $this->M_global->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
+                    $header     = $this->M_global2->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
                 } else {
-                    $header     = $this->M_global->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
+                    $header     = $this->M_global2->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
                 }
             }
 
@@ -456,11 +458,11 @@ class Laporan extends CI_Controller
                         <td style="border: 1px solid black;">' . $h->invoice . '</td>
                         <td style="border: 1px solid black;">' . (($h->invoice_po == '' || $h->invoice_po == null) ? 'Non-PO' : $h->invoice_po) . '</td>
                         <td style="border: 1px solid black;">' . date('d-m-Y', strtotime($h->tgl_beli)) . '<br>' . date('H:i:s', strtotime($h->jam_beli)) . '</td>
-                        <td style="border: 1px solid black;">' . $this->M_global->getData('m_supplier', ['kode_supplier' => $h->kode_supplier])->nama . '</td>
-                        <td style="border: 1px solid black;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $h->kode_gudang])->nama . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global2->getData('m_supplier', ['kode_supplier' => $h->kode_supplier])->nama . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global2->getData('m_gudang', ['kode_gudang' => $h->kode_gudang])->nama . '</td>
                         <td style="border: 1px solid black;">' . $h->surat_jalan . '</td>
                         <td style="border: 1px solid black;">' . $h->no_faktur . '</td>
-                        <td style="border: 1px solid black;">' . $this->M_global->getData('user', ['kode_user' => $h->kode_user])->nama . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global2->getData('user', ['kode_user' => $h->kode_user])->nama . '</td>
                         <td style="border: 1px solid black; text-align: right;">' . $total . '</td>
                     </tr>';
 
@@ -505,14 +507,14 @@ class Laporan extends CI_Controller
 
             // isi body
             if ($kode_gudang == '' && $kode_supplier == '') {
-                $header     = $this->M_global->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_cabang' => $kode_cabang]);
+                $header     = $this->M_global2->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_cabang' => $kode_cabang]);
             } else {
                 if ($kode_gudang == '' && $kode_supplier != '') {
-                    $header     = $this->M_global->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_cabang' => $kode_cabang]);
+                    $header     = $this->M_global2->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_cabang' => $kode_cabang]);
                 } else if ($kode_gudang != '' && $kode_supplier == '') {
-                    $header     = $this->M_global->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
+                    $header     = $this->M_global2->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
                 } else {
-                    $header     = $this->M_global->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
+                    $header     = $this->M_global2->getDataResult('barang_in_header', ['tgl_beli >= ' => $dari, 'tgl_beli <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
                 }
             }
 
@@ -566,16 +568,16 @@ class Laporan extends CI_Controller
                     }
 
                     $body .= '<tr>
-                        <td colspan="8" style="border: 1px solid black; background-color: #007bff; color: white;">' . date('d-m-Y', strtotime($h->tgl_beli)) . ' / ' . date('H:i:s', strtotime($h->jam_beli)) . ' / ' . $h->invoice . ' / ' . $this->M_global->getData('m_supplier', ['kode_supplier' => $h->kode_supplier])->nama . ' / ' . $this->M_global->getData('m_gudang', ['kode_gudang' => $h->kode_gudang])->nama . '</td>
+                        <td colspan="8" style="border: 1px solid black; background-color: #007bff; color: white;">' . date('d-m-Y', strtotime($h->tgl_beli)) . ' / ' . date('H:i:s', strtotime($h->jam_beli)) . ' / ' . $h->invoice . ' / ' . $this->M_global2->getData('m_supplier', ['kode_supplier' => $h->kode_supplier])->nama . ' / ' . $this->M_global2->getData('m_gudang', ['kode_gudang' => $h->kode_gudang])->nama . '</td>
                         <td style="border: 1px solid black; background-color: #007bff; color: white; text-align: right; font-weight: bold;">' . $total . '</td>
                     </tr>';
 
-                    $detail = $this->M_global->getDataResult('barang_in_detail', ['invoice' => $h->invoice]);
+                    $detail = $this->M_global2->getDataResult('barang_in_detail', ['invoice' => $h->invoice]);
 
                     $no = 1;
                     foreach ($detail as $d) {
-                        $barang = $this->M_global->getData('barang', ['kode_barang' => $d->kode_barang]);
-                        $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $d->kode_satuan]);
+                        $barang = $this->M_global2->getData('barang', ['kode_barang' => $d->kode_barang]);
+                        $satuan = $this->M_global2->getData('m_satuan', ['kode_satuan' => $d->kode_satuan]);
 
                         if ($param == 1) {
                             $harga      = number_format($d->harga);
@@ -651,14 +653,14 @@ class Laporan extends CI_Controller
 
             // isi body
             if ($kode_gudang == '' && $kode_supplier == '') {
-                $header     = $this->M_global->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_cabang' => $kode_cabang]);
+                $header     = $this->M_global2->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_cabang' => $kode_cabang]);
             } else {
                 if ($kode_gudang == '' && $kode_supplier != '') {
-                    $header     = $this->M_global->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_cabang' => $kode_cabang]);
+                    $header     = $this->M_global2->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_cabang' => $kode_cabang]);
                 } else if ($kode_gudang != '' && $kode_supplier == '') {
-                    $header     = $this->M_global->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
+                    $header     = $this->M_global2->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
                 } else {
-                    $header     = $this->M_global->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
+                    $header     = $this->M_global2->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
                 }
             }
 
@@ -710,11 +712,11 @@ class Laporan extends CI_Controller
                         <td style="border: 1px solid black;">' . $h->invoice . '</td>
                         <td style="border: 1px solid black;">' . $h->invoice_in . '</td>
                         <td style="border: 1px solid black;">' . date('d-m-Y', strtotime($h->tgl_retur)) . ' / ' . date('H:i:s', strtotime($h->jam_retur)) . '</td>
-                        <td style="border: 1px solid black;">' . $this->M_global->getData('m_supplier', ['kode_supplier' => $h->kode_supplier])->nama . '</td>
-                        <td style="border: 1px solid black;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $h->kode_gudang])->nama . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global2->getData('m_supplier', ['kode_supplier' => $h->kode_supplier])->nama . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global2->getData('m_gudang', ['kode_gudang' => $h->kode_gudang])->nama . '</td>
                         <td style="border: 1px solid black;">' . $h->surat_jalan . '</td>
                         <td style="border: 1px solid black;">' . $h->no_faktur . '</td>
-                        <td style="border: 1px solid black;">' . $this->M_global->getData('user', ['kode_user' => $h->kode_user])->nama . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global2->getData('user', ['kode_user' => $h->kode_user])->nama . '</td>
                         <td style="border: 1px solid black; text-align: right;">' . $total . '</td>
                     </tr>';
 
@@ -759,14 +761,14 @@ class Laporan extends CI_Controller
 
             // isi body
             if ($kode_gudang == '' && $kode_supplier == '') {
-                $header     = $this->M_global->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_cabang' => $kode_cabang]);
+                $header     = $this->M_global2->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_cabang' => $kode_cabang]);
             } else {
                 if ($kode_gudang == '' && $kode_supplier != '') {
-                    $header     = $this->M_global->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_cabang' => $kode_cabang]);
+                    $header     = $this->M_global2->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_cabang' => $kode_cabang]);
                 } else if ($kode_gudang != '' && $kode_supplier == '') {
-                    $header     = $this->M_global->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
+                    $header     = $this->M_global2->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
                 } else {
-                    $header     = $this->M_global->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
+                    $header     = $this->M_global2->getDataResult('barang_in_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai, 'is_valid' => 1, 'kode_supplier' => $kode_supplier, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
                 }
             }
 
@@ -820,16 +822,16 @@ class Laporan extends CI_Controller
                     }
 
                     $body .= '<tr>
-                        <td colspan="8" style="border: 1px solid black; background-color: #007bff; color: white;">' . date('d-m-Y', strtotime($h->tgl_retur)) . ' / ' . date('H:i:s', strtotime($h->jam_retur)) . ' / ' . $h->invoice . ' / ' . $this->M_global->getData('m_supplier', ['kode_supplier' => $h->kode_supplier])->nama . ' / ' . $this->M_global->getData('m_gudang', ['kode_gudang' => $h->kode_gudang])->nama . '</td>
+                        <td colspan="8" style="border: 1px solid black; background-color: #007bff; color: white;">' . date('d-m-Y', strtotime($h->tgl_retur)) . ' / ' . date('H:i:s', strtotime($h->jam_retur)) . ' / ' . $h->invoice . ' / ' . $this->M_global2->getData('m_supplier', ['kode_supplier' => $h->kode_supplier])->nama . ' / ' . $this->M_global2->getData('m_gudang', ['kode_gudang' => $h->kode_gudang])->nama . '</td>
                         <td style="border: 1px solid black; background-color: #007bff; color: white; text-align: right; font-weight: bold;">' . $total . '</td>
                     </tr>';
 
-                    $detail = $this->M_global->getDataResult('barang_in_retur_detail', ['invoice' => $h->invoice]);
+                    $detail = $this->M_global2->getDataResult('barang_in_retur_detail', ['invoice' => $h->invoice]);
 
                     $no = 1;
                     foreach ($detail as $d) {
-                        $barang = $this->M_global->getData('barang', ['kode_barang' => $d->kode_barang]);
-                        $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $d->kode_satuan]);
+                        $barang = $this->M_global2->getData('barang', ['kode_barang' => $d->kode_barang]);
+                        $satuan = $this->M_global2->getData('m_satuan', ['kode_satuan' => $d->kode_satuan]);
 
                         if ($param == 1) {
                             $harga      = number_format($d->harga);
@@ -906,7 +908,7 @@ class Laporan extends CI_Controller
             $position = 'P';
 
             // isi body
-            $detail = $this->M_global->getReportPembelian($dari, $sampai, $kode_gudang, $kode_barang);
+            $detail = $this->M_global2->getReportPembelian($dari, $sampai, $kode_gudang, $kode_barang);
 
             // body header
             $body .= '<table style="width: 100%; font-size: 14px;" autosize="1">
@@ -923,12 +925,12 @@ class Laporan extends CI_Controller
                 <tr>
                     <td style="width: 9%;">Barang</td>
                     <td style="width: 1%;"> : </td>
-                    <td colspan="2">' . (empty($detail) ? '' : $kode_barang . ' / ' . $this->M_global->getData('barang', ['kode_barang' => $kode_barang])->nama) . '</td>
+                    <td colspan="2">' . (empty($detail) ? '' : $kode_barang . ' / ' . $this->M_global2->getData('barang', ['kode_barang' => $kode_barang])->nama) . '</td>
                 </tr>
                 <tr>
                     <td style="width: 9%;">Gudang</td>
                     <td style="width: 1%;"> : </td>
-                    <td style="width: 40%;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $kode_gudang])->nama . '</td>
+                    <td style="width: 40%;">' . $this->M_global2->getData('m_gudang', ['kode_gudang' => $kode_gudang])->nama . '</td>
                     <td style="width: 50%; text-align: right;">Pencetak : ' . $pencetak . '</td>
                 </tr>
             </table>';
@@ -980,7 +982,7 @@ class Laporan extends CI_Controller
                         $akhir    = ceil($stok_akhir);
                     }
 
-                    $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $d->satuan]);
+                    $satuan = $this->M_global2->getData('m_satuan', ['kode_satuan' => $d->satuan]);
 
                     $body .= '<tr>
                         <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
@@ -1007,9 +1009,9 @@ class Laporan extends CI_Controller
 
             // isi body
             if ($kode_gudang == '') {
-                $header     = $this->M_global->getDataResult('barang_out_header', ['tgl_jual >= ' => $dari, 'tgl_jual <= ' => $sampai, 'status_jual' => 1, 'kode_cabang' => $kode_cabang]);
+                $header     = $this->M_global2->getDataResult('barang_out_header', ['tgl_jual >= ' => $dari, 'tgl_jual <= ' => $sampai, 'status_jual' => 1, 'kode_cabang' => $kode_cabang]);
             } else {
-                $header     = $this->M_global->getDataResult('barang_out_header', ['tgl_jual >= ' => $dari, 'tgl_jual <= ' => $sampai, 'status_jual' => 1, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
+                $header     = $this->M_global2->getDataResult('barang_out_header', ['tgl_jual >= ' => $dari, 'tgl_jual <= ' => $sampai, 'status_jual' => 1, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
             }
 
             // body header
@@ -1058,11 +1060,11 @@ class Laporan extends CI_Controller
                         <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                         <td style="border: 1px solid black;">' . $h->invoice . '</td>
                         <td style="border: 1px solid black;">' . (($h->no_trx == '' || $h->no_trx == null) ? 'Umum' : $h->no_trx) . '</td>
-                        <td style="border: 1px solid black;">' . $h->kode_member . ' ~ ' . $this->M_global->getData('member', ['kode_member' => $h->kode_member])->nama . '</td>
+                        <td style="border: 1px solid black;">' . $h->kode_member . ' ~ ' . $this->M_global2->getData('member', ['kode_member' => $h->kode_member])->nama . '</td>
                         <td style="border: 1px solid black;">' . date('d-m-Y', strtotime($h->tgl_jual)) . ' / ' . date('H:i:s', strtotime($h->jam_jual)) . '</td>
-                        <td style="border: 1px solid black;">' . $this->M_global->getData('m_poli', ['kode_poli' => $h->kode_poli])->keterangan . ' ~ ' . $this->M_global->getData('dokter', ['kode_dokter' => $h->kode_dokter])->nama . '</td>
-                        <td style="border: 1px solid black;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $h->kode_gudang])->keterangan . '</td>
-                        <td style="border: 1px solid black;">' . $this->M_global->getData('user', ['kode_user' => $h->kode_user])->nama . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global2->getData('m_poli', ['kode_poli' => $h->kode_poli])->keterangan . ' ~ ' . $this->M_global2->getData('dokter', ['kode_dokter' => $h->kode_dokter])->nama . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global2->getData('m_gudang', ['kode_gudang' => $h->kode_gudang])->keterangan . '</td>
+                        <td style="border: 1px solid black;">' . $this->M_global2->getData('user', ['kode_user' => $h->kode_user])->nama . '</td>
                         <td style="border: 1px solid black; text-align: right;">' . $total . '</td>
                     </tr>';
 
@@ -1107,9 +1109,9 @@ class Laporan extends CI_Controller
 
             // isi body
             if ($kode_gudang == '') {
-                $header     = $this->M_global->getDataResult('barang_out_header', ['tgl_jual >= ' => $dari, 'tgl_jual <= ' => $sampai, 'status_jual' => 1, 'kode_cabang' => $kode_cabang]);
+                $header     = $this->M_global2->getDataResult('barang_out_header', ['tgl_jual >= ' => $dari, 'tgl_jual <= ' => $sampai, 'status_jual' => 1, 'kode_cabang' => $kode_cabang]);
             } else {
-                $header     = $this->M_global->getDataResult('barang_out_header', ['tgl_jual >= ' => $dari, 'tgl_jual <= ' => $sampai, 'status_jual' => 1, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
+                $header     = $this->M_global2->getDataResult('barang_out_header', ['tgl_jual >= ' => $dari, 'tgl_jual <= ' => $sampai, 'status_jual' => 1, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
             }
 
             // body header
@@ -1162,16 +1164,16 @@ class Laporan extends CI_Controller
                     }
 
                     $body .= '<tr>
-                        <td colspan="8" style="border: 1px solid black; background-color: #007bff; color: white;">' . date('d-m-Y', strtotime($h->tgl_out)) . ' / ' . date('H:i:s', strtotime($h->jam_out)) . ' / ' . $h->invoice . ' / ' . $h->kode_member . ' ~ ' . $this->M_global->getData('member', ['kode_member' => $h->kode_member])->nama . ' / ' . $this->M_global->getData('m_gudang', ['kode_gudang' => $h->kode_gudang])->nama . '</td>
+                        <td colspan="8" style="border: 1px solid black; background-color: #007bff; color: white;">' . date('d-m-Y', strtotime($h->tgl_out)) . ' / ' . date('H:i:s', strtotime($h->jam_out)) . ' / ' . $h->invoice . ' / ' . $h->kode_member . ' ~ ' . $this->M_global2->getData('member', ['kode_member' => $h->kode_member])->nama . ' / ' . $this->M_global2->getData('m_gudang', ['kode_gudang' => $h->kode_gudang])->nama . '</td>
                         <td style="border: 1px solid black; background-color: #007bff; color: white; text-align: right; font-weight: bold;">' . $total . '</td>
                     </tr>';
 
-                    $detail = $this->M_global->getDataResult('barang_out_detail', ['invoice' => $h->invoice]);
+                    $detail = $this->M_global2->getDataResult('barang_out_detail', ['invoice' => $h->invoice]);
 
                     $no = 1;
                     foreach ($detail as $d) {
-                        $barang = $this->M_global->getData('barang', ['kode_barang' => $d->kode_barang]);
-                        $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $d->kode_satuan]);
+                        $barang = $this->M_global2->getData('barang', ['kode_barang' => $d->kode_barang]);
+                        $satuan = $this->M_global2->getData('m_satuan', ['kode_satuan' => $d->kode_satuan]);
 
                         if ($param == 1) {
                             $harga      = number_format($d->harga);
@@ -1246,7 +1248,7 @@ class Laporan extends CI_Controller
             $file = 'Laporan Retur Penjualan';
 
             // isi body
-            $header = $this->M_global->getDataResult('barang_out_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai]);
+            $header = $this->M_global2->getDataResult('barang_out_retur_header', ['tgl_retur >= ' => $dari, 'tgl_retur <= ' => $sampai]);
 
             // body header
             $body .= '<table style="width: 100%; font-size: 14px;">
@@ -1263,7 +1265,7 @@ class Laporan extends CI_Controller
                 <tr>
                     <td style="width: 15%;">Gudang</td>
                     <td style="width: 2%;"> : </td>
-                    <td style="width: 33%;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $kode_gudang])->nama . '</td>
+                    <td style="width: 33%;">' . $this->M_global2->getData('m_gudang', ['kode_gudang' => $kode_gudang])->nama . '</td>
                     <td style="width: 50%; text-align: right;">Pencetak : ' . $pencetak . '</td>
                 </tr>
             </table>';
@@ -1296,7 +1298,7 @@ class Laporan extends CI_Controller
                 </tr>';
 
                 // detail barang
-                $detail = $this->M_global->getDataResult('barang_out_retur_detail', ['invoice' => $h->invoice]);
+                $detail = $this->M_global2->getDataResult('barang_out_retur_detail', ['invoice' => $h->invoice]);
 
                 $no = 1;
                 foreach ($detail as $d) {
@@ -1317,7 +1319,7 @@ class Laporan extends CI_Controller
                     }
                     $body .= '<tr>
                         <td style="border: 1px solid black;">' . $no . '</td>
-                        <td style="border: 1px solid black;">' . $d->kode_barang . ' ~ ' . $this->M_global->getData('barang', ['kode_barang' => $d->kode_barang])->nama . '</td>
+                        <td style="border: 1px solid black;">' . $d->kode_barang . ' ~ ' . $this->M_global2->getData('barang', ['kode_barang' => $d->kode_barang])->nama . '</td>
                         <td style="border: 1px solid black; text-align: right;">' . $harga . '</td>
                         <td style="border: 1px solid black; text-align: right;">' . $qty . '</td>
                         <td style="border: 1px solid black; text-align: right;">' . $discpr . '</td>
@@ -1357,7 +1359,7 @@ class Laporan extends CI_Controller
             $position = 'L';
 
             // isi body
-            $detail = $this->M_global->getReportPenjualan($dari, $sampai, $kode_gudang);
+            $detail = $this->M_global2->getReportPenjualan($dari, $sampai, $kode_gudang);
 
             // body header
             $body .= '<table style="width: 100%; font-size: 14px;">
@@ -1374,7 +1376,7 @@ class Laporan extends CI_Controller
                 <tr>
                     <td style="width: 15%;">Gudang</td>
                     <td style="width: 2%;"> : </td>
-                    <td style="width: 33%;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $kode_gudang])->nama . '</td>
+                    <td style="width: 33%;">' . $this->M_global2->getData('m_gudang', ['kode_gudang' => $kode_gudang])->nama . '</td>
                     <td style="width: 50%; text-align: right;">Pencetak : ' . $pencetak . '</td>
                 </tr>
             </table>';
@@ -1448,7 +1450,7 @@ class Laporan extends CI_Controller
                 $sel_user = "AND p.kode_user = '$kode_user'";
             }
 
-            $detail = $this->db->query("SELECT p.* FROM pembayaran p WHERE p.tgl_pembayaran >= '$dari' AND p.tgl_pembayaran <= '$sampai' $sel_user AND inv_jual IN (SELECT invoice FROM barang_out_header) AND kode_cabang = '$kode_cabang'")->result();
+            $detail = $this->db2->query("SELECT p.* FROM pembayaran p WHERE p.tgl_pembayaran >= '$dari' AND p.tgl_pembayaran <= '$sampai' $sel_user AND inv_jual IN (SELECT invoice FROM barang_out_header) AND kode_cabang = '$kode_cabang'")->result();
 
             // body header
             $body .= '<table style="width: 100%; font-size: 14px;">
@@ -1465,14 +1467,14 @@ class Laporan extends CI_Controller
                 <tr>
                     <td style="width: 15%;">Kasir</td>
                     <td style="width: 2%;"> : </td>
-                    <td style="width: 33%;">' . $this->M_global->getData('user', ['kode_user' => $kode_user])->nama . '</td>
+                    <td style="width: 33%;">' . $this->M_global2->getData('user', ['kode_user' => $kode_user])->nama . '</td>
                     <td style="width: 50%; text-align: right;">Pencetak : ' . $pencetak . '</td>
                 </tr>
             </table>';
 
             $body .= $breaktable;
 
-            $tipe_bank = $this->M_global->getResult('tipe_bank');
+            $tipe_bank = $this->M_global2->getResult('tipe_bank');
 
             $body .= '<table style="width: 100%; font-size: 14px;" autosize="2" cellpadding="5px">';
             $body .= '<thead>';
@@ -1516,10 +1518,10 @@ class Laporan extends CI_Controller
             } else {
                 $no = 1;
                 foreach ($detail as $d) {
-                    $cek_member = $this->M_global->getData('barang_out_header', ['invoice' => $d->inv_jual]);
+                    $cek_member = $this->M_global2->getData('barang_out_header', ['invoice' => $d->inv_jual]);
 
                     if ($cek_member) {
-                        $member = $this->M_global->getData('member', ['kode_member' => $cek_member->kode_member])->nama;
+                        $member = $this->M_global2->getData('member', ['kode_member' => $cek_member->kode_member])->nama;
                     } else {
                         $member = 'Masyarakat Umum';
                     }
@@ -1549,7 +1551,7 @@ class Laporan extends CI_Controller
                         <td style="border: 1px solid black; text-align: right;">' . $cash . '</td>';
 
                     foreach ($tipe_bank as $tb) {
-                        $card_detail = $this->M_global->getDataResult('bayar_card_detail', ['token_pembayaran' => $d->token_pembayaran, 'kode_tipe' => $tb->kode_tipe]);
+                        $card_detail = $this->M_global2->getDataResult('bayar_card_detail', ['token_pembayaran' => $d->token_pembayaran, 'kode_tipe' => $tb->kode_tipe]);
                         if (count($card_detail) > 0) {
                             foreach ($card_detail as $cd) {
                                 if ($param == 1) {
@@ -1565,7 +1567,7 @@ class Laporan extends CI_Controller
                         }
                     }
 
-                    $promo            = $this->M_global->getData('m_promo', ['kode_promo' => $d->kode_promo]);
+                    $promo            = $this->M_global2->getData('m_promo', ['kode_promo' => $d->kode_promo]);
                     $total_jual       = $d->jual;
                     $tindakan         = $d->paket + $d->single;
 
@@ -1623,7 +1625,7 @@ class Laporan extends CI_Controller
                 $sel_user = "WHERE kode_user = '$kode_user'";
             }
 
-            $detail = $this->db->query("SELECT * FROM (
+            $detail = $this->db2->query("SELECT * FROM (
                 SELECT pembayaran.invoice AS inv,
                 'UM MASUK' AS keterangan,
                 IF(cek_um = 1, um_masuk, 0) AS um_masuk,
@@ -1679,14 +1681,14 @@ class Laporan extends CI_Controller
                 <tr>
                     <td style="width: 15%;">Kasir</td>
                     <td style="width: 2%;"> : </td>
-                    <td style="width: 33%;">' . $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama . '</td>
+                    <td style="width: 33%;">' . $this->M_global2->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama . '</td>
                     <td style="width: 50%; text-align: right;">Pencetak : ' . $pencetak . '</td>
                 </tr>
             </table>';
 
             $body .= $breaktable;
 
-            $tipe_bank = $this->M_global->getResult('tipe_bank');
+            $tipe_bank = $this->M_global2->getResult('tipe_bank');
 
             $body .= '<table style="width: 100%; font-size: 14px;" autosize="2" cellpadding="5px">';
             $body .= '<thead>';
@@ -1720,10 +1722,10 @@ class Laporan extends CI_Controller
                 $sisa_um = 0;
                 foreach ($detail as $d) {
                     $sisa_um += ($d->um_masuk - $d->um_keluar);
-                    $cek_member = $this->M_global->getData('barang_out_header', ['invoice' => $d->inv_jual]);
+                    $cek_member = $this->M_global2->getData('barang_out_header', ['invoice' => $d->inv_jual]);
 
                     if ($cek_member) {
-                        $member = $this->M_global->getData('member', ['kode_member' => $d->kode_member])->nama;
+                        $member = $this->M_global2->getData('member', ['kode_member' => $d->kode_member])->nama;
 
                         $memberx = $cek_member->kode_member . ' ~ ' . $member;
                     } else {
