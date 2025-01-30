@@ -100,7 +100,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="date_end" class="control-label">Sampai Tgl <span class="text-danger">**</span></label>
-                                    <input type="date" name="date_end" id="date_end" class="form-control" value="<?= date('Y-m-d', strtotime('+1 Days')) ?>">
+                                    <input type="date" name="date_end" id="date_end" class="form-control" value="<?= date('Y-m-d', strtotime('+1 Days')) ?>" min="<?= date('Y-m-d', strtotime('+1 Days')) ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="time_end" class="control-label">Sampai Jam <span class="text-danger">**</span></label>
@@ -130,6 +130,23 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 </form>
 
 <script>
+    $(document).ready(function() {
+        initailizeSelect2_dokter_all();
+        initailizeSelect2_all_cabang();
+
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            locale: 'id',
+            editable: true,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+        });
+        calendar.render();
+    });
+
     const form = $('#form_jadwal');
     var kodeJadwal = $('#kodeJadwal');
     var kode_dokter = $('#kode_dokter');
@@ -140,22 +157,6 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     var time_start = $('#time_start');
     var time_end = $('#time_end');
     var comment = $('#comment');
-
-    $(document).ready(function() {
-        initailizeSelect2_dokter_all();
-        initailizeSelect2_all_cabang();
-
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            editable: true,
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-        });
-        calendar.render();
-    });
 
     function reseting() {
         kodeJadwal.val('');
@@ -171,7 +172,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 
     function save() {
         if (kode_dokter.val() == '' || kode_cabang.val() == '' || status_dokter.val() == '' || date_start.val() == '' || date_end.val() == '' || time_start.val() == '' || time_end.val() == '') {
-            return Swal.fire("Data", "Form sudah diisi?", "question");
+            return Swal.fire("Form Data", "Sudah diisi lengkap?", "question");
         }
 
         $.ajax({
