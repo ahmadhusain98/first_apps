@@ -64,7 +64,11 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="kode_cabang" class="control-label">Cabang <span class="text-danger">**</span></label>
-                                    <select name="kode_cabang" id="kode_cabang" class="form-control select2_all_cabang" data-placeholder="~ Pilih Cabang"></select>
+                                    <select name="kode_cabang" id="kode_cabang" class="form-control select2_all_cabang" data-placeholder="~ Pilih Cabang">
+                                        <option value="<?= $this->session->userdata('cabang') ?>">
+                                            <?= $this->M_global->getData('cabang', ['kode_cabang' => $this->session->userdata('cabang')])->cabang ?>
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -74,7 +78,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                     <label for="status_dokter" class="control-label">Status <span class="text-danger">**</span></label>
                                     <select name="status_dokter" id="status_dokter" class="form-control select2_global" data-placeholder="~ Pilih Status">
                                         <option value="">~ Pilih Status</option>
-                                        <option value="1">Hadir</option>
+                                        <option value="1" selected>Hadir</option>
                                         <option value="2">Izin</option>
                                         <option value="3">Sakit</option>
                                         <option value="4">Cuti</option>
@@ -161,8 +165,8 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     function reseting() {
         kodeJadwal.val('');
         kode_dokter.val('').trigger('change');
-        kode_cabang.val('').trigger('change');
-        status_dokter.val('').trigger('change');
+        kode_cabang.val("<?= $this->session->userdata('cabang') ?>").trigger('change');
+        status_dokter.val('1').trigger('change');
         date_start.val("<?= date('Y-m-d') ?>");
         date_end.val("<?= date('Y-m-d', strtotime('+1 Days')) ?>");
         time_start.val("<?= date('H:i') ?>");
