@@ -4,7 +4,6 @@ class M_global extends CI_Model
     function __construct()
     {
         parent::__construct();
-        $this->db2 = $this->load->database('second', TRUE);
     }
 
     // fungsi ambil semua baris
