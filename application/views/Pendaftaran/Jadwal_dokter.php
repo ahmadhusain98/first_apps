@@ -291,7 +291,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
             },
             eventMouseEnter: function(info) { // saat di hover
                 $(info.el).tooltip({
-                    title: 'Nama Dokter: ' + info.event.extendedProps.nama_dokter + '<br>Mulai: ' + info.event.startStr + '<br>Selesai: ' + info.event.endStr + '<br>Catatan: ' + info.event.extendedProps.comment,
+                    title: 'Nama Dokter: ' + info.event.extendedProps.nama_dokter + '<br>Mulai: ' + info.event.startStr + ' / ' + info.event.extendedProps.time_start + '<br>Selesai: ' + info.event.endStr + ' / ' + info.event.extendedProps.time_end + '<br>Catatan: ' + info.event.extendedProps.comment,
                     html: true,
                     placement: 'top'
                 });
