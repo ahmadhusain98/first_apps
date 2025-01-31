@@ -2749,9 +2749,13 @@ class Master extends CI_Controller
         if ($param != '0') {
             $dokter         = $this->M_global->getData('dokter', ['kode_dokter' => $param]);
             $dokter_poli    = $this->M_global->getDataResult('dokter_poli', ['kode_dokter' => $param]);
+
+            $data_dokter    = $this->M_global->getData('dokter', ['kode_dokter' => $param]);
+            $dokter_cabang  = $this->M_global->getDataResult('cabang_user', ['email' => $data_dokter->email]);
         } else {
             $dokter         = null;
             $dokter_poli    = null;
+            $dokter_cabang  = null;
         }
 
         $parameter = [
@@ -2764,8 +2768,10 @@ class Master extends CI_Controller
             'list_data'     => '',
             'data_dokter'   => $dokter,
             'dokter_poli'   => $dokter_poli,
+            'dokter_cabang' => $dokter_cabang,
             'role'          => $this->M_global->getResult('m_role'),
             'poli'          => $this->M_global->getResult('m_poli'),
+            'cabang'        => $this->M_global->getResult('cabang'),
         ];
 
         $this->template->load('Template/Content', 'Master/Internal/Form_dokter', $parameter);
@@ -2786,20 +2792,25 @@ class Master extends CI_Controller
 
             $this->M_global->delData('dokter_poli', ['kode_dokter' => $kodeDokter]);
         }
-        $nik          = $this->input->post('nik');
-        $email        = $this->input->post('email');
-        $nohp         = $this->input->post('nohp');
-        $npwp         = $this->input->post('npwp');
-        $sip          = $this->input->post('sip');
-        $tgl_mulai    = $this->input->post('tgl_mulai');
-        $tgl_berhenti = $this->input->post('tgl_berhenti');
-        $status       = $this->input->post('statusDokter');
-        $provinsi     = $this->input->post('provinsi');
-        $kabupaten    = $this->input->post('kabupaten');
-        $kecamatan    = $this->input->post('kecamatan');
-        $desa         = $this->input->post('desa');
-        $kodepos      = $this->input->post('kodepos');
-        $kode_poli    = $this->input->post('kode_poli');
+
+        $nik                = $this->input->post('nik');
+        $email              = $this->input->post('email');
+        $nohp               = $this->input->post('nohp');
+        $npwp               = $this->input->post('npwp');
+        $sip                = $this->input->post('sip');
+        $tgl_mulai          = $this->input->post('tgl_mulai');
+        $tgl_berhenti       = $this->input->post('tgl_berhenti');
+        $status             = $this->input->post('statusDokter');
+        $provinsi           = $this->input->post('provinsi');
+        $kabupaten          = $this->input->post('kabupaten');
+        $kecamatan          = $this->input->post('kecamatan');
+        $desa               = $this->input->post('desa');
+        $kodepos            = $this->input->post('kodepos');
+        $kode_poli          = $this->input->post('kode_poli');
+        $password           = $this->input->post('password');
+        $jkel               = $this->input->post('jkel');
+        $kode_cabang_all    = $this->input->post('kode_cabang_all');
+        $kode_cabang        = $this->input->post('kode_cabang');
 
         // tampung variable kedalam $isi
         $isi = [
@@ -2820,6 +2831,73 @@ class Master extends CI_Controller
             'kodepos'       => $kodepos,
         ];
 
+        $data_user = [
+            'kode_user'     => $kodeDokter,
+            'nama'          => $nama,
+            'email'         => $email,
+            'password'      => md5($password),
+            'secondpass'    => $password,
+            'jkel'          => $jkel,
+            'foto'          => (($jkel == 'P') ? 'pria.png' : 'wanita.png'),
+            'kode_role'     => 'R0009',
+            'nohp'          => $nohp,
+            'actived'       => (($tgl_berhenti >= date('Y-m-d')) ? 1 : 0),
+            'joined'        => $tgl_mulai,
+        ];
+
+        if ($param == 1) { // jika parameternya 1
+            // jalankan fungsi simpan
+            $cek          = [
+                $this->M_global->insertData('dokter', $isi),
+                $this->M_global->insertData('user', $data_user),
+            ];
+
+            $cek_param    = 'menambahkan';
+        } else { // selain itu
+            // jalankan fungsi update
+            $cek_user_dokter = $this->M_global->getData('user', ['kode_user' => $kodeDokter]);
+
+            if ($cek_user_dokter) {
+                $run_user = $this->M_global->updateData('user', $data_user, ['kode_user' => $kodeDokter]);
+            } else {
+                $run_user = $this->M_global->insertData('user', $data_user);
+            }
+
+            $cek          = [
+                $this->M_global->updateData('dokter', $isi, ['kode_dokter' => $kodeDokter]),
+                $run_user,
+                $this->M_global->delData('dokter_poli', ['kode_dokter' => $kodeDokter]),
+                $this->M_global->delData('cabang_user', ['email' => $email]),
+            ];
+
+            $cek_param    = 'mengubah';
+        }
+
+        // insert cabang
+        if ($kode_cabang_all) {
+            $data_cabang = $this->M_global->getResult('cabang');
+            foreach ($data_cabang as $dc) {
+                $isi_cabang = [
+                    'email'         => $email,
+                    'kode_cabang'   => $dc->kode_cabang,
+                ];
+
+                $this->M_global->insertData('cabang_user', $isi_cabang);
+            }
+        } else {
+            foreach ($kode_cabang as $kp) {
+                $_kode_cabang_input = $kp;
+
+                $isi_cabang = [
+                    'email'         => $email,
+                    'kode_cabang'   => $_kode_cabang_input,
+                ];
+
+                $this->M_global->insertData('cabang_user', $isi_cabang);
+            }
+        }
+
+        // insert poli
         foreach ($kode_poli as $kp) {
             $_kode_poli_input = $kp;
 
@@ -2829,18 +2907,6 @@ class Master extends CI_Controller
             ];
 
             $this->M_global->insertData('dokter_poli', $isi_poli);
-        }
-
-        if ($param == 1) { // jika parameternya 1
-            // jalankan fungsi simpan
-            $cek          = $this->M_global->insertData('dokter', $isi);
-
-            $cek_param    = 'menambahkan';
-        } else { // selain itu
-            // jalankan fungsi update
-            $cek          = $this->M_global->updateData('dokter', $isi, ['kode_dokter' => $kodeDokter]);
-
-            $cek_param    = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
@@ -2863,11 +2929,7 @@ class Master extends CI_Controller
         //     $this->M_global->delData('dokter', ['kode_dokter' => $kode_dokter]),
         //     $this->M_global->delData('dokter_poli', ['kode_dokter' => $kode_dokter]),
         // ];
-        $cek = $this->M_global->updateData(
-            'dokter',
-            ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')],
-            ['kode_dokter' => $kode_dokter]
-        );
+        $cek = $this->M_global->updateData('dokter', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_dokter' => $kode_dokter]);
 
         if ($cek) { // jika fungsi berjalan
 
@@ -3038,23 +3100,29 @@ class Master extends CI_Controller
         if ($param != '0') {
             $perawat        = $this->M_global->getData('perawat', ['kode_perawat' => $param]);
             $perawat_poli   = $this->M_global->getDataResult('perawat_poli', ['kode_perawat' => $param]);
+
+            $data_perawat   = $this->M_global->getData('perawat', ['kode_perawat' => $param]);
+            $perawat_cabang = $this->M_global->getDataResult('cabang_user', ['email' => $data_perawat->email]);
         } else {
             $perawat        = null;
             $perawat_poli   = null;
+            $perawat_cabang = null;
         }
 
         $parameter = [
             $this->data,
-            'judul'         => 'Master',
-            'nama_apps'     => $web_setting->nama,
-            'page'          => 'Perawat',
-            'web'           => $web_setting,
-            'web_version'   => $web_version->version,
-            'list_data'     => '',
-            'data_perawat'  => $perawat,
-            'perawat_poli'  => $perawat_poli,
-            'role'          => $this->M_global->getResult('m_role'),
-            'poli'          => $this->M_global->getResult('m_poli'),
+            'judul'             => 'Master',
+            'nama_apps'         => $web_setting->nama,
+            'page'              => 'Perawat',
+            'web'               => $web_setting,
+            'web_version'       => $web_version->version,
+            'list_data'         => '',
+            'data_perawat'      => $perawat,
+            'perawat_poli'      => $perawat_poli,
+            'perawat_cabang'    => $perawat_cabang,
+            'role'              => $this->M_global->getResult('m_role'),
+            'poli'              => $this->M_global->getResult('m_poli'),
+            'cabang'            => $this->M_global->getResult('cabang'),
         ];
 
         $this->template->load('Template/Content', 'Master/Internal/Form_perawat', $parameter);
@@ -3076,20 +3144,24 @@ class Master extends CI_Controller
             $this->M_global->delData('perawat_poli', ['kode_perawat' => $kodePerawat]);
         }
 
-        $nik          = $this->input->post('nik');
-        $email        = $this->input->post('email');
-        $nohp         = $this->input->post('nohp');
-        $npwp         = $this->input->post('npwp');
-        $sip          = $this->input->post('sip');
-        $tgl_mulai    = $this->input->post('tgl_mulai');
-        $tgl_berhenti = $this->input->post('tgl_berhenti');
-        $status       = $this->input->post('statusPerawat');
-        $provinsi     = $this->input->post('provinsi');
-        $kabupaten    = $this->input->post('kabupaten');
-        $kecamatan    = $this->input->post('kecamatan');
-        $desa         = $this->input->post('desa');
-        $kodepos      = $this->input->post('kodepos');
-        $kode_poli    = $this->input->post('kode_poli');
+        $nik                = $this->input->post('nik');
+        $email              = $this->input->post('email');
+        $nohp               = $this->input->post('nohp');
+        $npwp               = $this->input->post('npwp');
+        $sip                = $this->input->post('sip');
+        $tgl_mulai          = $this->input->post('tgl_mulai');
+        $tgl_berhenti       = $this->input->post('tgl_berhenti');
+        $status             = $this->input->post('statusPerawat');
+        $provinsi           = $this->input->post('provinsi');
+        $kabupaten          = $this->input->post('kabupaten');
+        $kecamatan          = $this->input->post('kecamatan');
+        $desa               = $this->input->post('desa');
+        $kodepos            = $this->input->post('kodepos');
+        $kode_poli          = $this->input->post('kode_poli');
+        $password           = $this->input->post('password');
+        $jkel               = $this->input->post('jkel');
+        $kode_cabang_all    = $this->input->post('kode_cabang_all');
+        $kode_cabang        = $this->input->post('kode_cabang');
 
         // tampung variable kedalam $isi
         $isi = [
@@ -3110,6 +3182,73 @@ class Master extends CI_Controller
             'kodepos'       => $kodepos,
         ];
 
+        $data_user = [
+            'kode_user'     => $kodePerawat,
+            'nama'          => $nama,
+            'email'         => $email,
+            'password'      => md5($password),
+            'secondpass'    => $password,
+            'jkel'          => $jkel,
+            'foto'          => (($jkel == 'P') ? 'pria.png' : 'wanita.png'),
+            'kode_role'     => 'R0009',
+            'nohp'          => $nohp,
+            'actived'       => (($tgl_berhenti >= date('Y-m-d')) ? 1 : 0),
+            'joined'        => $tgl_mulai,
+        ];
+
+        if ($param == 1) { // jika parameternya 1
+            // jalankan fungsi simpan
+            $cek          = [
+                $this->M_global->insertData('perawat', $isi),
+                $this->M_global->insertData('user', $data_user)
+            ];
+
+            $cek_param    = 'menambahkan';
+        } else { // selain itu
+            // jalankan fungsi update
+            $cek_user_dokter = $this->M_global->getData('user', ['kode_user' => $kodePerawat]);
+
+            if ($cek_user_dokter) {
+                $run_user = $this->M_global->updateData('user', $data_user, ['kode_user' => $kodePerawat]);
+            } else {
+                $run_user = $this->M_global->insertData('user', $data_user);
+            }
+
+            $cek          = [
+                $this->M_global->updateData('perawat', $isi, ['kode_perawat' => $kodePerawat]),
+                $run_user,
+                $this->M_global->delData('perawat_poli', ['kode_perawat' => $kodePerawat]),
+                $this->M_global->delData('cabang_user', ['email' => $email]),
+            ];
+
+            $cek_param    = 'mengubah';
+        }
+
+        // insert cabang
+        if ($kode_cabang_all) {
+            $data_cabang = $this->M_global->getResult('cabang');
+            foreach ($data_cabang as $dc) {
+                $isi_cabang = [
+                    'email'         => $email,
+                    'kode_cabang'   => $dc->kode_cabang,
+                ];
+
+                $this->M_global->insertData('cabang_user', $isi_cabang);
+            }
+        } else {
+            foreach ($kode_cabang as $kp) {
+                $_kode_cabang_input = $kp;
+
+                $isi_cabang = [
+                    'email'         => $email,
+                    'kode_cabang'   => $_kode_cabang_input,
+                ];
+
+                $this->M_global->insertData('cabang_user', $isi_cabang);
+            }
+        }
+
+        // insert poli
         foreach ($kode_poli as $kp) {
             $_kode_poli_input = $kp;
 
@@ -3119,18 +3258,6 @@ class Master extends CI_Controller
             ];
 
             $this->M_global->insertData('perawat_poli', $isi_poli);
-        }
-
-        if ($param == 1) { // jika parameternya 1
-            // jalankan fungsi simpan
-            $cek          = $this->M_global->insertData('perawat', $isi);
-
-            $cek_param    = 'menambahkan';
-        } else { // selain itu
-            // jalankan fungsi update
-            $cek          = $this->M_global->updateData('perawat', $isi, ['kode_perawat' => $kodePerawat]);
-
-            $cek_param    = 'mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan

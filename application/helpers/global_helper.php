@@ -449,14 +449,14 @@ function _kodeDokter($keterangan)
     $CI         = &get_instance();
 
     $inisial    = strtoupper(substr($keterangan, 0, 1));
-    $lastNumber = $CI->db->query('SELECT * FROM dokter WHERE kode_dokter LIKE "' . $inisial . '%" ORDER BY kode_dokter DESC LIMIT 1')->row();
+    $lastNumber = $CI->db->query('SELECT * FROM dokter WHERE kode_dokter LIKE "DR' . $inisial . '%" ORDER BY kode_dokter DESC LIMIT 1')->row();
     $number     = 1;
     if ($lastNumber) {
-        $number       = count($CI->db->query('SELECT * FROM dokter WHERE kode_dokter LIKE "' . $inisial . '%"')->result()) + 1;
-        $kode_user    = $inisial . sprintf("%05d", $number);
+        $number       = count($CI->db->query('SELECT * FROM dokter WHERE kode_dokter LIKE "DR' . $inisial . '%"')->result()) + 1;
+        $kode_user    = 'DR' . $inisial . sprintf("%05d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $inisial . "00001";
+        $kode_user    = 'DR' . $inisial . "00001";
     }
     return $kode_user;
 }
@@ -466,14 +466,14 @@ function _kodePerawat($keterangan)
     $CI         = &get_instance();
 
     $inisial    = strtoupper(substr($keterangan, 0, 1));
-    $lastNumber = $CI->db->query('SELECT * FROM perawat WHERE kode_perawat LIKE "' . $inisial . '%" ORDER BY kode_perawat DESC LIMIT 1')->row();
+    $lastNumber = $CI->db->query('SELECT * FROM perawat WHERE kode_perawat LIKE "PR' . $inisial . '%" ORDER BY kode_perawat DESC LIMIT 1')->row();
     $number     = 1;
     if ($lastNumber) {
-        $number       = count($CI->db->query('SELECT * FROM perawat WHERE kode_perawat LIKE "' . $inisial . '%"')->result()) + 1;
-        $kode_user    = $inisial . sprintf("%05d", $number);
+        $number       = count($CI->db->query('SELECT * FROM perawat WHERE kode_perawat LIKE "PR' . $inisial . '%"')->result()) + 1;
+        $kode_user    = 'PR' . $inisial . sprintf("%05d", $number);
     } else {
         $number       = 0;
-        $kode_user    = $inisial . "00001";
+        $kode_user    = 'PR' . $inisial . "00001";
     }
     return $kode_user;
 }

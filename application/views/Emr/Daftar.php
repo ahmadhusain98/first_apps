@@ -4,76 +4,77 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 
 <form id="">
     <div class="row mb-3">
-        <div class="col-md-3">
+        <div class="col-md-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">
-                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Pasien</span>
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Pasien</span>
+                    <div class="float-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="preview('pendaftaran')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="print('pendaftaran')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="excel('pendaftaran')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                        <?php if ($created == 1) : ?>
+                            <button type="button" class="btn btn-success" onclick="getUrl('Health/form_pendaftaran/0')"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select name="kode_poli" id="kode_poli" class="select2_poli" data-placeholder="~ Pilih Poli" onchange="getPoli(this.value)"></select>
+                                </div>
+                                <div class="col-md-6">
+                                    <select name="kode_dokter" id="kode_dokter" class="select2_dokter_all" data-placeholder="~ Pilih Dokter" onchange="getDokter(this.value)"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-4 col-5 mb-3">
+                                    <input type="date" name="dari" id="dari" class="form-control" value="<?= date('Y-m-d') ?>">
+                                </div>
+                                <div class="col-md-4 col-5 mb-3">
+                                    <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
+                                </div>
+                                <div class="col-md-4 col-2 mb-3">
+                                    <button type="button" class="btn btn-info" style="width: 100%" onclick="filter($('#kode_poli').val())"><i class="fa-solid fa-sort"></i>&nbsp;&nbsp;Filter</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <input type="search" name="search" id="search" onkeyup="cari()" class="form-control" placeholder="Cari Pasien..." autofocus>
-                        <br>
-                        <div id="listPasien"></div>
+                        <table class="table table-hover table-bordered" id="tableEmr" width="100%" style="border-radius: 10px;">
+                            <thead>
+                                <tr class="text-center">
+                                    <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                                    <th width="15%">No. Trx</th>
+                                    <th width="10%">Member</th>
+                                    <th>Tgl/Jam Masuk - Keluar</th>
+                                    <th>Dokter</th>
+                                    <th>Antri</th>
+                                    <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-9">
-            <div class="card card-outline card-primary">
-                <div class="card-header">
-                    <button type="button" id="btnper" class="btn btn-primary" onclick="seltab(1)">Pemeriksaan Perawat</button>
-                    <button type="button" id="btndok" class="btn btn-light" onclick="seltab(2)">Pemeriksaan Dokter</button>
-                </div>
-                <div class="card-body">
-                    <div id="forper">aaaa</div>
-                    <div id="fordok">bbbb</div>
-                </div>
-            </div>
-        </div>
     </div>
-
 </form>
 
 <script>
-    const btnper = $('#btnper')
-    const btndok = $('#btndok')
-    const forper = $('#forper')
-    const fordok = $('#fordok')
-
-    seltab(1)
-    cari()
-
-    function cari() {
-        var params = ($('#search').val()).toLowerCase();
-        xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("listPasien").innerHTML = this.responseText;
-            }
-        };
-        xhttp.open("GET", "<?= base_url('Emr/pencarian/'); ?>" + params, true);
-        xhttp.send();
-    }
-
-    function seltab(param) {
-        if (param == 1) {
-            btnper.removeClass('btn-light')
-            btnper.addClass('btn-primary')
-
-            btndok.addClass('btn-light')
-            btndok.removeClass('btn-primary')
-
-            forper.show(200)
-            fordok.hide(200)
-        } else {
-            btnper.addClass('btn-light')
-            btnper.removeClass('btn-primary')
-
-            btndok.removeClass('btn-light')
-            btndok.addClass('btn-primary')
-
-            forper.hide(200)
-            fordok.show(200)
-        }
-    }
+    // variable
+    var table = $('#tableEmr');
 </script>

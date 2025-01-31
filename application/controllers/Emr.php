@@ -14,7 +14,7 @@ class Emr extends CI_Controller
 
         if (!empty($this->session->userdata("email"))) { // jika session email masih ada
 
-            $id_menu = $this->M_global->getData('m_menu', ['url' => 'Health'])->id;
+            $id_menu = $this->M_global->getData('m_menu', ['url' => 'Emr'])->id;
 
             // ambil isi data berdasarkan email session dari table user, kemudian tampung ke variable $user
             $user = $this->M_global->getData("user", ["email" => $this->session->userdata("email")]);
@@ -54,45 +54,98 @@ class Emr extends CI_Controller
             'page'          => 'EMR',
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
-            'list_data'     => 'Emr/daftar_list',
+            'list_data'     => 'Emr/daftar_list/',
             'param1'        => '',
         ];
 
         $this->template->load('Template/Content', 'Emr/Daftar', $parameter);
     }
 
-    public function pencarian($key = '')
+    // fungsi list daftar
+    public function daftar_list($param1 = 1, $param2 = '')
     {
-        $cabang = $this->session->userdata('cabang');
+        // parameter untuk list table
+        $table            = 'pendaftaran';
+        $colum            = ['id', 'no_trx', 'tgl_daftar', 'jam_daftar', 'kode_member', 'kode_poli', 'kode_ruang', 'kode_dokter', 'no_antrian', 'tgl_keluar', 'jam_keluar', 'status_trx', 'kode_user', 'shift'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['id' => 'asc'];
+        $kondisi_param2   = 'kode_poli';
+        $kondisi_param1   = 'tgl_daftar';
 
-        if ($key == '' || $key == null || $key == 'null') {
-            $add_sintak = '';
+        // kondisi role
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+
+        // table server side tampung kedalam variable $list
+        $dat    = explode("~", $param1);
+        if ($dat[0] == 1) {
+            $bulan   = date('m');
+            $tahun   = date('Y');
+            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2);
         } else {
-            $add_sintak = 'AND (m.nama LIKE "%' . $key . '%" OR m.kode_member LIKE "%' . $key . '%")';
+            $bulan   = date('Y-m-d', strtotime($dat[1]));
+            $tahun   = date('Y-m-d', strtotime($dat[2]));
+            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 2, $bulan, $tahun, $param2, $kondisi_param2);
+        }
+        $data             = [];
+        $no               = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($updated > 0) {
+                if ($rd->status_trx == 2) {
+                    $upd_diss = 'disabled';
+                } else {
+                    if ($rd->status_trx == 1) {
+                        $upd_diss = 'disabled';
+                    } else {
+                        $upd_diss = '';
+                    }
+                }
+            } else {
+                $upd_diss = 'disabled';
+            }
+
+            if ($deleted > 0) {
+                if ($rd->status_trx == 2) {
+                    $del_diss = 'disabled';
+                } else {
+                    if ($rd->status_trx == 1) {
+                        $del_diss = 'disabled';
+                    } else {
+                        $del_diss = '';
+                    }
+                }
+            } else {
+                $del_diss = 'disabled';
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>'));
+            $row[]  = $rd->kode_member . '<br>' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama;
+            $row[]  = 'Datang: <span class="float-right">' . date('d/m/Y', strtotime($rd->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_daftar)) . '</span><br>' .
+                '<hr>Selesai: <span class="float-right">' . (($rd->status_trx < 1) ? '<i class="text-secondary">Null</i>' : (($rd->tgl_keluar == null) ? 'xx/xx/xxxx' : date('d/m/Y', strtotime($rd->tgl_keluar))) . ' ~ ' . (($rd->jam_keluar == null) ? 'xx:xx:xx' : date('H:i:s', strtotime($rd->jam_keluar)))) . '</span>';
+            $row[]  = 'Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $rd->kode_dokter])->nama;
+            $row[]  = 'Ruang <span class="float-right">' . $this->M_global->getData('m_poli', ['kode_poli' => $rd->kode_poli])->keterangan . ' (' . $this->M_global->getData('m_ruang', ['kode_ruang' => $rd->kode_ruang])->keterangan . ')</span>' . '<br>No Urut <span class="float-right">' . $rd->no_antrian . '</span>';
+
+            $row[]  = '<div class="text-center">
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-success" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Perawat" onclick="getUrl(' . "Emr/perawat/'" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-nurse"></i> Nurse</button>
+                <button type="button" style="margin-bottom: 5px;" class="btn btn-primary" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Dokter" onclick="getUrl(' . "Emr/dokter/'" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-doctor"></i> Doctor</button>
+            </div>';
+            $data[] = $row;
         }
 
-        $sintak = $this->db->query(
-            'SELECT p.*, m.nama
-            FROM pendaftaran p
-            JOIN member m ON p.kode_member = m.kode_member
-            WHERE p.status_trx = 0 AND p.kode_cabang = "' . $cabang . '"' . $add_sintak
-        )->result();
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables2->count_all($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2),
+            "recordsFiltered" => $this->M_datatables2->count_filtered($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2),
+            "data"            => $data,
+        ];
 
-?>
-        <table class="table table-hover table-bordered" id="tablePendaftaran" width="100%" style="border-radius: 10px;">
-            <tbody>
-                <?php foreach ($sintak as $s) : ?>
-                    <tr>
-                        <td style="width: 15%;"><?= $s->no_antrian ?></td>
-                        <td style="width: 55%;"><?= $s->nama ?></td>
-                        <td style="width: 30%;" class="text-center">
-                            <button type="button" class="btn mb-1 btn-success btn-circle" title="Panggil"><i class="fa-solid fa-microphone-lines"></i></button>
-                            <button type="button" class="btn mb-1 btn-dark btn-circle" title="Lewati"><i class="fa-solid fa-microphone-lines-slash"></i></button>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-<?php
+        // kirimkan ke view
+        echo json_encode($output);
     }
 }

@@ -256,7 +256,7 @@
                     <a class="nav-link" data-widget="pushmenu" type="button" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <span type="button" class="nav-link">Cabang: <?= $master_cabang->cabang ?></span>
+                    <span type="button" class="nav-link">Cabang: <?= $master_cabang->cabang . ' / ' . $this->session->userdata('kode_role') ?></span>
                 </li>
             </ul>
 

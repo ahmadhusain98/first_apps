@@ -281,10 +281,12 @@ class Sampah extends CI_Controller
                     $where = ['kode_dokter' => $_invoice];
 
                     $this->M_global->delData('dokter_poli', ['kode_dokter' => $_invoice]);
+                    $this->M_global->delData('user', ['kode_user' => $_invoice]);
                 } else if ($_tabel == 'perawat') {
                     $where = ['kode_perawat' => $_invoice];
 
                     $this->M_global->delData('perawat_poli', ['kode_perawat' => $_invoice]);
+                    $this->M_global->delData('user', ['kode_user' => $_invoice]);
                 } else if ($_tabel == 'tarif_jasa') {
                     $where = ['kode_tarif' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')];
 
@@ -379,10 +381,12 @@ class Sampah extends CI_Controller
             $where = ['kode_dokter' => $id];
 
             $this->M_global->delData('dokter_poli', ['kode_dokter' => $id]);
+            $this->M_global->delData('user', ['kode_user' => $id]);
         } else if ($table == 'perawat') {
             $where = ['kode_perawat' => $id];
 
             $this->M_global->delData('perawat_poli', ['kode_perawat' => $id]);
+            $this->M_global->delData('user', ['kode_user' => $id]);
         } else if ($table == 'tarif_jasa') {
             $where = ['kode_tarif' => $id, 'kode_cabang' => $this->session->userdata('cabang')];
 

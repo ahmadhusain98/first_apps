@@ -1,3 +1,19 @@
+<?php
+if ($data_dokter) {
+    $user = $this->M_global->getData('user', ['kode_user' => $data_dokter->kode_dokter]);
+    if ($user) {
+        $password   = $user->secondpass;
+        $jkel       = $user->jkel;
+    } else {
+        $password   = '';
+        $jkel       = '';
+    }
+} else {
+    $password       = '';
+    $jkel           = '';
+}
+?>
+
 <form method="post" id="form_dokter">
     <div class="row">
         <div class="col-md-12">
@@ -104,7 +120,7 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <label for="kode_poli">Poli <sup class="text-danger">**</sup></label>
                                 <select name="kode_poli[]" id="kode_poli" class="form-control select2_global" data-placeholder="~ Pilih Poli" multiple="multiple">
                                     <option value="">~ Pilih Poli</option>
@@ -119,6 +135,51 @@
                                         <option value="<?= $p->kode_poli ?>" <?= (!empty($data_dokter) ? (in_array($p->kode_poli, $dp_arr) ? 'selected' : '') : '') ?>><?= $p->keterangan ?></option>
                                     <?php endforeach; ?>
                                 </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="kode_cabang">Cabang <sup class="text-danger">**</sup></label>
+                                <div class="row">
+                                    <div class="col-md-11">
+                                        <select name="kode_cabang[]" id="kode_cabang" class="form-control select2_global" data-placeholder="~ Pilih Cabang" multiple="multiple">
+                                            <option value="">~ Pilih Cabang</option>
+                                            <?php if (!empty($data_dokter)) :
+                                                $dp_arr = [];
+                                                foreach ($dokter_cabang as $dp) :
+                                                    $dp_arr[] = $dp->kode_cabang;
+                                            ?>
+                                            <?php endforeach;
+                                            endif; ?>
+                                            <?php foreach ($cabang as $c) : ?>
+                                                <option value="<?= $c->kode_cabang ?>" <?= (!empty($data_dokter) ? (in_array($c->kode_cabang, $dp_arr) ? 'selected' : '') : '') ?>><?= $c->cabang ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <input type="checkbox" name="kode_cabang_all" id="kode_cabang_all" class="form-control" title="Semua Cabang">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="jkel">Gender <sup class="text-danger">**</sup></label>
+                                <select name="jkel" id="jkel" class="form-control select2_global" data-placeholder="~ Pilih Gender">
+                                    <option value="">~ Pilih Gender</option>
+                                    <option value="P" <?= ($jkel == 'P') ? 'selected' : '' ?>>Pria</option>
+                                    <option value="W" <?= ($jkel == 'W') ? 'selected' : '' ?>>Wanita</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="password">Sandi <sup class="text-danger">**</sup></label>
+                                <div class="input-group mb-3">
+                                    <input type="password" class="form-control" placeholder="Sandi" id="password" name="password" value="<?= $password ?>">
+                                    <div class="input-group-append" onclick="pass()">
+                                        <div class="input-group-text">
+                                            <i class="fa-solid fa-fw fa-lock text-success" id="lock_pass"></i>
+                                            <i class="fa-solid fa-lock-open text-danger" id="open_pass"></i>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -399,5 +460,27 @@
                 </p>
             </ol>
         `);
+    }
+
+    // fungsi tampil/sembunyi password
+    function pass() {
+        if (document.getElementById("password").type == "password") { // jika icon password gembok di klik
+            // ubah tipe password menjadi text
+            document.getElementById("password").type = "text";
+
+            // tampilkan icon buka
+            $("#open_pass").show();
+
+            // sembunyikan icon gembok
+            $("#lock_pass").hide();
+        } else { // selain itu
+            // ubah tipe password menjadi passwword
+            document.getElementById("password").type = "password";
+            // sembunyikan icon buka
+            $("#open_pass").hide();
+
+            // tampilkan icon gembok
+            $("#lock_pass").show();
+        }
     }
 </script>
