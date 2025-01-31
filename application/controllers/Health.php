@@ -1207,8 +1207,8 @@ class Health extends CI_Controller
             $data[] = [
                 'id'            => $event->id,
                 'title'         => $event->title,
-                'start'         => $event->start_date,
-                'end'           => $event->end_date,
+                'start'         => $event->start_date . 'T' . $event->time_start,
+                'end'           => $event->end_date . 'T' . $event->time_end,
                 'time_start'    => date('H:i', strtotime($event->time_start)),
                 'time_end'      => date('H:i', strtotime($event->time_end)),
                 'status_dokter' => $event->status,

@@ -191,7 +191,8 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 method: 'GET',
                 failure: function() {
                     Swal.fire("Jadwal Dokter", "Gagal diload", "error");
-                }
+                },
+                allDay: false
             },
             eventContent: function(arg) { // mengubah tanda koma (,) menjadi <br>
                 let title = arg.event.title.split(',').join('<br>');
