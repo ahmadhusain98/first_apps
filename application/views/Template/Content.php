@@ -1152,6 +1152,7 @@
         initailizeSelect2_dokter_poli(param = 'POL0000001');
         initailizeSelect2_dokter_all();
         initailizeSelect2_ruang();
+        initailizeSelect2_bed(param = '');
         initailizeSelect2_supplier();
         initailizeSelect2_gudang_int();
         initailizeSelect2_gudang_log();
@@ -1906,6 +1907,48 @@
                     cache: true
                 }
             });
+        }
+
+        function initailizeSelect2_bed(param) {
+            if (param == '' || param == null || param == 'null') { // jika parameter kosong/ null
+                // jalankan fungsi select2_default
+                select2_default('select2_bed');
+            } else {
+                $(".select2_bed").select2({
+                    allowClear: true,
+                    multiple: false,
+                    placeholder: '~ Pilih Bed',
+                    //minimumInputLength: 2,
+                    dropdownAutoWidth: true,
+                    width: '100%',
+                    language: {
+                        inputTooShort: function() {
+                            return 'Ketikan Nomor minimal 2 huruf';
+                        },
+                        noResults: function() {
+                            return 'Data Tidak Ditemukan';
+                        }
+                    },
+                    ajax: {
+                        url: siteUrl + 'Select2_master/dataBed/' + param,
+                        type: 'POST',
+                        dataType: 'JSON',
+                        delay: 100,
+                        data: function(result) {
+                            return {
+                                searchTerm: result.term
+                            };
+                        },
+
+                        processResults: function(result) {
+                            return {
+                                results: result
+                            };
+                        },
+                        cache: true
+                    }
+                });
+            }
         }
 
         function initailizeSelect2_supplier() {

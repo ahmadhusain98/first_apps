@@ -311,6 +311,8 @@ class Sampah extends CI_Controller
                     }
                 } else if ($_tabel == 'm_ruang') {
                     $where = ['kode_ruang' => $_invoice];
+
+                    $this->M_global->delData('bed_cabang', ['kode_bed' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')]);
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -413,6 +415,8 @@ class Sampah extends CI_Controller
             }
         } else if ($table == 'm_ruang') {
             $where = ['kode_ruang' => $id];
+
+            $this->M_global->delData('bed_cabang', ['kode_bed' => $id, 'kode_cabang' => $this->session->userdata('cabang')]);
         } else {
             echo json_encode(['status' => 0]);
             return;

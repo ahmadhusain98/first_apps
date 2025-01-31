@@ -16,8 +16,8 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-4">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label for="id" class="control-label">ID <span class="text-danger">**</span></label>
@@ -25,7 +25,17 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="nama_bed">Nama <span class="text-danger">**</span></label>
+                                        <input type="text" class="form-control" id="nama_bed" name="nama_bed" placeholder="Masukkan Bed" onkeyup="ubah_nama(this.value, 'nama_bed')">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label for="kode_ruang">Ruang/Bangsal <span class="text-danger">**</span></label>
@@ -33,11 +43,11 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label for="nama_bed">Nama <span class="text-danger">**</span></label>
-                                        <input type="text" class="form-control" id="nama_bed" name="nama_bed" placeholder="Masukkan Bed" onkeyup="ubah_nama(this.value, 'nama_bed')">
+                                        <label for="nama_cabang">Cabang <sup class="text-danger">**</sup></label>
+                                        <input type="nama_cabang" class="form-control" name="nama_cabang" id="nama_cabang" value="<?= $this->M_global->getData('cabang', ['kode_cabang' => $this->session->userdata('cabang')])->cabang ?>" readonly>
                                     </div>
                                 </div>
                             </div>

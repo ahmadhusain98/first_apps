@@ -331,6 +331,33 @@ class M_select2 extends CI_Model
         return $sintak;
     }
 
+    // fungsi bed
+    function getBed($key, $kode_ruang)
+    {
+        $now = date('Y-m-d');
+        $limit = ' LIMIT 50';
+
+        if ($kode_ruang == null || $kode_ruang == "" || $kode_ruang == "null") {
+            $sintak = $this->db->query('SELECT 0 AS id, "Pilih Ruang Dahulu" AS text FROM bed LIMIT 1')->result();
+        } else {
+            if (!empty($key)) {
+                $add_sintak = ' AND (b.kode_bed LIKE "%' . $key . '%" OR b.nama_bed LIKE "%' . $key . '%" OR r.keterangan LIKE "%' . $key . '%") ORDER BY b.nama_bed ASC';
+            } else {
+                $add_sintak = ' ORDER BY b.nama_bed ASC';
+            }
+
+            $sintak = $this->db->query(
+                'SELECT b.kode_bed AS id, nama_bed AS text 
+                FROM bed b
+                JOIN m_ruang r ON r.kode_ruang = b.kode_ruang
+                JOIN bed_cabang bc ON b.kode_bed = bc.kode_bed
+                WHERE b.status = 0 AND bc.kode_cabang = "' . $this->session->userdata('cabang') . '"' . $add_sintak . $limit
+            )->result();
+        }
+
+        return $sintak;
+    }
+
     // fungsi dokter_all
     function getDokterAll($key)
     {

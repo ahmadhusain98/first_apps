@@ -5164,6 +5164,7 @@ class Master extends CI_Controller
         // variable
         $nama_bed       = $this->input->post('nama_bed');
         $kode_ruang     = $this->input->post('kode_ruang');
+        $kode_cabang    = $this->session->userdata('cabang');
 
         if ($param == 1) { // jika parameternya 1
             // maka buat kode baru
@@ -5180,6 +5181,11 @@ class Master extends CI_Controller
             'nama_bed'      => $nama_bed,
         ];
 
+        $isi2 = [
+            'kode_bed'      => $kodeBed,
+            'kode_cabang'   => $kode_cabang,
+        ];
+
         if ($param == 1) { // jika parameternya 1
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('bed', $isi);
@@ -5187,10 +5193,15 @@ class Master extends CI_Controller
             $cek_param = 'menambahkan';
         } else { // selain itu
             // jalankan fungsi update
-            $cek = $this->M_global->updateData('bed', $isi, ['kode_bed' => $kodeBed]);
+            $cek = [
+                $this->M_global->updateData('bed', $isi, ['kode_bed' => $kodeBed]),
+                $this->M_global->delData('bed_cabang', ['kode_bed' => $kodeBed, 'kode_cabang' => $kode_cabang]),
+            ];
 
             $cek_param = 'mengubah';
         }
+
+        $this->M_global->insertData('bed_cabang', $isi2);
 
         if ($cek) { // jika fungsi berjalan
             aktifitas_user('Master Bed', $cek_param, $kodeBed, $this->M_global->getData('bed', ['kode_bed' => $kodeBed])->nama_bed);

@@ -53,14 +53,28 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="">Ruangan/Bed <sup class="text-danger">**</sup></label>
-                                        <select name="kode_ruang" id="kode_ruang" class="form-control select2_ruang" data-placeholder="~ Pilih Ruang">
-                                            <?php
-                                            if (!empty($data_pendaftaran)) :
-                                                $ruang = $this->M_global->getData('m_ruang', ['kode_ruang' => $data_pendaftaran->kode_ruang]);
-                                                echo '<option value="' . $ruang->kode_ruang . '">' . $ruang->kode_ruang . ' ~ ' . $ruang->keterangan . '</option>';
-                                            endif;
-                                            ?>
-                                        </select>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <select name="kode_ruang" id="kode_ruang" class="form-control select2_ruang" data-placeholder="~ Pilih Ruang" onchange="getBed(this.value)">
+                                                    <?php
+                                                    if (!empty($data_pendaftaran)) :
+                                                        $ruang = $this->M_global->getData('m_ruang', ['kode_ruang' => $data_pendaftaran->kode_ruang]);
+                                                        echo '<option value="' . $ruang->kode_ruang . '">' . $ruang->kode_ruang . ' ~ ' . $ruang->keterangan . '</option>';
+                                                    endif;
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select name="kode_bed" id="kode_bed" class="form-control select2_bed" data-placeholder="~ Pilih Bed">
+                                                    <?php
+                                                    if (!empty($data_pendaftaran)) :
+                                                        $bed = $this->M_global->getData('m_bed', ['kode_bed' => $data_pendaftaran->kode_bed]);
+                                                        echo '<option value="' . $bed->kode_bed . '">' . $bed->kode_bed . ' ~ ' . $bed->nama_bed . '</option>';
+                                                    endif;
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -237,6 +251,7 @@
     var kode_poli = $('#kode_poli');
     var kode_dokter = $('#kode_dokter');
     var kode_ruang = $('#kode_ruang');
+    var kode_bed = $('#kode_bed');
     const btnTambahPaket = $('#btnTambahPaket');
 
     const form = $('#form_pendaftaran');
@@ -309,6 +324,24 @@
 
         // jalankan select2 berdasarkan param
         initailizeSelect2_dokter_poli(param);
+    }
+
+    // fungsi get bed berdasarkan ruang
+    function getBed(param) {
+        kode_bed.empty();
+
+        if (param == '' || param == null) { // jika kode ruang kosong/ null
+            // tampilkan notif
+            Swal.fire("Poli", "Sudah dipilih?", "question");
+            // set param jadi kosong
+            var param = '';
+        } else {
+            // set param menjadi kode ruang
+            var param = param;
+        }
+
+        // jalankan select2 berdasarkan param
+        initailizeSelect2_bed(param);
     }
 
     // fungsi save/update
