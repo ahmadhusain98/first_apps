@@ -4853,4 +4853,382 @@ class Master extends CI_Controller
             echo json_encode(['status' => 0]);
         }
     }
+
+    // ############################################################################################################################################################################
+
+    /**
+     * Master Ruang
+     * untuk menampilkan, menambahkan, dan mengubah ruang dalam sistem
+     */
+
+    // ruang page
+    public function ruang()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter   = [
+            $this->data,
+            'judul'         => 'Master',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Ruang',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => 'Master/ruang_list/',
+            'param1'        => '1',
+        ];
+
+        $this->template->load('Template/Content', 'Master/Umum/Ruang', $parameter);
+    }
+
+    // fungsi list ruang
+    public function ruang_list($param1)
+    {
+        // parameter untuk list table
+        $table            = 'm_ruang';
+        $colum            = ['id', 'kode_ruang', 'keterangan'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['id' => 'asc'];
+        $kondisi_param1   = 'hapus < ';
+
+        // kondisi role
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+
+        if ($updated > 0) {
+            $upd_diss     = '';
+        } else {
+            $upd_diss     = 'disabled';
+        }
+
+        // table server side tampung kedalam variable $list
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($deleted > 0) {
+                $bed             = $this->M_global->getResult('bed');
+
+                $ruang             = [];
+                foreach ($bed as $b) {
+                    $ruang[]       = [$b->kode_ruang];
+                }
+
+                $flattened_ruang   = array_merge(...$ruang);
+
+                if (in_array($rd->kode_ruang, $flattened_ruang)) {
+                    $del_diss       = 'disabled';
+                } else {
+                    $del_diss       = '';
+                }
+            } else {
+                $del_diss           = 'disabled';
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->kode_ruang;
+            $row[]  = $rd->keterangan;
+            $row[]  = '<div class="text-center">
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_ruang . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_ruang . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables->count_all($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "recordsFiltered" => $this->M_datatables->count_filtered($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    // fungsi cek ruang berdasarkan keterangan ruang
+    public function cekRuang()
+    {
+        // ambil keterangan inputan
+        $keterangan   = $this->input->post('keterangan');
+
+        // cek keterangan pada table m_ruang
+        $cek          = $this->M_global->jumDataRow('m_ruang', ['keterangan' => $keterangan]);
+
+        if ($cek < 1) { // jika tidak ada/ kurang dari 1
+            // kirimkan status 1
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi proses simpan/update ruang
+    public function ruang_proses($param)
+    {
+        // variable
+        $keterangan       = $this->input->post('keterangan');
+
+        if ($param == 1) { // jika parameternya 1
+            // maka buat kode baru
+            $kodeRuang   = _kodeRuang();
+        } else { // selain itu
+            // ambil kode dari inputan
+            $kodeRuang   = $this->input->post('kodeRuang');
+        }
+
+        // tampung variable kedalam $isi
+        $isi = [
+            'kode_ruang'   => $kodeRuang,
+            'keterangan'    => $keterangan,
+        ];
+
+        if ($param == 1) { // jika parameternya 1
+            // jalankan fungsi simpan
+            $cek = $this->M_global->insertData('m_ruang', $isi);
+
+            $cek_param = 'menambahkan';
+        } else { // selain itu
+            // jalankan fungsi update
+            $cek = $this->M_global->updateData('m_ruang', $isi, ['kode_ruang' => $kodeRuang]);
+
+            $cek_param = 'mengubah';
+        }
+
+        if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Ruang', $cek_param, $kodeRuang, $this->M_global->getData('m_ruang', ['kode_ruang' => $kodeRuang])->keterangan);
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi ambil informasi ruang berdasarkan kode ruang
+    public function getInfoRuang($kode_ruang)
+    {
+        // ambil data ruang berdasarkan kode_ruang
+        $data = $this->M_global->getData('m_ruang', ['kode_ruang' => $kode_ruang]);
+        // lempar ke view
+        echo json_encode($data);
+    }
+
+    // fungsi hapus ruang berdasarkan kode_ruang
+    public function delRuang($kode_ruang)
+    {
+        // jalankan fungsi hapus ruang berdasarkan kode_ruang
+        aktifitas_user('Master Ruang', 'menghapus', $kode_ruang, $this->M_global->getData('m_ruang', ['kode_ruang' => $kode_ruang])->keterangan);
+        // $cek = $this->M_global->delData('m_ruang', ['kode_ruang' => $kode_ruang]);
+        $cek = $this->M_global->updateData('m_ruang', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_ruang' => $kode_ruang]);
+
+        if ($cek) { // jika fungsi berjalan
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // ############################################################################################################################################################################
+
+    /**
+     * Master Bed
+     * untuk menampilkan, menambahkan, dan mengubah bed dalam sistem
+     */
+
+    // bed page
+    public function bed()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter   = [
+            $this->data,
+            'judul'         => 'Master',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Bed',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => 'Master/bed_list/',
+            'ruang'         => $this->M_global->getResult('m_ruang'),
+            'param1'        => '1',
+        ];
+
+        $this->template->load('Template/Content', 'Master/Umum/Bed', $parameter);
+    }
+
+    // fungsi list bed
+    public function bed_list($param1)
+    {
+        // parameter untuk list table
+        $table            = 'bed';
+        $colum            = ['id', 'kode_bed', 'nama_bed', 'kode_ruang', 'status'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['id' => 'asc'];
+        $kondisi_param1   = 'hapus < ';
+
+        // kondisi role
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+
+        if ($updated > 0) {
+            $upd_diss     = '';
+        } else {
+            $upd_diss     = 'disabled';
+        }
+
+        // table server side tampung kedalam variable $list
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($deleted > 0) {
+                $m_ruang           = $this->M_global->getResult('m_ruang');
+
+                $ruang             = [];
+                foreach ($m_ruang as $b) {
+                    $ruang[]       = [$b->kode_ruang];
+                }
+
+                $flattened_ruang   = array_merge(...$ruang);
+
+                if (in_array($rd->kode_ruang, $flattened_ruang)) {
+                    $del_diss       = 'disabled';
+                } else {
+                    $del_diss       = '';
+                }
+            } else {
+                $del_diss           = 'disabled';
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->kode_bed;
+            $row[]  = $this->M_global->getData('m_ruang', ['kode_ruang' => $rd->kode_ruang])->keterangan;
+            $row[]  = $rd->nama_bed;
+            $row[]  = '<div class="text-center">
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_bed . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_bed . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables->count_all($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "recordsFiltered" => $this->M_datatables->count_filtered($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    // fungsi cek bed berdasarkan nama_bed bed
+    public function cekBed()
+    {
+        // ambil nama_bed inputan
+        $nama_bed   = $this->input->post('nama_bed');
+
+        // cek nama_bed pada table bed
+        $cek          = $this->M_global->jumDataRow('bed', ['nama_bed' => $nama_bed]);
+
+        if ($cek < 1) { // jika tidak ada/ kurang dari 1
+            // kirimkan status 1
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi proses simpan/update bed
+    public function bed_proses($param)
+    {
+        // variable
+        $nama_bed       = $this->input->post('nama_bed');
+        $kode_ruang     = $this->input->post('kode_ruang');
+
+        if ($param == 1) { // jika parameternya 1
+            // maka buat kode baru
+            $kodeBed   = _kodeBed();
+        } else { // selain itu
+            // ambil kode dari inputan
+            $kodeBed   = $this->input->post('kodeBed');
+        }
+
+        // tampung variable kedalam $isi
+        $isi = [
+            'kode_bed'      => $kodeBed,
+            'kode_ruang'    => $kode_ruang,
+            'nama_bed'      => $nama_bed,
+        ];
+
+        if ($param == 1) { // jika parameternya 1
+            // jalankan fungsi simpan
+            $cek = $this->M_global->insertData('bed', $isi);
+
+            $cek_param = 'menambahkan';
+        } else { // selain itu
+            // jalankan fungsi update
+            $cek = $this->M_global->updateData('bed', $isi, ['kode_bed' => $kodeBed]);
+
+            $cek_param = 'mengubah';
+        }
+
+        if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Bed', $cek_param, $kodeBed, $this->M_global->getData('bed', ['kode_bed' => $kodeBed])->nama_bed);
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi ambil informasi bed berdasarkan kode bed
+    public function getInfoBed($kode_bed)
+    {
+        // ambil data bed berdasarkan kode_bed
+        $data = $this->db->query('SELECT b.*, (SELECT keterangan FROM m_ruang WHERE kode_ruang = b.kode_ruang) AS ruang FROM bed b WHERE kode_bed = "' . $kode_bed . '"')->row();
+        // lempar ke view
+        echo json_encode($data);
+    }
+
+    // fungsi hapus bed berdasarkan kode_bed
+    public function delBed($kode_bed)
+    {
+        // jalankan fungsi hapus bed berdasarkan kode_bed
+        aktifitas_user('Master Bed', 'menghapus', $kode_bed, $this->M_global->getData('bed', ['kode_bed' => $kode_bed])->nama_bed);
+        // $cek = $this->M_global->delData('bed', ['kode_bed' => $kode_bed]);
+        $cek = $this->M_global->updateData('bed', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_bed' => $kode_bed]);
+
+        if ($cek) { // jika fungsi berjalan
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // ############################################################################################################################################################################
 }

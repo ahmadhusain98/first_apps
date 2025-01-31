@@ -164,6 +164,40 @@ function _kodeSatuan()
     return $kode_user;
 }
 
+function _kodeRuang()
+{
+    $CI         = &get_instance();
+
+    $inisial    = "RG";
+    $lastNumber = $CI->db->query('SELECT * FROM m_ruang ORDER BY kode_ruang DESC LIMIT 1')->row();
+    $number     = 1;
+    if ($lastNumber) {
+        $number       = count($CI->db->query('SELECT * FROM m_ruang')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%07d", $number);
+    } else {
+        $number       = 0;
+        $kode_user    = $inisial . "0000001";
+    }
+    return $kode_user;
+}
+
+function _kodeBed()
+{
+    $CI         = &get_instance();
+
+    $inisial    = "BED";
+    $lastNumber = $CI->db->query('SELECT * FROM bed ORDER BY kode_bed DESC LIMIT 1')->row();
+    $number     = 1;
+    if ($lastNumber) {
+        $number       = count($CI->db->query('SELECT * FROM bed')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%06d", $number);
+    } else {
+        $number       = 0;
+        $kode_user    = $inisial . "000001";
+    }
+    return $kode_user;
+}
+
 function _kodeRole()
 {
     $CI         = &get_instance();

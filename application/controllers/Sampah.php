@@ -129,6 +129,8 @@ class Sampah extends CI_Controller
                     $where = ['kode_perawat' => $_invoice];
                 } else if ($_tabel == 'tarif_jasa' || $_tabel == 'tarif_paket') {
                     $where = ['kode_tarif' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')];
+                } else if ($_tabel == 'm_ruang') {
+                    $where = ['kode_ruang' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -191,6 +193,8 @@ class Sampah extends CI_Controller
             $where = ['kode_perawat' => $id];
         } else if ($table == 'tarif_jasa' || $table == 'tarif_paket') {
             $where = ['kode_tarif' => $id, 'kode_cabang' => $this->session->userdata('cabang')];
+        } else if ($table == 'm_ruang') {
+            $where = ['kode_ruang' => $id];
         } else {
             echo json_encode(['status' => 0]);
             return;
@@ -305,6 +309,8 @@ class Sampah extends CI_Controller
                         $this->M_global->delData('tarif_paket_bhp', ['kode_tarif' => $_invoice]);
                         $this->M_global->delData('m_tarif', ['kode_tarif' => $_invoice]);
                     }
+                } else if ($_tabel == 'm_ruang') {
+                    $where = ['kode_ruang' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -405,6 +411,8 @@ class Sampah extends CI_Controller
                 $this->M_global->delData('tarif_paket_bhp', ['kode_tarif' => $id]);
                 $this->M_global->delData('m_tarif', ['kode_tarif' => $id]);
             }
+        } else if ($table == 'm_ruang') {
+            $where = ['kode_ruang' => $id];
         } else {
             echo json_encode(['status' => 0]);
             return;
