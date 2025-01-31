@@ -1866,9 +1866,19 @@ class Master extends CI_Controller
                 $del_diss       = 'disabled';
             }
 
+            $role = $this->M_global->getData('m_role', ['kode_role' => $rd->kode_role]);
+
+            if ($rd->kode_role == 'R0009') {
+                $color = 'primary';
+            } else if ($rd->kode_role == 'R0010') {
+                $color = 'success';
+            } else {
+                $color = 'info';
+            }
+
             $row    = [];
             $row[]  = $no++;
-            $row[]  = $rd->kode_user;
+            $row[]  = $rd->kode_user . '<br><span class="badge badge-' . $color . '">' . $role->keterangan . '</span>';
             $row[]  = $rd->nama;
             $row[]  = $rd->email;
             $row[]  = (($rd->jkel == 'P') ? 'Laki-laki' : 'Perempuan');
@@ -3190,7 +3200,7 @@ class Master extends CI_Controller
             'secondpass'    => $password,
             'jkel'          => $jkel,
             'foto'          => (($jkel == 'P') ? 'pria.png' : 'wanita.png'),
-            'kode_role'     => 'R0009',
+            'kode_role'     => 'R0010',
             'nohp'          => $nohp,
             'actived'       => (($tgl_berhenti >= date('Y-m-d')) ? 1 : 0),
             'joined'        => $tgl_mulai,
