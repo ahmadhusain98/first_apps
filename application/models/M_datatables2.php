@@ -11,7 +11,7 @@ class M_datatables2 extends CI_Model
         date_default_timezone_set('Asia/Jakarta');
     }
 
-    private function _get_datatables_query($table, $columns, $order_arr, $order, $order2, $condition_param1, $type, $month, $year, $param2, $condition_param2)
+    private function _get_datatables_query($table, $columns, $order_arr, $order, $order2, $condition_param1, $type, $month, $year, $param2, $condition_param2, $param3 = '', $condition_param3 = '')
     {
         $this->db->query("SET SESSION sql_mode = REPLACE(
             REPLACE(

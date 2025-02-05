@@ -51,7 +51,7 @@ class Emr extends CI_Controller
             $this->data,
             'judul'         => 'Electrical Medical Record',
             'nama_apps'     => $web_setting->nama,
-            'page'          => 'EMR',
+            'page'          => 'EMR Rawat Jalan',
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
             'list_data'     => 'Emr/daftar_list/',
@@ -62,7 +62,7 @@ class Emr extends CI_Controller
     }
 
     // fungsi list daftar
-    public function daftar_list($param1 = 1, $param2 = '')
+    public function daftar_list($param1 = 1, $param2 = '', $param3 = '')
     {
         // parameter untuk list table
         $table            = 'pendaftaran';
@@ -70,8 +70,9 @@ class Emr extends CI_Controller
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
-        $kondisi_param2   = 'kode_poli';
         $kondisi_param1   = 'tgl_daftar';
+        $kondisi_param2   = 'kode_poli';
+        $kondisi_param3   = 'kode_dokter';
 
         // kondisi role
         $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
@@ -82,7 +83,7 @@ class Emr extends CI_Controller
         if ($dat[0] == 1) {
             $bulan   = date('m');
             $tahun   = date('Y');
-            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2);
+            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2, $param3, $kondisi_param3);
         } else {
             $bulan   = date('Y-m-d', strtotime($dat[1]));
             $tahun   = date('Y-m-d', strtotime($dat[2]));
@@ -124,11 +125,11 @@ class Emr extends CI_Controller
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>'));
-            $row[]  = $rd->kode_member . '<br>' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama;
+            $row[]  = 'No. RM: <span class="float-right">' . $rd->kode_member . '</span><hr>Nama: <span class="float-right">' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama . '</span>';
             $row[]  = 'Datang: <span class="float-right">' . date('d/m/Y', strtotime($rd->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_daftar)) . '</span><br>' .
                 '<hr>Selesai: <span class="float-right">' . (($rd->status_trx < 1) ? '<i class="text-secondary">Null</i>' : (($rd->tgl_keluar == null) ? 'xx/xx/xxxx' : date('d/m/Y', strtotime($rd->tgl_keluar))) . ' ~ ' . (($rd->jam_keluar == null) ? 'xx:xx:xx' : date('H:i:s', strtotime($rd->jam_keluar)))) . '</span>';
-            $row[]  = 'Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $rd->kode_dokter])->nama;
-            $row[]  = 'Ruang <span class="float-right">' . $this->M_global->getData('m_poli', ['kode_poli' => $rd->kode_poli])->keterangan . ' (' . $this->M_global->getData('m_ruang', ['kode_ruang' => $rd->kode_ruang])->keterangan . ')</span>' . '<br>No Urut <span class="float-right">' . $rd->no_antrian . '</span>';
+            $row[]  = 'Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $rd->kode_dokter])->nama . '<hr>(Poli: ' . $this->M_global->getData('m_poli', ['kode_poli' => $rd->kode_poli])->keterangan . ')';
+            $row[]  = 'Ruang <span class="float-right">' . $this->M_global->getData('m_poli', ['kode_poli' => $rd->kode_poli])->keterangan . ' (' . $this->M_global->getData('m_ruang', ['kode_ruang' => $rd->kode_ruang])->keterangan . ')</span>' . '<hr>No Urut <span class="float-right">' . $rd->no_antrian . '</span>';
 
             $row[]  = '<div class="text-center">
                 <button type="button" style="margin-bottom: 5px;" class="btn btn-success" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Perawat" onclick="getUrl(' . "Emr/perawat/'" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-nurse"></i> Nurse</button>

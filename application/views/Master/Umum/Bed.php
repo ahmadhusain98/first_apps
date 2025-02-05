@@ -229,7 +229,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     function reseting() {
         kodeBed.val('');
         nama_bed.val('');
-        kode_ruang.val('').trigger();
+        kode_ruang.val('').trigger('change');
     }
 
     // fungsi hapus berdasarkan kode_bed

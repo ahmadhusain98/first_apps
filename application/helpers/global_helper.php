@@ -470,10 +470,10 @@ function _codeMember($nama)
     $number     = 1;
     if ($lastNumber) {
         $number         = count($CI->db->query('SELECT * FROM member WHERE nama LIKE "' . $inisial . '%"')->result()) + 1;
-        $kode_member    = $inisial . sprintf("%05d", $number);
+        $kode_member    = "MBR-" . $inisial . sprintf("%05d", $number);
     } else {
         $number         = 0;
-        $kode_member    = $inisial . "00001";
+        $kode_member    = "MBR-" . $inisial . "00001";
     }
     return $kode_member;
 }

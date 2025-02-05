@@ -977,6 +977,13 @@ class Health extends CI_Controller
         $this->template->load('Template/Content', 'Pendaftaran/Form_pendaftaran', $parameter);
     }
 
+    // jadwal dokter
+    public function jd_dkr()
+    {
+        $jadwal = $this->db->query('SELECT jd.*, CONCAT("Dr. ", d.nama) AS nama FROM jadwal_dokter jd JOIN dokter d ON jd.kode_dokter = d.kode_dokter WHERE jd.kode_cabang = "' . $this->session->userdata('cabang') . '"')->result();
+        echo json_encode($jadwal);
+    }
+
     public function getToken($no_trx)
     {
         $pembayaran = $this->M_global->getData('pembayaran', ['no_trx' => $no_trx]);
@@ -1016,8 +1023,12 @@ class Health extends CI_Controller
             $last_regist = $member->last_regist;
             $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $last_regist]);
 
-            $cabang = $this->M_global->getData('cabang', ['kode_cabang' => $pendaftaran->kode_cabang]);
-            echo json_encode(['status' => 0, "kode_member" => $kode_member, "cabang" => $cabang->inisial_cabang, "tgl" => date('d-m-Y', strtotime($pendaftaran->tgl_daftar))]);
+            if ($pendaftaran) {
+                $cabang = $this->M_global->getData('cabang', ['kode_cabang' => $pendaftaran->kode_cabang]);
+                echo json_encode(['status' => 0, "kode_member" => $kode_member, "cabang" => $cabang->inisial_cabang, "tgl" => date('d-m-Y', strtotime($pendaftaran->tgl_daftar))]);
+            } else {
+                echo json_encode(['status' => 1]);
+            }
         }
     }
 
@@ -1046,6 +1057,7 @@ class Health extends CI_Controller
         $kode_member      = $this->input->post('kode_member');
         $kode_dokter      = $this->input->post('kode_dokter');
         $kode_ruang       = $this->input->post('kode_ruang');
+        $kode_bed         = $this->input->post('kode_bed');
 
         $kode_tarif       = $this->input->post('kode_tarif');
         $kunjungan        = $this->input->post('kunjungan');
@@ -1066,6 +1078,7 @@ class Health extends CI_Controller
             'jam_keluar'    => null,
             'status_trx'    => 0,
             'kode_ruang'    => $kode_ruang,
+            'kode_bed'      => $kode_bed,
             'kode_user'     => $kode_user,
             'shift'         => $shift,
         ];
@@ -1078,6 +1091,7 @@ class Health extends CI_Controller
             $cek = [
                 $this->M_global->insertData('pendaftaran', $isi),
                 $this->M_global->updateData('member', ['status_regist' => 1, 'last_regist' => $no_trx], ['kode_member' => $kode_member]),
+                $this->M_global->updateData('bed_cabang', ['status_bed' => 1], ['kode_bed' => $kode_bed, 'kode_cabang' => $kode_cabang]),
             ];
         } else { // selain itu
             aktifitas_user_transaksi('Pendaftaran', 'mengubah Pendaftaran Member ' . $kode_member, $no_trx);
@@ -1085,6 +1099,7 @@ class Health extends CI_Controller
             $cek = [
                 $this->M_global->updateData('pendaftaran', $isi, ['no_trx' => $no_trx]),
                 $this->M_global->delData('tarif_paket_pasien', ['no_trx' => $no_trx]),
+                $this->M_global->updateData('bed_cabang', ['status_bed' => 1], ['kode_bed' => $kode_bed, 'kode_cabang' => $kode_cabang]),
             ];
         }
 
@@ -1126,6 +1141,7 @@ class Health extends CI_Controller
             $this->M_global->updateData('pendaftaran', ['status_trx' => 2, 'tgl_keluar' => date('Y-m-d'), 'jam_keluar' => date('H:i:s')], ['no_trx' => $no_trx]),
             $this->M_global->updateData('member', ['status_regist' => 0], ['last_regist' => $no_trx]),
             $this->M_global->updateData('tarif_paket_pasien', ['status' => 2], ['no_trx' => $no_trx]),
+            $this->M_global->updateData('bed_cabang', ['status_bed' => 0], ['kode_bed' => $pendaftaran->kode_bed, 'kode_cabang' => $pendaftaran->kode_cabang]),
         ];
 
         if ($cek) { // jika fungsi berjalan
@@ -1148,6 +1164,7 @@ class Health extends CI_Controller
         $cek = [
             $this->M_global->delData('pendaftaran', ['no_trx' => $no_trx]),
             $this->M_global->delData('tarif_paket_pasien', ['no_trx' => $no_trx]),
+            $this->M_global->updateData('bed_cabang', ['status_bed' => 0], ['kode_bed' => $member->kode_bed, 'kode_cabang' => $member->kode_cabang]),
         ];
 
         if ($cek) { // jika fungsi berjalan
@@ -1192,11 +1209,12 @@ class Health extends CI_Controller
     {
         // sintak untuk tampil ke view
         $events = $this->db->query(
-            'SELECT CONCAT("Dokter: ", d.nama, ", Cabang: ", c.cabang) AS title, d.nama,
+            'SELECT CONCAT("Dokter: ", d.nama, ", Cabang: ", c.cabang, ", Poli: ", p.keterangan) AS title, d.nama,
              jd.id, jd.kode_dokter, jd.kode_cabang, jd.status, jd.date_start AS start_date, jd.date_end AS end_date, jd.time_start, jd.time_end, jd.comment
             FROM jadwal_dokter jd
             JOIN cabang c ON c.kode_cabang = jd.kode_cabang
-            JOIN dokter d ON d.kode_dokter = jd.kode_dokter'
+            JOIN dokter d ON d.kode_dokter = jd.kode_dokter
+            JOIN m_poli p ON (p.kode_poli = jd.kode_poli)'
         )->result();
 
         // buat data untuk menampung data array
@@ -1215,6 +1233,7 @@ class Health extends CI_Controller
                 'nama_dokter'   => "Dr. " . $event->nama,
                 'kode_dokter'   => $event->kode_dokter,
                 'comment'       => (($event->comment == '') ? 'Tidak ada catatan' : $event->comment),
+                'displayEventTime' => true, // Display the event time
             ];
         }
 
@@ -1228,6 +1247,7 @@ class Health extends CI_Controller
         // ambil semua data dari veiw
         $kodeJadwal   = $this->input->post('kodeJadwal');
         $kode_dokter  = $this->input->post('kode_dokter');
+        $kode_poli    = $this->input->post('kode_poli');
         $kode_cabang  = $this->input->post('kode_cabang');
         $status       = $this->input->post('status_dokter');
         $date_start   = $this->input->post('date_start');
@@ -1242,6 +1262,7 @@ class Health extends CI_Controller
         // simpan semua data lemparan kedalam array
         $data = [
             'kode_dokter'   => $kode_dokter,
+            'kode_poli'     => $kode_poli,
             'kode_cabang'   => $kode_cabang,
             'status'        => $status,
             'date_start'    => $date_start,

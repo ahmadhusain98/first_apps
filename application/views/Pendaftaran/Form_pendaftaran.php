@@ -1,3 +1,11 @@
+<style>
+    :root {
+        --fc-border-color: #e9ecef;
+        --fc-daygrid-event-dot-width: 5px;
+        --fc-button-primary: #007bff;
+    }
+</style>
+
 <form method="post" id="form_pendaftaran">
     <div class="row">
         <div class="col-md-12">
@@ -59,7 +67,7 @@
                                                     <?php
                                                     if (!empty($data_pendaftaran)) :
                                                         $ruang = $this->M_global->getData('m_ruang', ['kode_ruang' => $data_pendaftaran->kode_ruang]);
-                                                        echo '<option value="' . $ruang->kode_ruang . '">' . $ruang->kode_ruang . ' ~ ' . $ruang->keterangan . '</option>';
+                                                        echo '<option value="' . $ruang->kode_ruang . '">' . $ruang->keterangan . '</option>';
                                                     endif;
                                                     ?>
                                                 </select>
@@ -68,8 +76,8 @@
                                                 <select name="kode_bed" id="kode_bed" class="form-control select2_bed" data-placeholder="~ Pilih Bed">
                                                     <?php
                                                     if (!empty($data_pendaftaran)) :
-                                                        $bed = $this->M_global->getData('m_bed', ['kode_bed' => $data_pendaftaran->kode_bed]);
-                                                        echo '<option value="' . $bed->kode_bed . '">' . $bed->kode_bed . ' ~ ' . $bed->nama_bed . '</option>';
+                                                        $bed = $this->M_global->getData('bed', ['kode_bed' => $data_pendaftaran->kode_bed]);
+                                                        echo '<option value="' . $bed->kode_bed . '">' . $bed->nama_bed . '</option>';
                                                     endif;
                                                     ?>
                                                 </select>
@@ -84,21 +92,28 @@
                                             <?php
                                             if (!empty($data_pendaftaran)) :
                                                 $poli = $this->M_global->getData('m_poli', ['kode_poli' => $data_pendaftaran->kode_poli]);
-                                                echo '<option value="' . $poli->kode_poli . '">' . $poli->kode_poli . ' ~ ' . $poli->keterangan . '</option>';
+                                                echo '<option value="' . $poli->kode_poli . '">' . $poli->keterangan . '</option>';
                                             endif;
                                             ?>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="">Dokter Poli <sup class="text-danger">**</sup></label>
-                                        <select name="kode_dokter" id="kode_dokter" class="form-control select2_dokter_poli" data-placeholder="~ Pilih Dokter">
-                                            <?php
-                                            if (!empty($data_pendaftaran)) :
-                                                $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $data_pendaftaran->kode_dokter]);
-                                                echo '<option value="' . $dokter->kode_dokter . '">' . $dokter->kode_dokter . ' ~ ' . $dokter->nama . '</option>';
-                                            endif;
-                                            ?>
-                                        </select>
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <select name="kode_dokter" id="kode_dokter" class="form-control select2_dokter_poli" data-placeholder="~ Pilih Dokter">
+                                                    <?php
+                                                    if (!empty($data_pendaftaran)) :
+                                                        $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $data_pendaftaran->kode_dokter]);
+                                                        echo '<option value="' . $dokter->kode_dokter . '">Dr. ' . $dokter->nama . '</option>';
+                                                    endif;
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="button" class="btn btn-info w-100" title="Jadwal Dokter" onclick="jadwal_dokter()"><i class="fa fa-info-circle"></i></button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -241,6 +256,9 @@
     </div>
 </form>
 
+<!-- full calendar -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+
 <script>
     // variable
     var table = $('#tableRiwayat');
@@ -253,6 +271,7 @@
     var kode_ruang = $('#kode_ruang');
     var kode_bed = $('#kode_bed');
     const btnTambahPaket = $('#btnTambahPaket');
+    var modal_mg = $('#modal_mg');
 
     const form = $('#form_pendaftaran');
     const btnSimpan = $('#btnSimpan');
@@ -642,5 +661,129 @@
                 </p>
             </ol>
         `);
+    }
+
+    // modal jadwal dokter
+    function jadwal_dokter() {
+        // ubah ukuran modal
+        $('.modal-dialog').removeClass('modal-lg')
+        $('.modal-dialog').addClass('modal-xl')
+
+        // clean text
+        $('#modal_mgLabel').text(``);
+        $('#modal-isi').text(``);
+
+        setTimeout(function() {
+            kalendar();
+        }, 500); // Add delay to ensure modal is fully shown
+
+        $('#modal_mg').modal('show'); // show modal
+
+        $('#modal_mgLabel').text(`Jadwal Dokter`);
+        $('#modal-isi').append("<div id='calendar' style='min-height: 700px;'></div>"); // Adjusted height
+
+    }
+
+    // fungsi kalendar
+    function kalendar() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            locale: 'id', // ubah lokasi ke indonesia
+            editable: true,
+            headerToolbar: { // menampilkan button yang akan ditampilkan
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            buttonText: { // merubah text button
+                today: 'Hari ini',
+                month: 'Bulan',
+                week: 'Minggu',
+                day: 'Hari'
+            },
+            customButtons: { // merubah text button
+                prev: {
+                    text: 'Sebelumnya',
+                    click: function() {
+                        calendar.prev();
+                    }
+                },
+                next: {
+                    text: 'Berikutnya',
+                    click: function() {
+                        calendar.next();
+                    }
+                }
+            },
+            events: { // load data fullcalendar
+                url: siteUrl + 'Health/jadwal_list',
+                method: 'GET',
+                failure: function() {
+                    Swal.fire("Jadwal Dokter", "Gagal diload", "error");
+                },
+                allDay: false
+            },
+            eventContent: function(arg) { // mengubah tanda koma (,) menjadi <br>
+                let title = arg.event.title.split(',').join('<br>');
+                return {
+                    html: title
+                };
+            },
+            eventDidMount: function(info) { //mengatur warna by status kehadiran
+                switch (info.event.extendedProps.status_dokter) {
+                    case '1': // Hadir
+                        info.el.style.backgroundColor = '#007bff';
+                        break;
+                    case '2': // Izin
+                        info.el.style.backgroundColor = '#ffd000';
+                        break;
+                    case '3': // Sakit
+                        info.el.style.backgroundColor = '#ed1e32';
+                        break;
+                    case '4': // Cuti
+                        info.el.style.backgroundColor = '#2aae47';
+                        break;
+                    default:
+                        info.el.style.backgroundColor = '#76818d';
+                }
+            },
+            eventMouseEnter: function(info) { // saat di hover
+                // date format tgl mulai
+                const start_date = new Date(info.event.startStr);
+                const yyyy = start_date.getFullYear();
+                let mm = start_date.getMonth() + 1;
+                let dd = start_date.getDate();
+
+                if (dd < 10) dd = '0' + dd;
+                if (mm < 10) mm = '0' + mm;
+
+                const formattedToday = dd + '-' + mm + '-' + yyyy;
+
+                // date format tgl mulai
+                const end_date = new Date(info.event.endStr);
+                const yyyy2 = end_date.getFullYear();
+                let mm2 = end_date.getMonth() + 1;
+                let dd2 = end_date.getDate();
+
+                if (dd2 < 10) dd2 = '0' + dd2;
+                if (mm2 < 10) mm2 = '0' + mm2;
+
+                const formattedToday2 = dd2 + '-' + mm2 + '-' + yyyy2;
+
+                $(info.el).tooltip({
+                    title: 'Nama Dokter: ' + info.event.extendedProps.nama_dokter + '<br>Mulai: ' + formattedToday + ' / ' + info.event.extendedProps.time_start + '<br>Selesai: ' + formattedToday2 + ' / ' + info.event.extendedProps.time_end + '<br>Catatan: ' + info.event.extendedProps.comment,
+                    html: true,
+                    placement: 'top'
+                });
+
+                // tampilkan tooltip
+                $(info.el).tooltip('show');
+            },
+            eventMouseLeave: function(info) { // saat tidak di hover
+                // sembunyikan tooltip
+                $(info.el).tooltip('hide');
+            }
+        });
+        calendar.render();
     }
 </script>

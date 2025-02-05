@@ -592,6 +592,9 @@
                 <div class="modal-content letter" style="border-radius: 0px;">
                     <div class="modal-header text-primary">
                         <h5 class="modal-title" style="font-weight: bold;" id="modal_mgLabel"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="md_close()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <div id="modal-isi"></div>
@@ -677,6 +680,10 @@
             });
         }
 
+        // close modal
+        function md_close() {
+            $('#modal_mg').modal('hide');
+        }
 
         function simpan_shift() {
             $('#modal_mg').modal('hide');
@@ -1120,14 +1127,14 @@
             });
 
             // fungsi filter tanggal dan parameter jika ada (jika tidak ada di kosongkan)
-            function filter(x = '') {
+            function filter(x = '', y = '') {
                 var dari = $('#dari').val();
                 var sampai = $('#sampai').val();
 
                 if (x == '' || x == null) {
                     var parameterString = `2~${dari}~${sampai}`;
                 } else {
-                    var parameterString = `2~${dari}~${sampai}/${x}`;
+                    var parameterString = `2~${dari}~${sampai}/${x}/${y}`;
                 }
 
                 table.DataTable().ajax.url(siteUrl + '<?= $list_data ?>' + parameterString).load();
@@ -1150,6 +1157,7 @@
         initailizeSelect2_user();
         initailizeSelect2_poli();
         initailizeSelect2_dokter_poli(param = 'POL0000001');
+        initailizeSelect2_poli_dokter(param = '');
         initailizeSelect2_dokter_all();
         initailizeSelect2_ruang();
         initailizeSelect2_bed(param = '');
@@ -1792,6 +1800,48 @@
                     cache: true
                 }
             });
+        }
+
+        function initailizeSelect2_poli_dokter(param) {
+            if (param == '' || param == null || param == 'null') { // jika parameter kosong/ null
+                // jalankan fungsi select2_default
+                select2_default('select2_poli_dokter');
+            } else { // selain itu
+                // jalan fungsi select2 asli
+                $(".select2_poli_dokter").select2({
+                    allowClear: true,
+                    multiple: false,
+                    placeholder: '~ Pilih Poli',
+                    dropdownAutoWidth: true,
+                    width: '100%',
+                    language: {
+                        inputTooShort: function() {
+                            return 'Ketikan Nomor minimal 1 huruf';
+                        },
+                        noResults: function() {
+                            return 'Data Tidak Ditemukan';
+                        }
+                    },
+                    ajax: {
+                        url: siteUrl + 'Select2_master/dataPoliDokter/' + param,
+                        type: 'POST',
+                        dataType: 'JSON',
+                        delay: 100,
+                        data: function(result) {
+                            return {
+                                searchTerm: result.term
+                            };
+                        },
+
+                        processResults: function(result) {
+                            return {
+                                results: result
+                            };
+                        },
+                        cache: true
+                    }
+                });
+            }
         }
 
         function initailizeSelect2_dokter_poli(param) {

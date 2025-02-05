@@ -5098,16 +5098,20 @@ class Master extends CI_Controller
         // loop $list
         foreach ($list as $rd) {
             if ($deleted > 0) {
-                $m_ruang           = $this->M_global->getResult('m_ruang');
+                $m_bed           = $this->db->query('SELECT bc.*, b.kode_ruang
+                                        FROM bed_cabang bc
+                                        JOIN bed b ON (b.kode_bed = bc.kode_bed AND bc.kode_cabang = "' . $this->session->userdata('cabang') . '")
+                                        WHERE bc.kode_cabang = "' . $this->session->userdata('cabang') . '" 
+                                    AND bc.status_bed = 1')->result();
 
-                $ruang             = [];
-                foreach ($m_ruang as $b) {
-                    $ruang[]       = [$b->kode_ruang];
+                $bed             = [];
+                foreach ($m_bed as $b) {
+                    $bed[]       = [$b->kode_bed];
                 }
 
-                $flattened_ruang   = array_merge(...$ruang);
+                $flattened_bed   = array_merge(...$bed);
 
-                if (in_array($rd->kode_ruang, $flattened_ruang)) {
+                if (in_array($rd->kode_bed, $flattened_bed)) {
                     $del_diss       = 'disabled';
                 } else {
                     $del_diss       = '';

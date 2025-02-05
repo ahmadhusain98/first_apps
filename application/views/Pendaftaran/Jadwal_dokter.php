@@ -24,121 +24,134 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 
 <form method="post" id="form_jadwal">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">
                     <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Jadwal Dokter</span>
                 </div>
                 <div class="card-footer text-center">
                     <div class="row">
-                        <div class="col-md-3">
-                            <label for="hadir" style="margin-right: 10px;">Hadir</label>
-                            <input type="radio" checked style="accent-color: #007bff;">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="hadir" style="margin-right: 10px;">Hadir</label>
+                                    <input type="radio" checked style="accent-color: #007bff;">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="izin" style="margin-right: 10px;">Izin</label>
+                                    <input type="radio" checked style="accent-color: #ffd000;">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="sakit" style="margin-right: 10px;">Sakit</label>
+                                    <input type="radio" checked style="accent-color: #ed1e32;">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="cuti" style="margin-right: 10px;">Cuti</label>
+                                    <input type="radio" checked style="accent-color: #2aae47;">
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-3">
-                            <label for="izin" style="margin-right: 10px;">Izin</label>
-                            <input type="radio" checked style="accent-color: #ffd000;">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="sakit" style="margin-right: 10px;">Sakit</label>
-                            <input type="radio" checked style="accent-color: #ed1e32;">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="cuti" style="margin-right: 10px;">Cuti</label>
-                            <input type="radio" checked style="accent-color: #2aae47;">
+                        <div class="col-md-6">
+                            <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id='calendar'></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card card-outline card-primary">
-                <div class="card-header">
-                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Formulir</span>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label for="kode_dokter" class="control-label">Dokter <span class="text-danger">**</span></label>
-                                    <input type="hidden" class="form-control" id="kodeJadwal" name="kodeJadwal" placeholder="Otomatis" readonly>
-                                    <select name="kode_dokter" id="kode_dokter" class="form-control select2_dokter_all" data-placeholder="~ Pilih Dokter"></select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label for="kode_cabang" class="control-label">Cabang <span class="text-danger">**</span></label>
-                                    <select name="kode_cabang" id="kode_cabang" class="form-control select2_all_cabang" data-placeholder="~ Pilih Cabang">
-                                        <option value="<?= $this->session->userdata('cabang') ?>">
-                                            <?= $this->M_global->getData('cabang', ['kode_cabang' => $this->session->userdata('cabang')])->cabang ?>
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label for="status_dokter" class="control-label">Status <span class="text-danger">**</span></label>
-                                    <select name="status_dokter" id="status_dokter" class="form-control select2_global" data-placeholder="~ Pilih Status">
-                                        <option value="">~ Pilih Status</option>
-                                        <option value="1" selected>Hadir</option>
-                                        <option value="2">Izin</option>
-                                        <option value="3">Sakit</option>
-                                        <option value="4">Cuti</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="date_start" class="control-label">Dari Tgl <span class="text-danger">**</span></label>
-                                    <input type="date" name="date_start" id="date_start" class="form-control" value="<?= date('Y-m-d') ?>">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="time_start" class="control-label">Dari Jam <span class="text-danger">**</span></label>
-                                    <input type="time" name="time_start" id="time_start" class="form-control" value="<?= date('H:i') ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="date_end" class="control-label">Sampai Tgl <span class="text-danger">**</span></label>
-                                    <input type="date" name="date_end" id="date_end" class="form-control" value="<?= date('Y-m-d', strtotime('+1 Days')) ?>" min="<?= date('Y-m-d', strtotime('+1 Days')) ?>">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="time_end" class="control-label">Sampai Jam <span class="text-danger">**</span></label>
-                                    <input type="time" name="time_end" id="time_end" class="form-control" value="<?= date('H:i') ?>">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row">
-                        <div class="col-md-12">
-                            <label for="comment" class="control-label">Catatan</label>
-                            <textarea name="comment" id="comment" class="form-control" rows="5"></textarea>
+                        <div class="col-md-6">
+                            <div id='calendar' style="font-size: 10px;"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="float-right">
-                        <button type="button" class="btn btn-info" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
-                        <?php if ($created == 1) : ?>
-                            <button type="button" class="btn btn-success" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
-                        <?php endif; ?>
+                        <div class="col-md-6">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="kode_dokter" class="control-label">Dokter <span class="text-danger">**</span></label>
+                                            <input type="hidden" class="form-control" id="kodeJadwal" name="kodeJadwal" placeholder="Otomatis" readonly>
+                                            <select name="kode_dokter" id="kode_dokter" class="form-control select2_dokter_all" data-placeholder="~ Pilih Dokter" onchange="getPoli(this.value)"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="kode_poli" class="control-label">Poli <span class="text-danger">**</span></label>
+                                            <select name="kode_poli" id="kode_poli" class="form-control select2_poli_dokter" data-placeholder="~ Pilih Dokter Terlebih Dahulu"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="kode_cabang" class="control-label">Cabang <span class="text-danger">**</span></label>
+                                            <select name="kode_cabang" id="kode_cabang" class="form-control select2_all_cabang" data-placeholder="~ Pilih Cabang">
+                                                <option value="<?= $this->session->userdata('cabang') ?>">
+                                                    <?= $this->M_global->getData('cabang', ['kode_cabang' => $this->session->userdata('cabang')])->cabang ?>
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="status_dokter" class="control-label">Status <span class="text-danger">**</span></label>
+                                            <select name="status_dokter" id="status_dokter" class="form-control select2_global" data-placeholder="~ Pilih Status">
+                                                <option value="">~ Pilih Status</option>
+                                                <option value="1" selected>Hadir</option>
+                                                <option value="2">Izin</option>
+                                                <option value="3">Sakit</option>
+                                                <option value="4">Cuti</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="date_start" class="control-label">Dari Tgl <span class="text-danger">**</span></label>
+                                            <input type="date" name="date_start" id="date_start" class="form-control" value="<?= date('Y-m-d') ?>">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="time_start" class="control-label">Dari Jam <span class="text-danger">**</span></label>
+                                            <input type="time" name="time_start" id="time_start" class="form-control" value="<?= date('H:i') ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="date_end" class="control-label">Sampai Tgl <span class="text-danger">**</span></label>
+                                            <input type="date" name="date_end" id="date_end" class="form-control" value="<?= date('Y-m-d') ?>" min="<?= date('Y-m-d') ?>">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="time_end" class="control-label">Sampai Jam <span class="text-danger">**</span></label>
+                                            <input type="time" name="time_end" id="time_end" class="form-control" value="<?= date('H:i') ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="comment" class="control-label">Catatan</label>
+                                    <textarea name="comment" id="comment" class="form-control" rows="5"></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="float-right">
+                                        <button type="button" class="btn btn-info" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
+                                        <?php if ($created == 1) : ?>
+                                            <button type="button" class="btn btn-success" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -151,6 +164,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     $(document).ready(function() {
         initailizeSelect2_dokter_all();
         initailizeSelect2_all_cabang();
+        initailizeSelect2_poli_dokter('');
 
         fc_function();
     });
@@ -259,9 +273,31 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 });
             },
             eventClick: function(info) { // fungsi hapus jadwal jika di klik
+                // date format tgl mulai
+                const start_date = new Date(info.event.startStr);
+                const yyyy = start_date.getFullYear();
+                let mm = start_date.getMonth() + 1;
+                let dd = start_date.getDate();
+
+                if (dd < 10) dd = '0' + dd;
+                if (mm < 10) mm = '0' + mm;
+
+                const formattedToday = dd + '-' + mm + '-' + yyyy;
+
+                // date format tgl mulai
+                const end_date = new Date(info.event.endStr);
+                const yyyy2 = end_date.getFullYear();
+                let mm2 = end_date.getMonth() + 1;
+                let dd2 = end_date.getDate();
+
+                if (dd2 < 10) dd2 = '0' + dd2;
+                if (mm2 < 10) mm2 = '0' + mm2;
+
+                const formattedToday2 = dd2 + '-' + mm2 + '-' + yyyy2;
+
                 Swal.fire({
-                    title: 'Hapus Jadwal Dokter ' + info.event.extendedProps.nama_dokter,
-                    text: "Hapus jadwal " + info.event.startStr + " sampai " + info.event.endStr + " ?",
+                    title: '<b>Hapus Jadwal<br>' + info.event.extendedProps.nama_dokter + '</b>',
+                    text: "Dari " + formattedToday + " sampai " + formattedToday2 + " ?",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -291,8 +327,30 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 });
             },
             eventMouseEnter: function(info) { // saat di hover
+                // date format tgl mulai
+                const start_date = new Date(info.event.startStr);
+                const yyyy = start_date.getFullYear();
+                let mm = start_date.getMonth() + 1;
+                let dd = start_date.getDate();
+
+                if (dd < 10) dd = '0' + dd;
+                if (mm < 10) mm = '0' + mm;
+
+                const formattedToday = dd + '-' + mm + '-' + yyyy;
+
+                // date format tgl mulai
+                const end_date = new Date(info.event.endStr);
+                const yyyy2 = end_date.getFullYear();
+                let mm2 = end_date.getMonth() + 1;
+                let dd2 = end_date.getDate();
+
+                if (dd2 < 10) dd2 = '0' + dd2;
+                if (mm2 < 10) mm2 = '0' + mm2;
+
+                const formattedToday2 = dd2 + '-' + mm2 + '-' + yyyy2;
+
                 $(info.el).tooltip({
-                    title: 'Nama Dokter: ' + info.event.extendedProps.nama_dokter + '<br>Mulai: ' + info.event.startStr + ' / ' + info.event.extendedProps.time_start + '<br>Selesai: ' + info.event.endStr + ' / ' + info.event.extendedProps.time_end + '<br>Catatan: ' + info.event.extendedProps.comment,
+                    title: 'Nama Dokter: ' + info.event.extendedProps.nama_dokter + '<br>Mulai: ' + formattedToday + ' / ' + info.event.extendedProps.time_start + '<br>Selesai: ' + formattedToday2 + ' / ' + info.event.extendedProps.time_end + '<br>Catatan: ' + info.event.extendedProps.comment,
                     html: true,
                     placement: 'top'
                 });
@@ -312,6 +370,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     const form = $('#form_jadwal');
     var kodeJadwal = $('#kodeJadwal');
     var kode_dokter = $('#kode_dokter');
+    var kode_poli = $('#kode_poli');
     var kode_cabang = $('#kode_cabang');
     var status_dokter = $('#status_dokter');
     var date_start = $('#date_start');
@@ -319,6 +378,15 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     var time_start = $('#time_start');
     var time_end = $('#time_end');
     var comment = $('#comment');
+
+    // getpoli dokter
+    function getPoli(param) {
+        // hapus poli sebelumnya
+        kode_poli.val('').change();
+
+        // cek poli berdasarkan kode_dokter
+        initailizeSelect2_poli_dokter(param);
+    }
 
     // fungsi reset
     function reseting() { // membuat semua param kembali ke default
@@ -335,7 +403,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 
     // fungsi simpan
     function save() {
-        if (kode_dokter.val() == '' || kode_cabang.val() == '' || status_dokter.val() == '' || date_start.val() == '' || date_end.val() == '' || time_start.val() == '' || time_end.val() == '') { // cek data kosong
+        if (kode_dokter.val() == '' || kode_cabang.val() == '' || status_dokter.val() == '' || date_start.val() == '' || date_end.val() == '' || time_start.val() == '' || time_end.val() == '' || kode_poli.val() == '') { // cek data kosong
             return Swal.fire("Form Data", "Sudah diisi lengkap?", "question");
         }
 

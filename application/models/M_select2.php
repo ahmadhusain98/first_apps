@@ -1,6 +1,16 @@
 <?php
 class M_select2 extends CI_Model
 {
+    function __construct()
+    {
+        parent::__construct();
+
+        $this->db->query("SET SESSION sql_mode = REPLACE(
+            REPLACE(
+                REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY,', ''),
+            ',ONLY_FULL_GROUP_BY', ''),
+        'ONLY_FULL_GROUP_BY', '')");
+    }
     // fungsi Cabang
     function getCabang($key, $email)
     {
@@ -313,9 +323,9 @@ class M_select2 extends CI_Model
             $sintak = $this->db->query('SELECT 0 AS id, "Pilih Poli Dahulu" AS text FROM dokter_poli LIMIT 1')->result();
         } else {
             if (!empty($key)) {
-                $add_sintak = ' AND (dp.kode_dokter LIKE "%' . $key . '%" OR dp.kode_poli LIKE "%' . $key . '%") ORDER BY dp.kode_dokter ASC';
+                $add_sintak = ' AND (dp.kode_dokter LIKE "%' . $key . '%" OR dp.kode_poli LIKE "%' . $key . '%" OR d.nama LIKE "%' . $key . '%") GROUP BY dp.kode_dokter ORDER BY dp.kode_dokter ASC';
             } else {
-                $add_sintak = ' ORDER BY dp.kode_dokter ASC';
+                $add_sintak = ' GROUP BY dp.kode_dokter ORDER BY dp.kode_dokter ASC ';
             }
 
             $sintak = $this->db->query(
@@ -331,10 +341,35 @@ class M_select2 extends CI_Model
         return $sintak;
     }
 
+    // fungsi poli_dokter
+    function getPoliDokter($key, $kode_dokter)
+    {
+        $now = date('Y-m-d');
+        $limit = ' LIMIT 50';
+
+        if ($kode_dokter == null || $kode_dokter == "" || $kode_dokter == "null") {
+            $sintak = $this->db->query('SELECT 0 AS id, "Pilih Dokter Dahulu" AS text FROM dokter_poli LIMIT 1')->result();
+        } else {
+            if (!empty($key)) {
+                $add_sintak = ' AND (dp.kode_dokter LIKE "%' . $key . '%" OR dp.kode_poli LIKE "%' . $key . '%" OR p.keterangan LIKE "%' . $key . '%")  GROUP BY dp.kode_dokter ORDER BY p.keterangan ASC';
+            } else {
+                $add_sintak = '  GROUP BY dp.kode_dokter ORDER BY p.keterangan ASC';
+            }
+
+            $sintak = $this->db->query(
+                'SELECT dp.kode_poli AS id, p.keterangan AS text 
+                FROM dokter_poli dp 
+                JOIN m_poli p ON p.kode_poli = dp.kode_poli
+                WHERE dp.kode_dokter = "' . $kode_dokter . '" ' . $add_sintak . $limit
+            )->result();
+        }
+
+        return $sintak;
+    }
+
     // fungsi bed
     function getBed($key, $kode_ruang)
     {
-        $now = date('Y-m-d');
         $limit = ' LIMIT 50';
 
         if ($kode_ruang == null || $kode_ruang == "" || $kode_ruang == "null") {
@@ -351,7 +386,7 @@ class M_select2 extends CI_Model
                 FROM bed b
                 JOIN m_ruang r ON r.kode_ruang = b.kode_ruang
                 JOIN bed_cabang bc ON b.kode_bed = bc.kode_bed
-                WHERE b.status = 0 AND bc.kode_cabang = "' . $this->session->userdata('cabang') . '"' . $add_sintak . $limit
+                WHERE bc.status_bed = 0 AND bc.kode_cabang = "' . $this->session->userdata('cabang') . '" AND b.kode_ruang = "' . $kode_ruang . '" ' . $add_sintak . $limit
             )->result();
         }
 
