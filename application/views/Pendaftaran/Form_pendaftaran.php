@@ -43,13 +43,43 @@
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-12">
-                                        <label for="">Tgl/Jam Daftar <sup class="text-danger">**</sup></label>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <input type="date" class="form-control" id="tgl_masuk" name="tgl_masuk" value="<?= (!empty($data_pendaftaran) ? date('Y-m-d', strtotime($data_pendaftaran->tgl_daftar)) : date('Y-m-d')) ?>" readonly>
+                                                <label for="">Tgl/Jam Daftar <sup class="text-danger">**</sup></label>
+                                                <div class="row">
+                                                    <div class="col-md-6 col-6">
+                                                        <input type="date" class="form-control" id="tgl_masuk" name="tgl_masuk" value="<?= (!empty($data_pendaftaran) ? date('Y-m-d', strtotime($data_pendaftaran->tgl_daftar)) : date('Y-m-d')) ?>" readonly>
+                                                    </div>
+                                                    <div class="col-md-6 col-6">
+                                                        <input type="time" class="form-control" id="jam_masuk" name="jam_masuk" value="<?= (!empty($data_pendaftaran) ? date('H:i:s', strtotime($data_pendaftaran->jam_daftar)) : date('H:i:s')) ?>" readonly>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <input type="time" class="form-control" id="jam_masuk" name="jam_masuk" value="<?= (!empty($data_pendaftaran) ? date('H:i:s', strtotime($data_pendaftaran->jam_daftar)) : date('H:i:s')) ?>" readonly>
+                                                <label for="">Tipe Pendaftaran <sup class="text-danger">**</sup></label>
+                                                <input type="hidden" id="tipe_daftar" name="tipe_daftar" value="1">
+                                                <div class="row">
+                                                    <div class="col-md-6 col-6">
+                                                        <div class="row">
+                                                            <div class="col-md-4 m-auto">
+                                                                <input type="checkbox" name="rajal" id="rajal" class="form-control" onclick="changeType(1)">
+                                                            </div>
+                                                            <div class="col-md-8 m-auto">
+                                                                <span for="">Rawat Jalan</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-6">
+                                                        <div class="row">
+                                                            <div class="col-md-4 m-auto">
+                                                                <input type="checkbox" name="ranap" id="ranap" class="form-control" onclick="changeType(2)">
+                                                            </div>
+                                                            <div class="col-md-8 m-auto">
+                                                                <span for="">Rawat Inap</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -60,6 +90,37 @@
                                         <input type="text" class="form-control" placeholder="Otomatis" id="no_antrian" name="no_antrian" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_antrian : '') ?>" readonly>
                                     </div>
                                     <div class="col-md-6">
+                                        <label for="">Poli <sup class="text-danger">**</sup></label>
+                                        <select name="kode_poli" id="kode_poli" class="form-control select2_poli" data-placeholder="~ Pilih Poli" onchange="getDokter(this.value)">
+                                            <?php
+                                            if (!empty($data_pendaftaran)) :
+                                                $poli = $this->M_global->getData('m_poli', ['kode_poli' => $data_pendaftaran->kode_poli]);
+                                                echo '<option value="' . $poli->kode_poli . '">' . $poli->keterangan . '</option>';
+                                            endif;
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="">Dokter Poli <sup class="text-danger">**</sup></label>
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <select name="kode_dokter" id="kode_dokter" class="form-control select2_dokter_poli" data-placeholder="~ Pilih Dokter">
+                                                    <?php
+                                                    if (!empty($data_pendaftaran)) :
+                                                        $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $data_pendaftaran->kode_dokter]);
+                                                        echo '<option value="' . $dokter->kode_dokter . '">Dr. ' . $dokter->nama . '</option>';
+                                                    endif;
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="button" class="btn btn-info w-100" title="Jadwal Dokter" onclick="jadwal_dokter()"><i class="fa fa-info-circle"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 for_ranap">
                                         <label for="">Ruangan/Bed <sup class="text-danger">**</sup></label>
                                         <div class="row">
                                             <div class="col-md-6">
@@ -81,37 +142,6 @@
                                                     endif;
                                                     ?>
                                                 </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="">Poli <sup class="text-danger">**</sup></label>
-                                        <select name="kode_poli" id="kode_poli" class="form-control select2_poli" data-placeholder="~ Pilih Poli" onchange="getDokter(this.value)">
-                                            <?php
-                                            if (!empty($data_pendaftaran)) :
-                                                $poli = $this->M_global->getData('m_poli', ['kode_poli' => $data_pendaftaran->kode_poli]);
-                                                echo '<option value="' . $poli->kode_poli . '">' . $poli->keterangan . '</option>';
-                                            endif;
-                                            ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="">Dokter Poli <sup class="text-danger">**</sup></label>
-                                        <div class="row">
-                                            <div class="col-md-9">
-                                                <select name="kode_dokter" id="kode_dokter" class="form-control select2_dokter_poli" data-placeholder="~ Pilih Dokter">
-                                                    <?php
-                                                    if (!empty($data_pendaftaran)) :
-                                                        $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $data_pendaftaran->kode_dokter]);
-                                                        echo '<option value="' . $dokter->kode_dokter . '">Dr. ' . $dokter->nama . '</option>';
-                                                    endif;
-                                                    ?>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <button type="button" class="btn btn-info w-100" title="Jadwal Dokter" onclick="jadwal_dokter()"><i class="fa fa-info-circle"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -267,16 +297,19 @@
     var no_trx = $('#no_trx');
     var kode_member = $('#kode_member');
     var kode_poli = $('#kode_poli');
+    var tipe_daftar = $('#tipe_daftar');
     var kode_dokter = $('#kode_dokter');
     var kode_ruang = $('#kode_ruang');
     var kode_bed = $('#kode_bed');
     const btnTambahPaket = $('#btnTambahPaket');
     var modal_mg = $('#modal_mg');
+    var for_ranap = $('.for_ranap');
 
     const form = $('#form_pendaftaran');
     const btnSimpan = $('#btnSimpan');
 
     $('#btnUMember').attr('disabled', true);
+    changeType(1);
 
     function tambahTarifPaket() {
         var jum = Number($('#jumPaket').val());
@@ -299,6 +332,26 @@
         </tr>`);
 
         initailizeSelect2_tarif_paket();
+    }
+
+    function changeType(param) {
+        var rajal = document.getElementById('rajal');
+        var ranap = document.getElementById('ranap');
+
+        if (param == 1) {
+            rajal.checked = true;
+            ranap.checked = false;
+            tipe_daftar.val(1)
+            for_ranap.hide(200)
+        } else {
+            // rajal.checked = false;
+            // ranap.checked = true;
+            // tipe_daftar.val(2)
+            // for_ranap.show(200)
+            changeType(1)
+
+            Swal.fire("Rawat Inap", "Coming Soon", "info");
+        }
     }
 
     function hapusTindakan(i) {
@@ -373,22 +426,31 @@
             return Swal.fire("Member", "Sudah dipilih?", "question");
         }
 
-        if (kode_poli.val() == '' || kode_poli.val() == null) { // jika kode_poli kosong/ null
-            btnSimpan.attr('disabled', false);
-
-            return Swal.fire("Poli", "Sudah dipilih?", "question");
-        }
-
         if (kode_dokter.val() == '' || kode_dokter.val() == null) { // jika kode_dokter kosong/ null
             btnSimpan.attr('disabled', false);
 
             return Swal.fire("Dokter", "Sudah dipilih?", "question");
         }
 
-        if (kode_ruang.val() == '' || kode_ruang.val() == null) { // jika kode_ruang kosong/ null
-            btnSimpan.attr('disabled', false);
+        if (tipe_daftar.val() == 1) {
+            if (kode_poli.val() == '' || kode_poli.val() == null) { // jika kode_poli kosong/ null
+                btnSimpan.attr('disabled', false);
 
-            return Swal.fire("Ruang", "Sudah dipilih?", "question");
+                return Swal.fire("Poli", "Sudah dipilih?", "question");
+            }
+
+        } else {
+            if (kode_ruang.val() == '' || kode_ruang.val() == null) { // jika kode_ruang kosong/ null
+                btnSimpan.attr('disabled', false);
+
+                return Swal.fire("Ruang", "Sudah dipilih?", "question");
+            }
+
+            if (kode_bed.val() == '' || kode_bed.val() == null) { // jika kode_bed kosong/ null
+                btnSimpan.attr('disabled', false);
+
+                return Swal.fire("Ruang", "Sudah dipilih?", "question");
+            }
         }
 
         if (no_trx.val() == '' || no_trx.val() == null) { // jika kode no_trx kosong/ null

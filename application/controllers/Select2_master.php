@@ -154,6 +154,13 @@ class Select2_master extends CI_Controller
         echo json_encode($this->M_select2->getBed($key, $kode_ruang));
     }
 
+    // master dataBarangStok
+    function dataBarangStok()
+    {
+        $key = $this->input->post('searchTerm');
+        echo json_encode($this->M_select2->getBarangStok($key));
+    }
+
     // master dokter all
     function dataDokterAll()
     {

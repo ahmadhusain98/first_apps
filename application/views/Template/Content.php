@@ -258,6 +258,25 @@
                 <li class="nav-item d-none d-sm-inline-block">
                     <span type="button" class="nav-link">Cabang: <?= $master_cabang->cabang ?></span>
                 </li>
+                <?php if (($this->uri->segment(1) == 'Emr') && ($this->uri->segment(2) == '')) : ?>
+                    <li class="nav-item d-none d-sm-inline-block">
+                        <span class="nav-link" style="border-left: 1px solid #ccc; height: 100%;"></span>
+                    </li>
+                    <li class="nav-item d-none d-sm-inline-block">
+                        <span class="nav-link">Refresh Otomatis <span id="countdown">10</span></span>
+                        <script>
+                            var timeLeft = 10;
+                            var countdownTimer = setInterval(function() {
+                                if (timeLeft <= 0) {
+                                    timeLeft = 10; // Reset the timer
+                                    reloadTable(); // Call reloadTable function
+                                }
+                                document.getElementById("countdown").innerHTML = timeLeft + " Detik";
+                                timeLeft -= 1;
+                            }, 1000);
+                        </script>
+                    </li>
+                <?php endif; ?>
             </ul>
 
             <!-- Right navbar links -->
@@ -1183,8 +1202,46 @@
         initailizeSelect2_terdaftar();
         initailizeSelect2_klasifikasi_akun();
         initailizeSelect2_akun_sel(param = '');
+        initailizeSelect2_barang_stok();
 
         // fungsi
+        function initailizeSelect2_barang_stok() {
+            // jalan fungsi select2 asli
+            $(".select2_barang_stok").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Barang',
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 1 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataBarangStok/',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
         function initailizeSelect2_akun_sel(param) {
             if (param == '' || param == null || param == 'null') { // jika parameter kosong/ null
                 // jalankan fungsi select2_default

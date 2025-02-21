@@ -17,7 +17,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 <div class="card-body">
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label for="id" class="control-label">ID <span class="text-danger">**</span></label>
@@ -25,11 +25,23 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label for="keterangan">Keterangan <span class="text-danger">**</span></label>
                                         <input type="text" class="form-control" id="keterangan" name="keterangan" placeholder="Masukkan Ruang" onkeyup="ubah_nama(this.value, 'keterangan')">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="jenis">Jenis Ruangan <span class="text-danger">**</span></label>
+                                        <select name="jenis" id="jenis" class="form-control select2_global" data-placeholder="-- Pilih Jenis --">
+                                            <option value="">-- Pilih Jenis --</option>
+                                            <option value="1">Rawat Jalan</option>
+                                            <option value="2">Rawat Inap</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +84,8 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                         <tr class="text-center">
                                             <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
                                             <th width="20%">ID</th>
-                                            <th width="60%">Keterangan</th>
+                                            <th width="40%">Keterangan</th>
+                                            <th width="20%">Jenis Ruangan</th>
                                             <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                         </tr>
                                     </thead>
@@ -92,6 +105,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     const form = $('#form_ruang');
     var kodeRuang = $('#kodeRuang');
     var keterangan = $('#keterangan');
+    var jenis = $('#jenis');
     var btnSimpan = $('#btnSimpan');
 
     // btnSimpan.attr('disabled', false);
@@ -104,6 +118,12 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
             btnSimpan.attr('disabled', false);
 
             return Swal.fire("Keterangan", "Form sudah diisi?", "question");
+        }
+
+        if (jenis.val() == '' || jenis.val() == null) { // jika jenis null/ kosong
+            btnSimpan.attr('disabled', false);
+
+            return Swal.fire("Jenis Ruangan", "Form sudah diisi?", "question");
         }
 
         if (kodeRuang.val() == '' || kodeRuang.val() == null) { // jika kode_ruang null/ kosong
@@ -190,6 +210,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 if (result) { // jika hasilnya ada, isi form dengan hasil
                     kodeRuang.val(kode_ruang);
                     keterangan.val(result.keterangan);
+                    jenis.val(result.jenis).change();
                 } else { // selain itu, kosongkan
                     reseting();
                 }
@@ -201,6 +222,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     function reseting() {
         kodeRuang.val('');
         keterangan.val('');
+        jenis.val('').change();
     }
 
     // fungsi hapus berdasarkan kode_ruang

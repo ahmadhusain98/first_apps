@@ -33,6 +33,23 @@ class M_select2 extends CI_Model
         return $sintak;
     }
 
+    function getBarangStok($key)
+    {
+        $limit = ' LIMIT 50';
+        $kode_cabang = $this->session->userdata('cabang');
+        $g_utama = $this->M_global->getData('M_gudang', ['utama' => 1])->kode_gudang;
+
+        if (!empty($key)) {
+            $add_sintak = ' AND (bs.kode_cabang LIKE "%' . $key . '%" OR b.nama LIKE "%' . $key . '%") ORDER BY b.nama ASC';
+        } else {
+            $add_sintak = ' ORDER BY b.nama ASC';
+        }
+
+        $sintak = $this->db->query('SELECT bs.kode_barang AS id, CONCAT(b.nama, " | stok: ", ROUND(bs.masuk - bs.keluar), " ", (SELECT keterangan FROM m_satuan WHERE kode_satuan = b.kode_satuan)) AS text FROM barang_stok bs JOIN barang b ON b.kode_barang = bs.kode_barang WHERE bs.kode_cabang = "' . $kode_cabang . '" ' . $add_sintak . $limit)->result();
+
+        return $sintak;
+    }
+
     function getAllCabang($key)
     {
         $limit = ' LIMIT 50';

@@ -75,8 +75,17 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                 <div class="col-md-6">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label for="kode_poli" class="control-label">Poli <span class="text-danger">**</span></label>
-                                            <select name="kode_poli" id="kode_poli" class="form-control select2_poli_dokter" data-placeholder="~ Pilih Dokter Terlebih Dahulu"></select>
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    <label for="kode_poli" class="control-label">Poli <span class="text-danger">**</span></label>
+                                                    <select name="kode_poli" id="kode_poli" class="form-control select2_poli_dokter" data-placeholder="~ Pilih Dokter Terlebih Dahulu"></select>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    <label for="kode_ruang" class="control-label">Ruangan <span class="text-danger">**</span></label>
+                                                    <select name="kode_ruang" id="kode_ruang" class="form-control select2_ruang
+                                                    " data-placeholder="~ Pilih Ruangan"></select>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -165,6 +174,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
         initailizeSelect2_dokter_all();
         initailizeSelect2_all_cabang();
         initailizeSelect2_poli_dokter('');
+        initailizeSelect2_ruang();
 
         fc_function();
     });

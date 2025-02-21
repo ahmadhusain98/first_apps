@@ -4887,7 +4887,7 @@ class Master extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'm_ruang';
-        $colum            = ['id', 'kode_ruang', 'keterangan'];
+        $colum            = ['id', 'kode_ruang', 'keterangan', 'jenis'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -4933,6 +4933,7 @@ class Master extends CI_Controller
             $row[]  = $no++;
             $row[]  = $rd->kode_ruang;
             $row[]  = $rd->keterangan;
+            $row[]  = (($rd->jenis == 1) ? 'Rawat Jalan' : 'Rawat Inap');
             $row[]  = '<div class="text-center">
                 <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_ruang . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
                 <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_ruang . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
@@ -4975,6 +4976,7 @@ class Master extends CI_Controller
     {
         // variable
         $keterangan       = $this->input->post('keterangan');
+        $jenis            = $this->input->post('jenis');
 
         if ($param == 1) { // jika parameternya 1
             // maka buat kode baru
@@ -4986,8 +4988,9 @@ class Master extends CI_Controller
 
         // tampung variable kedalam $isi
         $isi = [
-            'kode_ruang'   => $kodeRuang,
+            'kode_ruang'    => $kodeRuang,
             'keterangan'    => $keterangan,
+            'jenis'         => $jenis,
         ];
 
         if ($param == 1) { // jika parameternya 1

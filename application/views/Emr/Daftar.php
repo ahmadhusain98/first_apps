@@ -88,10 +88,7 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
     var kode_poli = $('#kode_poli');
 
     <?php if ($cek_sess_dokter) : ?>
-        alert('ada sess')
         getPoli('<?= $cek_session ?>')
-    <?php else : ?>
-        alert('tidak ada sess')
     <?php endif ?>
 
 
