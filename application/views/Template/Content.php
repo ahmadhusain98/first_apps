@@ -200,6 +200,32 @@
             top: 1px;
             transform: rotate(1.4deg);
         }
+
+        #popup {
+            position: fixed;
+            z-index: 9999;
+            display: none;
+            width: 30vw;
+            top: 10%;
+            right: 67%;
+        }
+
+        .card-draggable {
+            cursor: move;
+        }
+
+        #popup2 {
+            position: fixed;
+            z-index: 9999;
+            display: none;
+            width: 30vw;
+            top: 10%;
+            right: 67%;
+        }
+
+        .card-draggable2 {
+            cursor: move;
+        }
     </style>
 
     <?php
@@ -660,6 +686,14 @@
         });
 
         display_ct();
+
+        function close_popup() {
+            popup.style.display = 'none';
+        }
+
+        function close_popup2() {
+            popup2.style.display = 'none';
+        }
 
         function ganti_shift() {
             $('#modal_mgLabel').text(``);

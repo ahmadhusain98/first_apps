@@ -2,49 +2,27 @@
 $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kode_member]);
 ?>
 
-<style>
-    .modal {
-        z-index: 1050;
-        /* display: none !important; */
-    }
-
-    .modal-backdrop {
-        display: none;
-    }
-
-    .modal-static {
-        z-index: -1;
-    }
-
-    .modal-dialog {
-        cursor: move;
-    }
-
-    .modal-header {
-        cursor: move;
-    }
-</style>
-
-<button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#myModal">
-    Buka Modal
-</button>
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" id="draggableModal" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticModalLabel">Modal Static</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Ini adalah modal static yang dapat di-drag.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-            </div>
+<div id="popup">
+    <div class="card shadow card-lg" style="border: 1px solid grey;">
+        <div class="card-header card-draggable">
+            <span class="h4">
+                History Pasien - Perawat
+                <i type="button" class="fa fa-times float-right" onclick="close_popup()"></i>
+            </span>
         </div>
+        <div id="body_hispx" style="overflow-y: scroll; overflow-x: hidden; height: 70vh; width: 100%;"></div>
+    </div>
+</div>
+
+<div id="popup2">
+    <div class="card shadow card-lg" style="border: 1px solid grey;">
+        <div class="card-header card-draggable2">
+            <span class="h4">
+                History Pasien - Dokter
+                <i type="button" class="fa fa-times float-right" onclick="close_popup2()"></i>
+            </span>
+        </div>
+        <div id="body_hispx2" style="overflow-y: scroll; overflow-x: hidden; height: 70vh; width: 100%;"></div>
     </div>
 </div>
 
@@ -60,7 +38,11 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                     </div>
                     <div class="card-body">
                         <select name="filter_dokter" id="filter_dokter" class="form-control select2_dokter_all" data-placeholder="~ Pilih Dokter" onchange="history_px()">
-                            <option value="<?= $kode_dokter ?>">Dr. <?= $this->M_global->getData('dokter', ['kode_dokter' => $kode_dokter])->nama ?></option>
+                            <?php if (!empty($kode_dokter)) : ?>
+                                <option value="<?= $kode_dokter ?>">Dr. <?= $this->M_global->getData('dokter', ['kode_dokter' => $kode_dokter])->nama ?></option>
+                            <?php else : ?>
+                                <option value="<?= ((!empty($pendaftaran)) ? $pendaftaran->kode_dokter : '') ?>"><?= ((!empty($pendaftaran)) ? 'Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $pendaftaran->kode_dokter])->nama : '') ?></option>
+                            <?php endif ?>
                         </select>
                         <hr>
                         <div id="body_history" style="overflow-y: scroll; overflow-x: hidden; height: 65vh; width: 100%;"></div>
@@ -78,17 +60,17 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                 <div class="row mb-3">
                                     <label for="" class="form-label col-md-3">Nomor RM</label>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" id="kode_member" name="kode_member" value="<?= (($pendaftaran) ? (($member) ? $member->kode_member : '') : '') ?>" readonly>
+                                        <input type="text" class="form-control" id="kode_member2" name="kode_member2" value="<?= (($pendaftaran) ? (($member) ? $member->kode_member : '') : '') ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="" class="form-label col-md-3">Nama Pasien</label>
+                                    <label for="" class="form-label col-md-3">Nama</label>
                                     <div class="col-md-9">
                                         <input type="text" class="form-control" id="name_member" name="name_member" value="<?= (($pendaftaran) ? (($member) ? $member->nama : '') : '') ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="" class="form-label col-md-3">Tempat & Tanggal Lahir</label>
+                                    <label for="" class="form-label col-md-3">Tempat / Tgl Lahir</label>
                                     <div class="col-md-9">
                                         <div class="row">
                                             <div class="col-md-6 col-12">
@@ -101,16 +83,30 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="" class="form-label col-md-3">Umur Saat Ini</label>
+                                    <label for="" class="form-label col-md-3">Gender / Umur</label>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" id="umur" name="umur" value="<?= (($pendaftaran) ? (($member) ? hitung_umur($member->tgl_lahir) : '0 Tahun') : '0 Tahun') ?>" readonly>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input type="hidden" class="form-control" id="jkel" name="jkel" value="<?= (($pendaftaran) ? (($member) ? $member->jkel : '') : '') ?>" readonly>
+                                                <input type="text" class="form-control" id="jkel1" name="jkel1" value="<?= (($pendaftaran) ? (($member) ? (($member->jkel == 'P') ? 'Pria' : 'Wanita') : '') : '') ?>" readonly>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" id="umur" name="umur" value="<?= (($pendaftaran) ? (($member) ? hitung_umur($member->tgl_lahir) : '0 Tahun') : '0 Tahun') ?>" readonly>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="" class="form-label col-md-3">Jenis Kelamin</label>
+                                    <label for="" class="form-label col-md-3">Alamat</label>
                                     <div class="col-md-9">
-                                        <input type="hidden" class="form-control" id="jkel" name="jkel" value="<?= (($pendaftaran) ? (($member) ? $member->jkel : '') : '') ?>" readonly>
-                                        <input type="text" class="form-control" id="jkel1" name="jkel1" value="<?= (($pendaftaran) ? (($member) ? (($member->jkel == 'P') ? 'Pria' : 'Wanita') : '') : '') ?>" readonly>
+                                        <?php
+                                        $prov           = $this->M_global->getData('m_provinsi', ['kode_provinsi' => $member->provinsi])->provinsi;
+                                        $kab            = $this->M_global->getData('kabupaten', ['kode_kabupaten' => $member->kabupaten])->kabupaten;
+                                        $kec            = $this->M_global->getData('kecamatan', ['kode_kecamatan' => $member->kecamatan])->kecamatan;
+
+                                        $alamat         = 'Prov. ' . $prov . ', ' . $kab . ', Kec. ' . $kec . ', Ds. ' . $member->desa . ', (POS: ' . $member->kodepos . '), RT.' . $member->rt . '/RW.' . $member->rw;
+                                        ?>
+                                        <textarea name="alamat" id="alamat" class="form-control" readonly><?= $alamat ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -126,7 +122,7 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                     <label for="" class="form-label col-md-3">Dokter</label>
                                     <div class="col-md-9">
                                         <input type="hidden" class="form-control" id="kode_dokter" name="kode_dokter" value="<?= ($pendaftaran) ? $pendaftaran->kode_dokter : '' ?>" readonly>
-                                        <input type="text" class="form-control" id="kode_dokter1" name="kode_dokter1" value="<?= ($pendaftaran) ? $this->M_global->getData('dokter', ['kode_dokter' => $pendaftaran->kode_dokter])->nama : '' ?>" readonly>
+                                        <input type="text" class="form-control" id="kode_dokter1" name="kode_dokter1" value="Dr. <?= ($pendaftaran) ? $this->M_global->getData('dokter', ['kode_dokter' => $pendaftaran->kode_dokter])->nama : '' ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -152,6 +148,16 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                         </div>
                     </div>
                     <div class="card-footer">
+                        <span class="font-weight-bold h4 text-primary"><i class="fa-solid fa-bookmark text-primary"></i> Anamnesa Perawat</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <textarea name="anamnesa_per" id="anamnesa_per" class="form-control" rows="5"><?= ((!empty($emr_per)) ? $emr_per->anamnesa_per : '') ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
                         <span class="font-weight-bold h4 text-primary"><i class="fa-solid fa-bookmark text-primary"></i> Riwayat Kesehatan</span>
                     </div>
                     <div class="card-body">
@@ -161,7 +167,7 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                     <label for="" class="form-label col-md-3">Penyakit Keluarga</label>
                                     <div class="col-md-9">
                                         <input type="text" id="penyakit_keluarga_his" name="penyakit_keluarga_his" class="form-control mb-3" readonly>
-                                        <textarea name="penyakit_keluarga" id="penyakit_keluarga" class="form-control" rows="3" placeholder="Penyakit Baru..."></textarea>
+                                        <textarea name="penyakit_keluarga" id="penyakit_keluarga" class="form-control" rows="3" placeholder="Penyakit Baru..."><?= ((!empty($emr_per)) ? $emr_per->penyakit_keluarga : '') ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -170,7 +176,7 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                     <label for="" class="form-label col-md-3">Alergi</label>
                                     <div class="col-md-9">
                                         <input type="text" id="alergi_his" name="alergi_his" class="form-control mb-3" readonly>
-                                        <textarea name="alergi" id="alergi" class="form-control" rows="3" placeholder="Alergi Baru..."></textarea>
+                                        <textarea name="alergi" id="alergi" class="form-control" rows="3" placeholder="Alergi Baru..."><?= ((!empty($emr_per)) ? $emr_per->alergi : '') ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -185,19 +191,19 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                 <div class="row mb-3">
                                     <label for="" class="form-label col-md-6 m-auto">Tekanan Darah (mmHg)</label>
                                     <div class="col-md-6">
-                                        <input type="text" id="tekanan_darah" name="tekanan_darah" class="form-control">
+                                        <input type="text" id="tekanan_darah" name="tekanan_darah" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->tekanan_darah : '') ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <label for="" class="form-label col-md-6 m-auto">Nadi (x/mnt)</label>
                                     <div class="col-md-6">
-                                        <input type="text" id="nadi" name="nadi" class="form-control">
+                                        <input type="text" id="nadi" name="nadi" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->nadi : '') ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <label for="" class="form-label col-md-6 m-auto">Suhu (°c)</label>
                                     <div class="col-md-6">
-                                        <input type="text" id="suhu" name="suhu" class="form-control">
+                                        <input type="text" id="suhu" name="suhu" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->suhu : '') ?>">
                                     </div>
                                 </div>
                             </div>
@@ -205,13 +211,13 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                 <div class="row mb-3">
                                     <label for="" class="form-label col-md-6 m-auto">Berat Badan (kg)</label>
                                     <div class="col-md-6">
-                                        <input type="text" id="bb" name="bb" class="form-control">
+                                        <input type="text" id="bb" name="bb" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->bb : '') ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <label for="" class="form-label col-md-6 m-auto">Tinggi Badan (cm)</label>
                                     <div class="col-md-6">
-                                        <input type="text" id="tb" name="tb" class="form-control">
+                                        <input type="text" id="tb" name="tb" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->tb : '') ?>">
                                     </div>
                                 </div>
                             </div>
@@ -219,13 +225,13 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                 <div class="row mb-3">
                                     <label for="" class="form-label col-md-6 m-auto">Pernapasan (x/mnt)</label>
                                     <div class="col-md-6">
-                                        <input type="text" id="pernapasan" name="pernapasan" class="form-control">
+                                        <input type="text" id="pernapasan" name="pernapasan" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->pernapasan : '') ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <label for="" class="form-label col-md-6 m-auto">Saturasi O2 (%)</label>
                                     <div class="col-md-6">
-                                        <input type="text" id="saturasi" name="saturasi" class="form-control">
+                                        <input type="text" id="saturasi" name="saturasi" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->saturasi : '') ?>">
                                     </div>
                                 </div>
                             </div>
@@ -241,65 +247,155 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                 <div class="row mb-3">
                                     <div class="col-md-12">
                                         <div class="table-responsive">
+                                            <input type="hidden" id="scale" name="scale" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->scale : '1') ?>">
                                             <table>
                                                 <tr>
                                                     <td style="width: 20%;">
-                                                        <input type="checkbox" id="scale1" name="scale[]" class="form-control">
-                                                        <input type="hidden" id="scale_i1" name="scale_i[]" class="form-control" value="0">
+                                                        <input type="checkbox" id="scale1" class="form-control" onclick="cek_scale('1')">
                                                     </td>
                                                     <td style="width: 80%;">
-                                                        <label for="">&nbsp;&nbsp;&nbsp; (Skala Nyeri 0-1) Tidak Ada Rasa Sakit</label>
+                                                        <label for="">&nbsp; (Skala Nyeri 0-1) Tidak Ada Rasa Sakit</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="width: 20%;">
-                                                        <input type="checkbox" id="scale2" name="scale[]" class="form-control">
-                                                        <input type="hidden" id="scale_i2" name="scale_i[]" class="form-control" value="0">
+                                                        <input type="checkbox" id="scale2" class="form-control" onclick="cek_scale('2')">
                                                     </td>
                                                     <td style="width: 80%;">
-                                                        <label for="">&nbsp;&nbsp;&nbsp; (Skala Nyeri 2-3) Nyeri Ringan</label>
+                                                        <label for="">&nbsp; (Skala Nyeri 2-3) Nyeri Ringan</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="width: 20%;">
-                                                        <input type="checkbox" id="scale3" name="scale[]" class="form-control">
-                                                        <input type="hidden" id="scale_i3" name="scale_i[]" class="form-control" value="0">
+                                                        <input type="checkbox" id="scale3" class="form-control" onclick="cek_scale('3')">
                                                     </td>
                                                     <td style="width: 80%;">
-                                                        <label for="">&nbsp;&nbsp;&nbsp; (Skala Nyeri 4-5) Nyeri Sedang</label>
+                                                        <label for="">&nbsp; (Skala Nyeri 4-5) Nyeri Sedang</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="width: 20%;">
-                                                        <input type="checkbox" id="scale4" name="scale[]" class="form-control">
-                                                        <input type="hidden" id="scale_i4" name="scale_i[]" class="form-control" value="0">
+                                                        <input type="checkbox" id="scale4" class="form-control" onclick="cek_scale('4')">
                                                     </td>
                                                     <td style="width: 80%;">
-                                                        <label for="">&nbsp;&nbsp;&nbsp; (Skala Nyeri 6-7) Nyeri Parah</label>
+                                                        <label for="">&nbsp; (Skala Nyeri 6-7) Nyeri Parah</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="width: 20%;">
-                                                        <input type="checkbox" id="scale5" name="scale[]" class="form-control">
-                                                        <input type="hidden" id="scale_i5" name="scale_i[]" class="form-control" value="0">
+                                                        <input type="checkbox" id="scale5" class="form-control" onclick="cek_scale('5')">
                                                     </td>
                                                     <td style="width: 80%;">
-                                                        <label for="">&nbsp;&nbsp;&nbsp; (Skala Nyeri 8-9) Nyeri Sangat Parah</label>
+                                                        <label for="">&nbsp; (Skala Nyeri 8-9) Nyeri Sangat Parah</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="width: 20%;">
-                                                        <input type="checkbox" id="scale6" name="scale[]" class="form-control">
-                                                        <input type="hidden" id="scale_i6" name="scale_i[]" class="form-control" value="0">
+                                                        <input type="checkbox" id="scale6" class="form-control" onclick="cek_scale('6')">
                                                     </td>
                                                     <td style="width: 80%;">
-                                                        <label for="">&nbsp;&nbsp;&nbsp; (Skala Nyeri 10 >) Nyeri Sangat Buruk</label>
+                                                        <label for="">&nbsp; (Skala Nyeri 10 >) Nyeri Sangat Buruk</label>
                                                     </td>
                                                 </tr>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="font-weight-bold h4 text-primary"><i class="fa-solid fa-bookmark text-primary"></i> Komunikasi, Emosional & Spiritual</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <input type="hidden" id="bicara" name="bicara" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->bicara : '1') ?>">
+                                    <table cellpadding="10px" width="100%">
+                                        <tr>
+                                            <td style="width: 5%;">
+                                                <input type="radio" id="bicara1" class="form-control" onclick="cek_bcr(1)">
+                                            </td>
+                                            <td style="width: 25%;">
+                                                <label for="">&nbsp;&nbsp;&nbsp; Bicara Normal</label>
+                                            </td>
+                                            <td style="width: 5%;">
+                                                <input type="radio" id="bicara2" class="form-control" onclick="cek_bcr(2)">
+                                            </td>
+                                            <td style="width: 25%;">
+                                                <label for="">&nbsp;&nbsp;&nbsp; Bicara Terganggu</label>
+                                            </td>
+                                            <td style="width: 40%;">
+                                                <textarea name="gangguan_bcr" id="gangguan_bcr" class="form-control" rows="3" placeholder="Keterangan Gangguan Bicara..."></textarea>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <hr>
+                                <div class="table-responsive">
+                                    <input type="hidden" id="emosi" name="emosi" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->emosi : '1') ?>">
+                                    <table cellpadding="10px" width="100%">
+                                        <tr>
+                                            <td style="width: 5%;">
+                                                <input type="radio" id="emosi1" class="form-control" onclick="cek_emosi(1)">
+                                            </td>
+                                            <td style="width: 25%;">
+                                                <label for="">&nbsp;&nbsp;&nbsp; Tenang</label>
+                                            </td>
+                                            <td style="width: 5%;">
+                                                <input type="radio" id="emosi2" class="form-control" onclick="cek_emosi(2)">
+                                            </td>
+                                            <td style="width: 25%;">
+                                                <label for="">&nbsp;&nbsp;&nbsp; Gelisah</label>
+                                            </td>
+                                            <td style="width: 5%;">
+                                                <input type="radio" id="emosi3" class="form-control" onclick="cek_emosi(3)">
+                                            </td>
+                                            <td style="width: 25%;">
+                                                <label for="">&nbsp;&nbsp;&nbsp; Emosional</label>
+                                            </td>
+                                            <td style="width: 15%;"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <hr>
+                                <div class="table-responsive">
+                                    <input type="hidden" id="spiritual" name="spiritual" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->spiritual : '1') ?>">
+                                    <table cellpadding="10px" width="100%">
+                                        <tr>
+                                            <td style="width: 5%;">
+                                                <input type="radio" id="spiritual1" class="form-control" onclick="cek_spiritual(1)">
+                                            </td>
+                                            <td style="width: 25%;">
+                                                <label for="">&nbsp;&nbsp;&nbsp; Berdiri</label>
+                                            </td>
+                                            <td style="width: 5%;">
+                                                <input type="radio" id="spiritual2" class="form-control" onclick="cek_spiritual(2)">
+                                            </td>
+                                            <td style="width: 25%;">
+                                                <label for="">&nbsp;&nbsp;&nbsp; Duduk</label>
+                                            </td>
+                                            <td style="width: 5%;">
+                                                <input type="radio" id="spiritual3" class="form-control" onclick="cek_spiritual(3)">
+                                            </td>
+                                            <td style="width: 25%;">
+                                                <label for="">&nbsp;&nbsp;&nbsp; Berbaring</label>
+                                            </td>
+                                            <td style="width: 15%;"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="font-weight-bold h4 text-primary"><i class="fa-solid fa-bookmark text-primary"></i> Diagnosa Keperawatan **</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <textarea name="diagnosa_per" id="diagnosa_per" class="form-control" rows="5" placeholder="Diagnosa Perawat..."><?= ((!empty($emr_per)) ? $emr_per->diagnosa_per : '') ?></textarea>
                             </div>
                         </div>
                     </div>
@@ -319,7 +415,6 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                         <div class="card w-100 h-100">
                                             <div class="card-header">
                                                 <span class="h4" id="title_tab">E-Resep / Racik</span>
-                                                <button type="button" class="btn btn-primary float-right"><i class="fa fa-copy"></i> Copy Resep/Racik</button>
                                             </div>
                                             <div class="card-body">
                                                 <div id="tab_eresep">
@@ -349,26 +444,42 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                                                                     foreach ($eresep as $er) : ?>
                                                                                         <tr id="row_eresep<?= $no_eresep ?>">
                                                                                             <td width="5%" class="text-center">
-                                                                                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no_eresep ?>" onclick="hapusBarang('1')"><i class="fa-solid fa-delete-left"></i></button>
+                                                                                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no_eresep ?>" onclick="hapusBarang('<?= $no_eresep ?>')"><i class="fa-solid fa-delete-left"></i></button>
                                                                                             </td>
                                                                                             <td width="30%">
                                                                                                 <select name="kode_barang[]" id="kode_barang<?= $no_eresep ?>" class="form-control select2_barang_stok" data-placeholder="~ Pilih Barang" onchange="getSatuan(this.value, '<?= $no_eresep ?>')">
-                                                                                                    <option value="">~ Pilih Barang</option>
+                                                                                                    <?php
+                                                                                                    $barang = $this->M_global->getData('barang', ['kode_barang' => $er->kode_barang]);
+                                                                                                    ?>
+                                                                                                    <option value="<?= $er->kode_barang ?>"><?= $barang->nama ?></option>
                                                                                                 </select>
                                                                                             </td>
                                                                                             <td width="15%">
                                                                                                 <select name="kode_satuan[]" id="kode_satuan<?= $no_eresep ?>" class="form-control select2_global" data-placeholder="~ Pilih Satuan">
-                                                                                                    <option value="">~ Pilih Satuan</option>
+                                                                                                    <?php
+                                                                                                    $barang = $this->M_global->getData('barang', ['kode_barang' => $er->kode_barang]);
+
+                                                                                                    $satuan = [];
+                                                                                                    foreach ([$barang->kode_satuan, $barang->kode_satuan2, $barang->kode_satuan3] as $satuanCode) {
+                                                                                                        $satuanDetail = $this->M_global->getData('m_satuan', ['kode_satuan' => $satuanCode]);
+                                                                                                        if ($satuanDetail) {
+                                                                                                            $satuan[] = [
+                                                                                                                'kode_satuan' => $satuanCode,
+                                                                                                                'keterangan' => $satuanDetail->keterangan,
+                                                                                                            ];
+                                                                                                        }
+                                                                                                    }
+                                                                                                    ?>
                                                                                                     <?php foreach ($satuan as $s) : ?>
                                                                                                         <option value="<?= $s['kode_satuan'] ?>" <?= (($er->kode_satuan == $s['kode_satuan']) ? 'selected' : '') ?>><?= $s['keterangan'] ?></option>
                                                                                                     <?php endforeach; ?>
                                                                                                 </select>
                                                                                             </td>
                                                                                             <td width="15%">
-                                                                                                <input type="text" id="qty<?= $no_eresep ?>" name="qty[]" value="<?= $no_eresep ?>" min="<?= $no_eresep ?>" class="form-control text-right" onchange="hitung_st('<?= $no_eresep ?>'); formatRp(this.value, 'qty<?= $no_eresep ?>')">
+                                                                                                <input type="text" id="qty<?= $no_eresep ?>" name="qty[]" value="<?= $er->qty ?>" min="<?= $no_eresep ?>" class="form-control text-right" onchange="hitung_st('<?= $no_eresep ?>'); formatRp(this.value, 'qty<?= $no_eresep ?>')">
                                                                                             </td>
                                                                                             <td width="35%">
-                                                                                                <textarea name="signa[]" id="signa<?= $no_eresep ?>" class="form-control"></textarea>
+                                                                                                <textarea name="signa[]" id="signa<?= $no_eresep ?>" class="form-control"><?= $er->signa ?></textarea>
                                                                                             </td>
                                                                                         </tr>
                                                                                     <?php $no_eresep++;
@@ -407,6 +518,7 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <button type="button" class="btn btn-primary" onclick="addBarang()" id="btnCari"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                                                                    <button type="button" class="btn btn-danger float-right" onclick="emptyBarang()" id="btnEmpty"><i class="fa-solid fa-trash"></i>&nbsp;&nbsp;Hapus Semua</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -418,14 +530,14 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                                             </div>
                                                             <div class="row mb-3">
                                                                 <div class="col-md-12">
-                                                                    <textarea name="eracikan" id="eracikan" class="form-control" rows="5"></textarea>
+                                                                    <textarea name="eracikan" id="eracikan" class="form-control" rows="5"><?= ((!empty($emr_per)) ? $emr_per->eracikan : '') ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div id="tab_elab">Lab</div>
-                                                <div id="tab_erad">Rad</div>
+                                                <div id="tab_elab">Lab Coming Soon</div>
+                                                <div id="tab_erad">Rad Coming Soon</div>
                                             </div>
                                         </div>
                                     </div>
@@ -457,6 +569,8 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
     const form = $('#form_emr_perawat')
     var no_trx = $("#no_trx");
     var kode_member = $("#kode_member");
+    var diagnosa_per = $("#diagnosa_per");
+    var anamnesa_per = $("#anamnesa_per");
     var filter_dokter = $("#filter_dokter");
     const btn_eresep = $('#btn_eresep');
     const btn_elab = $('#btn_elab');
@@ -464,10 +578,19 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
     const tab_eresep = $('#tab_eresep');
     const tab_elab = $('#tab_elab');
     const tab_erad = $('#tab_erad');
-    let title_tab = $('#title_tab')
+    let title_tab = $('#title_tab');
+    var scale = $('#scale');
+    var bicara = $('#bicara');
+    var gangguan_bcr = $('#gangguan_bcr');
+    var emosi = $('#emosi');
+    var spiritual = $('#spiritual');
 
     history_px();
+    cek_scale('<?= ((!empty($emr_per)) ? $emr_per->scale : '1') ?>');
     sel_tab(1);
+    cek_bcr(<?= ((!empty($emr_per)) ? $emr_per->bicara : '1') ?>);
+    cek_emosi(<?= ((!empty($emr_per)) ? $emr_per->emosi : '1') ?>);
+    cek_spiritual(<?= ((!empty($emr_per)) ? $emr_per->spiritual : '1') ?>);
 
     function history_px() {
         xhttp = new XMLHttpRequest();
@@ -481,9 +604,98 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
         xhttp.send();
     }
 
-    function show_his(param) {
-        var params = `/${param}?kode_member=${kode_member.val()}&kode_dokter=${filter_dokter.val()}`
-        window.open(`${siteUrl}Emr/perawat/${params}`, '_blank');
+    function cek_scale(param) {
+        scale.val(param);
+        if (param == 1) {
+            document.getElementById('scale1').checked = true;
+            document.getElementById('scale2').checked = false;
+            document.getElementById('scale3').checked = false;
+            document.getElementById('scale4').checked = false;
+            document.getElementById('scale5').checked = false;
+            document.getElementById('scale6').checked = false;
+        } else if (param == 2) {
+            document.getElementById('scale1').checked = false;
+            document.getElementById('scale2').checked = true;
+            document.getElementById('scale3').checked = false;
+            document.getElementById('scale4').checked = false;
+            document.getElementById('scale5').checked = false;
+            document.getElementById('scale6').checked = false;
+        } else if (param == 3) {
+            document.getElementById('scale1').checked = false;
+            document.getElementById('scale2').checked = false;
+            document.getElementById('scale3').checked = true;
+            document.getElementById('scale4').checked = false;
+            document.getElementById('scale5').checked = false;
+            document.getElementById('scale6').checked = false;
+        } else if (param == 4) {
+            document.getElementById('scale1').checked = false;
+            document.getElementById('scale2').checked = false;
+            document.getElementById('scale3').checked = false;
+            document.getElementById('scale4').checked = true;
+            document.getElementById('scale5').checked = false;
+            document.getElementById('scale6').checked = false;
+        } else if (param == 5) {
+            document.getElementById('scale1').checked = false;
+            document.getElementById('scale2').checked = false;
+            document.getElementById('scale3').checked = false;
+            document.getElementById('scale4').checked = false;
+            document.getElementById('scale5').checked = true;
+            document.getElementById('scale6').checked = false;
+        } else {
+            document.getElementById('scale1').checked = false;
+            document.getElementById('scale2').checked = false;
+            document.getElementById('scale3').checked = false;
+            document.getElementById('scale4').checked = false;
+            document.getElementById('scale5').checked = false;
+            document.getElementById('scale6').checked = true;
+        }
+    }
+
+    function cek_bcr(param) {
+        bicara.val(param);
+        if (param == 1) {
+            document.getElementById('bicara1').checked = true;
+            document.getElementById('bicara2').checked = false;
+            gangguan_bcr.hide();
+        } else {
+            document.getElementById('bicara1').checked = false;
+            document.getElementById('bicara2').checked = true;
+            gangguan_bcr.show();
+        }
+    }
+
+    function cek_emosi(param) {
+        emosi.val(param);
+        if (param == 1) {
+            document.getElementById('emosi1').checked = true;
+            document.getElementById('emosi2').checked = false;
+            document.getElementById('emosi3').checked = false;
+        } else if (param == 2) {
+            document.getElementById('emosi1').checked = false;
+            document.getElementById('emosi2').checked = true;
+            document.getElementById('emosi3').checked = false;
+        } else {
+            document.getElementById('emosi1').checked = false;
+            document.getElementById('emosi2').checked = false;
+            document.getElementById('emosi3').checked = true;
+        }
+    }
+
+    function cek_spiritual(param) {
+        spiritual.val(param);
+        if (param == 1) {
+            document.getElementById('spiritual1').checked = true;
+            document.getElementById('spiritual2').checked = false;
+            document.getElementById('spiritual3').checked = false;
+        } else if (param == 2) {
+            document.getElementById('spiritual1').checked = false;
+            document.getElementById('spiritual2').checked = true;
+            document.getElementById('spiritual3').checked = false;
+        } else {
+            document.getElementById('spiritual1').checked = false;
+            document.getElementById('spiritual2').checked = false;
+            document.getElementById('spiritual3').checked = true;
+        }
     }
 
     function sel_tab(param) {
@@ -593,6 +805,13 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
         });
     }
 
+    function emptyBarang() {
+        var tbody = $('#body_eresep');
+
+        tbody.empty();
+        addBarang();
+    }
+
     function hapusBarang(no) {
         $('#row_eresep' + no).remove();
     }
@@ -601,11 +820,212 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
         window.location.reload();
     }
 
-    $(document).ready(function() {
-        $('#myModal').on('shown.bs.modal', function() {
-            $(this).find('.modal-dialog').draggable({
-                handle: '.modal-header',
-            });
-        });
+    const popup = document.getElementById('popup');
+    const header = document.querySelector('.card-draggable');
+    let offsetX, offsetY, isDragging = false;
+
+    header.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        offsetX = e.clientX - popup.offsetLeft;
+        offsetY = e.clientY - popup.offsetTop;
     });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        popup.style.left = e.clientX - offsetX + 'px';
+        popup.style.top = e.clientY - offsetY + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+
+    function show_his(param, nohis, km) {
+        $('#body_hispx').text('');
+
+        if (!param) {
+            return Swal.fire("Invoice", "Form sudah dipilih?", "question");
+        }
+
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("body_hispx").innerHTML = this.responseText;
+            }
+        };
+        var param = `/${param}/${nohis}/${km}`;
+        xhttp.open("GET", "<?= base_url('Emr/his_px'); ?>" + param, true);
+        xhttp.send();
+
+        popup.style.display = 'block';
+    }
+
+    // dokter
+
+    const popup2 = document.getElementById('popup2');
+    const header2 = document.querySelector('.card-draggable2');
+    let offsetX2, offsetY2, isDragging2 = false;
+
+    header2.addEventListener('mousedown', (e) => {
+        isDragging2 = true;
+        offsetX2 = e.clientX - popup2.offsetLeft;
+        offsetY2 = e.clientY - popup2.offsetTop;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging2) return;
+        popup2.style.left = e.clientX - offsetX2 + 'px';
+        popup2.style.top = e.clientY - offsetY2 + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging2 = false;
+    });
+
+    function show_his2(param, nohis, km) {
+        $('#body_hispx2').text('');
+
+        if (!param) {
+            return Swal.fire("Invoice", "Form sudah dipilih?", "question");
+        }
+
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("body_hispx2").innerHTML = this.responseText;
+            }
+        };
+        var param = `/${param}/${nohis}/${km}`;
+        xhttp.open("GET", "<?= base_url('Emr/his_px2'); ?>" + param, true);
+        xhttp.send();
+
+        popup2.style.display = 'block';
+    }
+
+    function copyText(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.textContent;
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Teks Berhasil Disalin",
+                    showConfirmButton: false,
+                    timer: 500
+                });
+            })
+            .catch(err => {
+                Swal.fire({
+                    position: "center",
+                    icon: "warning",
+                    title: "Teks Gagal Disalin",
+                    showConfirmButton: false,
+                    timer: 500
+                });
+            });
+    }
+
+    function implement(param, x) {
+        $('#' + x).val(param);
+    }
+
+    function implement_err(param, x, notrx) {
+        $('#' + x).val(param);
+        var tbody = $('#body_eresep');
+        var no = 1;
+
+        if (!notrx) {
+            return;
+        }
+
+        tbody.empty();
+
+        $.ajax({
+            url: `${siteUrl}Emr/emr_per_barang/${notrx}`,
+            type: `POST`,
+            dataType: `JSON`,
+            success: function(result) {
+                $.each(result, function(index, value) {
+                    tbody.append(`<tr id="row_eresep${no}">
+                        <td width="5%" class="text-center">
+                            <button class="btn btn-sm btn-danger" type="button" id="btnHapus${no}" onclick="hapusBarang('${no}')"><i class="fa-solid fa-delete-left"></i></button>
+                        </td>
+                        <td width="30%">
+                            <select name="kode_barang[]" id="kode_barang${no}" class="form-control select2_barang_stok" data-placeholder="~ Pilih Barang" onchange="getSatuan(this.value, '${no}')">
+                                <option value="${value.kode_barang}">${value.nama}</option>
+                            </select>
+                        </td>
+                        <td width="15%">
+                            <select name="kode_satuan[]" id="kode_satuan${no}" class="form-control select2_global" data-placeholder="~ Pilih Satuan">
+                                <option value="${value.kode_satuan}">${value.satuan}</option>
+                            </select>
+                        </td>
+                        <td width="15%">
+                            <input type="text" id="qty${no}" name="qty[]" value="${value.qty}" min="1" class="form-control text-right" onchange="hitung_st('${no}'); formatRp(this.value, 'qty${no}')">
+                        </td>
+                        <td width="35%">
+                            <textarea name="signa[]" id="signa${no}" class="form-control">${value.signa}</textarea>
+                        </td>
+                    </tr>`);
+
+                    initailizeSelect2_barang_stok();
+
+                    $(".select2_global").select2({
+                        placeholder: $(this).data('placeholder'),
+                        width: '100%',
+                        allowClear: true,
+                    });
+
+                    no++
+                });
+            },
+            error: function(error) {
+                error_proccess();
+            }
+        });
+    }
+
+    function implement_fisik(xi1, x1, xi2, x2, xi3, x3, xi4, x4, xi5, x5, xi6, x6, xi7, x7) {
+        $('#' + x1).val(xi1);
+        $('#' + x2).val(xi2);
+        $('#' + x3).val(xi3);
+        $('#' + x4).val(xi4);
+        $('#' + x5).val(xi5);
+        $('#' + x6).val(xi6);
+        $('#' + x7).val(xi7);
+    }
+</script>
+
+<script>
+    function save() {
+        if (diagnosa_per.val() == '' || diagnosa_per.val() == null) {
+            return Swal.fire("Diagnosa Perawat", "Form sudah diisi?", "question");
+        }
+
+        if (anamnesa_per.val() == '' || anamnesa_per.val() == null) {
+            return Swal.fire("Anamnesa Perawat", "Form sudah diisi?", "question");
+        }
+
+        $.ajax({
+            url: `${siteUrl}Emr/proses_per`,
+            type: `POST`,
+            dataType: `JSON`,
+            data: form.serialize(),
+            success: function(result) {
+                if (result.status == 1) { // jika mendapatkan respon 1
+
+                    Swal.fire("EMR Perawat", "Berhasil diproses", "success").then(() => {
+                        location.href = siteUrl + 'Emr';
+                    });
+                } else { // selain itu
+
+                    Swal.fire("EMR Perawat", "Gagal diproses, silahkan dicoba kembali", "info");
+                }
+            },
+            error: function(error) {
+                error_proccess();
+            }
+        });
+    }
 </script>
