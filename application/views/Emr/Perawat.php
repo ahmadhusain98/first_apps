@@ -1,5 +1,61 @@
 <?php
 $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kode_member]);
+
+$cek_session = $this->session->userdata('kode_user');
+$cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_session]);
+
+$cek_jual = $this->M_global->getData('barang_out_header', ['no_trx' => $no_trx]);
+if ($cek_jual) {
+    $btn_diss = 'disabled';
+    $readonly = 'readonly';
+} else {
+    $btn_diss = '';
+    $readonly = '';
+}
+
+if ($pendaftaran->status_trx == 1) {
+    $btn_sv = 'disabled';
+} else {
+    $btn_sv = '';
+}
+
+
+$kode_memberx = $pendaftaran->kode_member;
+
+// Use query binding to prevent SQL injection
+$last_notrx = $this->db->query('SELECT * FROM pendaftaran WHERE kode_member = ? ORDER BY id DESC LIMIT 1', [$kode_memberx])->row();
+
+// Check if last_notrx exists to avoid errors when accessing its properties
+if ($last_notrx) {
+    $riwayat = $this->db->query('SELECT * FROM emr_dok WHERE kode_member = ? AND no_trx <> ? ORDER BY id DESC', [$kode_memberx, $last_notrx->no_trx])->result();
+
+    if (!empty($riwayat)) {
+        $p_kel = [];
+        $alr = [];
+        foreach ($riwayat as $rwt) {
+            // Check if $rwt has the necessary properties
+            $p_kel[] = $rwt->penyakit_keluarga ?? ''; // Use null coalescing operator to handle missing fields
+            $alr[] = $rwt->alergi ?? ''; // Use null coalescing operator
+        }
+    } else {
+        // Return empty values if no records are found
+        $p_kel = '';
+        $alr = '';
+    }
+} else {
+    // Handle the case when $last_notrx is null (no records found)
+    $p_kel = '';
+    $alr = '';
+}
+
+if (is_array($p_kel) && !empty($p_kel)) {
+    $p_kel = implode(", ", $p_kel);  // Join array elements into a string separated by commas
+    $alr = implode(", ", $alr);  // Join array elements into a string separated by commas
+} else {
+    $p_kel = $p_kel;  // In case it's not an array, just print the string
+    $alr = $alr;  // In case it's not an array, just print the string
+}
+
 ?>
 
 <div id="popup">
@@ -38,10 +94,12 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                     </div>
                     <div class="card-body">
                         <select name="filter_dokter" id="filter_dokter" class="form-control select2_dokter_all" data-placeholder="~ Pilih Dokter" onchange="history_px()">
-                            <?php if (!empty($kode_dokter)) : ?>
-                                <option value="<?= $kode_dokter ?>">Dr. <?= $this->M_global->getData('dokter', ['kode_dokter' => $kode_dokter])->nama ?></option>
-                            <?php else : ?>
-                                <option value="<?= ((!empty($pendaftaran)) ? $pendaftaran->kode_dokter : '') ?>"><?= ((!empty($pendaftaran)) ? 'Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $pendaftaran->kode_dokter])->nama : '') ?></option>
+                            <?php if ($cek_sess_dokter) : ?>
+                                <?php if (!empty($kode_dokter)) : ?>
+                                    <option value="<?= $kode_dokter ?>">Dr. <?= $this->M_global->getData('dokter', ['kode_dokter' => $kode_dokter])->nama ?></option>
+                                <?php else : ?>
+                                    <option value="<?= ((!empty($pendaftaran)) ? $pendaftaran->kode_dokter : '') ?>"><?= ((!empty($pendaftaran)) ? 'Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $pendaftaran->kode_dokter])->nama : '') ?></option>
+                                <?php endif ?>
                             <?php endif ?>
                         </select>
                         <hr>
@@ -166,7 +224,7 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                 <div class="row">
                                     <label for="" class="form-label col-md-3">Penyakit Keluarga</label>
                                     <div class="col-md-9">
-                                        <input type="text" id="penyakit_keluarga_his" name="penyakit_keluarga_his" class="form-control mb-3" readonly>
+                                        <input type="text" id="penyakit_keluarga_his" name="penyakit_keluarga_his" class="form-control mb-3" readonly value="<?= $p_kel ?>">
                                         <textarea name="penyakit_keluarga" id="penyakit_keluarga" class="form-control" rows="3" placeholder="Penyakit Baru..."><?= ((!empty($emr_per)) ? $emr_per->penyakit_keluarga : '') ?></textarea>
                                     </div>
                                 </div>
@@ -175,7 +233,7 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                 <div class="row">
                                     <label for="" class="form-label col-md-3">Alergi</label>
                                     <div class="col-md-9">
-                                        <input type="text" id="alergi_his" name="alergi_his" class="form-control mb-3" readonly>
+                                        <input type="text" id="alergi_his" name="alergi_his" class="form-control mb-3" readonly value="<?= $alr ?>">
                                         <textarea name="alergi" id="alergi" class="form-control" rows="3" placeholder="Alergi Baru..."><?= ((!empty($emr_per)) ? $emr_per->alergi : '') ?></textarea>
                                     </div>
                                 </div>
@@ -444,7 +502,7 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                                                                     foreach ($eresep as $er) : ?>
                                                                                         <tr id="row_eresep<?= $no_eresep ?>">
                                                                                             <td width="5%" class="text-center">
-                                                                                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no_eresep ?>" onclick="hapusBarang('<?= $no_eresep ?>')"><i class="fa-solid fa-delete-left"></i></button>
+                                                                                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no_eresep ?>" onclick="hapusBarang('<?= $no_eresep ?>')" <?= $btn_diss ?>><i class="fa-solid fa-delete-left"></i></button>
                                                                                             </td>
                                                                                             <td width="30%">
                                                                                                 <select name="kode_barang[]" id="kode_barang<?= $no_eresep ?>" class="form-control select2_barang_stok" data-placeholder="~ Pilih Barang" onchange="getSatuan(this.value, '<?= $no_eresep ?>')">
@@ -476,10 +534,10 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                                                                                 </select>
                                                                                             </td>
                                                                                             <td width="15%">
-                                                                                                <input type="text" id="qty<?= $no_eresep ?>" name="qty[]" value="<?= $er->qty ?>" min="<?= $no_eresep ?>" class="form-control text-right" onchange="hitung_st('<?= $no_eresep ?>'); formatRp(this.value, 'qty<?= $no_eresep ?>')">
+                                                                                                <input type="text" id="qty<?= $no_eresep ?>" name="qty[]" value="<?= $er->qty ?>" min="<?= $no_eresep ?>" class="form-control text-right" onchange="hitung_st('<?= $no_eresep ?>'); formatRp(this.value, 'qty<?= $no_eresep ?>')" <?= $readonly ?>>
                                                                                             </td>
                                                                                             <td width="35%">
-                                                                                                <textarea name="signa[]" id="signa<?= $no_eresep ?>" class="form-control"><?= $er->signa ?></textarea>
+                                                                                                <textarea name="signa[]" id="signa<?= $no_eresep ?>" class="form-control" <?= $readonly ?>><?= $er->signa ?></textarea>
                                                                                             </td>
                                                                                         </tr>
                                                                                     <?php $no_eresep++;
@@ -517,8 +575,8 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-md-12">
-                                                                    <button type="button" class="btn btn-primary" onclick="addBarang()" id="btnCari"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
-                                                                    <button type="button" class="btn btn-danger float-right" onclick="emptyBarang()" id="btnEmpty"><i class="fa-solid fa-trash"></i>&nbsp;&nbsp;Hapus Semua</button>
+                                                                    <button type="button" class="btn btn-primary" onclick="addBarang()" id="btnCari" <?= $btn_diss ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                                                                    <button type="button" class="btn btn-danger float-right" onclick="emptyBarang()" id="btnEmpty" <?= $btn_diss ?>><i class="fa-solid fa-trash"></i>&nbsp;&nbsp;Hapus Semua</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -530,7 +588,7 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                                             </div>
                                                             <div class="row mb-3">
                                                                 <div class="col-md-12">
-                                                                    <textarea name="eracikan" id="eracikan" class="form-control" rows="5"><?= ((!empty($emr_per)) ? $emr_per->eracikan : '') ?></textarea>
+                                                                    <textarea name="eracikan" id="eracikan" class="form-control" rows="5" <?= $readonly ?>><?= ((!empty($emr_per)) ? $emr_per->eracikan : '') ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -549,7 +607,7 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                         <div class="row">
                             <div class="col-md-12">
                                 <button type="button" class="btn btn-danger" onclick="getUrl('Emr')" id="btnKembali"><i class="fa-solid fa-circle-chevron-left"></i>&nbsp;&nbsp;Kembali</button>
-                                <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan"><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
+                                <button type="button" class="btn btn-success float-right ml-2" onclick="save()" id="btnSimpan" <?= $btn_sv ?>><i class="fa-regular fa-hard-drive"></i>&nbsp;&nbsp;Proses</button>
                                 <button type="button" class="btn btn-info float-right" onclick="reseting()" id="btnReset"><i class="fa-solid fa-arrows-rotate"></i>&nbsp;&nbsp;Reset</button>
                             </div>
                         </div>
@@ -757,7 +815,6 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
             data: form.serialize(),
             dataType: "JSON",
             success: function(result) { // jika fungsi berjalan dengan baik
-                console.table(result)
                 $.each(result, function(index, value) {
                     $('#kode_satuan' + no).append('<option value="' + value.kode_satuan + '">' + value.nama_satuan + '</option>')
                 });
@@ -949,7 +1006,7 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                 $.each(result, function(index, value) {
                     tbody.append(`<tr id="row_eresep${no}">
                         <td width="5%" class="text-center">
-                            <button class="btn btn-sm btn-danger" type="button" id="btnHapus${no}" onclick="hapusBarang('${no}')"><i class="fa-solid fa-delete-left"></i></button>
+                            <button class="btn btn-sm btn-danger" type="button" id="btnHapus${no}" onclick="hapusBarang('${no}')" <?= $btn_diss ?>><i class="fa-solid fa-delete-left"></i></button>
                         </td>
                         <td width="30%">
                             <select name="kode_barang[]" id="kode_barang${no}" class="form-control select2_barang_stok" data-placeholder="~ Pilih Barang" onchange="getSatuan(this.value, '${no}')">
@@ -962,10 +1019,10 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                             </select>
                         </td>
                         <td width="15%">
-                            <input type="text" id="qty${no}" name="qty[]" value="${value.qty}" min="1" class="form-control text-right" onchange="hitung_st('${no}'); formatRp(this.value, 'qty${no}')">
+                            <input type="text" id="qty${no}" name="qty[]" value="${value.qty}" min="1" class="form-control text-right" onchange="hitung_st('${no}'); formatRp(this.value, 'qty${no}')" <?= $readonly ?>>
                         </td>
                         <td width="35%">
-                            <textarea name="signa[]" id="signa${no}" class="form-control">${value.signa}</textarea>
+                            <textarea name="signa[]" id="signa${no}" class="form-control" <?= $readonly ?>>${value.signa}</textarea>
                         </td>
                     </tr>`);
 

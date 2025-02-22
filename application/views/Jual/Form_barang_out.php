@@ -1,5 +1,13 @@
 <?php
 $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
+
+if ($param == 'emr') {
+    $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+    $emr_dok = $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]);
+} else {
+    $pendaftaran = null;
+    $emr_dok = null;
+}
 ?>
 
 <form method="post" id="form_barang_out">
@@ -33,7 +41,7 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
                                 <label for="">Poli</label>
                                 <div class="row">
                                     <div class="col-md-2 col-2">
-                                        <input type="checkbox" name="cek_pendaftaran" id="cek_pendaftaran" class="form-control" onclick="cekPendaftaran()">
+                                        <input type="checkbox" name="cek_pendaftaran" id="cek_pendaftaran" class="form-control" onclick="cekPendaftaran('<?= (($param == 'emr') ? $no_trx : ((!empty($data_barang_out)) ? $data_barang_out->no_trx : '')) ?>')">
                                     </div>
                                     <div class="col-md-10 col-10">
                                         <select name="kode_poli" id="kode_poli" class="form-control select2_poli" data-placeholder="~ Pilih Poli" onchange="getPendaftaran(this.value)">
@@ -102,6 +110,12 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
                                 <textarea name="alamat" id="alamat" class="form-control" rows="3" readonly><?= (!empty($data_barang_out) ? $data_barang_out->alamat : '') ?></textarea>
                             </div>
                         </div>
+                        <?php if ($param == 'emr') : ?>
+                            <div class="row mb-3">
+                                <label for="" class="text-danger font-weight-bold">Racikan dari dokter</label>
+                                <textarea name="eracikan" id="eracikan" class="form-control" rows="3" readonly><?= (!empty($emr_dok) ? $emr_dok->eracikan : '') ?></textarea>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -111,7 +125,7 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
                     <div class="row mb-3">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <input type="hidden" name="jumlahBarisBarang" id="jumlahBarisBarang" value="<?= (!empty($barang_detail) ? count($barang_detail) : '0') ?>">
+                                <input type="hidden" name="jumlahBarisBarang" id="jumlahBarisBarang" value="<?= (!empty($barang_detail) ? count($barang_detail) : (($param == 'emr') ? count($emr_per_barang) : '0')) ?>">
                                 <table class="table table-hover table-bordered" id="tableDetailBarangOut" width="100%" style="border-radius: 10px;">
                                     <thead>
                                         <tr class="text-center">
@@ -131,6 +145,9 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
                                             <?php $no = 1;
                                             foreach ($barang_detail as $bd) :
                                                 $barang = $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang]);
+                                                if (!$barang) {
+                                                    continue;  // Skip if no barang is found
+                                                }
 
                                                 $satuan = [];
                                                 foreach ([$barang->kode_satuan, $barang->kode_satuan2, $barang->kode_satuan3] as $satuanCode) {
@@ -140,8 +157,6 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
                                                             'kode_satuan' => $satuanCode,
                                                             'keterangan' => $satuanDetail->keterangan,
                                                         ];
-                                                    } else {
-                                                        $satuan[] = '';
                                                     }
                                                 }
                                             ?>
@@ -151,14 +166,18 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
                                                     </td>
                                                     <td>
                                                         <input type="hidden" id="kode_barang_out<?= $no ?>" name="kode_barang_out[]" value="<?= $bd->kode_barang ?>">
-                                                        <span><?= $bd->kode_barang ?> ~ <?= $this->M_global->getData('barang', ['kode_barang' => $bd->kode_barang])->nama ?></span>
+                                                        <span><?= $bd->kode_barang ?> ~ <?= $barang->nama ?></span>
                                                     </td>
                                                     <td>
                                                         <select name="kode_satuan[]" id="kode_satuan<?= $no ?>" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, <?= $no ?>)">
                                                             <option value="">~ Pilih Satuan</option>
-                                                            <?php foreach ($satuan as $s) : ?>
-                                                                <option value="<?= $s['kode_satuan'] ?>" <?= (($bd->kode_satuan == $s['kode_satuan']) ? 'selected' : '') ?>><?= $s['keterangan'] ?></option>
-                                                            <?php endforeach; ?>
+                                                            <?php if (!empty($satuan)): ?>
+                                                                <?php foreach ($satuan as $s): ?>
+                                                                    <option value="<?= $s['kode_satuan'] ?>" <?= (($bd->kode_satuan == $s['kode_satuan']) ? 'selected' : '') ?>><?= $s['keterangan'] ?></option>
+                                                                <?php endforeach; ?>
+                                                            <?php else: ?>
+                                                                <option value="">No Satuan Available</option>
+                                                            <?php endif; ?>
                                                         </select>
                                                     </td>
                                                     <td>
@@ -185,6 +204,7 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
                                             <?php $no++;
                                             endforeach; ?>
                                         <?php endif; ?>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -337,6 +357,12 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
     var rowBarangOut = $('#rowBarangOut');
     var jumlahBarisBarang = $('#jumlahBarisBarang');
 
+    <?php if (!empty($emr_dok)) : ?>
+        <?php if ($emr_dok->eracikan != '') : ?>
+            Swal.fire("INFORMASI", "Terdapat racikan dari Dokter, mohon diisikan kedalam obat!", "info");
+        <?php endif ?>
+    <?php endif ?>
+
     $('#tableSederhanaObat').DataTable({
         "destroy": true,
         "processing": true,
@@ -379,25 +405,28 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
 
     // tampilkan fungsi select barang
     function selbarfunc() {
-        var tableBarang = $('#tableSederhanaObat').dataTable(); // ambil id table detail
-        var rowCount = tableBarang.fnGetData().length; // hitung jumlah rownya
-        var tableBarangIn = document.getElementById('tableDetailBarangOut'); // ambil id table detail
-        var no = tableBarangIn.rows.length; // hitung jumlah rownya
+        var tableBarang = $('#tableSederhanaObat').DataTable(); // Inisialisasi DataTable dengan benar
+        var rowCount = tableBarang.rows().count(); // Mendapatkan jumlah baris data
+        var tableBarangIn = document.getElementById('tableDetailBarangOut'); // Ambil table detail
+        var no = tableBarangIn.rows.length; // Hitung jumlah row pada table detail
 
-        // var no = 0;
-        // lakukan loop
+        tableBarang.search('').draw(); // Hapus pencarian pada DataTable
+
+        // Loop melalui setiap row pada tableBarang
         for (var i = 1; i <= rowCount; i++) {
+            // Cek apakah barang yang dipilih adalah '1'
             if ($('#select_barang' + i).val() == 1) {
-                $('#select_barang' + i).val(0);
-                document.getElementById('select_barangx' + i).checked = false;
-                var obat = $('#selobat' + i).val();
-                $('#modal_barang').modal('hide');
-                tampilList2(obat, i);
-                no += 1;
-                jumlahBarisBarang.val(no);
+                $('#select_barang' + i).val(0); // Set nilai select_barang menjadi 0
+                document.getElementById('select_barangx' + i).checked = false; // Uncheck checkbox
+                var obat = $('#selobat' + i).val(); // Ambil nilai obat yang dipilih
+                $('#modal_barang').modal('hide'); // Sembunyikan modal
+                tampilList2(obat, no); // Tampilkan list obat dengan no yang sesuai
+                no += 1; // Increment nomor baris
+                jumlahBarisBarang.val(no); // Update nilai jumlahBarisBarang
             }
         }
     }
+
 
     // fungsi tampilList2
     function tampilList2(brg, i) {
@@ -497,21 +526,119 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
         }
     }
 
+    <?php if ($param == 'emr') : ?>
+        // cekPendaftaran('<?= $no_trx ?>');
+        document.getElementById('cek_pendaftaran').checked = true;
+
+        <?php
+        $poli = $this->M_global->getData('m_poli', ['kode_poli' => $pendaftaran->kode_poli]);
+        ?>
+        kode_poli.attr('disabled', false);
+        kode_poli.html(`<option value="<?= $pendaftaran->kode_poli ?>"><?= $poli->keterangan ?></option>`);
+
+        <?php
+        $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kode_member]);
+        ?>
+        kode_pendaftaran.attr('disabled', false);
+        kode_pendaftaran.html(`<option value="<?= $pendaftaran->no_trx ?>"><?= $pendaftaran->no_trx . ' ~ Kode Member: ' . $pendaftaran->kode_member . ' | Nama Member: ' . $member->nama ?></option>`);
+
+        <?php
+        $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $pendaftaran->kode_dokter]);
+        ?>
+        kode_dokter.attr('disabled', false);
+        kode_dokter.html(`<option value="<?= $pendaftaran->kode_dokter ?>"><?= $pendaftaran->kode_dokter . ' ~ Dr. ' . $dokter->nama ?></option>`);
+
+        <?php
+        $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kode_member]);
+        ?>
+        kode_member.attr('disabled', false);
+        kode_member.html(`<option value="<?= $pendaftaran->kode_member ?>"><?= $pendaftaran->kode_member . ' ~ ' . $member->nama ?></option>`);
+
+        <?php
+        $prov           = $this->M_global->getData('m_provinsi', ['kode_provinsi' => $member->provinsi])->provinsi;
+        $kab            = $this->M_global->getData('kabupaten', ['kode_kabupaten' => $member->kabupaten])->kabupaten;
+        $kec            = $this->M_global->getData('kecamatan', ['kode_kecamatan' => $member->kecamatan])->kecamatan;
+
+        $alamat         = 'Prov. ' . $prov . ', ' . $kab . ', Kec. ' . $kec . ', Ds. ' . $member->desa . ', (POS: ' . $member->kodepos . '), RT.' . $member->rt . '/RW.' . $member->rw;
+        ?>
+        alamat.val(`<?= $alamat ?>`);
+
+        $.ajax({
+            url: `<?= site_url('Transaksi/getBarangEmr/') . $no_trx ?>`,
+            type: `POST`,
+            dataType: `JSON`,
+            success: function(result) {
+                var x = 1;
+                $.each(result, function(index, value) {
+                    bodyBarangIn.append(`<tr id="rowBarangOut${x}">
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button>
+                        </td>
+                        <td>
+                            <input type="hidden" id="kode_barang_out${x}" name="kode_barang_out[]" value="${value.kode_barang}">
+                            <span>${value.kode_barang} ~ ${value.barang}</span>
+                        </td>
+                        <td>
+                            <input type="hidden" id="kode_satuan${x}" name="kode_satuan[]" value="${value.kode_satuan}">
+                            <span>${value.satuan}</span>
+                        </td>
+                        <td class="text-right">
+                            <input type="hidden" id="harga_out${x}" name="harga_out[]" value="${value.harga_jual}">
+                            <span>${formatRpNoId(Number(value.harga_jual))}</span>
+                        </td>
+                        <td>
+                            <input type="text" id="qty_out${x}" name="qty_out[]" value="${value.qty}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_out${x}')">
+                        </td>
+                        <td>
+                            <input type="text" id="discpr_out${x}" name="discpr_out[]" value="0" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_out${x}')">
+                        </td>
+                        <td>
+                            <input type="text" id="discrp_out${x}" name="discrp_out[]" value="0" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_out${x}')">
+                        </td>
+                        <td class="text-center">
+                            <input type="checkbox" id="pajak_out${x}" name="pajak_out[]" class="form-control" onclick="hitung_st('${x}')">
+                            <input type="hidden" id="pajakrp_out${x}" name="pajakrp_out[]" value="0">
+                        </td>
+                        <td class="text-right">
+                            <input type="hidden" id="jumlah_out${x}" name="jumlah_out[]" value="${formatRpNoId(Number(value.harga_jual * value.qty))}" class="form-control text-right" readonly>
+                            <span id="jumlah2_out${x}">${formatRpNoId(Number(value.harga_jual * value.qty))}</span>
+                        </td>
+                    </tr>`);
+                });
+
+                // jalankan fungsi
+                hitung_st(x);
+
+                x++;
+            },
+            error: function(error) {
+                error_proccess();
+            }
+        });
+    <?php else : ?>
+        cekPendaftaran('<?= ((!empty($data_barang_out)) ? $data_barang_out->no_trx : '') ?>');
+    <?php endif; ?>
+
     // cek pendaftaran
-    function cekPendaftaran() {
-        if (document.getElementById('cek_pendaftaran').checked == true) { // jika checked
-            // id kode_poli di nondisabled
+    function cekPendaftaran(notrx) {
+        if (notrx) {
+            document.getElementById('cek_pendaftaran').checked = true;
             kode_poli.attr('disabled', false);
+        } else {
+            if (document.getElementById('cek_pendaftaran').checked == true) { // jika checked
+                // id kode_poli di nondisabled
+                kode_poli.attr('disabled', false);
 
-            $('#kode_member').html(`<option value="">~ Pilih Member</option>`);
-        } else { // selain itu
-            // id (kode_poli, kode_pendaftaran) disabled, set ke default kosong
-            kode_poli.attr('disabled', true);
-            kode_poli.html(`<option value="">~ Pilih Poli</option>`);
-            kode_pendaftaran.attr('disabled', true);
-            kode_pendaftaran.html(`<option value="">~ Pilih Member Terdaftar</option>`);
+                $('#kode_member').html(`<option value="">~ Pilih Member</option>`);
+            } else { // selain itu
+                // id (kode_poli, kode_pendaftaran) disabled, set ke default kosong
+                kode_poli.attr('disabled', true);
+                kode_poli.html(`<option value="">~ Pilih Poli</option>`);
+                kode_pendaftaran.attr('disabled', true);
+                kode_pendaftaran.html(`<option value="">~ Pilih Member Terdaftar</option>`);
 
-            $('#kode_member').html(`<option value="U00001">U00001 ~ UMUM</option>`);
+                $('#kode_member').html(`<option value="U00001">U00001 ~ UMUM</option>`);
+            }
         }
     }
 
@@ -772,37 +899,37 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
 
                     // masukan ke body table barang in detail
                     bodyBarangIn.append(`<tr id="rowBarangOut${x}">
-                            <td class="text-center">
-                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button>
-                            </td>
-                            <td>
-                                <input type="hidden" id="kode_barang_out${x}" name="kode_barang_out[]" value="${result[0].kode_barang}">
-                                <span>${result[0].kode_barang} ~ ${result[0].nama}</span>
-                            </td>
-                            <td>
-                                <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
-                            </td>
-                            <td>
-                                <input type="text" id="harga_out${x}" name="harga_out[]" value="${formatRpNoId(Number(result[0].harga_jual))}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_out${x}'); cekHarga(this.value, ${x})">
-                            </td>
-                            <td>
-                                <input type="text" id="qty_out${x}" name="qty_out[]" value="1" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_out${x}')">
-                            </td>
-                            <td>
-                                <input type="text" id="discpr_out${x}" name="discpr_out[]" value="0" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_out${x}')">
-                            </td>
-                            <td>
-                                <input type="text" id="discrp_out${x}" name="discrp_out[]" value="0" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_out${x}')">
-                            </td>
-                            <td class="text-center">
-                                <input type="checkbox" id="pajak_out${x}" name="pajak_out[]" class="form-control" onclick="hitung_st('${x}')">
-                                <input type="hidden" id="pajakrp_out${x}" name="pajakrp_out[]" value="0">
-                            </td>
-                            <td class="text-right">
-                                <input type="hidden" id="jumlah_out${x}" name="jumlah_out[]" value="${formatRpNoId(Number(result[0].harga_jual))}" class="form-control text-right" readonly>
-                                <span id="jumlah2_out${x}">${formatRpNoId(Number(result[0].harga_jual))}</span>
-                            </td>
-                        </tr>`);
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-danger" type="button" id="btnHapus${x}" onclick="hapusBarang('${x}')"><i class="fa-solid fa-delete-left"></i></button>
+                        </td>
+                        <td>
+                            <input type="hidden" id="kode_barang_out${x}" name="kode_barang_out[]" value="${result[0].kode_barang}">
+                            <span>${result[0].kode_barang} ~ ${result[0].nama}</span>
+                        </td>
+                        <td>
+                            <select name="kode_satuan[]" id="kode_satuan${x}" class="form-control select2_global" data-placeholder="~ Pilih Satuan" onchange="ubahSatuan(this.value, ${x})"></select>
+                        </td>
+                        <td>
+                            <input type="text" id="harga_out${x}" name="harga_out[]" value="${formatRpNoId(Number(result[0].harga_jual))}" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'harga_out${x}'); cekHarga(this.value, ${x})">
+                        </td>
+                        <td>
+                            <input type="text" id="qty_out${x}" name="qty_out[]" value="1" class="form-control text-right" onchange="hitung_st('${x}'); formatRp(this.value, 'qty_out${x}')">
+                        </td>
+                        <td>
+                            <input type="text" id="discpr_out${x}" name="discpr_out[]" value="0" class="form-control text-right" onchange="hitung_dpr(${x}); formatRp(this.value, 'discpr_out${x}')">
+                        </td>
+                        <td>
+                            <input type="text" id="discrp_out${x}" name="discrp_out[]" value="0" class="form-control text-right" onchange="hitung_drp(${x}); formatRp(this.value, 'discrp_out${x}')">
+                        </td>
+                        <td class="text-center">
+                            <input type="checkbox" id="pajak_out${x}" name="pajak_out[]" class="form-control" onclick="hitung_st('${x}')">
+                            <input type="hidden" id="pajakrp_out${x}" name="pajakrp_out[]" value="0">
+                        </td>
+                        <td class="text-right">
+                            <input type="hidden" id="jumlah_out${x}" name="jumlah_out[]" value="${formatRpNoId(Number(result[0].harga_jual))}" class="form-control text-right" readonly>
+                            <span id="jumlah2_out${x}">${formatRpNoId(Number(result[0].harga_jual))}</span>
+                        </td>
+                    </tr>`);
 
                     // each satuan
                     $.each(result[1], function(index, value) {

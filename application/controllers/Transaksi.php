@@ -11,6 +11,7 @@ class Transaksi extends CI_Controller
         parent::__construct();
         // load model M_auth
         $this->load->model("M_auth");
+        $this->load->model("M_order_emr");
 
         if (!empty($this->session->userdata("email"))) { // jika session email masih ada
 
@@ -2228,6 +2229,96 @@ class Transaksi extends CI_Controller
         $this->template->load('Template/Content', 'Jual/Keluar', $parameter);
     }
 
+    // fungsi list emr dokter
+    public function emr_list($param1)
+    {
+
+        // Kondisi role
+        $updated      = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted      = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+
+        // Table server side tampung kedalam variable $list
+        $dat          = explode("~", $param1);
+        if ($dat[0] == 1) {
+            $dari     = date('Y-m-d');
+            $sampai   = date('Y-m-d');
+            $tipe     = 1;
+        } else {
+            $dari     = date('Y-m-d', strtotime($dat[1])); // Extract month from date
+            $sampai   = date('Y-m-d', strtotime($dat[2])); // Extract year from date
+            $tipe     = 2;
+        }
+
+        $list         = $this->M_order_emr->get_datatables($dari, $sampai, $tipe);
+
+        $data         = [];
+        $no           = $_POST['start'] + 1;
+
+        // Loop $list
+        foreach ($list as $rd) {
+            if ($updated > 0) {
+                if ($rd->status_trx == 2) {
+                    $upd_diss = 'disabled';
+                } else {
+                    if ($rd->status_trx == 1) {
+                        $upd_diss = 'disabled';
+                    } else {
+                        $upd_diss = '';
+                    }
+                }
+            } else {
+                $upd_diss = 'disabled';
+            }
+
+            if ($deleted > 0) {
+                if ($rd->status_trx == 2) {
+                    $del_diss = 'disabled';
+                } else {
+                    if ($rd->status_trx == 1) {
+                        $del_diss = 'disabled';
+                    } else {
+                        $del_diss = '';
+                    }
+                }
+            } else {
+                $del_diss = 'disabled';
+            }
+
+            $row = [];
+            $row[] = $no++;
+            $row[] = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>'));
+            $row[] = '<span class="float-right">' . date('d/m/Y', strtotime($rd->date_dok)) . ' ~ ' . date('H:i:s', strtotime($rd->time_dok)) . '</span>';
+            $row[] = 'No. RM: <span class="float-right">' . $rd->kode_member . '</span><hr>Nama: <span class="float-right">' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama . '</span>';
+            $row[] = 'Dr. ' . $rd->dokter . '<hr>(Poli: ' . $rd->poli . ')';
+            $row[] = $rd->perawat;
+
+            if ($rd->status_trx == 0) {
+                $disabled = '';
+            } else {
+                $disabled = 'disabled';
+            }
+
+            $row[] = '<div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-success" onclick="ubah(' . "'emr', '" . $rd->no_trx . "'" . ')" ' . $disabled . '>
+                    <i class="fa-solid fa-receipt"></i> Proses
+                </button>
+            </div>';
+
+            $data[] = $row;
+        }
+
+        // Hasil server side
+        $output = [
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $this->M_order_emr->count_all($dari, $sampai, $tipe),
+            "recordsFiltered" => $this->M_order_emr->count_filtered($dari, $sampai, $tipe),
+            "data" => $data,
+        ];
+
+        // Kirimkan ke view
+        echo json_encode($output);
+    }
+
     // fungsi list barang_out
     public function barang_out_list($param1 = 1, $param2 = '')
     {
@@ -2316,7 +2407,7 @@ class Transaksi extends CI_Controller
             if ($rd->batal < 1) {
                 $batal = '<button type="button" style="margin-bottom: 5px;" class="btn btn-secondary" title="Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 1" . ')" ' . $confirm_diss . '><i class="fa-solid fa-ban"></i></button>';
 
-                $ubah = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>';
+                $ubah = '<button type="button" style="margin-bottom: 5px;" class="btn btn-warning" title="Ubah" onclick="ubah(' . "'" . $rd->invoice . "', '" . $rd->no_trx . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>';
             } else {
                 $batal = '<button type="button" style="margin-bottom: 5px;" class="btn btn-light" title="Re-Batalkan" onclick="actived(' . "'" . $rd->invoice . "', 0" . ')" ' . $confirm_diss . '><i class="fa-solid fa-arrow-rotate-left"></i></button>';
 
@@ -2522,19 +2613,34 @@ class Transaksi extends CI_Controller
         }
     }
 
+    // getBarangEmr
+    public function getBarangEmr($no_trx)
+    {
+        $barang = $this->db->query('SELECT epb.*, b.nama AS barang, b.harga_jual, (SELECT keterangan FROM m_satuan WHERE kode_satuan = epb.kode_satuan) AS satuan FROM emr_per_barang epb JOIN barang b ON epb.kode_barang = b.kode_barang WHERE epb.no_trx = "' . $no_trx . '"')->result();
+
+        echo json_encode($barang);
+    }
+
     // form barang_out page
-    public function form_barang_out($param)
+    public function form_barang_out($param, $no_trx)
     {
         // website config
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
-        if ($param != '0') {
-            $barang_out     = $this->M_global->getData('barang_out_header', ['invoice' => $param]);
-            $barang_detail  = $this->M_global->getDataResult('barang_out_detail', ['invoice' => $param]);
-        } else {
+        if ($param == 'emr') {
+            $emr_per_barang     = $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $no_trx]);
             $barang_out     = null;
             $barang_detail  = null;
+        } else {
+            $emr_per_barang     = null;
+            if ($param != '0') {
+                $barang_out     = $this->M_global->getData('barang_out_header', ['invoice' => $param]);
+                $barang_detail  = $this->M_global->getDataResult('barang_out_detail', ['invoice' => $param]);
+            } else {
+                $barang_out     = null;
+                $barang_detail  = null;
+            }
         }
 
         $parameter = [
@@ -2545,6 +2651,9 @@ class Transaksi extends CI_Controller
             'web'               => $web_setting,
             'web_version'       => $web_version->version,
             'list_data'         => '',
+            'param'             => $param,
+            'no_trx'            => $no_trx,
+            'emr_per_barang'    => $emr_per_barang,
             'data_barang_out'   => $barang_out,
             'barang_detail'     => $barang_detail,
             'role'              => $this->M_global->getResult('m_role'),

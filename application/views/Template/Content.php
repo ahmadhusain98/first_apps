@@ -336,7 +336,12 @@
                 <li class="nav-item dropdown">
                     <?php
                     $cabang = $this->session->userdata('cabang');
-                    $sintak = $this->db->query("SELECT * FROM (
+                    $cek_dok = $this->M_global->getData('dokter', ['kode_dokter' => $this->session->userdata('kode_user')]);
+
+                    if ($cek_dok) {
+                        $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr" AS url FROM pendaftaran p WHERE p.kode_dokter = "' . $cek_dok->kode_dokter . '"')->result();
+                    } else {
+                        $sintak = $this->db->query("SELECT * FROM (
                         SELECT id, no_trx AS invoice, 'pembayaran' AS url FROM pendaftaran
                         WHERE kode_cabang = '$cabang' AND status_trx = 0
 
@@ -361,6 +366,8 @@
                         WHERE kode_cabang = '$cabang' AND is_valid = 1 AND invoice NOT IN (SELECT invoice_po FROM barang_in_header WHERE kode_cabang = '$cabang')
                     ) AS semuax
                     ORDER BY id DESC LIMIT 10")->result();
+                    }
+
                     ?>
                     <a class="nav-link" data-toggle="dropdown" type="button">
                         <i class="fa-regular fa-bell"></i>&nbsp;&nbsp;Notifikasi&nbsp;&nbsp;
@@ -375,7 +382,10 @@
                             <?php
                             if (count($sintak) > 0) :
                                 foreach ($sintak as $s) :
-                                    if ($s->url == 'kasir') {
+                                    if ($s->url == 'emr') {
+                                        $msg = 'Emr Dokter';
+                                        $par_url = 'Emr/dokter/' . $s->invoice;
+                                    } else if ($s->url == 'kasir') {
                                         $msg = 'Pbr.Ksr';
                                         $par_url = 'Kasir/form_kasir/0?invoice=' . $s->invoice;
                                     } else if ($s->url == 'pembayaran') {

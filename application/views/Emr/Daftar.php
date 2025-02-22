@@ -35,7 +35,7 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
                                 <div class="col-md-6">
                                     <select name="kode_dokter" id="kode_dokter" class="form-control select2_dokter_all" data-placeholder="~ Pilih Dokter" onchange="getPoli(this.value)">
                                         <?php if ($cek_sess_dokter) : ?>
-                                            <option value="<?= $cek_session ?>"><?= 'Dr. ' . $cek_sess_dokter->nama ?></option>
+                                            <option value="<?= $cek_sess_dokter->kode_dokter ?>"><?= 'Dr. ' . $cek_sess_dokter->nama ?></option>
                                         <?php endif ?>
                                     </select>
                                 </div>
@@ -84,14 +84,14 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
 
 <script>
     var timeLeft = 10;
-    // var countdownTimer = setInterval(function() {
-    //     if (timeLeft <= 0) {
-    //         timeLeft = 10; // Reset the timer
-    //         reloadTableEmr(); // Call reloadTable function
-    //     }
-    //     document.getElementById("countdown").innerHTML = timeLeft + " Detik";
-    //     timeLeft -= 1;
-    // }, 1000);
+    var countdownTimer = setInterval(function() {
+        if (timeLeft <= 0) {
+            timeLeft = 10; // Reset the timer
+            reloadTableEmr(); // Call reloadTable function
+        }
+        document.getElementById("countdown").innerHTML = timeLeft + " Detik";
+        timeLeft -= 1;
+    }, 1000);
 
     function reloadTableEmr() {
         tableEmr.DataTable().ajax.reload(null, false);
@@ -112,7 +112,7 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
         "serverSide": true,
         "order": [],
         "ajax": {
-            "url": `<?= site_url() ?>Emr/daftar_list/1?kode_poli=&kode_dokter=<?= $cek_session ?>`,
+            "url": `<?= site_url() ?>Emr/daftar_list/1?kode_poli=&kode_dokter=<?= ((!empty($cek_sess_dokter)) ? $cek_sess_dokter->kode_dokter : '') ?>`,
             "type": "POST",
         },
         "scrollCollapse": false,

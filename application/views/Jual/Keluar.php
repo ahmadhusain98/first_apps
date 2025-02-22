@@ -8,7 +8,7 @@ echo _lock_so();
         <div class="col-md-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">
-                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Pembelian</span>
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Order EMR Dokter & Penjualan</span>
                     <div class="float-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -20,7 +20,7 @@ echo _lock_so();
                                 <li><a class="dropdown-item" href="#" onclick="excel('barang_out')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
                             </ul>
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                        <button type="button" class="btn btn-primary" onclick="reloadTable3()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
                         <?php if ($created == 1) : ?>
                             <button type="button" class="btn btn-success" onclick="getUrl('Transaksi/form_barang_out/0')" <?= _lock_button() ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
                         <?php endif; ?>
@@ -29,9 +29,57 @@ echo _lock_so();
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-md-6 col-12">
-                            <select name="kode_gudang" id="kode_gudang" class="select2_gudang_int" data-placeholder="~ Pilih Gudang" onchange="getGudang(this.value)"></select>
+                            <span class="h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Order EMR Dokter</span>
                         </div>
                         <div class="col-md-6 col-12">
+                            <div class="row">
+                                <div class="col-md-4 col-4 mb-3">
+                                    <input type="date" name="dari2" id="dari2" class="form-control" value="<?= date('Y-m-d') ?>">
+                                </div>
+                                <div class="col-md-4 col-4 mb-3">
+                                    <input type="date" name="sampai2" id="sampai2" class="form-control" value="<?= date('Y-m-d') ?>">
+                                </div>
+                                <div class="col-md-4 col-4 mb-3">
+                                    <button type="button" style="width: 100%;" class="btn btn-info" onclick="filterEmr()"><i class="fa-solid fa-sort"></i>&nbsp;&nbsp;Filter</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered" id="tableEmr" width="100%" style="border-radius: 10px;">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
+                                            <th width="15%">Invoice</th>
+                                            <th width="15%">Tgl/Jam Order</th>
+                                            <th width="20%">Pembeli</th>
+                                            <th width="15%">Dokter</th>
+                                            <th width="15%">Perawat</th>
+                                            <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <span class="h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Penjualan</span>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <select name="kode_gudang" id="kode_gudang" class="select2_gudang_int" data-placeholder="~ Pilih Gudang" onchange="getGudang(this.value)"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-4 col-4 mb-3">
                                     <input type="date" name="dari" id="dari" class="form-control" value="<?= date('Y-m-d') ?>">
@@ -74,13 +122,71 @@ echo _lock_so();
 </form>
 
 <script>
+    var tableEmr = $('#tableEmr');
+
+    tableEmr.DataTable({
+        "destroy": true,
+        "processing": true,
+        "responsive": true,
+        "serverSide": true,
+        "order": [],
+        "ajax": {
+            "url": `<?= site_url() ?>Transaksi/emr_list/1`,
+            "type": "POST",
+        },
+        "scrollCollapse": false,
+        "paging": true,
+        "language": {
+            "emptyTable": "<div class='text-center'>Data Kosong</div>",
+            "infoEmpty": "",
+            "infoFiltered": "",
+            "search": "",
+            "searchPlaceholder": "Cari data...",
+            "info": " Jumlah _TOTAL_ Data (_START_ - _END_)",
+            "lengthMenu": "_MENU_ Baris",
+            "zeroRecords": "<div class='text-center'>Data Kosong</div>",
+            "paginate": {
+                "previous": "Sebelumnya",
+                "next": "Berikutnya"
+            }
+        },
+        "lengthMenu": [
+            [10, 25, 50, 75, 100, -1],
+            [10, 25, 50, 75, 100, "Semua"]
+        ],
+        "columnDefs": [{
+            "targets": [-1],
+            "orderable": false,
+        }],
+    });
+
+    function filterEmr() {
+        var dari2 = $('#dari2').val();
+        var sampai2 = $('#sampai2').val();
+
+        var parameterString = `2~${dari2}~${sampai2}`;
+
+        tableEmr.DataTable().ajax.url('<?= site_url() ?>Transaksi/emr_list/' + parameterString).load();
+    }
+
+    function reloadTable3() {
+        reloadTable();
+        reloadTable2();
+    }
+
+    function reloadTable2() {
+        tableEmr.DataTable().ajax.reload(null, false);
+    }
+</script>
+
+<script>
     // variable
     var table = $('#tableBarangOut');
 
     //fungsi ubah berdasarkan lemparan kode
-    function ubah(invoice) {
+    function ubah(invoice, notrx) {
         // jalankan fungsi
-        getUrl('Transaksi/form_barang_out/' + invoice);
+        getUrl('Transaksi/form_barang_out/' + invoice + '/' + notrx);
     }
 
     // fungsi hapus berdasarkan invoice
@@ -107,6 +213,7 @@ echo _lock_so();
 
                         if (result.status == 1) { // jika mendapatkan hasil 1
                             reloadTable();
+                            reloadTable2();
 
                             Swal.fire("Penjualan", "Berhasil di hapus!", "success");
                         } else { // selain itu
@@ -194,7 +301,7 @@ echo _lock_so();
             showLoaderOnConfirm: true,
             preConfirm: async (email) => {
                 try {
-                    const githubUrl = `${siteUrl}Transaksi/email_out/${x}?email=${email}`;
+                    const githubUrl = `<?= site_url() ?>Transaksi/email_out/${x}?email=${email}`;
                     const response = await fetch(githubUrl);
                     if (!response.ok) {
                         return Swal.showValidationMessage(`${JSON.stringify(await response.json())}`);
@@ -210,7 +317,7 @@ echo _lock_so();
                 if (result.value.status == 1) {
                     Swal.fire("Invoice Penjualan", "Berhasil dikirim via Email!, silahkan cek email", "success");
                 } else {
-                    Swal.fire("Invoice Penjualan", "Gagal dikirim via Email!, silahkan cek email", "info");
+                    Swal.fire("Invoice Penjualan", "Gagal dikirim via Email!, silahkan coba lagi", "info");
                 }
             }
         });

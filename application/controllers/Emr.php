@@ -77,16 +77,16 @@ class Emr extends CI_Controller
         // Table server side tampung kedalam variable $list
         $dat          = explode("~", $param1);
         if ($dat[0] == 1) {
-            $bulan    = date('m');
-            $tahun    = date('Y');
+            $dari     = date('Y-m-d');
+            $sampai   = date('Y-m-d');
             $tipe     = 1;
         } else {
-            $bulan    = date('m', strtotime($dat[1])); // Extract month from date
-            $tahun    = date('Y', strtotime($dat[2])); // Extract year from date
+            $dari     = date('Y-m-d', strtotime($dat[1])); // Extract month from date
+            $sampai   = date('Y-m-d', strtotime($dat[2])); // Extract year from date
             $tipe     = 2;
         }
 
-        $list         = $this->M_Emr->get_datatables($bulan, $tahun, $kode_poli, $kode_dokter, $tipe);
+        $list         = $this->M_Emr->get_datatables($dari, $sampai, $kode_poli, $kode_dokter, $tipe);
 
         $data         = [];
         $no           = $_POST['start'] + 1;
@@ -185,8 +185,8 @@ class Emr extends CI_Controller
         // Hasil server side
         $output = [
             "draw" => $_POST['draw'],
-            "recordsTotal" => $this->M_Emr->count_all($bulan, $tahun, $kode_poli, $kode_dokter, $tipe),
-            "recordsFiltered" => $this->M_Emr->count_filtered($bulan, $tahun, $kode_poli, $kode_dokter, $tipe),
+            "recordsTotal" => $this->M_Emr->count_all($dari, $sampai, $kode_poli, $kode_dokter, $tipe),
+            "recordsFiltered" => $this->M_Emr->count_filtered($dari, $sampai, $kode_poli, $kode_dokter, $tipe),
             "data" => $data,
         ];
 
@@ -231,10 +231,10 @@ class Emr extends CI_Controller
         $kode_member = $this->input->get('kode_member');
         $kode_dokter = $this->input->get('kode_dokter');
 
-        if ($kode_dokter) {
-            $where_dokter = ' AND kode_dokter = "' . $kode_dokter . '"';
-        } else {
+        if ($kode_dokter == '' || $kode_dokter == null || $kode_dokter == 'null') {
             $where_dokter = '';
+        } else {
+            $where_dokter = ' AND kode_dokter = "' . $kode_dokter . '"';
         }
 
         $pendaftaran = $this->db->query('SELECT *, ROW_NUMBER() OVER (ORDER BY id DESC) AS eps FROM pendaftaran WHERE kode_member = "' . $kode_member . '" ' . $where_dokter . '  ORDER BY id DESC')->result();
@@ -405,7 +405,9 @@ class Emr extends CI_Controller
                 <div class="row mb-1">
                     <div class="col-md-12">
                         <span class="font-weight-bold">Terapi
-                            <?php if (!$cek_dokter) : ?>
+                            <?php
+                            if (!$cek_dokter) :
+                            ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_terapi')"><i class="fa fa-copy"></i> Copy</button>
@@ -580,7 +582,9 @@ class Emr extends CI_Controller
                 <div class="row mb-1">
                     <div class="col-md-12">
                         <span class="font-weight-bold">Terapi
-                            <?php if ($cek_dokter) : ?>
+                            <?php
+                            if ($cek_dokter) :
+                            ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_terapi')"><i class="fa fa-copy"></i> Copy</button>
@@ -703,6 +707,7 @@ class Emr extends CI_Controller
     {
         // ambil data dari view
         $no_trx               = htmlspecialchars($this->input->post('no_trx'));
+        $kode_member          = htmlspecialchars($this->input->post('kode_member'));
         $umur                 = htmlspecialchars($this->input->post('umur'));
         $penyakit_keluarga    = htmlspecialchars($this->input->post('penyakit_keluarga'));
         $alergi               = htmlspecialchars($this->input->post('alergi'));
@@ -732,6 +737,7 @@ class Emr extends CI_Controller
         // tampung dalam array
         $data = [
             'no_trx'            => $no_trx,
+            'kode_member'       => $kode_member,
             'umur'              => $umur,
             'date_per'          => $date_per,
             'time_per'          => $time_per,
@@ -752,6 +758,7 @@ class Emr extends CI_Controller
             'diagnosa_per'      => $diagnosa_per,
             'anamnesa_per'      => $anamnesa_per,
             'eracikan'          => $eracikan,
+            'kode_user'         => $this->data['kode_user'],
         ];
 
         // pengecekan data emr perawat
@@ -760,6 +767,7 @@ class Emr extends CI_Controller
         if ($cek_emr_per) { // jika ada data, maka update
             $cek = [
                 $this->M_global->updateData('emr_per', $data, ['no_trx' => $no_trx]),
+                $this->M_global->updateData('emr_dok', ['penyakit_keluarga' => $penyakit_keluarga, 'alergi' => $alergi, 'eracikan' => $eracikan], ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_per_barang', ['no_trx' => $no_trx]),
             ];
         } else { // selain itu maka tambah
@@ -770,24 +778,26 @@ class Emr extends CI_Controller
         }
 
         $loop = 0;
-        foreach ($kode_barang as $k) {
-            if ($k) {
-                $kode_barang_   = $k;
-                $kode_satuan_   = $kode_satuan[$loop];
-                $qty_           = $qty[$loop];
-                $signa_         = $signa[$loop];
+        if (isset($kode_barang)) {
+            foreach ($kode_barang as $k) {
+                if ($k) {
+                    $kode_barang_   = $k;
+                    $kode_satuan_   = $kode_satuan[$loop];
+                    $qty_           = $qty[$loop];
+                    $signa_         = $signa[$loop];
 
-                $loop++;
+                    $loop++;
 
-                $data_barang = [
-                    'no_trx'        => $no_trx,
-                    'kode_barang'   => $kode_barang_,
-                    'kode_satuan'   => $kode_satuan_,
-                    'qty'           => $qty_,
-                    'signa'         => $signa_,
-                ];
+                    $data_barang = [
+                        'no_trx'        => $no_trx,
+                        'kode_barang'   => $kode_barang_,
+                        'kode_satuan'   => $kode_satuan_,
+                        'qty'           => $qty_,
+                        'signa'         => $signa_,
+                    ];
 
-                $this->M_global->insertData('emr_per_barang', $data_barang);
+                    $this->M_global->insertData('emr_per_barang', $data_barang);
+                }
             }
         }
 
@@ -840,6 +850,7 @@ class Emr extends CI_Controller
     {
         // ambil data dari view
         $no_trx               = htmlspecialchars($this->input->post('no_trx'));
+        $kode_member          = htmlspecialchars($this->input->post('kode_member'));
         $umur                 = htmlspecialchars($this->input->post('umur'));
         $penyakit_keluarga    = htmlspecialchars($this->input->post('penyakit_keluarga'));
         $alergi               = htmlspecialchars($this->input->post('alergi'));
@@ -861,6 +872,7 @@ class Emr extends CI_Controller
         // tampung dalam array
         $data = [
             'no_trx'            => $no_trx,
+            'kode_member'       => $kode_member,
             'umur'              => $umur,
             'date_dok'          => $date_dok,
             'time_dok'          => $time_dok,
@@ -870,6 +882,7 @@ class Emr extends CI_Controller
             'anamnesa_dok'      => $anamnesa_dok,
             'rencana_dok'       => $rencana_dok,
             'eracikan'          => $eracikan,
+            'kode_user'         => $this->data['kode_user'],
         ];
 
         // pengecekan data emr perawat
@@ -878,6 +891,7 @@ class Emr extends CI_Controller
         if ($cek_emr_dok) { // jika ada data, maka update
             $cek = [
                 $this->M_global->updateData('emr_dok', $data, ['no_trx' => $no_trx]),
+                $this->M_global->updateData('emr_per', ['penyakit_keluarga' => $penyakit_keluarga, 'alergi' => $alergi, 'eracikan' => $eracikan], ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_per_barang', ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_dok_fisik', ['no_trx' => $no_trx]),
             ];
@@ -890,42 +904,46 @@ class Emr extends CI_Controller
         }
 
         $loop = 0;
-        foreach ($kode_barang as $k) {
-            if ($k) {
-                $kode_barang_   = $k;
-                $kode_satuan_   = $kode_satuan[$loop];
-                $qty_           = $qty[$loop];
-                $signa_         = $signa[$loop];
+        if (isset($kode_barang)) {
+            foreach ($kode_barang as $k) {
+                if ($k) {
+                    $kode_barang_   = $k;
+                    $kode_satuan_   = $kode_satuan[$loop];
+                    $qty_           = $qty[$loop];
+                    $signa_         = $signa[$loop];
 
-                $loop++;
+                    $loop++;
 
-                $data_barang = [
-                    'no_trx'        => $no_trx,
-                    'kode_barang'   => $kode_barang_,
-                    'kode_satuan'   => $kode_satuan_,
-                    'qty'           => $qty_,
-                    'signa'         => $signa_,
-                ];
+                    $data_barang = [
+                        'no_trx'        => $no_trx,
+                        'kode_barang'   => $kode_barang_,
+                        'kode_satuan'   => $kode_satuan_,
+                        'qty'           => $qty_,
+                        'signa'         => $signa_,
+                    ];
 
-                $this->M_global->insertData('emr_per_barang', $data_barang);
+                    $this->M_global->insertData('emr_per_barang', $data_barang);
+                }
             }
         }
 
         $loop2 = 0;
-        foreach ($fisik as $f) {
-            if ($f) {
-                $fisik_        = $f;
-                $desc_fisik_   = $desc_fisik[$loop2];
+        if (isset($fisik)) {
+            foreach ($fisik as $f) {
+                if ($f) {
+                    $fisik_        = $f;
+                    $desc_fisik_   = $desc_fisik[$loop2];
 
-                $loop2++;
+                    $loop2++;
 
-                $data_fisik = [
-                    'no_trx'        => $no_trx,
-                    'fisik'         => $fisik_,
-                    'desc_fisik'    => $desc_fisik_,
-                ];
+                    $data_fisik = [
+                        'no_trx'        => $no_trx,
+                        'fisik'         => $fisik_,
+                        'desc_fisik'    => $desc_fisik_,
+                    ];
 
-                $this->M_global->insertData('emr_dok_fisik', $data_fisik);
+                    $this->M_global->insertData('emr_dok_fisik', $data_fisik);
+                }
             }
         }
 

@@ -39,36 +39,36 @@ function dell_field($table, $kolom)
 }
 
 // send email
-function _sendMail($emailUser, $title, $message)
-{
-    $CI = &get_instance();
-    $web_setting = $CI->db->query('SELECT * FROM web_setting WHERE id = 1')->row();
+// function _sendMail($emailUser, $title, $message)
+// {
+//     $CI = &get_instance();
+//     $web_setting = $CI->db->query('SELECT * FROM web_setting WHERE id = 1')->row();
 
-    $config = [
-        'mailtype'      => 'html',
-        'charset'       => 'utf-8',
-        'protocol'      => 'smtp',
-        'smtp_host'     => 'smtp.gmail.com',
-        'smtp_user'     => $web_setting->email,
-        'smtp_pass'     => $web_setting->kode_email,
-        'smtp_crypto'   => 'ssl',
-        'smtp_port'     => 465,
-        'crlf'          => "\r\n",
-        'newline'       => "\r\n"
-    ];
+//     $config = [
+//         'mailtype'      => 'html',
+//         'charset'       => 'utf-8',
+//         'protocol'      => 'smtp',
+//         'smtp_host'     => 'smtp.gmail.com',
+//         'smtp_user'     => $web_setting->email,
+//         'smtp_pass'     => $web_setting->kode_email,
+//         'smtp_crypto'   => 'ssl',
+//         'smtp_port'     => 465,
+//         'crlf'          => "\r\n",
+//         'newline'       => "\r\n"
+//     ];
 
-    $CI->email->clear();
-    $CI->email->initialize($config);
-    $CI->email->from($web_setting->email, $web_setting->nama);
-    $CI->email->to($emailUser);
-    $CI->email->subject($title);
-    $CI->email->message($message);
-    if ($CI->email->send()) { // email terkirim
-        echo json_encode(["status" => 1, "email" => $emailUser]);
-    } else { // email gagal terkirim
-        echo json_encode(["status" => 2, "email" => $emailUser]);
-    }
-}
+//     $CI->email->clear();
+//     $CI->email->initialize($config);
+//     $CI->email->from($web_setting->email, $web_setting->nama);
+//     $CI->email->to($emailUser);
+//     $CI->email->subject($title);
+//     $CI->email->message($message);
+//     if ($CI->email->send()) { // email terkirim
+//         echo json_encode(["status" => 1, "email" => $emailUser]);
+//     } else { // email gagal terkirim
+//         echo json_encode(["status" => 2, "email" => $emailUser]);
+//     }
+// }
 
 function aktifitas_user($menu, $message, $kode, $value, $detail = [])
 {

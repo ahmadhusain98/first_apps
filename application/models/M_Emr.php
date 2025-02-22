@@ -7,7 +7,7 @@ class M_Emr extends CI_Model
 
     protected $columns = ['p.id', 'p.no_trx', 'p.tgl_daftar', 'p.jam_daftar', 'p.kode_member', 'm.nama AS member', 'd.nama AS dokter', 'pol.keterangan', 'p.kode_poli', 'p.kode_ruang', 'p.kode_dokter', 'p.no_antrian', 'p.tgl_keluar', 'p.jam_keluar', 'p.status_trx', 'p.kode_user', 'p.shift'];
 
-    protected $search_key = ['no_trx', 'tgl_daftar', 'jam_daftar', 'kode_member', 'kode_poli', 'kode_ruang', 'kode_dokter', 'no_antrian', 'tgl_keluar', 'jam_keluar', 'status_trx', 'kode_user', 'shift'];
+    protected $search_key = ['p.id', 'p.no_trx', 'p.tgl_daftar', 'p.jam_daftar', 'p.kode_member', 'm.nama', 'd.nama', 'pol.keterangan', 'p.kode_poli', 'p.kode_ruang', 'p.kode_dokter', 'p.no_antrian', 'p.tgl_keluar', 'p.jam_keluar', 'p.status_trx', 'p.kode_user', 'p.shift'];
 
     protected $order = ['id' => 'asc'];
 
@@ -18,7 +18,7 @@ class M_Emr extends CI_Model
         date_default_timezone_set("Asia/Jakarta");
     }
 
-    private function _get_datatables_query($bulan, $tahun, $kode_poli, $kode_dokter, $tipe)
+    private function _get_datatables_query($dari, $sampai, $kode_poli, $kode_dokter, $tipe)
     {
         $this->db->query("SET SESSION sql_mode = ''");
 
@@ -32,9 +32,9 @@ class M_Emr extends CI_Model
         $this->db->where("p.kode_cabang", $this->session->userdata("cabang"));
 
         if ($tipe == 1) {
-            $this->db->where(['p.tgl_daftar >=' => date('Y-m-d')]);
+            $this->db->where(['p.tgl_daftar >=' => $dari]);
         } else {
-            $this->db->where(['p.tgl_daftar >=' => $tahun . '-' . $bulan . '-01', 'p.tgl_daftar <=' => date('Y-m-t', strtotime($tahun . '-' . $bulan . '-01'))]);
+            $this->db->where(['p.tgl_daftar >=' => $dari, 'p.tgl_daftar <=' => $sampai]);
         }
 
         if (!empty($kode_poli) && empty($kode_dokter)) {
@@ -75,9 +75,9 @@ class M_Emr extends CI_Model
         }
     }
 
-    public function get_datatables($bulan, $tahun, $kode_poli, $kode_dokter, $tipe)
+    public function get_datatables($dari, $sampai, $kode_poli, $kode_dokter, $tipe)
     {
-        $this->_get_datatables_query($bulan, $tahun, $kode_poli, $kode_dokter, $tipe);
+        $this->_get_datatables_query($dari, $sampai, $kode_poli, $kode_dokter, $tipe);
         if ($_POST["length"] != -1) {
             $this->db->limit($_POST["length"], $_POST["start"]);
         }
@@ -85,14 +85,14 @@ class M_Emr extends CI_Model
         return $query->result();
     }
 
-    public function count_filtered($bulan, $tahun, $kode_poli, $kode_dokter, $tipe)
+    public function count_filtered($dari, $sampai, $kode_poli, $kode_dokter, $tipe)
     {
-        $this->_get_datatables_query($bulan, $tahun, $kode_poli, $kode_dokter, $tipe);
+        $this->_get_datatables_query($dari, $sampai, $kode_poli, $kode_dokter, $tipe);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all($bulan, $tahun, $kode_poli, $kode_dokter, $tipe)
+    public function count_all($dari, $sampai, $kode_poli, $kode_dokter, $tipe)
     {
         $this->db->query("SET SESSION sql_mode = ''");
 
@@ -106,9 +106,9 @@ class M_Emr extends CI_Model
         $this->db->where("p.kode_cabang", $this->session->userdata("cabang"));
 
         if ($tipe == 1) {
-            $this->db->where(['p.tgl_daftar >=' => date('Y-m-d')]);
+            $this->db->where(['p.tgl_daftar >=' => $dari]);
         } else {
-            $this->db->where(['p.tgl_daftar >=' => $tahun . '-' . $bulan . '-01', 'p.tgl_daftar <=' => date('Y-m-t', strtotime($tahun . '-' . $bulan . '-01'))]);
+            $this->db->where(['p.tgl_daftar >=' => $dari, 'p.tgl_daftar <=' => $sampai]);
         }
 
         if (!empty($kode_poli) && empty($kode_dokter)) {

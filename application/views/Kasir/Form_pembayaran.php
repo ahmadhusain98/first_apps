@@ -134,11 +134,12 @@
                                     <thead>
                                         <tr class="text-center">
                                             <th style="width: 5%;">No</th>
-                                            <th style="width: 45%;">Barang</th>
+                                            <th style="width: 35%;">Barang</th>
                                             <th style="width: 10%;">Satuan</th>
                                             <th style="width: 10%;">Qty</th>
                                             <th style="width: 10%;">Harga</th>
                                             <th style="width: 10%;">Disc</th>
+                                            <th style="width: 10%;">Pajak</th>
                                             <th style="width: 10%;">Jumlah</th>
                                         </tr>
                                     </thead>
@@ -164,6 +165,9 @@
                                                     </td>
                                                     <td style="text-align: right;">
                                                         <label style="font-weight: normal;"><?= number_format($pen->discrp) ?></label>
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        <label style="font-weight: normal;"><?= number_format($pen->pajakrp) ?></label>
                                                     </td>
                                                     <td style="text-align: right;">
                                                         <label style="font-weight: normal;"><?= number_format($pen->jumlah) ?></label>
@@ -699,6 +703,9 @@
                         </td>
                         <td>
                             Rp. <span class="float-right" style="font-weight: normal;">${formatRpNoId(value.discrp)}</span>
+                        </td>
+                        <td>
+                            Rp. <span class="float-right" style="font-weight: normal;">${formatRpNoId(value.pajakrp)}</span>
                         </td>
                         <td>
                             Rp. <span class="float-right" style="font-weight: normal;">${formatRpNoId(value.jumlah)}</span>
