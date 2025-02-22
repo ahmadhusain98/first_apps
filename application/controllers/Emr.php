@@ -11,6 +11,7 @@ class Emr extends CI_Controller
         parent::__construct();
         // load model M_auth
         $this->load->model("M_auth");
+        $this->load->model("M_Emr");
 
         if (!empty($this->session->userdata("email"))) { // jika session email masih ada
 
@@ -55,7 +56,7 @@ class Emr extends CI_Controller
             'page'          => 'EMR Rawat Jalan',
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
-            'list_data'     => 'Emr/daftar_list/',
+            'list_data'     => '',
             'param1'        => '',
         ];
 
@@ -63,40 +64,39 @@ class Emr extends CI_Controller
     }
 
     // fungsi list daftar
-    public function daftar_list($param1 = 1, $param2 = '', $param3 = '')
+    public function daftar_list($param1)
     {
-        // parameter untuk list table
-        $table            = 'pendaftaran';
-        $colum            = ['id', 'no_trx', 'tgl_daftar', 'jam_daftar', 'kode_member', 'kode_poli', 'kode_ruang', 'kode_dokter', 'no_antrian', 'tgl_keluar', 'jam_keluar', 'status_trx', 'kode_user', 'shift'];
-        $order            = 'id';
-        $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
-        $kondisi_param1   = 'tgl_daftar';
-        $kondisi_param2   = 'kode_poli';
-        $kondisi_param3   = 'kode_dokter';
+        // Parameter untuk list table
+        $kode_poli    = $this->input->get('kode_poli');
+        $kode_dokter  = $this->input->get('kode_dokter');
 
-        // kondisi role
-        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
-        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+        // Kondisi role
+        $updated      = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted      = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
 
-        // table server side tampung kedalam variable $list
-        $dat    = explode("~", $param1);
+        // Table server side tampung kedalam variable $list
+        $dat          = explode("~", $param1);
         if ($dat[0] == 1) {
-            $bulan   = date('m');
-            $tahun   = date('Y');
-            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2, $param3, $kondisi_param3);
+            $bulan    = date('m');
+            $tahun    = date('Y');
+            $tipe     = 1;
         } else {
-            $bulan   = date('Y-m-d', strtotime($dat[1]));
-            $tahun   = date('Y-m-d', strtotime($dat[2]));
-            $list    = $this->M_datatables2->get_datatables($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 2, $bulan, $tahun, $param2, $kondisi_param2);
+            $bulan    = date('m', strtotime($dat[1])); // Extract month from date
+            $tahun    = date('Y', strtotime($dat[2])); // Extract year from date
+            $tipe     = 2;
         }
-        $data             = [];
-        $no               = $_POST['start'] + 1;
 
-        // loop $list
+        $list         = $this->M_Emr->get_datatables($bulan, $tahun, $kode_poli, $kode_dokter, $tipe);
+
+        $data         = [];
+        $no           = $_POST['start'] + 1;
+
+        // Loop $list
         foreach ($list as $rd) {
             if ($updated > 0) {
-                if ($rd->status_trx == 2) {
+                if (
+                    $rd->status_trx == 2
+                ) {
                     $upd_diss = 'disabled';
                 } else {
                     if ($rd->status_trx == 1) {
@@ -109,8 +109,12 @@ class Emr extends CI_Controller
                 $upd_diss = 'disabled';
             }
 
-            if ($deleted > 0) {
-                if ($rd->status_trx == 2) {
+            if (
+                $deleted > 0
+            ) {
+                if (
+                    $rd->status_trx == 2
+                ) {
                     $del_diss = 'disabled';
                 } else {
                     if ($rd->status_trx == 1) {
@@ -137,14 +141,14 @@ class Emr extends CI_Controller
                 $status_dok = '';
             }
 
-            $row    = [];
-            $row[]  = $no++;
-            $row[]  = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>')) . '<br>' . $status_per . ' ' . $status_dok;
-            $row[]  = 'No. RM: <span class="float-right">' . $rd->kode_member . '</span><hr>Nama: <span class="float-right">' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama . '</span>';
-            $row[]  = 'Datang: <span class="float-right">' . date('d/m/Y', strtotime($rd->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_daftar)) . '</span><br>' .
+            $row = [];
+            $row[] = $no++;
+            $row[] = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>')) . '<br>' . $status_per . ' ' . $status_dok;
+            $row[] = 'No. RM: <span class="float-right">' . $rd->kode_member . '</span><hr>Nama: <span class="float-right">' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama . '</span>';
+            $row[] = 'Datang: <span class="float-right">' . date('d/m/Y', strtotime($rd->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_daftar)) . '</span><br>' .
                 '<hr>Selesai: <span class="float-right">' . (($rd->status_trx < 1) ? '<i class="text-secondary">Null</i>' : (($rd->tgl_keluar == null) ? 'xx/xx/xxxx' : date('d/m/Y', strtotime($rd->tgl_keluar))) . ' ~ ' . (($rd->jam_keluar == null) ? 'xx:xx:xx' : date('H:i:s', strtotime($rd->jam_keluar)))) . '</span>';
-            $row[]  = 'Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $rd->kode_dokter])->nama . '<hr>(Poli: ' . $this->M_global->getData('m_poli', ['kode_poli' => $rd->kode_poli])->keterangan . ')';
-            $row[]  = '<span>' . $this->M_global->getData('m_poli', ['kode_poli' => $rd->kode_poli])->keterangan . (($rd->kode_ruang == null) ? '' : ' (' . $this->M_global->getData('m_ruang', ['kode_ruang' => $rd->kode_ruang])->keterangan . ')</span>') . '<hr>No Urut <span class="float-right">' . $rd->no_antrian . '</span>';
+            $row[] = 'Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $rd->kode_dokter])->nama . '<hr>(Poli: ' . $this->M_global->getData('m_poli', ['kode_poli' => $rd->kode_poli])->keterangan . ')';
+            $row[] = '<span>' . $this->M_global->getData('m_poli', ['kode_poli' => $rd->kode_poli])->keterangan . (($rd->kode_ruang == null) ? '' : ' (' . $this->M_global->getData('m_ruang', ['kode_ruang' => $rd->kode_ruang])->keterangan . ')</span>') . '<hr>No Urut <span class="float-right">' . $rd->no_antrian . '</span>';
 
             if ($rd->status_trx == 2) {
                 $disabled = 'disabled';
@@ -152,39 +156,41 @@ class Emr extends CI_Controller
                 $disabled = '';
             }
 
-            if ($rd->kode_dokter == $this->data['kode_user']) {
+            if (
+                $rd->kode_dokter == $this->data['kode_user']
+            ) {
                 $button = '<button ' . $disabled . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-primary" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Dokter" onclick="getUrl(' . "'" . "Emr/dokter/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-doctor"></i> Doctor</button>';
             } else {
                 $button = '<button ' . $disabled . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-success" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Perawat" onclick="getUrl(' . "'" . "Emr/perawat/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-nurse"></i> Nurse</button>';
             }
 
-            $row[]  = '<div class="d-flex justify-content-center">
-                ' . $button . '
-                <div class="btn-group dropstart" style="margin-bottom: 5px;">
-                    <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-envelope-open-text"></i> Surat
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Surat Keterangan Sakit</a></li>
-                        <li><a class="dropdown-item" href="#">Surat Keterangan Dokter</a></li>
-                        <li><a class="dropdown-item" href="#">Surat Keterangan Diagnosa</a></li>
-                        <li><a class="dropdown-item" href="#">Surat Keterangan Dalam Perawatan</a></li>
-                    </ul>
-                </div>
-            </div>';
+            $row[] = '<div class="d-flex justify-content-center">
+            ' . $button . '
+            <div class="btn-group dropstart" style="margin-bottom: 5px;">
+                <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-envelope-open-text"></i> Surat
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Surat Keterangan Sakit</a></li>
+                    <li><a class="dropdown-item" href="#">Surat Keterangan Dokter</a></li>
+                    <li><a class="dropdown-item" href="#">Surat Keterangan Diagnosa</a></li>
+                    <li><a class="dropdown-item" href="#">Surat Keterangan Dalam Perawatan</a></li>
+                </ul>
+            </div>
+        </div>';
 
             $data[] = $row;
         }
 
-        // hasil server side
+        // Hasil server side
         $output = [
-            "draw"            => $_POST['draw'],
-            "recordsTotal"    => $this->M_datatables2->count_all($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2),
-            "recordsFiltered" => $this->M_datatables2->count_filtered($table, $colum, $order_arr, $order, $order2, $kondisi_param1, 1, $bulan, $tahun, $param2, $kondisi_param2),
-            "data"            => $data,
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $this->M_Emr->count_all($bulan, $tahun, $kode_poli, $kode_dokter, $tipe),
+            "recordsFiltered" => $this->M_Emr->count_filtered($bulan, $tahun, $kode_poli, $kode_dokter, $tipe),
+            "data" => $data,
         ];
 
-        // kirimkan ke view
+        // Kirimkan ke view
         echo json_encode($output);
     }
 
@@ -709,6 +715,7 @@ class Emr extends CI_Controller
         $saturasi             = htmlspecialchars($this->input->post('saturasi'));
         $scale                = htmlspecialchars($this->input->post('scale'));
         $bicara               = htmlspecialchars($this->input->post('bicara'));
+        $gangguan             = htmlspecialchars($this->input->post('gangguan_bcr'));
         $emosi                = htmlspecialchars($this->input->post('emosi'));
         $spiritual            = htmlspecialchars($this->input->post('spiritual'));
         $diagnosa_per         = htmlspecialchars($this->input->post('diagnosa_per'));
@@ -739,6 +746,7 @@ class Emr extends CI_Controller
             'saturasi'          => (($saturasi) ? $saturasi : '-'),
             'scale'             => $scale,
             'bicara'            => $bicara,
+            'gangguan'          => $gangguan,
             'emosi'             => $emosi,
             'spiritual'         => $spiritual,
             'diagnosa_per'      => $diagnosa_per,

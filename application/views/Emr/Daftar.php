@@ -1,5 +1,5 @@
 <?php
-$created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->created;
+$created = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->created;
 
 $cek_session = $this->session->userdata('kode_user');
 $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_session]);
@@ -22,7 +22,7 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
                                 <li><a class="dropdown-item" href="#" onclick="excel('pendaftaran')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
                             </ul>
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                        <button type="button" class="btn btn-primary" onclick="reloadTableEmr()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
                         <?php if ($created == 1) : ?>
                             <button type="button" class="btn btn-success" onclick="getUrl('Health/form_pendaftaran/0')"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
                         <?php endif; ?>
@@ -40,7 +40,7 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <select name="kode_poli" id="kode_poli" class="form-control select2_poli_dokter" data-placeholder="~ Pilih Poli"></select>
+                                    <select name="kode_poli" id="kode_poli" class="form-control select2_poli_dokter2" data-placeholder="~ Pilih Poli"></select>
                                 </div>
                             </div>
                         </div>
@@ -53,7 +53,7 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
                                     <input type="date" name="sampai" id="sampai" class="form-control" value="<?= date('Y-m-d') ?>">
                                 </div>
                                 <div class="col-md-4 col-2 mb-3">
-                                    <button type="button" class="btn btn-info" style="width: 100%" onclick="filter($('#kode_poli').val(), $('#kode_dokter').val())"><i class="fa-solid fa-sort"></i>&nbsp;&nbsp;Filter</button>
+                                    <button type="button" class="btn btn-info" style="width: 100%" onclick="filterEmr()"><i class="fa-solid fa-sort"></i>&nbsp;&nbsp;Filter</button>
                                 </div>
                             </div>
                         </div>
@@ -81,15 +81,80 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
     </div>
 </form>
 
+
 <script>
+    var timeLeft = 10;
+    // var countdownTimer = setInterval(function() {
+    //     if (timeLeft <= 0) {
+    //         timeLeft = 10; // Reset the timer
+    //         reloadTableEmr(); // Call reloadTable function
+    //     }
+    //     document.getElementById("countdown").innerHTML = timeLeft + " Detik";
+    //     timeLeft -= 1;
+    // }, 1000);
+
+    function reloadTableEmr() {
+        tableEmr.DataTable().ajax.reload(null, false);
+    }
+
     // variable
-    var table = $('#tableEmr');
+    var tableEmr = $('#tableEmr');
     var kode_dokter = $('#kode_dokter');
     var kode_poli = $('#kode_poli');
 
-    <?php if ($cek_sess_dokter) : ?>
-        getPoli('<?= $cek_session ?>')
-    <?php endif ?>
+    initailizeSelect2_dokter_all();
+    initailizeSelect2_poli_dokter2('<?= $cek_session ?>');
+
+    tableEmr.DataTable({
+        "destroy": true,
+        "processing": true,
+        "responsive": true,
+        "serverSide": true,
+        "order": [],
+        "ajax": {
+            "url": `<?= site_url() ?>Emr/daftar_list/1?kode_poli=&kode_dokter=<?= $cek_session ?>`,
+            "type": "POST",
+        },
+        "scrollCollapse": false,
+        "paging": true,
+        "language": {
+            "emptyTable": "<div class='text-center'>Data Kosong</div>",
+            "infoEmpty": "",
+            "infoFiltered": "",
+            "search": "",
+            "searchPlaceholder": "Cari data...",
+            "info": " Jumlah _TOTAL_ Data (_START_ - _END_)",
+            "lengthMenu": "_MENU_ Baris",
+            "zeroRecords": "<div class='text-center'>Data Kosong</div>",
+            "paginate": {
+                "previous": "Sebelumnya",
+                "next": "Berikutnya"
+            }
+        },
+        "lengthMenu": [
+            [10, 25, 50, 75, 100, -1],
+            [10, 25, 50, 75, 100, "Semua"]
+        ],
+        "columnDefs": [{
+            "targets": [-1],
+            "orderable": false,
+        }],
+    });
+
+    function filterEmr() {
+        var dari = $('#dari').val();
+        var sampai = $('#sampai').val();
+        var kpoli = $('#kode_poli').val();
+        var kdokter = $('#kode_dokter').val();
+
+        var parameterString = `2~${dari}~${sampai}`; // Inisialisasi parameter dasar
+
+        if (kpoli || kdokter) { // Periksa apakah kpoli dan kdokter memiliki nilai
+            parameterString += `?kode_poli=${kpoli}&kode_dokter=${kdokter}`; // Tambahkan parameter jika keduanya ada
+        }
+
+        tableEmr.DataTable().ajax.url('<?= site_url() ?>Emr/daftar_list/' + parameterString).load();
+    }
 
 
     // getpoli dokter
@@ -98,6 +163,97 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
         kode_poli.val('').change();
 
         // cek poli berdasarkan kode_dokter
-        initailizeSelect2_poli_dokter(param);
+        initailizeSelect2_poli_dokter2(param);
+    }
+
+    function select2_default(param) {
+        var mymessage = "Data tidak ditemukan";
+        $("." + param).select2({
+            placeholder: $(this).data('placeholder'),
+            width: '100%',
+            language: {
+                noResults: function() {
+                    return mymessage;
+                }
+            },
+        });
+    }
+
+    function initailizeSelect2_dokter_all() {
+        $(".select2_dokter_all").select2({
+            allowClear: true,
+            multiple: false,
+            placeholder: '~ Pilih Dokter',
+            dropdownAutoWidth: true,
+            width: '100%',
+            language: {
+                inputTooShort: function() {
+                    return 'Ketikan Nomor minimal 1 huruf';
+                },
+                noResults: function() {
+                    return 'Data Tidak Ditemukan';
+                }
+            },
+            ajax: {
+                url: '<?= site_url() ?>Select2_master/dataDokterAll',
+                type: 'POST',
+                dataType: 'JSON',
+                delay: 100,
+                data: function(result) {
+                    return {
+                        searchTerm: result.term
+                    };
+                },
+
+                processResults: function(result) {
+                    return {
+                        results: result
+                    };
+                },
+                cache: true
+            }
+        });
+    }
+
+    function initailizeSelect2_poli_dokter2(param) {
+        if (param == '' || param == null || param == 'null') { // jika parameter kosong/ null
+            // jalankan fungsi select2_default
+            select2_default('select2_poli_dokter2');
+        } else { // selain itu
+            // jalan fungsi select2 asli
+            $(".select2_poli_dokter2").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Poli',
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 1 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
+                    }
+                },
+                ajax: {
+                    url: '<?= site_url() ?>Select2_master/dataPoliDokter/' + param,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
     }
 </script>

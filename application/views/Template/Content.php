@@ -290,17 +290,6 @@
                     </li>
                     <li class="nav-item d-none d-sm-inline-block">
                         <span class="nav-link">Refresh Otomatis <span id="countdown">10</span></span>
-                        <script>
-                            var timeLeft = 10;
-                            var countdownTimer = setInterval(function() {
-                                if (timeLeft <= 0) {
-                                    timeLeft = 10; // Reset the timer
-                                    reloadTable(); // Call reloadTable function
-                                }
-                                document.getElementById("countdown").innerHTML = timeLeft + " Detik";
-                                timeLeft -= 1;
-                            }, 1000);
-                        </script>
                     </li>
                 <?php endif; ?>
             </ul>

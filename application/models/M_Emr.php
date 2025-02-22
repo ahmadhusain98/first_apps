@@ -1,0 +1,129 @@
+<?php
+defined("BASEPATH") or exit("No direct script access allowed");
+
+class M_Emr extends CI_Model
+{
+    protected $table = "pendaftaran";
+
+    protected $columns = ['p.id', 'p.no_trx', 'p.tgl_daftar', 'p.jam_daftar', 'p.kode_member', 'm.nama AS member', 'd.nama AS dokter', 'pol.keterangan', 'p.kode_poli', 'p.kode_ruang', 'p.kode_dokter', 'p.no_antrian', 'p.tgl_keluar', 'p.jam_keluar', 'p.status_trx', 'p.kode_user', 'p.shift'];
+
+    protected $search_key = ['no_trx', 'tgl_daftar', 'jam_daftar', 'kode_member', 'kode_poli', 'kode_ruang', 'kode_dokter', 'no_antrian', 'tgl_keluar', 'jam_keluar', 'status_trx', 'kode_user', 'shift'];
+
+    protected $order = ['id' => 'asc'];
+
+    public function __construct()
+    {
+        parent::__construct();
+        setlocale(LC_ALL, "id_ID.utf8");
+        date_default_timezone_set("Asia/Jakarta");
+    }
+
+    private function _get_datatables_query($bulan, $tahun, $kode_poli, $kode_dokter, $tipe)
+    {
+        $this->db->query("SET SESSION sql_mode = ''");
+
+        $this->db->select($this->columns);
+        $this->db->from($this->table . " AS p");
+
+        $this->db->join("member m", "m.kode_member = p.kode_member");
+        $this->db->join("dokter d", "d.kode_dokter = p.kode_dokter");
+        $this->db->join("m_poli pol", "pol.kode_poli = p.kode_poli");
+
+        $this->db->where("p.kode_cabang", $this->session->userdata("cabang"));
+
+        if ($tipe == 1) {
+            $this->db->where(['p.tgl_daftar >=' => date('Y-m-d')]);
+        } else {
+            $this->db->where(['p.tgl_daftar >=' => $tahun . '-' . $bulan . '-01', 'p.tgl_daftar <=' => date('Y-m-t', strtotime($tahun . '-' . $bulan . '-01'))]);
+        }
+
+        if (!empty($kode_poli) && empty($kode_dokter)) {
+            $this->db->where("p.kode_poli", $kode_poli);
+        } else if (empty($kode_poli) && !empty($kode_dokter)) {
+            $this->db->where("p.kode_dokter", $kode_dokter);
+        } else if (!empty($kode_poli) && !empty($kode_dokter)) {
+            $this->db->group_start();
+            $this->db->where("p.kode_poli", $kode_poli);
+            $this->db->or_where("p.kode_dokter", $kode_dokter);
+            $this->db->group_end();
+        } else {
+            // Tidak ada filter tambahan jika kedua parameter kosong
+        }
+
+        $i = 0;
+
+        foreach ($this->search_key as $item) {
+            if (!empty($_POST["search"]["value"])) {
+                if ($i === 0) {
+                    $this->db->group_start();
+                    $this->db->like($item, $_POST["search"]["value"]);
+                } else {
+                    $this->db->or_like($item, $_POST["search"]["value"]);
+                }
+                if (count($this->search_key) - 1 == $i) {
+                    $this->db->group_end();
+                }
+            }
+            $i++;
+        }
+
+        if (isset($_POST["order"])) {
+            $this->db->order_by($this->columns[$_POST["order"]["0"]["column"]], $_POST["order"]["0"]["dir"]);
+        } elseif (!empty($this->order)) {
+            $order = $this->order;
+            $this->db->order_by(key($order), $order[key($order)]);
+        }
+    }
+
+    public function get_datatables($bulan, $tahun, $kode_poli, $kode_dokter, $tipe)
+    {
+        $this->_get_datatables_query($bulan, $tahun, $kode_poli, $kode_dokter, $tipe);
+        if ($_POST["length"] != -1) {
+            $this->db->limit($_POST["length"], $_POST["start"]);
+        }
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function count_filtered($bulan, $tahun, $kode_poli, $kode_dokter, $tipe)
+    {
+        $this->_get_datatables_query($bulan, $tahun, $kode_poli, $kode_dokter, $tipe);
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+    public function count_all($bulan, $tahun, $kode_poli, $kode_dokter, $tipe)
+    {
+        $this->db->query("SET SESSION sql_mode = ''");
+
+        $this->db->select($this->columns);
+        $this->db->from($this->table . " AS p");
+
+        $this->db->join("member m", "m.kode_member = p.kode_member");
+        $this->db->join("dokter d", "d.kode_dokter = p.kode_dokter");
+        $this->db->join("m_poli pol", "pol.kode_poli = p.kode_poli");
+
+        $this->db->where("p.kode_cabang", $this->session->userdata("cabang"));
+
+        if ($tipe == 1) {
+            $this->db->where(['p.tgl_daftar >=' => date('Y-m-d')]);
+        } else {
+            $this->db->where(['p.tgl_daftar >=' => $tahun . '-' . $bulan . '-01', 'p.tgl_daftar <=' => date('Y-m-t', strtotime($tahun . '-' . $bulan . '-01'))]);
+        }
+
+        if (!empty($kode_poli) && empty($kode_dokter)) {
+            $this->db->where("p.kode_poli", $kode_poli);
+        } else if (empty($kode_poli) && !empty($kode_dokter)) {
+            $this->db->where("p.kode_dokter", $kode_dokter);
+        } else if (!empty($kode_poli) && !empty($kode_dokter)) {
+            $this->db->group_start();
+            $this->db->where("p.kode_poli", $kode_poli);
+            $this->db->or_where("p.kode_dokter", $kode_dokter);
+            $this->db->group_end();
+        } else {
+            // Tidak ada filter tambahan jika kedua parameter kosong
+        }
+
+        return $this->db->count_all_results();
+    }
+}

@@ -327,7 +327,7 @@ $member = $this->M_global->getData('member', ['kode_member' => $pendaftaran->kod
                                                 <label for="">&nbsp;&nbsp;&nbsp; Bicara Terganggu</label>
                                             </td>
                                             <td style="width: 40%;">
-                                                <textarea name="gangguan_bcr" id="gangguan_bcr" class="form-control" rows="3" placeholder="Keterangan Gangguan Bicara..."></textarea>
+                                                <textarea name="gangguan_bcr" id="gangguan_bcr" class="form-control" rows="3" placeholder="Keterangan Gangguan Bicara..."><?= ((!empty($emr_per)) ? $emr_per->gangguan : '1') ?></textarea>
                                             </td>
                                         </tr>
                                     </table>
