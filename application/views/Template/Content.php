@@ -339,7 +339,7 @@
                     $cek_dok = $this->M_global->getData('dokter', ['kode_dokter' => $this->session->userdata('kode_user')]);
 
                     if ($cek_dok) {
-                        $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr" AS url FROM pendaftaran p WHERE p.kode_dokter = "' . $cek_dok->kode_dokter . '"')->result();
+                        $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr" AS url FROM pendaftaran p WHERE p.kode_dokter = "' . $cek_dok->kode_dokter . '" AND p.status_trx <> 1')->result();
                     } else {
                         $sintak = $this->db->query("SELECT * FROM (
                         SELECT id, no_trx AS invoice, 'pembayaran' AS url FROM pendaftaran

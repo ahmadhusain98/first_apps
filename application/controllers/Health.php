@@ -1056,12 +1056,18 @@ class Health extends CI_Controller
         $jam_daftar       = date('H:i:s');
         $kode_member      = $this->input->post('kode_member');
         $kode_dokter      = $this->input->post('kode_dokter');
-        $kode_ruang       = $this->input->post('kode_ruang');
         $kode_bed         = $this->input->post('kode_bed');
         $tipe_daftar      = $this->input->post('tipe_daftar');
 
         $kode_tarif       = $this->input->post('kode_tarif');
         $kunjungan        = $this->input->post('kunjungan');
+
+        if ($tipe_daftar == 1) {
+            $get_ruang    = $this->M_global->getData('jadwal_dokter', ['kode_dokter' => $kode_dokter, 'date_start' => $tgl_daftar]);
+            $kode_ruang   = $get_ruang->kode_ruang;
+        } else {
+            $kode_ruang   = $this->input->post('kode_ruang');
+        }
 
         // jika ada last antrian + 1, jika tidak ada 0 + 1
 
@@ -1250,6 +1256,7 @@ class Health extends CI_Controller
         $kodeJadwal   = $this->input->post('kodeJadwal');
         $kode_dokter  = $this->input->post('kode_dokter');
         $kode_poli    = $this->input->post('kode_poli');
+        $kode_ruang   = $this->input->post('kode_ruang');
         $kode_cabang  = $this->input->post('kode_cabang');
         $status       = $this->input->post('status_dokter');
         $date_start   = $this->input->post('date_start');
@@ -1266,6 +1273,7 @@ class Health extends CI_Controller
             'kode_dokter'   => $kode_dokter,
             'kode_poli'     => $kode_poli,
             'kode_cabang'   => $kode_cabang,
+            'kode_ruang'    => $kode_ruang,
             'status'        => $status,
             'date_start'    => $date_start,
             'date_end'      => $date_end,

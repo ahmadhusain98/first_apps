@@ -271,7 +271,12 @@ class Emr extends CI_Controller
                                     <tr>
                                         <td style="width: 30%;">Poli</td>
                                         <td style="width: 5%;"> : </td>
-                                        <td style="width: 65%;"><?= $this->M_global->getData('m_poli', ['kode_poli' => $p->kode_poli])->keterangan ?></td>
+                                        <td style="width: 65%;"><?= $this->M_global->getData('m_poli', ['kode_poli' => $p->kode_poli])->keterangan . ' (' . $this->M_global->getData('m_ruang', ['kode_ruang' => $p->kode_ruang])->keterangan . ')' ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 30%;">Cabang</td>
+                                        <td style="width: 5%;"> : </td>
+                                        <td style="width: 65%;"><?= $this->M_global->getData('cabang', ['kode_cabang' => $p->kode_cabang])->cabang ?></td>
                                     </tr>
                                 </table>
                             </div>
@@ -329,6 +334,11 @@ class Emr extends CI_Controller
                             <td style="width: 15%;" valign="top">Alamat</td>
                             <td style="width: 5%;" valign="top"> : </td>
                             <td style="width: 80%;" valign="top"><?= $alamat ?></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Cabang</td>
+                            <td style="width: 5%;"> : </td>
+                            <td style="width: 80%;"><?= $this->M_global->getData('cabang', ['kode_cabang' => $p->kode_cabang])->cabang ?></td>
                         </tr>
                     </table>
                 </div>
@@ -421,29 +431,55 @@ class Emr extends CI_Controller
                 <div class="row mb-1">
                     <div class="col-md-12">
                         <span id="his_terapi">
-                            <?php
-                            $emr_per_barang = $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $p->no_trx]);
-                            if (empty($emr_per_barang)) {
-                                echo '-';
-                            } else {
-                                if (count($emr_per_barang) > 1) {
-                                    $br = '<br>';
-                                } else {
-                                    $br = '';
-                                }
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <span class="text-primary"><b>Tarif / Tindakan</b></span>
+                                    <br>
+                                    <?php
+                                    $emr_tarif = $this->M_global->getDataResult('emr_tarif', ['no_trx' => $p->no_trx]);
+                                    if (empty($emr_tarif)) {
+                                        echo '-';
+                                    } else {
+                                        if (count($emr_tarif) > 1) {
+                                            $br = '<br>';
+                                        } else {
+                                            $br = '';
+                                        }
 
-                                foreach ($emr_per_barang as $epb) :
-                                    $barang = $this->M_global->getData('barang', ['kode_barang' => $epb->kode_barang]);
-                                    $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $epb->kode_satuan]);
-                                    echo $barang->nama . ' | ' . $epb->qty . ' ' . $satuan->keterangan . ' | ' . $epb->signa . $br;
-                                endforeach;
+                                        foreach ($emr_tarif as $et) :
+                                            $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $et->kode_tarif]);
+                                            echo '@' . $tarif->nama . ' | ' . $et->qty . $br;
+                                        endforeach;
+                                    }
+                                    ?>
+                                </div>
+                                <div class="col-md-6">
+                                    <span class="text-primary"><b>Resep / Racikan</b></span>
+                                    <br>
+                                    <?php
+                                    $emr_per_barang = $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $p->no_trx]);
+                                    if (empty($emr_per_barang)) {
+                                        echo '-';
+                                    } else {
+                                        if (count($emr_per_barang) > 1) {
+                                            $br = '<br>';
+                                        } else {
+                                            $br = '';
+                                        }
 
-                                if ($emr_per->eracikan != '') {
-                                    echo '<br>' . $emr_per->eracikan;
-                                }
-                            }
+                                        foreach ($emr_per_barang as $epb) :
+                                            $barang = $this->M_global->getData('barang', ['kode_barang' => $epb->kode_barang]);
+                                            $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $epb->kode_satuan]);
+                                            echo '@' . $barang->nama . ' | ' . $epb->qty . ' ' . $satuan->keterangan . ' | ' . $epb->signa . $br;
+                                        endforeach;
 
-                            ?>
+                                        if ($emr_per->eracikan != '') {
+                                            echo '<br>' . $emr_per->eracikan;
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                            </div>
                         </span>
                     </div>
                 </div>
@@ -495,6 +531,11 @@ class Emr extends CI_Controller
                             <td style="width: 15%;" valign="top">Alamat</td>
                             <td style="width: 5%;" valign="top"> : </td>
                             <td style="width: 80%;" valign="top"><?= $alamat ?></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Cabang</td>
+                            <td style="width: 5%;"> : </td>
+                            <td style="width: 80%;"><?= $this->M_global->getData('cabang', ['kode_cabang' => $p->kode_cabang])->cabang ?></td>
                         </tr>
                     </table>
                 </div>
@@ -582,16 +623,55 @@ class Emr extends CI_Controller
                 <div class="row mb-1">
                     <div class="col-md-12">
                         <span class="font-weight-bold">Terapi
-                            <?php
-                            if ($cek_dokter) :
-                            ?>
-                                <div class="float-right">
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_terapi')"><i class="fa fa-copy"></i> Copy</button>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="implement_err('<?= ((!empty($emr_dok)) ? $emr_dok->eracikan : '') ?>', 'eracikan', '<?= $p->no_trx ?>')"><i class="fa-solid fa-clone"></i> Apply</button>
-                                    </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <span class="text-primary"><b>Tarif / Tindakan</b></span>
+                                    <br>
+                                    <?php
+                                    $emr_tarif = $this->M_global->getDataResult('emr_tarif', ['no_trx' => $p->no_trx]);
+                                    if (empty($emr_tarif)) {
+                                        echo '-';
+                                    } else {
+                                        if (count($emr_tarif) > 1) {
+                                            $br = '<br>';
+                                        } else {
+                                            $br = '';
+                                        }
+
+                                        foreach ($emr_tarif as $et) :
+                                            $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $et->kode_tarif]);
+                                            echo '@' . $tarif->nama . ' | ' . $et->qty . $br;
+                                        endforeach;
+                                    }
+                                    ?>
                                 </div>
-                            <?php endif; ?>
+                                <div class="col-md-6">
+                                    <span class="text-primary"><b>Resep / Racikan</b></span>
+                                    <br>
+                                    <?php
+                                    $emr_per_barang = $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $p->no_trx]);
+                                    if (empty($emr_per_barang)) {
+                                        echo '-';
+                                    } else {
+                                        if (count($emr_per_barang) > 1) {
+                                            $br = '<br>';
+                                        } else {
+                                            $br = '';
+                                        }
+
+                                        foreach ($emr_per_barang as $epb) :
+                                            $barang = $this->M_global->getData('barang', ['kode_barang' => $epb->kode_barang]);
+                                            $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $epb->kode_satuan]);
+                                            echo '@' . $barang->nama . ' | ' . $epb->qty . ' ' . $satuan->keterangan . ' | ' . $epb->signa . $br;
+                                        endforeach;
+
+                                        if ($emr_per->eracikan != '') {
+                                            echo '<br>' . $emr_per->eracikan;
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                            </div>
                         </span>
                     </div>
                 </div>
@@ -660,6 +740,14 @@ class Emr extends CI_Controller
         echo json_encode($emr_per_barang);
     }
 
+    // emr_tarif
+    public function emr_tarif($no_trx)
+    {
+        $emr_tarif = $this->db->query('SELECT et.*, t.nama FROM emr_tarif et JOIN m_tarif t ON et.kode_tarif = t.kode_tarif WHERE et.no_trx = "' . $no_trx . '"')->result();
+
+        echo json_encode($emr_tarif);
+    }
+
     // emr fisik
     public function emr_dok_fisik($no_trx)
     {
@@ -697,6 +785,7 @@ class Emr extends CI_Controller
             'kode_dokter'       => $kode_dokter,
             'emr_per'           => $this->M_global->getData('emr_per', ['no_trx' => $no_trx]),
             'eresep'            => $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $no_trx]),
+            'etarif'            => $this->M_global->getDataResult('emr_tarif', ['no_trx' => $no_trx]),
         ];
 
         $this->template->load('Template/Content', 'Emr/Perawat', $parameter);
@@ -734,6 +823,9 @@ class Emr extends CI_Controller
         $qty                  = $this->input->post('qty');
         $signa                = $this->input->post('signa');
 
+        $kode_tarif           = $this->input->post('kode_tarif');
+        $qty_tarif            = $this->input->post('qty_tarif');
+
         // tampung dalam array
         $data = [
             'no_trx'            => $no_trx,
@@ -769,11 +861,13 @@ class Emr extends CI_Controller
                 $this->M_global->updateData('emr_per', $data, ['no_trx' => $no_trx]),
                 $this->M_global->updateData('emr_dok', ['penyakit_keluarga' => $penyakit_keluarga, 'alergi' => $alergi, 'eracikan' => $eracikan], ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_per_barang', ['no_trx' => $no_trx]),
+                $this->M_global->delData('emr_tarif', ['no_trx' => $no_trx]),
             ];
         } else { // selain itu maka tambah
             $cek = [
                 $this->M_global->insertData('emr_per', $data),
-                $this->M_global->delData('emr_per_barang', ['no_trx' => $no_trx])
+                $this->M_global->delData('emr_per_barang', ['no_trx' => $no_trx]),
+                $this->M_global->delData('emr_tarif', ['no_trx' => $no_trx]),
             ];
         }
 
@@ -797,6 +891,26 @@ class Emr extends CI_Controller
                     ];
 
                     $this->M_global->insertData('emr_per_barang', $data_barang);
+                }
+            }
+        }
+
+        $loop2 = 0;
+        if (isset($kode_tarif)) {
+            foreach ($kode_tarif as $kt) {
+                if ($k) {
+                    $kode_tarif_   = $kt;
+                    $qty_tarif_    = $qty_tarif[$loop2];
+
+                    $loop2++;
+
+                    $data_tarif = [
+                        'no_trx'        => $no_trx,
+                        'kode_tarif'    => $kode_tarif_,
+                        'qty'           => $qty_tarif_,
+                    ];
+
+                    $this->M_global->insertData('emr_tarif', $data_tarif);
                 }
             }
         }
@@ -840,6 +954,7 @@ class Emr extends CI_Controller
             'emr_dok'           => $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]),
             'emr_dok_fisik'     => $this->M_global->getDataResult('emr_dok_fisik', ['no_trx' => $no_trx]),
             'eresep'            => $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $no_trx]),
+            'etarif'            => $this->M_global->getDataResult('emr_tarif', ['no_trx' => $no_trx]),
         ];
 
         $this->template->load('Template/Content', 'Emr/Dokter', $parameter);
@@ -869,6 +984,9 @@ class Emr extends CI_Controller
         $fisik                = $this->input->post('fisik');
         $desc_fisik           = $this->input->post('desc_fisik');
 
+        $kode_tarif           = $this->input->post('kode_tarif');
+        $qty_tarif            = $this->input->post('qty_tarif');
+
         // tampung dalam array
         $data = [
             'no_trx'            => $no_trx,
@@ -894,12 +1012,14 @@ class Emr extends CI_Controller
                 $this->M_global->updateData('emr_per', ['penyakit_keluarga' => $penyakit_keluarga, 'alergi' => $alergi, 'eracikan' => $eracikan], ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_per_barang', ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_dok_fisik', ['no_trx' => $no_trx]),
+                $this->M_global->delData('emr_tarif', ['no_trx' => $no_trx]),
             ];
         } else { // selain itu maka tambah
             $cek = [
                 $this->M_global->insertData('emr_dok', $data),
                 $this->M_global->delData('emr_per_barang', ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_dok_fisik', ['no_trx' => $no_trx]),
+                $this->M_global->delData('emr_tarif', ['no_trx' => $no_trx]),
             ];
         }
 
@@ -924,6 +1044,7 @@ class Emr extends CI_Controller
 
                     $this->M_global->insertData('emr_per_barang', $data_barang);
                 }
+                $loop++;
             }
         }
 
@@ -943,6 +1064,26 @@ class Emr extends CI_Controller
                     ];
 
                     $this->M_global->insertData('emr_dok_fisik', $data_fisik);
+                }
+            }
+        }
+
+        $loop3 = 0;
+        if (isset($kode_tarif)) {
+            foreach ($kode_tarif as $kt) {
+                if ($f) {
+                    $kode_tarif_  = $kt;
+                    $qty_tarif_   = $qty_tarif[$loop3];
+
+                    $loop3++;
+
+                    $data_tarif = [
+                        'no_trx'        => $no_trx,
+                        'kode_tarif'    => $kode_tarif_,
+                        'qty'           => $qty_tarif_,
+                    ];
+
+                    $this->M_global->insertData('emr_tarif', $data_tarif);
                 }
             }
         }

@@ -107,7 +107,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
             <div class="col-md-9">
                 <div class="card card-outline card-primary">
                     <div class="card-header">
-                        <span class="font-weight-bold h4 text-primary"><i class="fa-solid fa-bookmark text-primary"></i> EMR Perawat</span>
+                        <span class="font-weight-bold h4 text-primary"><i class="fa-solid fa-bookmark text-primary"></i> EMR Dokter</span>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -393,7 +393,8 @@ if (is_array($p_kel) && !empty($p_kel)) {
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-2">
-                                        <button class="btn btn-primary w-100" type="button" onclick="sel_tab(1)" id="btn_eresep">E-Resep</button>
+                                        <button class="btn btn-primary w-100" type="button" onclick="sel_tab(0)" id="btn_etarif">E-Tarif / Tindakan</button>
+                                        <button class="btn btn-light w-100" type="button" onclick="sel_tab(1)" id="btn_eresep">E-Resep</button>
                                         <button class="btn btn-light w-100 mt-3 mb-3" type="button" onclick="sel_tab(2)" id="btn_elab">E-Laboratorium</button>
                                         <button class="btn btn-light w-100" type="button" onclick="sel_tab(3)" id="btn_erad">E-Radiologi</button>
                                     </div>
@@ -403,6 +404,65 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                                 <span class="h4" id="title_tab">E-Resep / Racik</span>
                                             </div>
                                             <div class="card-body">
+                                                <div id="tab_etarif">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="table-responsive">
+                                                                <table class="table table-hover table-bordered" id="table_etarif" width="100%" style="border-radius: 10px;">
+                                                                    <thead>
+                                                                        <tr class="text-center">
+                                                                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">Hapus</th>
+                                                                            <th width="85%">Tindakan</th>
+                                                                            <th width="10%">Qty</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="body_etarif">
+                                                                        <?php if (!empty($eresep)) : ?>
+                                                                            <?php $no_etarif = 1;
+                                                                            foreach ($etarif as $et) : ?>
+                                                                                <tr id="row_etarif<?= $no_etarif ?>">
+                                                                                    <td class="text-center">
+                                                                                        <button class="btn btn-sm btn-danger" type="button" id="btnHapusT<?= $no_etarif ?>" onclick="hapusTarif('<?= $no_etarif ?>')"><i class="fa-solid fa-delete-left"></i></button>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <select name="kode_tarif[]" id="kode_tarif<?= $no_etarif ?>" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tindakan">
+                                                                                            <?php $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $et->kode_tarif]); ?>
+                                                                                            <option value="<?= $et->kode_tarif ?>"><?= $tarif->nama ?></option>
+                                                                                        </select>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input type="text" id="qty_tarif<?= $no_etarif ?>" name="qty_tarif[]" value="<?= number_format($et->qty) ?>" min="1" class="form-control text-right" onchange="formatRp(this.value, 'qty_tarif<?= $no_etarif ?>')">
+                                                                                    </td>
+                                                                                </tr>
+                                                                            <?php $no_etarif++;
+                                                                            endforeach ?>
+                                                                        <?php else : ?>
+                                                                            <tr id="row_etarif1">
+                                                                                <td class="text-center">
+                                                                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapusT1" onclick="hapusTarif('1')"><i class="fa-solid fa-delete-left"></i></button>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <select name="kode_tarif[]" id="kode_tarif1" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tindakan">
+                                                                                        <option value="">~ Pilih Tindakan</option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="text" id="qty_tarif1" name="qty_tarif[]" value="1" min="1" class="form-control text-right" onchange="formatRp(this.value, 'qty_tarif1')">
+                                                                                </td>
+                                                                            </tr>
+                                                                        <?php endif; ?>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <button type="button" class="btn btn-primary" onclick="addTarif()" id="btnCari" <?= $btn_diss ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                                                                    <button type="button" class="btn btn-danger float-right" onclick="emptyTarif()" id="btnEmpty" <?= $btn_diss ?>><i class="fa-solid fa-trash"></i>&nbsp;&nbsp;Hapus Semua</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div id="tab_eresep">
                                                     <div class="row">
                                                         <div class="col-md-8">
@@ -561,16 +621,18 @@ if (is_array($p_kel) && !empty($p_kel)) {
     var anamnesa_per = $("#anamnesa_per");
     var anamnesa_dok = $("#anamnesa_dok");
     var filter_dokter = $("#filter_dokter");
+    const btn_etarif = $('#btn_etarif');
     const btn_eresep = $('#btn_eresep');
     const btn_elab = $('#btn_elab');
     const btn_erad = $('#btn_erad');
+    const tab_etarif = $('#tab_etarif');
     const tab_eresep = $('#tab_eresep');
     const tab_elab = $('#tab_elab');
     const tab_erad = $('#tab_erad');
     let title_tab = $('#title_tab');
 
     history_px();
-    sel_tab(1);
+    sel_tab(0);
 
     function history_px() {
         xhttp = new XMLHttpRequest();
@@ -585,16 +647,36 @@ if (is_array($p_kel) && !empty($p_kel)) {
     }
 
     function sel_tab(param) {
-        if (param == 1) {
+        if (param == 0) {
+            btn_etarif.addClass('btn-primary');
+            btn_etarif.removeClass('btn-light');
+
+            btn_eresep.removeClass('btn-primary');
+            btn_eresep.addClass('btn-light');
+            btn_elab.removeClass('btn-primary');
+            btn_elab.addClass('btn-light');
+            btn_erad.removeClass('btn-primary');
+            btn_erad.addClass('btn-light');
+
+            tab_etarif.show(200);
+            tab_eresep.hide(200);
+            tab_elab.hide(200);
+            tab_erad.hide(200);
+
+            title_tab.text('E-Tarif / Tindakan');
+        } else if (param == 1) {
             btn_eresep.addClass('btn-primary');
             btn_eresep.removeClass('btn-light');
 
+            btn_etarif.removeClass('btn-primary');
+            btn_etarif.addClass('btn-light');
             btn_elab.removeClass('btn-primary');
             btn_elab.addClass('btn-light');
             btn_erad.removeClass('btn-primary');
             btn_erad.addClass('btn-light');
 
             tab_eresep.show(200);
+            tab_etarif.hide(200);
             tab_elab.hide(200);
             tab_erad.hide(200);
 
@@ -605,11 +687,14 @@ if (is_array($p_kel) && !empty($p_kel)) {
 
             btn_eresep.removeClass('btn-primary');
             btn_eresep.addClass('btn-light');
+            btn_etarif.removeClass('btn-primary');
+            btn_etarif.addClass('btn-light');
             btn_erad.removeClass('btn-primary');
             btn_erad.addClass('btn-light');
 
             tab_elab.show(200);
             tab_eresep.hide(200);
+            tab_etarif.hide(200);
             tab_erad.hide(200);
 
             title_tab.text('E-Laboratorium');
@@ -617,14 +702,17 @@ if (is_array($p_kel) && !empty($p_kel)) {
             btn_erad.addClass('btn-primary');
             btn_erad.removeClass('btn-light');
 
-            btn_elab.removeClass('btn-primary');
-            btn_elab.addClass('btn-light');
             btn_eresep.removeClass('btn-primary');
             btn_eresep.addClass('btn-light');
+            btn_elab.removeClass('btn-primary');
+            btn_elab.addClass('btn-light');
+            btn_etarif.removeClass('btn-primary');
+            btn_etarif.addClass('btn-light');
 
             tab_erad.show(200);
-            tab_elab.hide(200);
             tab_eresep.hide(200);
+            tab_elab.hide(200);
+            tab_etarif.hide(200);
 
             title_tab.text('E-Radiologi');
         }
@@ -652,6 +740,40 @@ if (is_array($p_kel) && !empty($p_kel)) {
                 error_proccess();
             }
         });
+    }
+
+    function addTarif() {
+        var tableBarangIn = document.getElementById('table_etarif'); // ambil id table detail
+        var jum = tableBarangIn.rows.length; // hitung jumlah rownya
+        var x = Number(jum) + 1;
+        var tbody = $('#body_etarif')
+
+        tbody.append(`<tr id="row_etarif${x}">
+            <td class="text-center">
+                <button class="btn btn-sm btn-danger" type="button" id="btnHapusT${x}" onclick="hapusTarif('${x}')"><i class="fa-solid fa-delete-left"></i></button>
+            </td>
+            <td>
+                <select name="kode_tarif[]" id="kode_tarif${x}" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tindakan">
+                    <option value="">~ Pilih Tindakan</option>
+                </select>
+            </td>
+            <td>
+                <input type="text" id="qty_tarif${x}" name="qty_tarif[]" value="1" min="1" class="form-control text-right" onchange="formatRp(this.value, 'qty_tarif${x}')">
+            </td>
+        </tr>`);
+
+        initailizeSelect2_tarif_single();
+    }
+
+    function emptyTarif() {
+        var tbody = $('#body_etarif');
+
+        tbody.empty();
+        addTarif();
+    }
+
+    function hapusTarif(no) {
+        $('#row_etarif' + no).remove();
     }
 
     function addFisik() {
@@ -849,7 +971,11 @@ if (is_array($p_kel) && !empty($p_kel)) {
     function implement_err(param, x, notrx) {
         $('#' + x).val(param);
         var tbody = $('#body_eresep');
+        var tbody2 = $('#body_etarif');
+        tbody.empty();
+        tbody2.empty();
         var no = 1;
+        var no2 = 1;
 
         if (!notrx) {
             return;
@@ -894,6 +1020,36 @@ if (is_array($p_kel) && !empty($p_kel)) {
                     });
 
                     no++
+                });
+            },
+            error: function(error) {
+                error_proccess();
+            }
+        });
+
+        $.ajax({
+            url: `${siteUrl}Emr/emr_tarif/${notrx}`,
+            type: `POST`,
+            dataType: `JSON`,
+            success: function(result) {
+                $.each(result, function(index, value) {
+                    tbody2.append(`<tr id="row_etarif${no2}">
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-danger" type="button" id="btnHapusT${no2}" onclick="hapusTarif('${no2}')"><i class="fa-solid fa-delete-left"></i></button>
+                        </td>
+                        <td>
+                            <select name="kode_tarif[]" id="kode_tarif${no2}" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tindakan">
+                                <option value="${value.kode_tarif}">${value.nama}</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" id="qty_tarif${no2}" name="qty_tarif[]" value="${value.qty}" min="1" class="form-control text-right" onchange="formatRp(this.value, 'qty_tarif${no2}')">
+                        </td>
+                    </tr>`);
+
+                    initailizeSelect2_tarif_single();
+
+                    no2++
                 });
             },
             error: function(error) {
