@@ -283,6 +283,7 @@
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <span type="button" class="nav-link">Cabang: <?= $master_cabang->cabang ?></span>
+                    <span id="countdownNotif">10</span>
                 </li>
                 <?php if (($this->uri->segment(1) == 'Emr') && ($this->uri->segment(2) == '')) : ?>
                     <li class="nav-item d-none d-sm-inline-block">
@@ -334,90 +335,7 @@
 
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
-                    <?php
-                    $cabang = $this->session->userdata('cabang');
-                    $cek_dok = $this->M_global->getData('dokter', ['kode_dokter' => $this->session->userdata('kode_user')]);
-
-                    if ($cek_dok) {
-                        $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr" AS url FROM pendaftaran p WHERE p.kode_dokter = "' . $cek_dok->kode_dokter . '" AND p.status_trx <> 1')->result();
-                    } else {
-                        $sintak = $this->db->query("SELECT * FROM (
-                        SELECT id, no_trx AS invoice, 'pembayaran' AS url FROM pendaftaran
-                        WHERE kode_cabang = '$cabang' AND status_trx = 0
-
-                        UNION ALL
-
-                        SELECT id, invoice AS invoice, 'kasir' AS url FROM barang_out_header 
-                        WHERE kode_cabang = '$cabang' AND status_jual = 0 AND no_trx IS NULL
-
-                        UNION ALL 
-                        
-                        SELECT id, invoice AS invoice, 'mutasi_cabang' AS url FROM mutasi_po_header
-                        WHERE dari = '$cabang' AND status_po = 1 AND jenis_po = 1 AND invoice NOT IN (SELECT invoice_po FROM mutasi_header)
-
-                        UNION ALL 
-                        
-                        SELECT id, invoice AS invoice, 'mutasi_gudang' AS url FROM mutasi_po_header
-                        WHERE kode_cabang = '$cabang' AND status_po = 1 AND jenis_po = 0 AND invoice NOT IN (SELECT invoice_po FROM mutasi_header)
-
-                        UNION ALL
-
-                        SELECT id, invoice AS invoice, 'pre_order' AS url FROM barang_po_in_header
-                        WHERE kode_cabang = '$cabang' AND is_valid = 1 AND invoice NOT IN (SELECT invoice_po FROM barang_in_header WHERE kode_cabang = '$cabang')
-                    ) AS semuax
-                    ORDER BY id DESC LIMIT 10")->result();
-                    }
-
-                    ?>
-                    <a class="nav-link" data-toggle="dropdown" type="button">
-                        <i class="fa-regular fa-bell"></i>&nbsp;&nbsp;Notifikasi&nbsp;&nbsp;
-                        <?php if (count($sintak) > 0) : ?>
-                            <span class="badge badge-warning navbar-badge"><?= number_format(count($sintak)) ?></span>
-                        <?php endif ?>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header"><?= number_format(count($sintak)) ?> Notifikasi</span>
-                        <div class="dropdown-divider"></div>
-                        <a type="button" class="dropdown-item">
-                            <?php
-                            if (count($sintak) > 0) :
-                                foreach ($sintak as $s) :
-                                    if ($s->url == 'emr') {
-                                        $msg = 'Emr Dokter';
-                                        $par_url = 'Emr/dokter/' . $s->invoice;
-                                    } else if ($s->url == 'kasir') {
-                                        $msg = 'Pbr.Ksr';
-                                        $par_url = 'Kasir/form_kasir/0?invoice=' . $s->invoice;
-                                    } else if ($s->url == 'pembayaran') {
-                                        $msg = 'Pbr.Ksr';
-                                        $par_url = 'Kasir/form_kasir/0?invoice=' . $s->invoice;
-                                    } else if ($s->url == 'mutasi_cabang') {
-                                        $msg = 'Mts.Cab';
-                                        $par_url = 'Transaksi/form_mutasi/0?invoice=' . $s->invoice;
-                                    } else if ($s->url == 'mutasi_gudang') {
-                                        $msg = 'Mts.Gud';
-                                        $par_url = 'Transaksi/form_mutasi/0?invoice=' . $s->invoice;
-                                    } else if ($s->url == 'pre_order') {
-                                        $msg = 'Trm.Brg';
-                                        $par_url = 'Transaksi/form_barang_in/0?invoice=' . $s->invoice;
-                                    } else {
-                                        $msg = '';
-                                        $par_url = '';
-                                    }
-                            ?>
-                                    <a type="button" href="<?= site_url($par_url) ?>" class="pl-3 text-primary" style="text-decoration: none; margin-bottom: 10px;">
-                                        <?= $msg ?> | <?= $s->invoice ?>
-                                    </a>
-                                <?php
-                                endforeach;
-                            else : ?>
-                                <span style="color: grey; margin-bottom: 10px;">Tidak Ada Notifikasi</span>
-                            <?php endif;
-                            ?>
-                        </a>
-                        <!-- <div class="dropdown-divider"></div>
-                        <a type="button" class="dropdown-item dropdown-footer" href="<?= site_url('Transaksi/barang_out') ?>">Lihat Semua Notifikasi</a> -->
-                    </div>
+                    <div id="notf_live"></div>
                 </li>
                 <li class="nav-item dropdown">
                     <button type="button" class="btn text-danger" style="background-color: transparent;" onclick="exit()"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;Keluar</button>
@@ -683,6 +601,31 @@
             width: '100%',
             allowClear: true,
         });
+
+        $('#countdownNotif').hide();
+
+        var timeNotif = 10;
+        var countdownNotif = setInterval(function() {
+            if (timeNotif <= 0) {
+                timeNotif = 10;
+                notif_live();
+            }
+            document.getElementById("countdownNotif").innerHTML = timeNotif + " Detik";
+            timeNotif -= 1;
+        }, 1000);
+
+        notif_live();
+
+        function notif_live() {
+            xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("notf_live").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "<?= base_url('Auth/notif_live'); ?>", true);
+            xhttp.send();
+        }
 
         display_ct();
 

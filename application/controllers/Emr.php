@@ -763,32 +763,38 @@ class Emr extends CI_Controller
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
+        $cek_session     = $this->session->userdata('kode_user');
+        $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_session]);
 
-        $kode_dokter = $this->input->get('kode_dokter');
-        if (!$kode_dokter) {
-            $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+        if ($cek_sess_dokter) {
+            redirect('Where');
         } else {
-            $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx, 'kode_dokter' => $kode_dokter]);
+            $kode_dokter = $this->input->get('kode_dokter');
+            if (!$kode_dokter) {
+                $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+            } else {
+                $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx, 'kode_dokter' => $kode_dokter]);
+            }
+
+            $parameter = [
+                $this->data,
+                'judul'             => 'EMR',
+                'nama_apps'         => $web_setting->nama,
+                'page'              => 'Perawat',
+                'web'               => $web_setting,
+                'web_version'       => $web_version->version,
+                'list_data'         => '',
+                'param1'            => '',
+                'pendaftaran'       => $pendaftaran,
+                'no_trx'            => $no_trx,
+                'kode_dokter'       => $kode_dokter,
+                'emr_per'           => $this->M_global->getData('emr_per', ['no_trx' => $no_trx]),
+                'eresep'            => $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $no_trx]),
+                'etarif'            => $this->M_global->getDataResult('emr_tarif', ['no_trx' => $no_trx]),
+            ];
+
+            $this->template->load('Template/Content', 'Emr/Perawat', $parameter);
         }
-
-        $parameter = [
-            $this->data,
-            'judul'             => 'EMR',
-            'nama_apps'         => $web_setting->nama,
-            'page'              => 'Perawat',
-            'web'               => $web_setting,
-            'web_version'       => $web_version->version,
-            'list_data'         => '',
-            'param1'            => '',
-            'pendaftaran'       => $pendaftaran,
-            'no_trx'            => $no_trx,
-            'kode_dokter'       => $kode_dokter,
-            'emr_per'           => $this->M_global->getData('emr_per', ['no_trx' => $no_trx]),
-            'eresep'            => $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $no_trx]),
-            'etarif'            => $this->M_global->getDataResult('emr_tarif', ['no_trx' => $no_trx]),
-        ];
-
-        $this->template->load('Template/Content', 'Emr/Perawat', $parameter);
     }
 
     // proses simpan/update perawat
@@ -926,38 +932,46 @@ class Emr extends CI_Controller
     // dokter page
     public function dokter($no_trx)
     {
-        // website config
-        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
-        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+        $cek_session     = $this->session->userdata('kode_user');
+        $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_session]);
+
+        // cek apakah dia dokter ?
+        if (empty($cek_sess_dokter)) { // jika buka dokter
+            redirect('Where'); // lempar ke url where
+        } else { // namun jika dokter, arahkan ke page dokter
+            // website config
+            $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+            $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
 
-        $kode_dokter = $this->input->get('kode_dokter');
-        if (!$kode_dokter) {
-            $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
-        } else {
-            $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx, 'kode_dokter' => $kode_dokter]);
+            $kode_dokter = $this->input->get('kode_dokter');
+            if (!$kode_dokter) {
+                $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+            } else {
+                $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx, 'kode_dokter' => $kode_dokter]);
+            }
+
+            $parameter = [
+                $this->data,
+                'judul'             => 'EMR',
+                'nama_apps'         => $web_setting->nama,
+                'page'              => 'Dokter',
+                'web'               => $web_setting,
+                'web_version'       => $web_version->version,
+                'list_data'         => '',
+                'param1'            => '',
+                'pendaftaran'       => $pendaftaran,
+                'no_trx'            => $no_trx,
+                'kode_dokter'       => $kode_dokter,
+                'emr_per'           => $this->M_global->getData('emr_per', ['no_trx' => $no_trx]),
+                'emr_dok'           => $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]),
+                'emr_dok_fisik'     => $this->M_global->getDataResult('emr_dok_fisik', ['no_trx' => $no_trx]),
+                'eresep'            => $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $no_trx]),
+                'etarif'            => $this->M_global->getDataResult('emr_tarif', ['no_trx' => $no_trx]),
+            ];
+
+            $this->template->load('Template/Content', 'Emr/Dokter', $parameter);
         }
-
-        $parameter = [
-            $this->data,
-            'judul'             => 'EMR',
-            'nama_apps'         => $web_setting->nama,
-            'page'              => 'Dokter',
-            'web'               => $web_setting,
-            'web_version'       => $web_version->version,
-            'list_data'         => '',
-            'param1'            => '',
-            'pendaftaran'       => $pendaftaran,
-            'no_trx'            => $no_trx,
-            'kode_dokter'       => $kode_dokter,
-            'emr_per'           => $this->M_global->getData('emr_per', ['no_trx' => $no_trx]),
-            'emr_dok'           => $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]),
-            'emr_dok_fisik'     => $this->M_global->getDataResult('emr_dok_fisik', ['no_trx' => $no_trx]),
-            'eresep'            => $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $no_trx]),
-            'etarif'            => $this->M_global->getDataResult('emr_tarif', ['no_trx' => $no_trx]),
-        ];
-
-        $this->template->load('Template/Content', 'Emr/Dokter', $parameter);
     }
 
     // proses simpan/update dokter
