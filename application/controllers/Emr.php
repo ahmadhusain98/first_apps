@@ -252,7 +252,7 @@ class Emr extends CI_Controller
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table>
+                                <table style="font-size: 14px;">
                                     <tr>
                                         <td>Tanggal</td>
                                         <td> : </td>
@@ -282,8 +282,8 @@ class Emr extends CI_Controller
                             </div>
                         </div>
                         <div class="card-footer text-center">
-                            <button type="button" class="btn btn-info" style="width: 49%;" <?= (($p->status_trx == 2) ? 'disabled' : '') ?> onclick="show_his('<?= $p->no_trx ?>', '<?= $no_his ?>', '<?= $p->kode_member ?>')">EMR Perawat &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-angles-right"></i></button>
-                            <button type="button" class="btn btn-primary" style="width: 49%;" <?= (($p->status_trx == 2) ? 'disabled' : '') ?> onclick="show_his2('<?= $p->no_trx ?>', '<?= $no_his ?>', '<?= $p->kode_member ?>')">EMR Dokter &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-angles-right"></i></button>
+                            <button type="button" class="btn btn-info" style="width: 49%;" <?= (($p->status_trx == 2) ? 'disabled' : '') ?> onclick="show_his('<?= $p->no_trx ?>', '<?= $no_his ?>', '<?= $p->kode_member ?>')"> Perawat &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-angles-right"></i></button>
+                            <button type="button" class="btn btn-primary" style="width: 49%;" <?= (($p->status_trx == 2) ? 'disabled' : '') ?> onclick="show_his2('<?= $p->no_trx ?>', '<?= $no_his ?>', '<?= $p->kode_member ?>')"> Dokter &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-angles-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -544,7 +544,7 @@ class Emr extends CI_Controller
                 <div class="row mb-1">
                     <div class="col-md-12">
                         <span class="font-weight-bold">Anamnesa
-                            <?php if ($cek_dokter) : ?>
+                            <?php if (($cek_dokter) || ($this->session->userdata('kode_role') == 'R0001')) : ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_anamnesa')"><i class="fa fa-copy"></i> Copy</button>
@@ -564,7 +564,7 @@ class Emr extends CI_Controller
                 <div class="row mb-1">
                     <div class="col-md-12">
                         <span class="font-weight-bold">Pemeriksaan Fisik
-                            <?php if ($cek_dokter) : ?>
+                            <?php if (($cek_dokter) || ($this->session->userdata('kode_role') == 'R0001')) : ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_pem_fisik')"><i class="fa fa-copy"></i> Copy</button>
@@ -603,7 +603,7 @@ class Emr extends CI_Controller
                 <div class="row mb-1">
                     <div class="col-md-12">
                         <span class="font-weight-bold">Diagnosa
-                            <?php if ($cek_dokter) : ?>
+                            <?php if (($cek_dokter) || ($this->session->userdata('kode_role') == 'R0001')) : ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_diagnosa')"><i class="fa fa-copy"></i> Copy</button>
@@ -624,12 +624,12 @@ class Emr extends CI_Controller
                     <div class="col-md-12">
                         <span class="font-weight-bold">Terapi
                             <?php
-                            if ($cek_dokter) :
+                            if (($cek_dokter) || ($this->session->userdata('kode_role') == 'R0001')) :
                             ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_terapi')"><i class="fa fa-copy"></i> Copy</button>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="implement_err('<?= ((!empty($emr_per)) ? $emr_per->eracikan : '') ?>', 'eracikan', '<?= $p->no_trx ?>')"><i class="fa-solid fa-clone"></i> Apply</button>
+                                        <button type="button" class="btn btn-primary btn-sm" onclick="implement_err('<?= ((!empty($emr_dok)) ? $emr_dok->eracikan : '') ?>', 'eracikan', '<?= $p->no_trx ?>')"><i class="fa-solid fa-clone"></i> Apply</button>
                                     </div>
                                 </div>
                             <?php endif; ?>
@@ -720,7 +720,7 @@ class Emr extends CI_Controller
                 <div class="row mb-1">
                     <div class="col-md-12">
                         <span class="font-weight-bold">Rencana
-                            <?php if ($cek_dokter) : ?>
+                            <?php if (($cek_dokter) || ($this->session->userdata('kode_role') == 'R0001')) : ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_rencana')"><i class="fa fa-copy"></i> Copy</button>
@@ -880,12 +880,16 @@ class Emr extends CI_Controller
                 $this->M_global->delData('emr_per_barang', ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_tarif', ['no_trx' => $no_trx]),
             ];
+
+            aktifitas_user_transaksi('EMR', 'Mengubah Emr Perawat ' . $kode_member, $no_trx);
         } else { // selain itu maka tambah
             $cek = [
                 $this->M_global->insertData('emr_per', $data),
                 $this->M_global->delData('emr_per_barang', ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_tarif', ['no_trx' => $no_trx]),
             ];
+
+            aktifitas_user_transaksi('EMR', 'Menambahkan Emr Perawat ' . $kode_member, $no_trx);
         }
 
         $loop = 0;
@@ -947,9 +951,7 @@ class Emr extends CI_Controller
         $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_session]);
 
         // cek apakah dia dokter ?
-        if (empty($cek_sess_dokter)) { // jika buka dokter
-            redirect('Where'); // lempar ke url where
-        } else { // namun jika dokter, arahkan ke page dokter
+        if (($cek_sess_dokter) || ($this->session->userdata('kode_role') == 'R0001')) { // jika dokter
             // website config
             $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
             $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
@@ -982,6 +984,8 @@ class Emr extends CI_Controller
             ];
 
             $this->template->load('Template/Content', 'Emr/Dokter', $parameter);
+        } else { // namun jika bukan dokter, arahkan ke page dokter
+            redirect('Where'); // lempar ke url where
         }
     }
 
@@ -1039,6 +1043,8 @@ class Emr extends CI_Controller
                 $this->M_global->delData('emr_dok_fisik', ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_tarif', ['no_trx' => $no_trx]),
             ];
+
+            aktifitas_user_transaksi('EMR', 'Mengubah Emr Dokter ' . $kode_member, $no_trx);
         } else { // selain itu maka tambah
             $cek = [
                 $this->M_global->insertData('emr_dok', $data),
@@ -1046,6 +1052,8 @@ class Emr extends CI_Controller
                 $this->M_global->delData('emr_dok_fisik', ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_tarif', ['no_trx' => $no_trx]),
             ];
+
+            aktifitas_user_transaksi('EMR', 'Menambahkan Emr Dokter ' . $kode_member, $no_trx);
         }
 
         $loop = 0;

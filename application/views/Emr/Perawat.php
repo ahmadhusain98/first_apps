@@ -164,7 +164,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
 
                                         $alamat         = 'Prov. ' . $prov . ', ' . $kab . ', Kec. ' . $kec . ', Ds. ' . $member->desa . ', (POS: ' . $member->kodepos . '), RT.' . $member->rt . '/RW.' . $member->rw;
                                         ?>
-                                        <textarea name="alamat" id="alamat" class="form-control" readonly><?= $alamat ?></textarea>
+                                        <textarea name="alamat" id="alamat" class="form-control" readonly rows="5"><?= $alamat ?></textarea>
                                     </div>
                                 </div>
                             </div>

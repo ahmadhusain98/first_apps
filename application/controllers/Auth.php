@@ -137,46 +137,117 @@ class Auth extends CI_Controller
             ORDER BY id DESC LIMIT 10")->result();
         }
 ?>
-        <a type="button" class="dropdown-item p-1" style="width: 100%;">
+        <a type="button" class="dropdown-item p-2" style="width: 100%;">
             <?php
             if (count($sintak) > 0) :
                 foreach ($sintak as $s) :
                     if ($s->url == 'emr') {
-                        $msg = date('d/m/Y', strtotime($s->tgl)) . '-' . date('H:i:s', strtotime($s->jam)) . ' | Emr Dok';
+                        $msg = '<i class="fa-solid fa-fw fa-user-doctor"></i> Emr Dokter';
                         $par_url = 'Emr/dokter/' . $s->invoice;
                     } else if ($s->url == 'emr2') {
-                        $msg = date('d/m/Y', strtotime($s->tgl)) . '-' . date('H:i:s', strtotime($s->jam)) . ' | Emr Per';
+                        $msg = '<i class="fa-solid fa-fw fa-user-nurse"></i> Emr Perawat';
                         $par_url = 'Emr/perawat/' . $s->invoice;
                     } else if ($s->url == 'kasir') {
-                        $msg = date('d/m/Y', strtotime($s->tgl)) . '-' . date('H:i:s', strtotime($s->jam)) . ' | Pbr.Ksr';
+                        $msg = '<i class="fa-solid fa-fw fa-file-invoice-dollar"></i> Pembayaran Kasir';
                         $par_url = 'Kasir/form_kasir/0?invoice=' . $s->invoice;
                     } else if ($s->url == 'pembayaran') {
-                        $msg = date('d/m/Y', strtotime($s->tgl)) . '-' . date('H:i:s', strtotime($s->jam)) . ' | Pbr.Ksr';
+                        $msg = '<i class="fa-solid fa-fw fa-file-invoice-dollar"></i> Pembayaran Kasir';
                         $par_url = 'Kasir/form_kasir/0?invoice=' . $s->invoice;
                     } else if ($s->url == 'mutasi_cabang') {
-                        $msg = date('d/m/Y', strtotime($s->tgl)) . '-' . date('H:i:s', strtotime($s->jam)) . ' | Mts.Cab';
+                        $msg = '<i class="fa-solid fa-fw fa-building-circle-check"></i> Mutasi Cabang';
                         $par_url = 'Transaksi/form_mutasi/0?invoice=' . $s->invoice;
                     } else if ($s->url == 'mutasi_gudang') {
-                        $msg = date('d/m/Y', strtotime($s->tgl)) . '-' . date('H:i:s', strtotime($s->jam)) . ' | Mts.Gud';
+                        $msg = '<i class="fa-solid fa-fw fa-warehouse"></i> Mutasi Gudang';
                         $par_url = 'Transaksi/form_mutasi/0?invoice=' . $s->invoice;
                     } else if ($s->url == 'pre_order') {
-                        $msg = date('d/m/Y', strtotime($s->tgl)) . '-' . date('H:i:s', strtotime($s->jam)) . ' | Trm.Brg';
+                        $msg = '<i class="fa-solid fa-fw fa-clipboard-check"></i> Terima Barang';
                         $par_url = 'Transaksi/form_barang_in/0?invoice=' . $s->invoice;
                     } else {
-                        $msg = date('d/m/Y', strtotime($s->tgl)) . '-' . date('H:i:s', strtotime($s->jam)) . ' | ';
+                        $msg = ' None';
                         $par_url = '';
                     } ?>
-                    <a type="button" href="<?= site_url($par_url) ?>" style="text-decoration: none; margin-bottom: 15px; margin-left: 15px; color: #007bff; font-weight: bold;">
-                        <?= $msg ?> | <?= $s->invoice ?>
+                    <a type="button" href="<?= site_url($par_url) ?>" style="text-decoration: none; margin-bottom: 15px; color: #4c4c4c;">
+                        <span class="font-weight-bold pl-3"><?= $msg ?></span>
+                        <span class="float-right pr-3"><i class="fa-solid fa-chevron-right"></i></span>
                     </a>
                     <hr>
                 <?php
                 endforeach;
             else : ?>
                 <span style="color: grey; margin-bottom: 10px; width: 100%;">Tidak Ada Notifikasi</span>
-    <?php
+            <?php
             endif;
             echo '</a>';
+        }
+
+        // pesan
+        public function body_psn()
+        {
+            $people = $this->M_global->getResult('user');
+            ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row p-2">
+                        <div class="col-md-4">
+                            <div class="card shadow" style="height: 67vh; width: 9vw; position: fixed; background-color: #272a3f; color: white;">
+                                <div class="card-body">
+                                    <span class="text-center font-weight-bold">DAFTAR KONTAK</span>
+                                    <hr style="background-color: white;">
+                                    <?php
+                                    $no_kontak = 1;
+                                    foreach ($people as $p) :
+                                    ?>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span><?= $p->nama ?></span>
+                                            </div>
+                                            <div class="col-md-12" style="margin-bottom: -5px; margin-top: -5px;">
+                                                <span style="font-size: 8px; float: right">
+                                                    <?= $this->M_global->getData('m_role', ['kode_role' => $p->kode_role])->keterangan ?>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <hr style="background-color: white;">
+                                    <?php
+                                        $no_kontak++;
+                                    endforeach;
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row" style="height: 55vh;">
+                                <div class="col-md-12">
+                                    <div class="row mb-1">
+                                        <label for="">Kepada</label>
+                                        <div class="col-md-12">
+                                            <textarea name="ke" id="ke" class="w-80" rows="2" style="border-radius: 10px;">Kepada</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-md-12">
+                                            <div class="float-right">
+                                                <textarea name="dari" id="dari" class="w-80" rows="2" style="border-radius: 10px;">Saya</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <textarea name="pesanku" id="pesanku" class="form-control pesanku-no-border"></textarea>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-success w-100 h-100 paper-plane-no-border"><i class="fa-solid fa-paper-plane"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    <?php
         }
 
         // regist page

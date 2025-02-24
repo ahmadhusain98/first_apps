@@ -226,6 +226,25 @@
         .card-draggable2 {
             cursor: move;
         }
+
+        #popup_psn {
+            position: fixed;
+            z-index: 9999;
+            display: none;
+            width: 30vw;
+            top: 10%;
+            right: 67%;
+        }
+
+        .pesanku-no-border {
+            margin-top: auto;
+            border-bottom: 0 !important;
+        }
+
+        .paper-plane-no-border {
+            margin-top: auto;
+            border-bottom: 0 !important;
+        }
     </style>
 
     <?php
@@ -265,6 +284,59 @@
         }
     }
     ?>
+
+    <div id="popup_psn">
+        <div class="card shadow card-lg" style="border: 1px solid grey;">
+            <div class="card-header card-draggable_psn">
+                <span class="h4">
+                    Pesan
+                    <i type="button" class="fa fa-times float-right" onclick="close_popup_psn()"></i>
+                </span>
+            </div>
+            <div id="body_psn" style="overflow-y: scroll; overflow-x: hidden; height: 70vh; width: 100%;"></div>
+        </div>
+    </div>
+
+    <script>
+        const popup_psn = document.getElementById('popup_psn');
+        const header_psn = document.querySelector('.card-draggable_psn');
+        let offsetX_ps, offsetY_psn, isDragging_psn = false;
+
+        header_psn.addEventListener('mousedown', (e) => {
+            isDragging_psn = true;
+            offsetX_ps = e.clientX - popup_psn.offsetLeft;
+            offsetY_psn = e.clientY - popup_psn.offsetTop;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging_psn) return;
+            popup_psn.style.left = e.clientX - offsetX_ps + 'px';
+            popup_psn.style.top = e.clientY - offsetY_psn + 'px';
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging_psn = false;
+        });
+
+        function close_popup_psn() {
+            popup_psn.style.display = 'none';
+        }
+
+        function pop_psn() {
+            $('#body_psn').text('');
+
+            xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("body_psn").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "<?= base_url('Auth/body_psn'); ?>", true);
+            xhttp.send();
+
+            popup_psn.style.display = 'block';
+        }
+    </script>
 
 
     <div class="wrapper">
@@ -308,14 +380,18 @@
                     </a>
                 </li>
                 <!-- <li class="nav-item dropdown">
+                    <a href="" class="nav-link" data-toggle="dropdown" type="button" onclick="pop_psn()">
+                        <i class="fa-solid fa-comments"></i> Pesan
+                    </a>
+                </li> -->
+                <!-- <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" type="button">
                         <ion-icon name="chatbubbles-outline" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Perpesanan"></ion-icon>
                         <span class="badge badge-danger navbar-badge">3</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <a type="button" class="dropdown-item"> -->
-                <!-- Message Start -->
-                <!-- <div class="media">
+                        <a type="button" class="dropdown-item">
+                            <div class="media">
                                 <img src="<?= base_url() ?>assets/dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -325,9 +401,8 @@
                                     <p class="text-sm">I got your message bro</p>
                                     <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
                                 </div>
-                            </div> -->
-                <!-- Message End -->
-                <!-- </a>
+                            </div>
+                        </a>
                         <div class="dropdown-divider"></div>
                         <a type="button" class="dropdown-item dropdown-footer">See All Messages</a>
                     </div>
@@ -336,10 +411,10 @@
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" type="button">
-                        <i class="fa-regular fa-bell"></i>&nbsp;&nbsp;Notifikasi&nbsp;&nbsp;
+                        <i class="fa-regular fa-solid fa-bell"></i>&nbsp;&nbsp;Notifikasi&nbsp;&nbsp;
                         <div id="count_notif"></div>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right" style="width: 25vw;">
+                    <div class="dropdown-menu dropdown-menu-right" style="width: 20vw;">
                         <div id="notf_live" style="width: 100%;"></div>
                     </div>
                 </li>
