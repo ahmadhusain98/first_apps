@@ -279,7 +279,7 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" type="button" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" type="button" role="button"><i class="fa-solid fa-caret-left"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <span type="button" class="nav-link">Cabang: <?= $master_cabang->cabang ?></span>
@@ -339,8 +339,8 @@
                         <i class="fa-regular fa-bell"></i>&nbsp;&nbsp;Notifikasi&nbsp;&nbsp;
                         <div id="count_notif"></div>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <div id="notf_live"></div>
+                    <div class="dropdown-menu dropdown-menu-right" style="width: 25vw;">
+                        <div id="notf_live" style="width: 100%;"></div>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -607,6 +607,21 @@
             width: '100%',
             allowClear: true,
         });
+
+        $(document).ready(function() {
+            // Memeriksa ketika pushmenu diaktifkan
+            $('[data-widget="pushmenu"]').click(function() {
+                var icon = $(this).find('i'); // Menyimpan elemen <i> yang ada di dalam link
+
+                // Memeriksa apakah ikon kiri aktif (sebelum pushmenu dibuka)
+                if (icon.hasClass('fa-caret-left')) {
+                    icon.removeClass('fa-caret-left').addClass('fa-caret-right'); // Ganti ke fa-caret-right
+                } else {
+                    icon.removeClass('fa-caret-right').addClass('fa-caret-left'); // Ganti ke fa-caret-left
+                }
+            });
+        });
+
 
         $('#countdownNotif').hide();
 
