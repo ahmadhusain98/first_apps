@@ -623,55 +623,66 @@ class Emr extends CI_Controller
                 <div class="row mb-1">
                     <div class="col-md-12">
                         <span class="font-weight-bold">Terapi
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <span class="text-primary"><b>Tarif / Tindakan</b></span>
-                                    <br>
-                                    <?php
-                                    $emr_tarif = $this->M_global->getDataResult('emr_tarif', ['no_trx' => $p->no_trx]);
-                                    if (empty($emr_tarif)) {
-                                        echo '-';
-                                    } else {
-                                        if (count($emr_tarif) > 1) {
-                                            $br = '<br>';
-                                        } else {
-                                            $br = '';
-                                        }
-
-                                        foreach ($emr_tarif as $et) :
-                                            $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $et->kode_tarif]);
-                                            echo '@' . $tarif->nama . ' | ' . $et->qty . $br;
-                                        endforeach;
-                                    }
-                                    ?>
+                            <?php
+                            if ($cek_dokter) :
+                            ?>
+                                <div class="float-right">
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_terapi')"><i class="fa fa-copy"></i> Copy</button>
+                                        <button type="button" class="btn btn-primary btn-sm" onclick="implement_err('<?= ((!empty($emr_per)) ? $emr_per->eracikan : '') ?>', 'eracikan', '<?= $p->no_trx ?>')"><i class="fa-solid fa-clone"></i> Apply</button>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <span class="text-primary"><b>Resep / Racikan</b></span>
-                                    <br>
-                                    <?php
-                                    $emr_per_barang = $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $p->no_trx]);
-                                    if (empty($emr_per_barang)) {
-                                        echo '-';
+                            <?php endif; ?>
+                        </span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span class="text-primary"><b>Tarif / Tindakan</b></span>
+                                <br>
+                                <?php
+                                $emr_tarif = $this->M_global->getDataResult('emr_tarif', ['no_trx' => $p->no_trx]);
+                                if (empty($emr_tarif)) {
+                                    echo '-';
+                                } else {
+                                    if (count($emr_tarif) > 1) {
+                                        $br = '<br>';
                                     } else {
-                                        if (count($emr_per_barang) > 1) {
-                                            $br = '<br>';
-                                        } else {
-                                            $br = '';
-                                        }
-
-                                        foreach ($emr_per_barang as $epb) :
-                                            $barang = $this->M_global->getData('barang', ['kode_barang' => $epb->kode_barang]);
-                                            $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $epb->kode_satuan]);
-                                            echo '@' . $barang->nama . ' | ' . $epb->qty . ' ' . $satuan->keterangan . ' | ' . $epb->signa . $br;
-                                        endforeach;
-
-                                        if ($emr_per->eracikan != '') {
-                                            echo '<br>' . $emr_per->eracikan;
-                                        }
+                                        $br = '';
                                     }
-                                    ?>
-                                </div>
+
+                                    foreach ($emr_tarif as $et) :
+                                        $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $et->kode_tarif]);
+                                        echo '@' . $tarif->nama . ' | ' . $et->qty . $br;
+                                    endforeach;
+                                }
+                                ?>
                             </div>
+                            <div class="col-md-6">
+                                <span class="text-primary"><b>Resep / Racikan</b></span>
+                                <br>
+                                <?php
+                                $emr_per_barang = $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $p->no_trx]);
+                                if (empty($emr_per_barang)) {
+                                    echo '-';
+                                } else {
+                                    if (count($emr_per_barang) > 1) {
+                                        $br = '<br>';
+                                    } else {
+                                        $br = '';
+                                    }
+
+                                    foreach ($emr_per_barang as $epb) :
+                                        $barang = $this->M_global->getData('barang', ['kode_barang' => $epb->kode_barang]);
+                                        $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $epb->kode_satuan]);
+                                        echo '@' . $barang->nama . ' | ' . $epb->qty . ' ' . $satuan->keterangan . ' | ' . $epb->signa . $br;
+                                    endforeach;
+
+                                    if ($emr_per->eracikan != '') {
+                                        echo '<br>' . $emr_per->eracikan;
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
                         </span>
                     </div>
                 </div>

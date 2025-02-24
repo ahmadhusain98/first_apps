@@ -335,7 +335,13 @@
 
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
-                    <div id="notf_live"></div>
+                    <a class="nav-link" data-toggle="dropdown" type="button">
+                        <i class="fa-regular fa-bell"></i>&nbsp;&nbsp;Notifikasi&nbsp;&nbsp;
+                        <div id="count_notif"></div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <div id="notf_live"></div>
+                    </div>
                 </li>
                 <li class="nav-item dropdown">
                     <button type="button" class="btn text-danger" style="background-color: transparent;" onclick="exit()"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;Keluar</button>
@@ -609,12 +615,14 @@
             if (timeNotif <= 0) {
                 timeNotif = 10;
                 notif_live();
+                count_notif_live();
             }
             document.getElementById("countdownNotif").innerHTML = timeNotif + " Detik";
             timeNotif -= 1;
-        }, 1000);
+        }, 500);
 
         notif_live();
+        count_notif_live();
 
         function notif_live() {
             xhttp = new XMLHttpRequest();
@@ -626,6 +634,19 @@
             xhttp.open("GET", "<?= base_url('Auth/notif_live'); ?>", true);
             xhttp.send();
         }
+
+        function count_notif_live() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    // Get the first element with the class 'count_notif' and update its innerHTML
+                    document.getElementById("count_notif").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "<?= base_url('Auth/count_notif'); ?>", true);
+            xhttp.send();
+        }
+
 
         display_ct();
 
