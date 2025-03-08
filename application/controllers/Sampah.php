@@ -131,6 +131,8 @@ class Sampah extends CI_Controller
                     $where = ['kode_tarif' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')];
                 } else if ($_tabel == 'm_ruang') {
                     $where = ['kode_ruang' => $_invoice];
+                } else if ($_tabel == 'm_prefix') {
+                    $where = ['kode_prefix' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -195,6 +197,8 @@ class Sampah extends CI_Controller
             $where = ['kode_tarif' => $id, 'kode_cabang' => $this->session->userdata('cabang')];
         } else if ($table == 'm_ruang') {
             $where = ['kode_ruang' => $id];
+        } else if ($table == 'm_prefix') {
+            $where = ['kode_prefix' => $id];
         } else {
             echo json_encode(['status' => 0]);
             return;
@@ -313,6 +317,8 @@ class Sampah extends CI_Controller
                     $where = ['kode_ruang' => $_invoice];
 
                     $this->M_global->delData('bed_cabang', ['kode_bed' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')]);
+                } else if ($_tabel == 'm_prefix') {
+                    $where = ['kode_prefix' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -417,6 +423,8 @@ class Sampah extends CI_Controller
             $where = ['kode_ruang' => $id];
 
             $this->M_global->delData('bed_cabang', ['kode_bed' => $id, 'kode_cabang' => $this->session->userdata('cabang')]);
+        } else if ($table == 'm_prefix') {
+            $where = ['kode_prefix' => $id];
         } else {
             echo json_encode(['status' => 0]);
             return;

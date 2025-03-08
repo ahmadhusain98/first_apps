@@ -475,6 +475,20 @@ class M_global extends CI_Model
             FROM m_ruang
             WHERE hapus > 0
 
+            UNION ALL
+
+            SELECT 
+            kode_prefix AS id,
+            'Master ~ Prefix' AS menu,
+            nama AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'm_prefix' AS tabel,
+            3 AS bagian,
+            '' AS cabang
+            FROM m_prefix
+            WHERE hapus > 0
+
             -- end master
 
         ) AS query_all
