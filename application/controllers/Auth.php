@@ -39,9 +39,9 @@ class Auth extends CI_Controller
         $cek_per = $this->M_global->getData('perawat', ['kode_perawat' => $this->session->userdata('kode_user')]);
 
         if ($cek_dok) {
-            $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p WHERE p.kode_dokter = "' . $cek_dok->kode_dokter . '" AND p.status_trx <> 1 AND p.kode_cabang = "' . $cabang . '" AND p.no_trx NOT IN (SELECT no_trx FROM emr_dok)')->result();
+            $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p WHERE p.kode_dokter = "' . $cek_dok->kode_dokter . '" AND p.status_trx <> 1 AND p.kode_cabang = "' . $cabang . '" AND NOT EXISTS (SELECT 1 FROM emr_dok ed WHERE ed.no_trx = p.no_trx)')->result();
         } else if ($cek_per) {
-            $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr2" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p WHERE p.kode_dokter <> "' . $cek_dok->kode_dokter . '" AND p.status_trx <> 1 AND p.kode_cabang = "' . $cabang . '" AND p.no_trx NOT IN (SELECT no_trx FROM emr_per)')->result();
+            $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr2" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p WHERE p.kode_dokter <> "' . $cek_dok->kode_dokter . '" AND p.status_trx <> 1 AND p.kode_cabang = "' . $cabang . '" AND NOT EXISTS (SELECT 1 FROM emr_per ep WHERE ep.no_trx = p.no_trx)')->result();
         } else {
             $sintak = $this->db->query("SELECT * FROM (
                 SELECT id, no_trx AS invoice, 'pembayaran' AS url, tgl_daftar AS tgl, jam_daftar AS jam FROM pendaftaran
@@ -70,12 +70,12 @@ class Auth extends CI_Controller
                 UNION ALL
 
                 SELECT p.id, p.no_trx AS invoice, 'emr' AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p 
-                WHERE p.status_trx <> 1 AND p.kode_cabang = '$cabang' AND p.no_trx NOT IN (SELECT no_trx FROM emr_dok)
+                WHERE p.status_trx <> 1 AND p.kode_cabang = '$cabang' AND p.no_trx AND NOT EXISTS (SELECT 1 FROM emr_dok ed WHERE ed.no_trx = p.no_trx)
 
                 UNION ALL
 
                 SELECT p.id, p.no_trx AS invoice, 'emr2' AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p 
-                WHERE p.status_trx <> 1 AND p.kode_cabang = '$cabang' AND p.no_trx NOT IN (SELECT no_trx FROM emr_per)
+                WHERE p.status_trx <> 1 AND p.kode_cabang = '$cabang' AND p.no_trx AND NOT EXISTS (SELECT 1 FROM emr_per ep WHERE ep.no_trx = p.no_trx)
             ) AS semuax
             ORDER BY id DESC LIMIT 10")->result();
         }
@@ -96,9 +96,9 @@ class Auth extends CI_Controller
         $cek_per = $this->M_global->getData('perawat', ['kode_perawat' => $this->session->userdata('kode_user')]);
 
         if (!empty($cek_dok)) {
-            $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p WHERE p.kode_dokter = "' . $cek_dok->kode_dokter . '" AND p.status_trx <> 1 AND p.kode_cabang = "' . $cabang . '" AND p.no_trx NOT IN (SELECT no_trx FROM emr_dok)')->result();
+            $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p WHERE p.kode_dokter = "' . $cek_dok->kode_dokter . '" AND p.status_trx <> 1 AND p.kode_cabang = "' . $cabang . '" AND NOT EXISTS (SELECT 1 FROM emr_dok ed WHERE ed.no_trx = p.no_trx)')->result();
         } else if ($cek_per) {
-            $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr2" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p WHERE p.kode_dokter <> "' . $cek_dok->kode_dokter . '" AND p.status_trx <> 1 AND p.kode_cabang = "' . $cabang . '" AND p.no_trx NOT IN (SELECT no_trx FROM emr_per)')->result();
+            $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr2" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p WHERE p.kode_dokter <> "' . $cek_dok->kode_dokter . '" AND p.status_trx <> 1 AND p.kode_cabang = "' . $cabang . '" AND NOT EXISTS (SELECT 1 FROM emr_per ep WHERE ep.no_trx = p.no_trx)')->result();
         } else {
             $sintak = $this->db->query("SELECT * FROM (
                 SELECT id, no_trx AS invoice, 'pembayaran' AS url, tgl_daftar AS tgl, jam_daftar AS jam FROM pendaftaran
@@ -127,12 +127,12 @@ class Auth extends CI_Controller
                 UNION ALL
 
                 SELECT p.id, p.no_trx AS invoice, 'emr' AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p 
-                WHERE p.status_trx <> 1 AND p.kode_cabang = '$cabang' AND p.no_trx NOT IN (SELECT no_trx FROM emr_dok)
+                WHERE p.status_trx <> 1 AND p.kode_cabang = '$cabang' AND p.no_trx AND NOT EXISTS (SELECT 1 FROM emr_dok ed WHERE ed.no_trx = p.no_trx)
 
                 UNION ALL
 
                 SELECT p.id, p.no_trx AS invoice, 'emr2' AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p 
-                WHERE p.status_trx <> 1 AND p.kode_cabang = '$cabang' AND p.no_trx NOT IN (SELECT no_trx FROM emr_per)
+                WHERE p.status_trx <> 1 AND p.kode_cabang = '$cabang' AND p.no_trx AND NOT EXISTS (SELECT 1 FROM emr_per ep WHERE ep.no_trx = p.no_trx)
             ) AS semuax
             ORDER BY id DESC LIMIT 10")->result();
         }
