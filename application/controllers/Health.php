@@ -67,7 +67,7 @@ class Health extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'member';
-        $colum            = ['id', 'kode_member', 'nama', 'email', 'password', 'secondpass', 'jkel', 'foto', 'kode_role', 'actived', 'joined', 'on_off', 'nohp', 'tmp_lahir', 'tgl_lahir', 'provinsi', 'kabupaten', 'kecamatan', 'desa', 'kodepos', 'nik', 'last_regist', 'status_regist', 'rt', 'rw'];
+        $colum            = ['id', 'kode_prefix', 'kode_member', 'nama', 'email', 'password', 'secondpass', 'jkel', 'foto', 'kode_role', 'actived', 'joined', 'on_off', 'nohp', 'tmp_lahir', 'tgl_lahir', 'provinsi', 'kabupaten', 'kecamatan', 'desa', 'kodepos', 'nik', 'last_regist', 'status_regist', 'rt', 'rw'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -116,11 +116,18 @@ class Health extends CI_Controller
             $kab    = $this->M_global->getData('kabupaten', ['kode_kabupaten' => $rd->kabupaten])->kabupaten;
             $kec    = $this->M_global->getData('kecamatan', ['kode_kecamatan' => $rd->kecamatan])->kecamatan;
 
+            $prefix = $this->M_global->getData('m_prefix', ['kode_prefix' => $rd->kode_prefix]);
+            if ($prefix) {
+                $prefix = $prefix->nama;
+            } else {
+                $prefix = 'None';
+            }
+
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->kode_member . (($rd->actived == 1) ? '<br><span class="badge badge-success">Aktif</span>' : '<br><span class="badge badge-dark">Non-aktif</span>');
             $row[]  = $rd->nik;
-            $row[]  = $rd->nama . '<br><span class="badge badge-info">' . hitung_umur($rd->tgl_lahir) . '</span>';
+            $row[]  = $prefix . '. ' . $rd->nama . '<br><span class="badge badge-info">' . hitung_umur($rd->tgl_lahir) . '</span>';
             $row[]  = 'Prov. ' . $prov . ',<br>' . $kab . ',<br>Kec. ' . $kec . ',<br>Ds. ' . $rd->desa . ',<br>(POS: ' . $rd->kodepos . '), RT.' . $rd->rt . '/RW.' . $rd->rw;
             $row[]  = $rd->last_regist . (($rd->status_regist == 1) ? '<span class="badge badge-primary float-right">Buka</span>' : '<span class="badge badge-danger float-right">Tutup</span>');
 
@@ -275,6 +282,7 @@ class Health extends CI_Controller
     function member_proses($param)
     {
         $nik                = htmlspecialchars($this->input->post('nik'));
+        $kode_prefix        = $this->input->post('kode_prefix');
         $nama               = htmlspecialchars($this->input->post('nama'));
         if ($param == 1) {
             $kode_member    = _codeMember($nama);
@@ -314,6 +322,7 @@ class Health extends CI_Controller
 
             $isi = [
                 'kode_member'   => $kode_member,
+                'kode_prefix'   => $kode_prefix,
                 'nama'          => $nama,
                 'email'         => $email,
                 'password'      => $password,
@@ -347,6 +356,7 @@ class Health extends CI_Controller
 
             $isi = [
                 'kode_member'   => $kode_member,
+                'kode_prefix'   => $kode_prefix,
                 'nama'          => $nama,
                 'email'         => $email,
                 'password'      => $password,

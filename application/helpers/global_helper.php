@@ -147,6 +147,23 @@ function _kodeAkun()
     return $kode_akun;
 }
 
+function _kodePrefix()
+{
+    $CI         = &get_instance();
+
+    $inisial    = "PRE";
+    $lastNumber = $CI->db->query('SELECT * FROM m_prefix ORDER BY kode_prefix DESC LIMIT 1')->row();
+    $number     = 1;
+    if ($lastNumber) {
+        $number       = count($CI->db->query('SELECT * FROM m_prefix')->result()) + 1;
+        $kode_user    = $inisial . sprintf("%07d", $number);
+    } else {
+        $number       = 0;
+        $kode_user    = $inisial . "0000001";
+    }
+    return $kode_user;
+}
+
 function _kodeSatuan()
 {
     $CI         = &get_instance();

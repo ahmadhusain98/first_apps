@@ -175,6 +175,22 @@ class M_select2 extends CI_Model
         return $sintak;
     }
 
+    // fungsi prefix
+    function getPrefix($key)
+    {
+        $limit = ' LIMIT 50';
+
+        if (!empty($key)) {
+            $add_sintak = ' WHERE nama LIKE "%' . $key . '%" ORDER BY nama ASC';
+        } else {
+            $add_sintak = ' ORDER BY nama ASC';
+        }
+
+        $sintak = $this->db->query('SELECT kode_prefix AS id, nama AS text FROM m_prefix ' . $add_sintak . $limit)->result();
+
+        return $sintak;
+    }
+
     // fungsi provinsi
     function getProvinsi($key)
     {

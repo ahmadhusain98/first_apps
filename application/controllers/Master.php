@@ -5249,4 +5249,190 @@ class Master extends CI_Controller
     }
 
     // ############################################################################################################################################################################
+
+    /**
+     * Master Prefix
+     * untuk menampilkan, menambahkan, dan mengubah prefix dalam sistem
+     */
+
+    // prefix page
+    public function prefix()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter   = [
+            $this->data,
+            'judul'         => 'Master',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Prefix',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            'list_data'     => 'Master/prefix_list/',
+            'param1'        => '1',
+        ];
+
+        $this->template->load('Template/Content', 'Master/Umum/Prefix', $parameter);
+    }
+
+    // fungsi list prefix
+    public function prefix_list($param1)
+    {
+        // parameter untuk list table
+        $table            = 'm_prefix';
+        $colum            = ['id', 'kode_prefix', 'nama'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['id' => 'asc'];
+        $kondisi_param1   = 'hapus < ';
+
+        // kondisi role
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+
+        if ($updated > 0) {
+            $upd_diss     = '';
+        } else {
+            $upd_diss     = 'disabled';
+        }
+
+        // table server side tampung kedalam variable $list
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($deleted > 0) {
+                $barang             = $this->M_global->getResult('member');
+
+                $prefix             = [];
+                foreach ($barang as $b) {
+                    $prefix[]       = [$b->kode_prefix];
+                }
+
+                $flattened_prefix   = array_merge(...$prefix);
+
+                if (in_array($rd->kode_prefix, $flattened_prefix)) {
+                    $del_diss       = 'disabled';
+                } else {
+                    $del_diss       = '';
+                }
+            } else {
+                $del_diss           = 'disabled';
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->kode_prefix;
+            $row[]  = $rd->nama;
+            $row[]  = '<div class="text-center">
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_prefix . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_prefix . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables->count_all($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "recordsFiltered" => $this->M_datatables->count_filtered($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    // fungsi cek prefix berdasarkan nama prefix
+    public function cekPrefix()
+    {
+        // ambil nama inputan
+        $nama   = $this->input->post('nama');
+
+        // cek nama pada table m_prefix
+        $cek          = $this->M_global->jumDataRow('m_prefix', ['nama' => $nama]);
+
+        if ($cek < 1) { // jika tidak ada/ kurang dari 1
+            // kirimkan status 1
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi proses simpan/update prefix
+    public function prefix_proses($param)
+    {
+        // variable
+        $nama       = $this->input->post('nama');
+
+        if ($param == 1) { // jika parameternya 1
+            // maka buat kode baru
+            $kodePrefix   = _kodePrefix();
+        } else { // selain itu
+            // ambil kode dari inputan
+            $kodePrefix   = $this->input->post('kodePrefix');
+        }
+
+        // tampung variable kedalam $isi
+        $isi = [
+            'kode_prefix'   => $kodePrefix,
+            'nama'    => $nama,
+        ];
+
+        if ($param == 1) { // jika parameternya 1
+            // jalankan fungsi simpan
+            $cek = $this->M_global->insertData('m_prefix', $isi);
+
+            $cek_param = 'menambahkan';
+        } else { // selain itu
+            // jalankan fungsi update
+            $cek = $this->M_global->updateData('m_prefix', $isi, ['kode_prefix' => $kodePrefix]);
+
+            $cek_param = 'mengubah';
+        }
+
+        if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Prefix', $cek_param, $kodePrefix, $this->M_global->getData('m_prefix', ['kode_prefix' => $kodePrefix])->nama);
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi ambil informasi prefix berdasarkan kode prefix
+    public function getInfoPrefix($kode_prefix)
+    {
+        // ambil data prefix berdasarkan kode_prefix
+        $data = $this->M_global->getData('m_prefix', ['kode_prefix' => $kode_prefix]);
+        // lempar ke view
+        echo json_encode($data);
+    }
+
+    // fungsi hapus prefix berdasarkan kode_prefix
+    public function delPrefix($kode_prefix)
+    {
+        // jalankan fungsi hapus prefix berdasarkan kode_prefix
+        aktifitas_user('Master Prefix', 'menghapus', $kode_prefix, $this->M_global->getData('m_prefix', ['kode_prefix' => $kode_prefix])->nama);
+        // $cek = $this->M_global->delData('m_prefix', ['kode_prefix' => $kode_prefix]);
+        $cek = $this->M_global->updateData('m_prefix', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_prefix' => $kode_prefix]);
+
+        if ($cek) { // jika fungsi berjalan
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // ############################################################################################################################################################################
 }

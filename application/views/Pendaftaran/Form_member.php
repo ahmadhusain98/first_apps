@@ -15,7 +15,19 @@
                             <div class="col-md-6">
                                 <label for="nama">Nama <sup class="text-danger">**</sup></label>
                                 <input type="hidden" class="form-control" id="kodeMember" name="kodeMember" value="<?= ((!empty($data_member)) ? $data_member->kode_member : '') ?>">
-                                <input type="text" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Nama Lengkap" class="form-control" placeholder="Nama Lengkap" id="nama" name="nama" value="<?= ((!empty($data_member)) ? $data_member->nama : '') ?>" onkeyup="ubah_nama(this.value, 'nama')">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <select name="kode_prefix" id="kode_prefix" class="form-control select2-prefix" data-placeholder="~ Pilih Prefix">
+                                            <?php if (!empty($data_member)) : ?>
+                                                <?php $prefix = $this->M_global->getData('m_prefix', ['kode_prefix' => $data_member->kode_prefix]) ?>
+                                                <option value="<?= $data_member->kode_prefix ?>"><?= $prefix->nama ?></option>
+                                            <?php endif; ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Nama Lengkap" class="form-control" placeholder="Nama Lengkap" id="nama" name="nama" value="<?= ((!empty($data_member)) ? $data_member->nama : '') ?>" onkeyup="ubah_nama(this.value, 'nama')">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row mb-3">

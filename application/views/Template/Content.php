@@ -1255,6 +1255,7 @@
 
         // fungsi select2 global
         // inisial
+        initailizeSelect2_prefix();
         initailizeSelect2_pajak();
         initailizeSelect2_provinsi();
         initailizeSelect2_kabupaten(param = '');
@@ -1646,6 +1647,43 @@
                 },
                 ajax: {
                     url: siteUrl + 'Select2_master/dataBarang',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_prefix() {
+            $(".select2-prefix").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Prefix',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataPrefix',
                     type: 'POST',
                     dataType: 'JSON',
                     delay: 100,

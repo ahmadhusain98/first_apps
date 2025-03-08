@@ -84,6 +84,13 @@ class Select2_master extends CI_Controller
         echo json_encode($this->M_select2->getPajak($key));
     }
 
+    // master prefix
+    function dataPrefix()
+    {
+        $key = $this->input->post('searchTerm');
+        echo json_encode($this->M_select2->getPrefix($key));
+    }
+
     // master prosinsi
     function dataProvinsi()
     {
