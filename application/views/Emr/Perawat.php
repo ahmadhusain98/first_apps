@@ -103,7 +103,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                             <?php endif ?>
                         </select>
                         <hr>
-                        <div id="body_history" style="overflow-y: scroll; overflow-x: hidden; height: 64vh; width: 100%;"></div>
+                        <div id="body_history" style="overflow-y: scroll; overflow-x: hidden; height: 69.7vh; width: 100%;"></div>
                     </div>
                 </div>
             </div>

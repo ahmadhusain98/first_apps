@@ -2622,7 +2622,7 @@ class Transaksi extends CI_Controller
     }
 
     // form barang_out page
-    public function form_barang_out($param, $no_trx)
+    public function form_barang_out($param, $no_trx = '')
     {
         // website config
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
