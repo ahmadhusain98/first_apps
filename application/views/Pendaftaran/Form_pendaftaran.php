@@ -230,8 +230,7 @@
                                             <th>Tgl/Jam Daftar</th>
                                             <th>Tgl/Jam Keluar</th>
                                             <th>Poli</th>
-                                            <th>Dokter</th>
-                                            <th width="10%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
+                                            <th style="border-radius: 0px 10px 0px 0px;">Dokter</th>
                                         </tr>
                                     </thead>
                                     <tbody id="bodyRiwayat">
@@ -239,34 +238,33 @@
                                             <?php $no = 1;
                                             foreach ($riwayat as $r) : ?>
                                                 <tr>
-                                                    <td><?= $no ?></td>
+                                                    <td style="text-align: right;"><?= $no ?></td>
                                                     <td>
                                                         <?= $this->M_global->getData('cabang', ['kode_cabang' => $r->kode_cabang])->cabang ?>
                                                         <?php
                                                         if ($r->status_trx == 0) {
                                                             $cek_status = 'success';
-                                                            $message_status = 'Open';
-                                                            $btndis = 'disabled';
+                                                            $message_status = 'Proses';
+                                                            $btndis = 'style="color: black;"';
                                                         } else if ($r->status_trx == 2) {
                                                             $cek_status = 'warning';
-                                                            $message_status = 'Cancel';
-                                                            $btndis = '';
+                                                            $message_status = 'Batal';
+                                                            $btndis = 'style="color: black;"';
                                                         } else {
                                                             $cek_status = 'danger';
-                                                            $message_status = 'Close';
-                                                            $btndis = '';
+                                                            $message_status = 'Selesai';
+                                                            $btndis = 'onclick="getHisPas(' . "'" . $r->no_trx . "'" . ')" style="color: blue;"';
                                                         }
                                                         ?>
-                                                        <span class="badge badge-<?= $cek_status ?>"><?= $message_status ?></span>
+                                                        <span class="float-right badge badge-<?= $cek_status ?>"><?= $message_status ?></span>
                                                     </td>
-                                                    <td><?= $r->no_trx ?></td>
+                                                    <td>
+                                                        <a type="button" <?= $btndis ?>><?= $r->no_trx ?></a>
+                                                    </td>
                                                     <td><?= date('Y-m-d', strtotime($r->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($r->jam_daftar)) ?></td>
                                                     <td><?= '<span class="text-center">' . (($r->status_trx < 1) ? '-' : date('d/m/Y', strtotime($r->tgl_keluar)) . ' ~ ' . date('H:i:s', strtotime($r->jam_keluar))) . '</>' ?></td>
                                                     <td><?= $this->M_global->getData('m_poli', ['kode_poli' => $r->kode_poli])->keterangan ?></td>
-                                                    <td><?= $this->M_global->getData('dokter', ['kode_dokter' => $r->kode_dokter])->nama ?></td>
-                                                    <td class="text-center">
-                                                        <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getHisPas('<?= $r->no_trx ?>')" <?= $btndis ?>><i class="fa-solid fa-circle-info"></i></button>
-                                                    </td>
+                                                    <td>Dr. <?= $this->M_global->getData('dokter', ['kode_dokter' => $r->kode_dokter])->nama ?></td>
                                                 </tr>
                                             <?php $no++;
                                             endforeach; ?>
@@ -579,33 +577,32 @@
 
                     if (value.status_trx == 0) {
                         var cek_color = 'success';
-                        var message = 'Open';
+                        var message = 'Proses';
 
-                        var btndis = 'disabled';
+                        var btndis = 'style="color: black;"';
                     } else if (value.status_trx == 2) {
                         var cek_color = 'warning';
-                        var message = 'Cancel';
+                        var message = 'Batal';
 
-                        var btndis = '';
+                        var btndis = `style="color: black;"`;
                     } else {
                         var cek_color = 'danger';
-                        var message = 'Close';
+                        var message = 'Selesai';
 
-                        var btndis = '';
+                        var btndis = ` onclick="getHisPas('${value.no_trx}')" style="color: blue;"`;
                     }
 
                     // tampilkan ke bodyRiwayat
                     $('#bodyRiwayat').append(`<tr>
-                        <td>${no}</td>
-                        <td>${value.cabang} <span class="badge badge-${cek_color}">${message}</span></td>
-                        <td>${value.no_trx}</td>
+                        <td style="text-align: right;">${no}</td>
+                        <td>${value.cabang} <span class="float-right badge badge-${cek_color}">${message}</span></td>
+                        <td>
+                            <a type="button" ${btndis}>${value.no_trx}</a>
+                        </td>
                         <td>${value.tgl_daftar} ~ ${value.jam_daftar}</td>
                         <td>${keluar}</td>
                         <td>${value.nama_poli}</td>
-                        <td>${value.nama_dokter}</td>
-                        <td class="text-center">
-                            <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom" title="Detail Transaksi" onclick="getHisPas('${value.no_trx}')" ${btndis}><i class="fa-solid fa-circle-info"></i></button>
-                        </td>
+                        <td>Dr. ${value.nama_dokter}</td>
                     </tr>`);
                     no++;
                 });

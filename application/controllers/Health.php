@@ -962,7 +962,10 @@ class Health extends CI_Controller
             $pendaftaran          = $this->M_global->getData('pendaftaran', ['no_trx' => $param]);
             $kode_member          = $pendaftaran->kode_member;
 
-            $riwayat              = $this->M_global->getDataResult('pendaftaran', ['kode_member' => $kode_member]);
+            $riwayat = $this->db->where(['kode_member' => $kode_member])
+                ->order_by('id', 'DESC')
+                ->get('pendaftaran')
+                ->result();
             $tarif_paket_pasien   = $this->M_global->getDataResult('tarif_paket_pasien', ['no_trx' => $param]);
         } else {
             $pendaftaran          = null;

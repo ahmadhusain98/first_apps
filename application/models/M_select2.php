@@ -279,13 +279,13 @@ class M_select2 extends CI_Model
         }
 
         if ($param == 'Health') {
-            $sintak = $this->db->query('SELECT kode_member AS id, CONCAT(kode_member, " ~ " , nama) AS text, nik, email
+            $sintak = $this->db->query('SELECT kode_member AS id, CONCAT(kode_member, " ~ ", (SELECT nama FROM m_prefix WHERE kode_prefix = member.kode_prefix), ". ", nama) AS text, nik, email
             FROM member 
             WHERE kode_member != "U00001" AND actived = 1 ' . $add_sintak . ' ORDER BY kode_member ASC ' . $limit)->result();
         } else {
             $sintak = $this->db->query('SELECT kode_member AS id, CONCAT(kode_member, " ~ " , nama) AS text, nik, email, id2
             FROM ( 
-                SELECT kode_member, nama, actived, 0 AS id2, nik, email
+                SELECT kode_member, CONCAT((SELECT nama FROM m_prefix WHERE kode_prefix = member.kode_prefix), ". ", nama) AS nama, actived, 0 AS id2, nik, email
                 FROM member 
                 WHERE kode_member = "U00001"
                 
