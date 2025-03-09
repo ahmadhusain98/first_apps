@@ -5435,4 +5435,360 @@ class Master extends CI_Controller
     }
 
     // ############################################################################################################################################################################
+
+    // ############################################################################################################################################################################
+
+    /**
+     * Master Wilayah
+     * untuk menampilkan, menambahkan, dan mengubah wilayah dalam sistem
+     */
+
+    // wilayah page
+    public function wilayah()
+    {
+        // website config
+        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
+
+        $parameter   = [
+            $this->data,
+            'judul'         => 'Master',
+            'nama_apps'     => $web_setting->nama,
+            'page'          => 'Wilayah',
+            'web'           => $web_setting,
+            'web_version'   => $web_version->version,
+            //'list_data'     => 'Master/provinsi_list/0',
+            'param1'        => '1',
+        ];
+
+        $this->template->load('Template/Content', 'Master/Umum/Wilayah', $parameter);
+    }
+
+    // fungsi list provinsi
+    public function provinsi_list($param1 = '')
+    {
+        // parameter untuk list table
+        $table            = 'm_provinsi';
+        $colum            = ['id', 'kode_provinsi', 'provinsi'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['id' => 'asc'];
+        $kondisi_param1   = 'hapus < ';
+
+        // kondisi role
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+
+        if ($updated > 0) {
+            $upd_diss     = '';
+        } else {
+            $upd_diss     = 'disabled';
+        }
+
+        // table server side tampung kedalam variable $list
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($deleted > 0) {
+                $kabupaten            = $this->M_global->getResult('kabupaten');
+
+                $provinsi             = [];
+                foreach ($kabupaten as $p) {
+                    $provinsi[]       = [$p->kode_provinsi];
+                }
+
+                $flattened_provinsi   = array_merge(...$provinsi);
+
+                if (in_array($rd->kode_provinsi, $flattened_provinsi)) {
+                    $del_diss       = 'disabled';
+                } else {
+                    $del_diss       = '';
+                }
+            } else {
+                $del_diss           = 'disabled';
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->kode_provinsi;
+            $row[]  = $rd->provinsi;
+            $row[]  = '<div class="text-center">
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'tableProvinsi', " . "'" . $rd->kode_provinsi . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'tableProvinsi', " .  "'" . $rd->kode_provinsi . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables->count_all($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "recordsFiltered" => $this->M_datatables->count_filtered($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    // fungsi list kabupaten
+    public function kabupaten_list($param1 = '')
+    {
+        // parameter untuk list table
+        $table            = 'kabupaten';
+        $colum            = ['id', 'kode_kabupaten', 'kabupaten', 'kode_provinsi'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['id' => 'asc'];
+        $kondisi_param1   = 'hapus < ';
+
+        // kondisi role
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+
+        if ($updated > 0) {
+            $upd_diss     = '';
+        } else {
+            $upd_diss     = 'disabled';
+        }
+
+        // table server side tampung kedalam variable $list
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($deleted > 0) {
+                $kecamatan            = $this->M_global->getResult('kecamatan');
+
+                $kabupaten            = [];
+                foreach ($kecamatan as $k) {
+                    $kabupaten[]      = [$k->kode_kabupaten];
+                }
+
+                $flattened_kabupaten   = array_merge(...$kabupaten);
+
+                if (in_array($rd->kode_kabupaten, $flattened_kabupaten)) {
+                    $del_diss       = 'disabled';
+                } else {
+                    $del_diss       = '';
+                }
+            } else {
+                $del_diss           = 'disabled';
+            }
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->kode_kabupaten;
+            $row[]  = $rd->kabupaten;
+            $row[]  = $rd->kode_provinsi;
+            $row[]  = '<div class="text-center">
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'tableKabupaten', " . "'" . $rd->kode_kabupaten . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'tableKabupaten', " .  "'" . $rd->kode_kabupaten . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables->count_all($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "recordsFiltered" => $this->M_datatables->count_filtered($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    // fungsi list kecamatan
+    public function kecamatan_list($param1 = '')
+    {
+        // parameter untuk list table
+        $table            = 'kecamatan';
+        $colum            = ['id', 'kode_kecamatan', 'kecamatan', 'kode_kabupaten'];
+        $order            = 'id';
+        $order2           = 'desc';
+        $order_arr        = ['id' => 'asc'];
+        $kondisi_param1   = 'hapus < ';
+
+        // kondisi role
+        $updated          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->updated;
+        $deleted          = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->deleted;
+
+        if ($updated > 0) {
+            $upd_diss     = '';
+        } else {
+            $upd_diss     = 'disabled';
+        }
+
+        // table server side tampung kedalam variable $list
+        $list             = $this->M_datatables->get_datatables($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1);
+        $data             = [];
+        $no               = $_POST['start'] + 1;
+
+        // loop $list
+        foreach ($list as $rd) {
+            if ($deleted > 0) {
+                $member            = $this->M_global->getResult('member');
+
+                $kecamatan            = [];
+                foreach ($member as $k) {
+                    $kecamatan[]      = [$k->kecamatan];
+                }
+
+                $flattened_kecamatan   = array_merge(...$kecamatan);
+
+                if (in_array($rd->kode_kecamatan, $flattened_kecamatan)) {
+                    $del_diss       = 'disabled';
+                } else {
+                    $del_diss       = '';
+                }
+            } else {
+                $del_diss           = 'disabled';
+            }
+
+            $kab = $this->M_global->getData('kabupaten', ['kode_kabupaten' => $rd->kode_kabupaten]);
+            $prov = $this->M_global->getData('m_provinsi', ['kode_provinsi' => $kab->kode_provinsi]);
+
+            $row    = [];
+            $row[]  = $no++;
+            $row[]  = $rd->kode_kecamatan;
+            $row[]  = (!empty($prov) ? $prov->provinsi : '');
+            $row[]  = $kab->kabupaten;
+            $row[]  = $rd->kecamatan;
+            $row[]  = '<div class="text-center">
+                <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'tableKecamatan', " . "'" . $rd->kode_kecamatan . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
+                <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'tableKecamatan', " . "'" . $rd->kode_kecamatan . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>';
+            $data[] = $row;
+        }
+
+        // hasil server side
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->M_datatables->count_all($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "recordsFiltered" => $this->M_datatables->count_filtered($table, $colum, $order_arr, $order, $order2, $param1, $kondisi_param1),
+            "data"            => $data,
+        ];
+
+        // kirimkan ke view
+        echo json_encode($output);
+    }
+
+    // fungsi proses simpan/update wilayah
+    public function wilayah_proses()
+    {
+        // variable
+        $id_wil = $this->input->post('id_wil');
+        $cektab = $this->input->post('cektab');
+
+        $kode_provinsi = $this->input->post('kode_provinsi');
+        $provinsi = $this->input->post('provinsi');
+        $kode_kabupaten = $this->input->post('kode_kabupaten');
+        $kabupaten = $this->input->post('kabupaten');
+        $kode_kecamatan = $this->input->post('kode_kecamatan');
+        $kecamatan = $this->input->post('kecamatan');
+
+        if ($cektab == 1) {
+            $data = [
+                'kode_provinsi' => $kode_provinsi,
+                'provinsi'      => $provinsi,
+            ];
+
+            $table = 'm_provinsi';
+            $kode = $kode_provinsi;
+            $nama = $provinsi;
+            $where = ['kode_provinsi' => $id_wil];
+        } else if ($cektab == 2) {
+            $data = [
+                'kode_provinsi'     => $provinsi,
+                'kode_kabupaten'    => $kode_kabupaten,
+                'kabupaten'         => $kabupaten,
+            ];
+
+            $table = 'kabupaten';
+            $kode = $kode_kabupaten;
+            $nama = $kabupaten;
+            $where = ['kode_kabupaten' => $id_wil];
+        } else {
+            $data = [
+                'kode_kabupaten'    => $kabupaten,
+                'kode_kecamatan'    => $kode_kecamatan,
+                'kecamatan'         => $kecamatan,
+            ];
+
+            $table = 'kecamatan';
+            $kode = $kode_kecamatan;
+            $nama = $kecamatan;
+            $where = ['kode_kecamatan' => $id_wil];
+        }
+
+        if ($id_wil == '') {
+            $cek_param = 'Menambahkan';
+            $cek = $this->M_global->insertData($table, $data);
+        } else {
+            $cek_param = 'Mengubah';
+            $cek = $this->M_global->updateData($table, $data, $where);
+        }
+
+        if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Master Wilayah', $cek_param, $kode, $nama);
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // fungsi ambil informasi provinsi berdasarkan kode wilayah
+    public function getWilayah($param, $kode)
+    {
+        // ambil data wilayah berdasarkan kode_wilayah
+        if ($param == 'tableProvinsi') {
+            $data = $this->M_global->getData('m_provinsi', ['kode_provinsi' => $kode]);
+        } else if ($param == 'tableKabupaten') {
+            $data = $this->db->query('SELECT k.*, (SELECT provinsi FROM m_provinsi WHERE kode_provinsi = k.kode_provinsi) AS provinsi FROM kabupaten k WHERE kode_kabupaten = "' . $kode . '"')->row();
+        } else {
+            $data = $this->db->query('SELECT kec.*, kab.kabupaten, (SELECT provinsi FROM m_provinsi WHERE kode_provinsi = kab.kode_provinsi) AS provinsi FROM kecamatan kec JOIN kabupaten kab ON kec.kode_kabupaten = kab.kode_kabupaten WHERE kec.kode_kecamatan = "' . $kode . '"')->row();
+        }
+        // lempar ke view
+        echo json_encode($data);
+    }
+
+    // fungsi hapus wilayah berdasarkan kode
+    public function delWilayah($param, $kode)
+    {
+        // jalankan fungsi hapus wilayah berdasarkan kode_wilayah
+        if ($param == 'tableProvinsi') {
+            aktifitas_user('Master Provinsi', 'menghapus', $kode, $this->M_global->getData('m_provinsi', ['kode_provinsi' => $kode])->provinsi);
+
+            $cek = $this->M_global->updateData('m_provinsi', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_provinsi' => $kode]);
+        } else if ($param == 'tableKabupaten') {
+            aktifitas_user('Master Kabupaten', 'menghapus', $kode, $this->M_global->getData('kabupaten', ['kode_kabupaten' => $kode])->kabupaten);
+
+            $cek = $this->M_global->updateData('kabupaten', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_kabupaten' => $kode]);
+        } else {
+            aktifitas_user('Master Kecamatan', 'menghapus', $kode, $this->M_global->getData('kecamatan', ['kode_kecamatan' => $kode])->kecamatan);
+
+            $cek = $this->M_global->updateData('kecamatan', ['hapus' => 1, 'tgl_hapus' => date('Y-m-d'), 'jam_hapus' => date('H:i:s')], ['kode_kecamatan' => $kode]);
+        }
+
+        if ($cek) { // jika fungsi berjalan
+
+            // kirimkan status 1 ke view
+            echo json_encode(['status' => 1]);
+        } else { // selain itu
+            // kirimkan status 0 ke view
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    // ############################################################################################################################################################################
 }

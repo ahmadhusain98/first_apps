@@ -489,6 +489,48 @@ class M_global extends CI_Model
             FROM m_prefix
             WHERE hapus > 0
 
+            UNION ALL
+
+            SELECT 
+            kode_provinsi AS id,
+            'Master ~ Wilayah/Provinsi' AS menu,
+            provinsi AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'm_provinsi' AS tabel,
+            3 AS bagian,
+            '' AS cabang
+            FROM m_provinsi
+            WHERE hapus > 0
+
+            UNION ALL
+
+            SELECT 
+            kode_kabupaten AS id,
+            'Master ~ Wilayah/Kabupaten' AS menu,
+            kabupaten AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'kabupaten' AS tabel,
+            3 AS bagian,
+            '' AS cabang
+            FROM kabupaten
+            WHERE hapus > 0
+
+            UNION ALL
+
+            SELECT 
+            kode_kecamatan AS id,
+            'Master ~ Wilayah/Kecamatan' AS menu,
+            kecamatan AS nama,
+            tgl_hapus AS tgl,
+            jam_hapus AS jam,
+            'kecamatan' AS tabel,
+            3 AS bagian,
+            '' AS cabang
+            FROM kecamatan
+            WHERE hapus > 0
+
             -- end master
 
         ) AS query_all

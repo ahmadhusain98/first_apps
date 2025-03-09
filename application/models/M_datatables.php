@@ -100,7 +100,7 @@ class M_datatables extends CI_Model
 
         if (($this->uri->segment(1) === 'Health') || ($this->uri->segment(1) === 'Backdoor') || ($this->uri->segment(1) === 'Kasir')) {
         } else {
-            $this->db->where(['hapus' => 1]);
+            $this->db->where(['hapus < ' => 1]);
         }
 
         if ($this->uri->segment(2) === 'logistik_list') {

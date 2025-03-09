@@ -667,7 +667,8 @@
     <!-- myscript -->
     <script>
         // load pertama kali
-        const siteUrl = '<?= site_url() ?>';
+        var siteUrl = '<?= site_url() ?>';
+        var table;
 
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
@@ -1740,6 +1741,19 @@
             });
         }
 
+        function select2_default(param) {
+            var mymessage = "Data tidak ditemukan";
+            $("." + param).select2({
+                placeholder: $(this).data('placeholder'),
+                width: '100%',
+                language: {
+                    noResults: function() {
+                        return mymessage;
+                    }
+                },
+            });
+        }
+
         function initailizeSelect2_provinsi() {
             $(".select2_provinsi").select2({
                 allowClear: true,
@@ -1774,19 +1788,6 @@
                     },
                     cache: true
                 }
-            });
-        }
-
-        function select2_default(param) {
-            var mymessage = "Data tidak ditemukan";
-            $("." + param).select2({
-                placeholder: $(this).data('placeholder'),
-                width: '100%',
-                language: {
-                    noResults: function() {
-                        return mymessage;
-                    }
-                },
             });
         }
 

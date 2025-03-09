@@ -133,6 +133,12 @@ class Sampah extends CI_Controller
                     $where = ['kode_ruang' => $_invoice];
                 } else if ($_tabel == 'm_prefix') {
                     $where = ['kode_prefix' => $_invoice];
+                } else if ($_tabel == 'm_provinsi') {
+                    $where = ['kode_provinsi' => $_invoice];
+                } else if ($_tabel == 'kabupaten') {
+                    $where = ['kode_kabupaten' => $_invoice];
+                } else if ($_tabel == 'kecamatan') {
+                    $where = ['kode_kecamatan' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -199,6 +205,12 @@ class Sampah extends CI_Controller
             $where = ['kode_ruang' => $id];
         } else if ($table == 'm_prefix') {
             $where = ['kode_prefix' => $id];
+        } else if ($table == 'm_provinsi') {
+            $where = ['kode_provinsi' => $id];
+        } else if ($table == 'kabupaten') {
+            $where = ['kode_kabupaten' => $id];
+        } else if ($table == 'kecamatan') {
+            $where = ['kode_kecamatan' => $id];
         } else {
             echo json_encode(['status' => 0]);
             return;
@@ -319,6 +331,12 @@ class Sampah extends CI_Controller
                     $this->M_global->delData('bed_cabang', ['kode_bed' => $_invoice, 'kode_cabang' => $this->session->userdata('cabang')]);
                 } else if ($_tabel == 'm_prefix') {
                     $where = ['kode_prefix' => $_invoice];
+                } else if ($_tabel == 'm_provinsi') {
+                    $where = ['kode_provinsi' => $_invoice];
+                } else if ($_tabel == 'kabupaten') {
+                    $where = ['kode_kabupaten' => $_invoice];
+                } else if ($_tabel == 'kecamatan') {
+                    $where = ['kode_kecamatan' => $_invoice];
                 } else {
                     echo json_encode(['status' => 0]);
                     return;
@@ -425,6 +443,12 @@ class Sampah extends CI_Controller
             $this->M_global->delData('bed_cabang', ['kode_bed' => $id, 'kode_cabang' => $this->session->userdata('cabang')]);
         } else if ($table == 'm_prefix') {
             $where = ['kode_prefix' => $id];
+        } else if ($table == 'm_provinsi') {
+            $where = ['kode_provinsi' => $id];
+        } else if ($table == 'kabupaten') {
+            $where = ['kode_kabupaten' => $id];
+        } else if ($table == 'kecamatan') {
+            $where = ['kode_kecamatan' => $id];
         } else {
             echo json_encode(['status' => 0]);
             return;
