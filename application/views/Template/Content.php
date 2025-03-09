@@ -962,6 +962,42 @@
             }
         }
 
+        // kirim data via email
+        function send_data_mail(param) {
+            Swal.fire({
+                title: "Masukan Email",
+                input: "text",
+                inputAttributes: {
+                    autocapitalize: "off"
+                },
+                showCancelButton: true,
+                confirmButtonText: "Kirim",
+                cancelButtonText: "Tutup",
+                showLoaderOnConfirm: true,
+                preConfirm: async (email) => {
+                    try {
+                        const githubUrl = `${siteUrl}Auth/email/?param=${param}&email=${email}`;
+                        const response = await fetch(githubUrl);
+                        if (!response.ok) {
+                            return Swal.showValidationMessage(`${JSON.stringify(await response.json())}`);
+                        }
+                        return response.json();
+                    } catch (error) {
+                        Swal.showValidationMessage(`Request failed: ${error}`);
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (result.value.status == 1) {
+                        Swal.fire("Data", "Berhasil dikirim via Email!, silahkan cek email", "success");
+                    } else {
+                        Swal.fire("Data", "Gagal dikirim via Email!, silahkan coba lagi", "info");
+                    }
+                }
+            });
+        }
+
         // cek panjang karakter
         function cekLength(param, forid) {
             if (forid == 'kodepos' || forid == 'kode_pos') { // jika id nya kodepos

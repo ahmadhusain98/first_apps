@@ -701,4 +701,43 @@ class Auth extends CI_Controller
                 echo json_encode(['status' => 0]);
             }
         }
+
+        // fungsi kirim email
+        public function email()
+        {
+            $email = $this->input->get('email');
+            $judul = $this->input->get('param');
+
+            $attched_file    = $_SERVER["DOCUMENT_ROOT"] . '/first_apps/assets/file/pdf/' . $judul . '.pdf';
+
+            $ready_message   = "";
+            $ready_message   .= "<table border=0>
+                <tr>
+                    <td style='width: 30%;'>Judul</td>
+                    <td style='width: 10%;'> : </td>
+                    <td style='width: 60%;'> $judul </td>
+                </tr>
+                <tr>
+                    <td style='width: 30%;'>Tgl/Jam</td>
+                    <td style='width: 10%;'> : </td>
+                    <td style='width: 60%;'>" . date('d-m-Y') . " / " . date('H:i:s') . "</td>
+                </tr>
+                <tr>
+                    <td style='width: 30%;'>Pengirim</td>
+                    <td style='width: 10%;'> : </td>
+                    <td style='width: 60%;'>" . $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama . "</td>
+                </tr>
+            </table>";
+
+            if ($judul == 'Report Wilayah Kecamatan') {
+                $this->email->send_my_email($email, $judul, $ready_message, $attched_file);
+                echo json_encode(["status" => 1]);
+            } else {
+                if ($this->email->send_my_email($email, $judul, $ready_message, $attched_file)) {
+                    echo json_encode(["status" => 1]);
+                } else {
+                    echo json_encode(["status" => 0]);
+                }
+            }
+        }
     }

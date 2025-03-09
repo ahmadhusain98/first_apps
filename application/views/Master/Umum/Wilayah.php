@@ -27,6 +27,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                             <div class="card-header">
                                 <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Provinsi</span>
                                 <div class="float-right">
+                                    <button type="button" class="btn btn-info" onclick="send_data_mail('Report Wilayah Provinsi')"><i class="fa-solid fa-paper-plane"></i>&nbsp;&nbsp;Kirim Email</button>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
@@ -65,6 +66,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                             <div class="card-header">
                                 <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Kabupaten</span>
                                 <div class="float-right">
+                                    <button type="button" class="btn btn-info" onclick="send_data_mail('Report Wilayah Kabupaten')"><i class="fa-solid fa-paper-plane"></i>&nbsp;&nbsp;Kirim Email</button>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
@@ -104,6 +106,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                             <div class="card-header">
                                 <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Kecamatan</span>
                                 <div class="float-right">
+                                    <button type="button" class="btn btn-info" onclick="send_data_mail('Report Wilayah Kecamatan')"><i class="fa-solid fa-paper-plane"></i>&nbsp;&nbsp;Kirim Email</button>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh

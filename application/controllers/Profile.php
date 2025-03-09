@@ -95,7 +95,7 @@ class Profile extends CI_Controller
         $jkel         = $this->input->post('jkel');
         $nohp         = $this->input->post('nohp');
         $secondpass   = $this->input->post('secondpass');
-        $password     = md5($secondpass);
+        $password     = (!empty($secondpass) ? md5($secondpass) : '');
 
         $cek_user = $this->M_global->getData('user', ['email' => $email]);
 

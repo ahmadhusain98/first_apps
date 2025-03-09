@@ -9,6 +9,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 <div class="card-header">
                     <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Pemasok</span>
                     <div class="float-right">
+                        <button type="button" class="btn btn-info" onclick="send_data_mail('Master Supplier')"><i class="fa-solid fa-paper-plane"></i>&nbsp;&nbsp;Kirim Email</button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
