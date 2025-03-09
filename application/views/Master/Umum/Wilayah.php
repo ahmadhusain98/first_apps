@@ -87,8 +87,8 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                                     <tr class="text-center">
                                                         <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
                                                         <th width="20%">ID</th>
-                                                        <th width="30%">Provinsi</th>
                                                         <th width="30%">Kabupaten/Kota</th>
+                                                        <th width="30%">Provinsi</th>
                                                         <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                                     </tr>
                                                 </thead>
@@ -126,9 +126,9 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                                     <tr class="text-center">
                                                         <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
                                                         <th width="20%">ID</th>
-                                                        <th width="20%">Provinsi</th>
-                                                        <th width="20%">Kabupaten/Kota</th>
                                                         <th width="20%">Kecamatan</th>
+                                                        <th width="20%">Kabupaten/Kota</th>
+                                                        <th width="20%">Provinsi</th>
                                                         <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                                     </tr>
                                                 </thead>

@@ -5581,11 +5581,13 @@ class Master extends CI_Controller
                 $del_diss           = 'disabled';
             }
 
+            $prov = $this->M_global->getData('m_provinsi', ['kode_provinsi' => $rd->kode_provinsi]);
+
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->kode_kabupaten;
             $row[]  = $rd->kabupaten;
-            $row[]  = $rd->kode_provinsi;
+            $row[]  = $rd->kode_provinsi . ' - ' . $prov->provinsi;
             $row[]  = '<div class="text-center">
                 <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'tableKabupaten', " . "'" . $rd->kode_kabupaten . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
                 <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'tableKabupaten', " .  "'" . $rd->kode_kabupaten . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
@@ -5658,9 +5660,9 @@ class Master extends CI_Controller
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->kode_kecamatan;
-            $row[]  = (!empty($prov) ? $prov->provinsi : '');
-            $row[]  = $kab->kabupaten;
             $row[]  = $rd->kecamatan;
+            $row[]  = $rd->kode_kabupaten . ' - ' . $kab->kabupaten;
+            $row[]  = $kab->kode_provinsi . ' - ' . (!empty($prov) ? $prov->provinsi : '');
             $row[]  = '<div class="text-center">
                 <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'tableKecamatan', " . "'" . $rd->kode_kecamatan . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
                 <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'tableKecamatan', " . "'" . $rd->kode_kecamatan . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>
