@@ -32,9 +32,9 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                             <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#" onclick="preview('satuan')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="print('satuan')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="excel('satuan')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="preview('provinsi')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="print('provinsi')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="excel('provinsi')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
                                         </ul>
                                     </div>
                                     <button type="button" class="btn btn-primary" onclick="reloadTable2('tableProvinsi')"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
@@ -70,9 +70,9 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                             <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#" onclick="preview('satuan')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="print('satuan')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="excel('satuan')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="preview('kabupaten')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="print('kabupaten')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="excel('kabupaten')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
                                         </ul>
                                     </div>
                                     <button type="button" class="btn btn-primary" onclick="reloadTable2('tableKabupaten')"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
@@ -109,9 +109,9 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                             <i class="fa-solid fa-circle-down"></i>&nbsp;&nbsp;Unduh
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#" onclick="preview('satuan')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="print('satuan')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="excel('satuan')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="preview('kecamatan')"><i class="fa-solid fa-fw fa-tv"></i>&nbsp;&nbsp;Preview</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="print('kecamatan')"><i class="fa-regular fa-fw fa-file-pdf"></i>&nbsp;&nbsp;Pdf</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="excel('kecamatan')"><i class="fa-regular fa-fw fa-file-excel"></i>&nbsp;&nbsp;Excel</a></li>
                                         </ul>
                                     </div>
                                     <button type="button" class="btn btn-primary" onclick="reloadTable2('tableKecamatan')"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>

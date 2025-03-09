@@ -5126,8 +5126,8 @@ class Master extends CI_Controller
             $row    = [];
             $row[]  = $no++;
             $row[]  = $rd->kode_bed;
-            $row[]  = $this->M_global->getData('m_ruang', ['kode_ruang' => $rd->kode_ruang])->keterangan;
             $row[]  = $rd->nama_bed;
+            $row[]  = $this->M_global->getData('m_ruang', ['kode_ruang' => $rd->kode_ruang])->keterangan;
             $row[]  = '<div class="text-center">
                 <button type="button" class="btn btn-warning" style="margin-bottom: 5px;" onclick="ubah(' . "'" . $rd->kode_bed . "'" . ')" ' . $upd_diss . '><i class="fa-regular fa-pen-to-square"></i></button>
                 <button type="button" class="btn btn-danger" style="margin-bottom: 5px;" onclick="hapus(' . "'" . $rd->kode_bed . "'" . ')" ' . $del_diss . '><i class="fa-regular fa-circle-xmark"></i></button>

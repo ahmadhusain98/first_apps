@@ -90,8 +90,8 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                         <tr class="text-center">
                                             <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
                                             <th width="20%">ID</th>
+                                            <th width="30%">Bed</th>
                                             <th width="30%">Ruang</th>
-                                            <th width="30%">Nama</th>
                                             <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                         </tr>
                                     </thead>

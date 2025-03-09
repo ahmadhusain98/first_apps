@@ -8,6 +8,8 @@ function cetak_pdf($judul, $body, $cek_param, $position, $filename, $web, $yes =
 
     $mpdf = new Mpdf();
 
+    ini_set("pcre.backtrack_limit", "5000000");
+
     // buat html for kop surat
     $kop = '';
 
@@ -32,6 +34,25 @@ function cetak_pdf($judul, $body, $cek_param, $position, $filename, $web, $yes =
                 </td>
             </tr>
         </tbody>
+    </table>';
+
+    $user = $CI->session->userdata('nama');
+    $cabang = $CI->M_global->getData('cabang', ['kode_cabang' => $CI->session->userdata('cabang')])->cabang;
+    $role = $CI->M_global->getData('m_role', ['kode_role' => $CI->session->userdata('kode_role')])->keterangan;
+
+    $body .= '<table style="width: 100%; font-size: 12px; margin-top: 10px;" class="float-right" border=0>
+        <tr>
+            <td style="width: 70%; text-align: right"></td>
+            <td style="width: 30%; text-align: center">' . $cabang . ', ' . date('d M Y') . '</td>
+        </tr>
+        <tr>
+            <td style="width: 70%; text-align: right"></td>
+            <td style="width: 30%; text-align: center; padding-top: 50hv;">' . $user . '</td>
+        </tr>
+        <tr>
+            <td style="width: 70%; text-align: right"></td>
+            <td style="width: 30%; text-align: center">(' . $role . ')</td>
+        </tr>
     </table>';
 
     if ($cek_param == 0) {
@@ -101,6 +122,25 @@ function cetak_pdf_small($judul, $body, $cek_param, $position, $filename, $web, 
                 </td>
             </tr>
         </tbody>
+    </table>';
+
+    $user = $CI->session->userdata('nama');
+    $cabang = $CI->M_global->getData('cabang', ['kode_cabang' => $CI->session->userdata('cabang')])->cabang;
+    $role = $CI->M_global->getData('m_role', ['kode_role' => $CI->session->userdata('kode_role')])->keterangan;
+
+    $body .= '<table style="width: 100%; font-size: 10px; margin-top: 10px;" class="float-right" border=0>
+        <tr>
+            <td style="width: 50%; text-align: right"></td>
+            <td style="width: 50%; text-align: center">' . $cabang . ', ' . date('d M Y') . '</td>
+        </tr>
+        <tr>
+            <td style="width: 50%; text-align: right"></td>
+            <td style="width: 50%; text-align: center; padding-top: 30hv;">' . $user . '</td>
+        </tr>
+        <tr>
+            <td style="width: 50%; text-align: right"></td>
+            <td style="width: 50%; text-align: center">(' . $role . ')</td>
+        </tr>
     </table>';
 
     if ($CI->uri->segment(1) == 'Kasir' || $CI->uri->segment(1) == 'Kasir') {

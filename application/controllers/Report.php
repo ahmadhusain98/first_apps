@@ -44,9 +44,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_satuan s ORDER BY s.kode_satuan ASC")->result();
 
@@ -63,7 +60,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body       .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_satuan . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
             </tr>';
@@ -91,9 +88,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         $body           .= '<br>';
 
         // sintak
@@ -110,7 +104,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_kategori . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
             </tr>';
@@ -138,9 +132,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_jenis s ORDER BY s.kode_jenis ASC")->result();
 
@@ -156,7 +147,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_jenis . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
             </tr>';
@@ -184,9 +175,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_supplier s ORDER BY s.kode_supplier ASC")->result();
 
@@ -204,10 +192,10 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body       .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_supplier . '</td>
                 <td style="border: 1px solid black;">' . $s->nama . '</td>
-                <td style="border: 1px solid black;">' . $s->nohp . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $s->nohp . '</td>
                 <td style="border: 1px solid black;">' . $s->email . '</td>
                 <td style="border: 1px solid black;">' . $s->fax . '</td>
                 <td style="border: 1px solid black;">' . $s->alamat . '</td>
@@ -236,9 +224,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_gudang s ORDER BY s.kode_gudang ASC")->result();
 
@@ -248,19 +233,17 @@ class Report extends CI_Controller
             <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
             <th style="width: 20%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
             <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">Bagian</th>
-            <th style="width: 45%; border: 1px solid black; background-color: #272a3f; color: white;">Keterangan</th>
-            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">Tax</th>
+            <th style="width: 50%; border: 1px solid black; background-color: #272a3f; color: white;">Keterangan</th>
         </tr>';
 
         $no = 1;
         foreach ($sintak as $s) {
             $body       .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_gudang . '</td>
                 <td style="border: 1px solid black;">' . $s->nama . '</td>
                 <td style="border: 1px solid black;">' . $s->bagian . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
-                <td style="border: 1px solid black;">' . (($s->vat == 1) ? 'Ya' : 'Tidak') . '</td>
             </tr>';
             $no++;
         }
@@ -286,9 +269,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_bank s ORDER BY s.kode_bank ASC")->result();
         $body           .= '<br>';
@@ -303,7 +283,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body       .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_bank . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
             </tr>';
@@ -331,9 +311,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_pekerjaan s ORDER BY s.kode_pekerjaan ASC")->result();
         $body           .= '<br>';
@@ -348,7 +325,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body       .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_pekerjaan . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
             </tr>';
@@ -376,9 +353,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_agama s ORDER BY s.kode_agama ASC")->result();
         $body           .= '<br>';
@@ -393,7 +367,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body       .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_agama . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
             </tr>';
@@ -421,9 +395,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_pendidikan s ORDER BY s.kode_pendidikan ASC")->result();
         $body           .= '<br>';
@@ -438,7 +409,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body       .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_pendidikan . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
             </tr>';
@@ -466,9 +437,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_poli s ORDER BY s.kode_poli ASC")->result();
         $body           .= '<br>';
@@ -483,7 +451,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body       .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_poli . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
             </tr>';
@@ -511,9 +479,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM kas_bank s ORDER BY s.kode_kas_bank ASC")->result();
         $body           .= '<br>';
@@ -530,7 +495,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body       .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_kas_bank . '</td>
                 <td style="border: 1px solid black;">' . $s->nama . '</td>
                 <td style="border: 1px solid black;">' . (($s->tipe == 1) ? 'Cash' : 'Bank') . '</td>
@@ -560,9 +525,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_pajak s ORDER BY s.kode_pajak ASC")->result();
         $body           .= '<br>';
@@ -578,7 +540,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body       .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_pajak . '</td>
                 <td style="border: 1px solid black;">' . $s->nama . '</td>
                 <td style="border: 1px solid black;">' . $s->persentase . '%' . '</td>
@@ -607,9 +569,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->db->query("SELECT s.* FROM m_akun s ORDER BY s.kode_akun ASC")->result();
         $body           .= '<br>';
@@ -625,7 +584,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body       .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_akun . '</td>
                 <td style="border: 1px solid black;">' . $s->nama_akun . '</td>
                 <td style="border: 1px solid black;">' . $this->M_global->getData('klasifikasi_akun', ['kode_klasifikasi' => $s->kode_klasifikasi])->klasifikasi . '</td>
@@ -653,9 +612,6 @@ class Report extends CI_Controller
         // body cetakan
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
-
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         // sintak
         $sintak         = $this->db->query("SELECT b.*, (SELECT keterangan FROM m_satuan WHERE kode_satuan = b.kode_satuan) AS satuan1, (SELECT keterangan FROM m_satuan WHERE kode_satuan = b.kode_satuan2) AS satuan2, (SELECT keterangan FROM m_satuan WHERE kode_satuan = b.kode_satuan3) AS satuan3, k.keterangan AS kategori FROM barang b JOIN m_kategori k USING(kode_kategori) ORDER BY b.kode_barang ASC")->result();
@@ -696,7 +652,7 @@ class Report extends CI_Controller
             }
 
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_barang . '</td>
                 <td style="border: 1px solid black;">' . $s->nama . '</td>
                 <td style="border: 1px solid black;">' . $satuan1 . $satuan2 . $satuan3 . '</td>
@@ -743,9 +699,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->db->query("SELECT b.*, s.keterangan AS satuan, k.keterangan AS kategori FROM logistik b JOIN m_satuan s USING(kode_satuan) JOIN m_kategori k USING(kode_kategori) ORDER BY b.kode_logistik ASC")->result();
 
@@ -768,7 +721,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_logistik . '</td>
                 <td style="border: 1px solid black;">' . $s->nama . '</td>
                 <td style="border: 1px solid black;">' . $s->satuan . '</td>
@@ -802,9 +755,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->M_global->getResult('user');
 
@@ -823,11 +773,11 @@ class Report extends CI_Controller
         foreach ($sintak as $s) {
 
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_user . '</td>
                 <td style="border: 1px solid black;">' . $s->nama . '</td>
                 <td style="border: 1px solid black;">' . $this->M_global->getData('m_role', ['kode_role' => $s->kode_role])->keterangan . '</td>
-                <td style="border: 1px solid black;">' . $s->nohp . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $s->nohp . '</td>
                 <td style="border: 1px solid black;">' . $s->email . '</td>
                 <td style="border: 1px solid black; font-weight: bold; text-align: center; background-color: ' . (($s->actived == 1) ? 'green' : 'grey') . '; color: ' . (($s->actived == 1) ? 'white' : 'black') . '">' . (($s->actived == 1) ? 'Aktif' : 'Non-aktif') . '</td>
             </tr>';
@@ -854,9 +804,6 @@ class Report extends CI_Controller
         // body cetakan
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
-
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         // sintak
         $sintak         = $this->M_global->getResult('dokter');
@@ -917,9 +864,6 @@ class Report extends CI_Controller
         // body cetakan
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
-
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         // sintak
         $sintak         = $this->M_global->getResult('perawat');
@@ -982,7 +926,6 @@ class Report extends CI_Controller
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
         // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
         $kode_cabang    = $this->session->userdata('cabang');
 
         // sintak
@@ -1047,7 +990,6 @@ class Report extends CI_Controller
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
         // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
         $kode_cabang    = $this->session->userdata('cabang');
 
         // sintak
@@ -1130,9 +1072,6 @@ class Report extends CI_Controller
         $body           = '';
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
-        // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
-
         // sintak
         $sintak         = $this->db->query("SELECT m.*, pek.keterangan AS pekerjaan, pen.keterangan AS pendidikan, agm.keterangan AS agama, pro.provinsi AS provinsi, kab.kabupaten AS kabupaten, kec.kecamatan AS kecamatan FROM member m JOIN m_pekerjaan pek ON pek.kode_pekerjaan = m.pekerjaan JOIN m_pendidikan pen ON pen.kode_pendidikan = m.pendidikan JOIN m_agama agm ON agm.kode_agama = m.agama JOIN m_provinsi pro ON pro.kode_provinsi = m.provinsi JOIN kabupaten kab ON kab.kode_kabupaten = m.kabupaten JOIN kecamatan kec ON kec.kode_kecamatan = m.kecamatan JOIN m_role rol ON rol.kode_role = m.kode_role ORDER BY m.kode_member ASC")->result();
 
@@ -1151,7 +1090,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->kode_member . '</td>
                 <td style="border: 1px solid black;">' . $s->nama . '</td>
                 <td style="border: 1px solid black;">' . date('d-m-y', strtotime($s->tgl_lahir)) . '</td>
@@ -1187,7 +1126,6 @@ class Report extends CI_Controller
         // parameter dari view laporan
         $dari           = $this->input->get('dari');
         $sampai         = $this->input->get('sampai');
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         // sintak
         $sintak         = $this->db->query("SELECT m.* FROM pembayaran m WHERE tgl_pembayaran >= '$dari' AND tgl_pembayaran <= '$sampai'")->result();
@@ -1205,7 +1143,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_pembayaran)) . ' ~ ' . date('H:i:s', strtotime($s->jam_pembayaran)) . '</td>
                 <td style="border: 1px solid black;">' . $s->invoice . '</td>
                 <td style="border: 1px solid black;">' . $s->no_trx . '</td>
@@ -1239,7 +1177,6 @@ class Report extends CI_Controller
         // parameter dari view laporan
         $dari           = $this->input->get('dari');
         $sampai         = $this->input->get('sampai');
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         // sintak
         $sintak         = $this->db->query("SELECT m.* FROM barang_po_in_header m WHERE tgl_po >= '$dari' AND tgl_po <= '$sampai'")->result();
@@ -1264,7 +1201,7 @@ class Report extends CI_Controller
             }
 
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->invoice . '</td>
                 <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_po)) . ' ~ ' . date('H:i:s', strtotime($s->jam_po)) . '</td>
                 <td style="border: 1px solid black;">' . $this->M_global->getData('m_supplier', ['kode_supplier' => $s->kode_supplier])->nama . '</td>
@@ -1299,7 +1236,6 @@ class Report extends CI_Controller
         // parameter dari view laporan
         $dari           = $this->input->get('dari');
         $sampai         = $this->input->get('sampai');
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         // sintak
         $sintak         = $this->db->query("SELECT m.* FROM barang_in_header m WHERE tgl_beli >= '$dari' AND tgl_beli <= '$sampai'")->result();
@@ -1324,7 +1260,7 @@ class Report extends CI_Controller
             }
 
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->invoice . '</td>
                 <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_beli)) . ' ~ ' . date('H:i:s', strtotime($s->jam_beli)) . '</td>
                 <td style="border: 1px solid black;">' . $this->M_global->getData('m_supplier', ['kode_supplier' => $s->kode_supplier])->nama . '</td>
@@ -1359,7 +1295,6 @@ class Report extends CI_Controller
         // parameter dari view laporan
         $dari           = $this->input->get('dari');
         $sampai         = $this->input->get('sampai');
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         // sintak
         $sintak         = $this->db->query("SELECT m.* FROM barang_in_retur_header m WHERE tgl_retur >= '$dari' AND tgl_retur <= '$sampai'")->result();
@@ -1384,7 +1319,7 @@ class Report extends CI_Controller
             }
 
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->invoice . '</td>
                 <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_retur)) . ' ~ ' . date('H:i:s', strtotime($s->jam_retur)) . '</td>
                 <td style="border: 1px solid black;">' . $this->M_global->getData('m_supplier', ['kode_supplier' => $s->kode_supplier])->nama . '</td>
@@ -1419,7 +1354,6 @@ class Report extends CI_Controller
         // parameter dari view laporan
         $dari           = $this->input->get('dari');
         $sampai         = $this->input->get('sampai');
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         // sintak
         $sintak         = $this->db->query("SELECT m.* FROM barang_out_header m WHERE tgl_jual >= '$dari' AND tgl_jual <= '$sampai'")->result();
@@ -1443,7 +1377,7 @@ class Report extends CI_Controller
             }
 
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->invoice . '</td>
                 <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_jual)) . ' ~ ' . date('H:i:s', strtotime($s->jam_jual)) . '</td>
                 <td style="border: 1px solid black;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $s->kode_gudang])->nama . '</td>
@@ -1477,7 +1411,6 @@ class Report extends CI_Controller
         // parameter dari view laporan
         $dari           = $this->input->get('dari');
         $sampai         = $this->input->get('sampai');
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         // sintak
         $sintak         = $this->db->query("SELECT m.* FROM barang_out_retur_header m WHERE tgl_retur >= '$dari' AND tgl_retur <= '$sampai'")->result();
@@ -1501,7 +1434,7 @@ class Report extends CI_Controller
             }
 
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->invoice . '</td>
                 <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_retur)) . ' ~ ' . date('H:i:s', strtotime($s->jam_retur)) . '</td>
                 <td style="border: 1px solid black;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $s->kode_gudang])->nama . '</td>
@@ -1535,7 +1468,6 @@ class Report extends CI_Controller
         // parameter dari view laporan
         $dari           = $this->input->get('dari');
         $sampai         = $this->input->get('sampai');
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         // sintak
         $sintak         = $this->db->query("SELECT m.* FROM penyesuaian_header m WHERE tgl_penyesuaian >= '$dari' AND tgl_penyesuaian <= '$sampai'")->result();
@@ -1558,7 +1490,7 @@ class Report extends CI_Controller
             }
 
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->invoice . '</td>
                 <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_penyesuaian)) . ' ~ ' . date('H:i:s', strtotime($s->jam_penyesuaian)) . '</td>
                 <td style="border: 1px solid black;">' . $this->M_global->getData('m_gudang', ['kode_gudang' => $s->kode_gudang])->nama . '</td>
@@ -1590,7 +1522,6 @@ class Report extends CI_Controller
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
         // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         // sintak
         $header         = $this->db->query("SELECT a.* FROM activity_user a WHERE a.waktu LIKE '%$tgl%' LIMIT 1")->row();
@@ -1678,7 +1609,6 @@ class Report extends CI_Controller
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
         // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         $poli = $this->input->get('poli');
         $dari = $this->input->get('dari');
@@ -1707,7 +1637,7 @@ class Report extends CI_Controller
         $no = 1;
         foreach ($sintak as $s) {
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . date('d-m-y', strtotime($s->tgl_daftar)) . '/' . date('H:i:s', strtotime($s->jam_daftar)) . '</td>
                 <td style="border: 1px solid black;">' . date('d-m-y', strtotime($s->tgl_keluar)) . '/' . date('H:i:s', strtotime($s->jam_keluar)) . '</td>
                 <td style="border: 1px solid black;">' . $s->no_trx . '</td>
@@ -1740,7 +1670,6 @@ class Report extends CI_Controller
         $body           .= '<br><br>'; // beri jarak antara kop dengan body
 
         // parameter dari view laporan
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         $kode_cabang = $this->session->userdata('cabang');
         $kode_barang = $this->input->get('kode_barang');
@@ -1919,7 +1848,7 @@ class Report extends CI_Controller
             $stok_akhir += ($s->masuk - $s->keluar);
 
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->record_date . '</td>
                 <td style="border: 1px solid black;">' . $s->invoice . '</td>
                 <td style="border: 1px solid black;">' . $s->keterangan . '</td>
@@ -1954,7 +1883,6 @@ class Report extends CI_Controller
         // parameter dari view laporan
         $dari           = $this->input->get('dari');
         $sampai         = $this->input->get('sampai');
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         // sintak
         $sintak         = $this->db->query("SELECT m.* FROM mutasi_po_header m WHERE tgl_po >= '$dari' AND tgl_po <= '$sampai'")->result();
@@ -1988,7 +1916,7 @@ class Report extends CI_Controller
             }
 
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->invoice . '</td>
                 <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl_po)) . ' ~ ' . date('H:i:s', strtotime($s->jam_po)) . '</td>
                 <td style="border: 1px solid black; text-align: center;">' . ($s->jenis_po > 0 ? 'Mutasi Cabang' : 'Mutasi Gudang') . '</td>
@@ -2024,7 +1952,6 @@ class Report extends CI_Controller
         // parameter dari view laporan
         $dari           = $this->input->get('dari');
         $sampai         = $this->input->get('sampai');
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         // sintak
         $sintak         = $this->db->query("SELECT m.* FROM mutasi_header m WHERE tgl >= '$dari' AND tgl <= '$sampai'")->result();
@@ -2058,7 +1985,7 @@ class Report extends CI_Controller
             }
 
             $body .= '<tr>
-                <td style="border: 1px solid black;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
                 <td style="border: 1px solid black;">' . $s->invoice . '</td>
                 <td style="border: 1px solid black; text-align: center;">' . date('d-m-Y', strtotime($s->tgl)) . ' ~ ' . date('H:i:s', strtotime($s->jam)) . '</td>
                 <td style="border: 1px solid black; text-align: center;">' . ($s->jenis > 0 ? 'Mutasi Cabang' : 'Mutasi Gudang') . '</td>
@@ -2073,6 +2000,316 @@ class Report extends CI_Controller
         $body .= '</table>';
 
         $judul = 'Report Pengajuan Mutasi';
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // tipe
+    public function tipe($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // sintak
+        $sintak         = $this->db->query("SELECT s.* FROM tipe_bank s ORDER BY s.kode_tipe ASC")->result();
+
+        $body           .= '<br>';
+
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+
+        $body           .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
+            <th style="width: 70%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            $body       .= '<tr>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->kode_tipe . '</td>
+                <td style="border: 1px solid black;">' . $s->keterangan . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body           .= '</table>';
+
+        $judul          = 'Master Tipe Bank';
+        $filename       = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // ruang
+    public function ruang($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // sintak
+        $sintak         = $this->db->query("SELECT s.* FROM m_ruang s ORDER BY s.kode_ruang ASC")->result();
+
+        $body           .= '<br>';
+
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+
+        $body           .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
+            <th style="width: 40%; border: 1px solid black; background-color: #272a3f; color: white;">Nama</th>
+            <th style="width: 30%; border: 1px solid black; background-color: #272a3f; color: white;">Jenis</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            $body       .= '<tr>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->kode_ruang . '</td>
+                <td style="border: 1px solid black;">' . $s->keterangan . '</td>
+                <td style="border: 1px solid black;">' . (($s->jenis == 1) ? 'Rawat Jalan' : 'Rawat Inap') . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body           .= '</table>';
+
+        $judul          = 'Master Ruang';
+        $filename       = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // bed
+    public function bed($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // sintak
+        $sintak         = $this->db->query("SELECT s.*, (SELECT keterangan FROM m_ruang WHERE kode_ruang = s.kode_ruang) AS ruang FROM bed s JOIN bed_cabang a USING(kode_bed) WHERE a.kode_cabang = '" . $this->session->userdata('cabang') . "' ORDER BY s.kode_ruang ASC")->result();
+
+        $body           .= '<br>';
+
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+
+        $body           .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
+            <th style="width: 40%; border: 1px solid black; background-color: #272a3f; color: white;">Bed</th>
+            <th style="width: 30%; border: 1px solid black; background-color: #272a3f; color: white;">Ruang</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            $body       .= '<tr>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->kode_bed . '</td>
+                <td style="border: 1px solid black;">' . $s->nama_bed . '</td>
+                <td style="border: 1px solid black;">' . $s->ruang . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body           .= '</table>';
+
+        $judul          = 'Master Bed';
+        $filename       = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // prefix
+    public function prefix($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // sintak
+        $sintak         = $this->db->query("SELECT s.* FROM m_prefix s ORDER BY s.kode_prefix ASC")->result();
+
+        $body           .= '<br>';
+
+        $body           .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+
+        $body           .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 65%; border: 1px solid black; background-color: #272a3f; color: white;">Kode</th>
+            <th style="width: 30%; border: 1px solid black; background-color: #272a3f; color: white;">Prefix</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            $body       .= '<tr>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
+                <td style="border: 1px solid black;">' . $s->kode_prefix . '</td>
+                <td style="border: 1px solid black;">' . $s->nama . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body           .= '</table>';
+
+        $judul          = 'Master Prefix';
+        $filename       = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf_small($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // provinsi
+    public function provinsi($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // sintak
+        $sintak         = $this->db->query("SELECT m.* FROM m_provinsi m")->result();
+
+        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">ID</th>
+            <th style="width: 80%; border: 1px solid black; background-color: #272a3f; color: white;">Provinsi</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            $body .= '<tr>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $s->kode_provinsi . '</td>
+                <td style="border: 1px solid black;">' . $s->provinsi . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body .= '</table>';
+
+        $judul = 'Report Wilayah Provinsi';
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // kabupaten
+    public function kabupaten($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // sintak
+        $sintak         = $this->db->query("SELECT m.* FROM kabupaten m")->result();
+
+        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body .= '<tr>
+            <th style="width: 5%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">ID</th>
+            <th style="width: 40%; border: 1px solid black; background-color: #272a3f; color: white;">Kabupaten</th>
+            <th style="width: 40%; border: 1px solid black; background-color: #272a3f; color: white;">Provinsi</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            $body .= '<tr>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $s->kode_kabupaten . '</td>
+                <td style="border: 1px solid black;">' . $s->kabupaten . '</td>
+                <td style="border: 1px solid black;">' . $s->kode_provinsi . ' - ' . ($this->M_global->getData('m_provinsi', ['kode_provinsi' => $s->kode_provinsi])->provinsi) . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body .= '</table>';
+
+        $judul = 'Report Wilayah Provinsi';
+        $filename = $judul; // nama file yang ingin di simpan
+
+        // jalankan fungsi cetak_pdf
+        cetak_pdf($judul, $body, $param, $position, $filename, $web_setting);
+    }
+
+    // kecamatan
+    public function kecamatan($param)
+    {
+        // param website
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // sintak
+        $sintak         = $this->db->query("SELECT m.* FROM kecamatan m")->result();
+
+        $body .= '<table style="width: 100%; font-size: 10px;" cellpadding="5px">';
+        $body .= '<tr>
+            <th style="width: 10%; border: 1px solid black; background-color: #272a3f; color: white;">#</th>
+            <th style="width: 15%; border: 1px solid black; background-color: #272a3f; color: white;">ID</th>
+            <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kecamatan</th>
+            <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Kabupaten</th>
+            <th style="width: 25%; border: 1px solid black; background-color: #272a3f; color: white;">Provinsi</th>
+        </tr>';
+
+        $no = 1;
+        foreach ($sintak as $s) {
+            $kab = $this->M_global->getData('kabupaten', ['kode_kabupaten' => $s->kode_kabupaten]);
+            $body .= '<tr>
+                <td style="border: 1px solid black; text-align: right;">' . $no . '</td>
+                <td style="border: 1px solid black; text-align: right;">' . $s->kode_kecamatan . '</td>
+                <td style="border: 1px solid black;">' . $s->kecamatan . '</td>
+                <td style="border: 1px solid black;">' . $s->kode_kabupaten . ' - ' . $kab->kabupaten . '</td>
+                <td style="border: 1px solid black;">' . $kab->kode_provinsi . ' - ' . ($this->M_global->getData('m_provinsi', ['kode_provinsi' => $kab->kode_provinsi])->provinsi) . '</td>
+            </tr>';
+            $no++;
+        }
+
+        $body .= '</table>';
+
+        $judul = 'Report Wilayah Provinsi';
         $filename = $judul; // nama file yang ingin di simpan
 
         // jalankan fungsi cetak_pdf
