@@ -4,11 +4,11 @@
     <div class="card card-outline card-primary" card-primary" style="background-color: rgba(255, 255, 255, 0.8); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);">
         <div class="card-header text-center">
             <a type="button" class="h1"><b><?= $nama_apps ?></b></a>
-            <br>
-            <div class="h5"><?= $web_version_all->nama ?></div>
+            <!-- <br>
+            <div class="h5"><?= $web_version_all->nama ?></div> -->
         </div>
         <div class="card-body">
-            <p class="login-box-msg">Form Atur Ulang Sandi</p>
+            <p class="login-box-msg">Atur Ulang Sandi</p>
             <form id="form_repass" method="post">
                 <div class="input-group mb-3">
                     <input type="email" class="form-control" placeholder="Email" id="email" name="email" onchange="cekEmail(this.value)">
