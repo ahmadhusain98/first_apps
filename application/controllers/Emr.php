@@ -129,21 +129,21 @@ class Emr extends CI_Controller
 
             $cek_per = $this->M_global->getData('emr_per', ['no_trx' => $rd->no_trx]);
             if ($cek_per) {
-                $status_per = '<span class="badge badge-info">Diperiksa Perawat</span>';
+                $status_per = '<span class="badge badge-sm badge-info">Diperiksa Perawat</span>';
             } else {
                 $status_per = '';
             }
 
             $cek_dok = $this->M_global->getData('emr_dok', ['no_trx' => $rd->no_trx]);
             if ($cek_dok) {
-                $status_dok = '<span class="badge badge-primary">Diperiksa Dokter</span>';
+                $status_dok = '<span class="badge badge-sm badge-primary">Diperiksa Dokter</span>';
             } else {
                 $status_dok = '';
             }
 
             $row = [];
             $row[] = $no++;
-            $row[] = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>')) . '<br>' . $status_per . ' ' . $status_dok;
+            $row[] = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-sm badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-sm badge-danger">Batal</span>' : '<span class="badge badge-sm badge-primary">Selesai</span>')) . '<br>' . $status_per . ' ' . $status_dok;
             $row[] = 'No. RM: <span class="float-right">' . $rd->kode_member . '</span><hr>Nama: <span class="float-right">' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama . '</span>';
             $row[] = 'Datang: <span class="float-right">' . date('d/m/Y', strtotime($rd->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_daftar)) . '</span><br>' .
                 '<hr>Selesai: <span class="float-right">' . (($rd->status_trx < 1) ? '<i class="text-secondary">Null</i>' : (($rd->tgl_keluar == null) ? 'xx/xx/xxxx' : date('d/m/Y', strtotime($rd->tgl_keluar))) . ' ~ ' . (($rd->jam_keluar == null) ? 'xx:xx:xx' : date('H:i:s', strtotime($rd->jam_keluar)))) . '</span>';
@@ -245,23 +245,26 @@ class Emr extends CI_Controller
                 <div class="col-md-12">
                     <div class="card" style="background-color: <?= ($p->no_trx == $no_trx) ? '#272a3f; color: white;' : 'white' ?>; border: 1px solid grey;">
                         <div class="card-header">
-                            <span class="h4">Episode : <?= $no_his ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-danger float-right">Rawat Jalan</span>' : '<span class="badge badge-warning float-right">Rawat Inap</span>' ?></span>
+                            <span class="h5">Kunj : <?= $no_his ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-sm badge-danger float-right">Jalan</span>' : '<span class="badge badge-sm badge-warning float-right">Inap</span>' ?></span>
+                            <br>
+                            <span style="font-size: 14px;"><?= (($p->status_trx == 0) ? '<span class="badge badge-sm badge-success">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-sm badge-danger">Batal</span>' : '<span class="badge badge-sm badge-primary">Selesai</span>')) ?></span>
                         </div>
-                        <div class="card-footer">
-                            <span class="h5">Status Pemeriksaan : <?= (($p->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>')) ?></span>
+                        <div class="card-footer text-center">
+                            <button type="button" class="btn btn-sm btn-info" style="width: 49%;" <?= (($p->status_trx == 2) ? 'disabled' : '') ?> onclick="show_his('<?= $p->no_trx ?>', '<?= $no_his ?>', '<?= $p->kode_member ?>')"> Nurs &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-angles-right"></i></button>
+                            <button type="button" class="btn btn-sm btn-primary" style="width: 49%;" <?= (($p->status_trx == 2) ? 'disabled' : '') ?> onclick="show_his2('<?= $p->no_trx ?>', '<?= $no_his ?>', '<?= $p->kode_member ?>')"> Doc &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-angles-right"></i></button>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table style="font-size: 14px;">
                                     <tr>
-                                        <td>Tanggal</td>
+                                        <td>Daftar</td>
                                         <td> : </td>
-                                        <td>Masuk : <?= date('d-m-Y', strtotime($p->tgl_daftar)) ?> / <?= date('H:i', strtotime($p->jam_daftar)) ?></td>
+                                        <td><?= date('d M y', strtotime($p->tgl_daftar)) ?> / <?= date('H:i', strtotime($p->jam_daftar)) ?></td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td>Keluar : <?= (!$p->tgl_keluar) ? 'xx-xx-xxxx' : date('d M y', strtotime($p->tgl_keluar)) ?> / <?= (!$p->jam_keluar) ? 'xx:xx' : date('H:i', strtotime($p->jam_keluar)) ?></td>
+                                        <td>Pulang</td>
+                                        <td> : </td>
+                                        <td><?= (!$p->tgl_keluar) ? 'xx-xx-xxxx' : date('d M y', strtotime($p->tgl_keluar)) ?> / <?= (!$p->jam_keluar) ? 'xx:xx' : date('H:i', strtotime($p->jam_keluar)) ?></td>
                                     </tr>
                                     <tr>
                                         <td style="width: 30%;">Dokter</td>
@@ -280,10 +283,6 @@ class Emr extends CI_Controller
                                     </tr>
                                 </table>
                             </div>
-                        </div>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-info" style="width: 49%;" <?= (($p->status_trx == 2) ? 'disabled' : '') ?> onclick="show_his('<?= $p->no_trx ?>', '<?= $no_his ?>', '<?= $p->kode_member ?>')"> Perawat &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-angles-right"></i></button>
-                            <button type="button" class="btn btn-primary" style="width: 49%;" <?= (($p->status_trx == 2) ? 'disabled' : '') ?> onclick="show_his2('<?= $p->no_trx ?>', '<?= $no_his ?>', '<?= $p->kode_member ?>')"> Dokter &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-angles-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -312,10 +311,10 @@ class Emr extends CI_Controller
         $no_his         = count($pendaftaran);
         foreach ($pendaftaran as $p) : ?>
             <div class="card-header">
-                <span class="h4">Episode : <?= $eps ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-danger float-right">Rawat Jalan</span>' : '<span class="badge badge-warning float-right">Rawat Inap</span>' ?></span>
+                <span class="h4">Kunj : <?= $eps ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-sm badge-danger float-right">Jalan</span>' : '<span class="badge badge-sm badge-warning float-right">Inap</span>' ?></span>
             </div>
             <div class="card-footer">
-                <span class="h5">Status Pemeriksaan : <?= (($p->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>')) ?></span>
+                <span class="h5">Status : <?= (($p->status_trx == 0) ? '<span class="badge badge-sm badge-success float-right">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-sm badge-danger float-right">Batal</span>' : '<span class="badge badge-sm badge-primary float-right">Selesai</span>')) ?></span>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -509,10 +508,10 @@ class Emr extends CI_Controller
         $no_his         = count($pendaftaran);
         foreach ($pendaftaran as $p) : ?>
             <div class="card-header">
-                <span class="h4">Episode : <?= $eps ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-danger float-right">Rawat Jalan</span>' : '<span class="badge badge-warning float-right">Rawat Inap</span>' ?></span>
+                <span class="h4">Kunj : <?= $eps ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-sm badge-danger float-right">Jalan</span>' : '<span class="badge badge-sm badge-warning float-right">Inap</span>' ?></span>
             </div>
             <div class="card-footer">
-                <span class="h5">Status Pemeriksaan : <?= (($p->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>')) ?></span>
+                <span class="h5">Status : <?= (($p->status_trx == 0) ? '<span class="badge badge-sm badge-success float-right">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-sm badge-danger float-right">Batal</span>' : '<span class="badge badge-sm badge-primary float-right">Selesai</span>')) ?></span>
             </div>
             <div class="card-body">
                 <div class="table-responsive">

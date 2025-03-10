@@ -88,7 +88,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
         <input type="hidden" name="kode_member" id="kode_member" value="<?= $pendaftaran->kode_member ?>">
         <div class="row">
             <div class="col-md-3">
-                <div class="card card-outline card-primary" style="position: fixed; width: 20.5%;">
+                <div class="card card-outline card-primary" style="position: fixed; width: 19%;">
                     <div class="card-header">
                         <span class="font-weight-bold h4 text-primary">History Pasien</span>
                     </div>
@@ -103,7 +103,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                             <?php endif ?>
                         </select>
                         <hr>
-                        <div id="body_history" style="overflow-y: scroll; overflow-x: hidden; height: 69.7vh; width: 100%;"></div>
+                        <div id="body_history" style="overflow-y: scroll; overflow-x: hidden; height: 45vh; width: 100%;"></div>
                     </div>
                 </div>
             </div>
