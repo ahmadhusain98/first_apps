@@ -366,7 +366,7 @@ class M_select2 extends CI_Model
                 FROM dokter_poli dp 
                 JOIN dokter d ON dp.kode_dokter = d.kode_dokter 
                 JOIN m_poli p ON p.kode_poli = dp.kode_poli
-                JOIN jadwal_dokter jd ON jd.kode_dokter = d.kode_dokter 
+                JOIN jadwal_dokter jd ON (jd.kode_dokter = d.kode_dokter AND jd.kode_poli = "' . $kode_poli . '")
                 WHERE jd.status = 1 AND jd.kode_cabang = "' . $this->session->userdata('cabang') . '" AND jd.date_start <= "' . $now . '" AND jd.date_end >= "' . $now . '" AND dp.kode_poli = "' . $kode_poli . '" ' . $add_sintak . $limit
             )->result();
         }

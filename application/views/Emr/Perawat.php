@@ -467,8 +467,8 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     <div class="col-md-2">
                                         <button class="btn btn-primary w-100 mb-1" type="button" onclick="sel_tab(0)" id="btn_etarif">E-Tarif</button>
                                         <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(1)" id="btn_eresep">E-Resep</button>
-                                        <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(2)" id="btn_elab">E-Laboratorium</button>
-                                        <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(3)" id="btn_erad">E-Radiologi</button>
+                                        <!-- <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(2)" id="btn_elab">E-Laboratorium</button>
+                                        <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(3)" id="btn_erad">E-Radiologi</button> -->
                                     </div>
                                     <div class="col-md-10">
                                         <div class="card w-100 h-100">

@@ -87,7 +87,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
         <input type="hidden" name="kode_member" id="kode_member" value="<?= $pendaftaran->kode_member ?>">
         <div class="row">
             <div class="col-md-3">
-                <div class="card card-outline card-primary" style="position: fixed; width: 20.5%;">
+                <div class="card card-outline card-primary" style="position: fixed; width: 19%;">
                     <div class="card-header">
                         <span class="font-weight-bold h4 text-primary">History Pasien</span>
                     </div>
@@ -100,7 +100,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                             <?php endif ?>
                         </select>
                         <hr>
-                        <div id="body_history" style="overflow-y: scroll; overflow-x: hidden; height: 64vh; width: 100%;"></div>
+                        <div id="body_history" style="overflow-y: scroll; overflow-x: hidden; height: 45vh; width: 100%;"></div>
                     </div>
                 </div>
             </div>
@@ -191,7 +191,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     <div class="col-md-9">
                                         <div class="row">
                                             <div class="col-md-6 col-12">
-                                                <input type="text" class="form-control" id="kode_ruang" name="kode_ruang" value="<?= ($pendaftaran) ? $pendaftaran->kode_ruang : '' ?>" readonly>
+                                                <input type="text" class="form-control" id="kode_ruang" name="kode_ruang" value="<?= ($pendaftaran) ? $this->M_global->getData('m_ruang', ['kode_ruang' => $pendaftaran->kode_ruang])->keterangan : '' ?>" readonly>
                                             </div>
                                             <div class="col-md-6 col-12">
                                                 <input type="text" class="form-control" id="kode_bed" name="kode_bed" value="<?= ($pendaftaran) ? $pendaftaran->kode_bed : '' ?>" readonly>
@@ -395,8 +395,8 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     <div class="col-md-2">
                                         <button class="btn btn-primary w-100 mb-1" type="button" onclick="sel_tab(0)" id="btn_etarif">E-Tarif / Tindakan</button>
                                         <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(1)" id="btn_eresep">E-Resep</button>
-                                        <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(2)" id="btn_elab">E-Laboratorium</button>
-                                        <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(3)" id="btn_erad">E-Radiologi</button>
+                                        <!-- <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(2)" id="btn_elab">E-Laboratorium</button>
+                                        <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(3)" id="btn_erad">E-Radiologi</button> -->
                                     </div>
                                     <div class="col-md-10">
                                         <div class="card w-100 h-100">

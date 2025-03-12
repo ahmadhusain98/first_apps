@@ -66,6 +66,15 @@ function _sendMail($emailUser, $title, $message)
     }
 }
 
+function singkatTeks($teks, $panjang = 10)
+{
+    if (strlen($teks) > $panjang) {
+        return substr($teks, 0, $panjang) . "...";
+    } else {
+        return $teks;
+    }
+}
+
 function aktifitas_user($menu, $message, $kode, $value, $detail = [])
 {
     $CI       = &get_instance();

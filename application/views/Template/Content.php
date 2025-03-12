@@ -414,7 +414,7 @@
                         <i class="fa-regular fa-solid fa-bell"></i>&nbsp;&nbsp;Notifikasi&nbsp;&nbsp;
                         <div id="count_notif"></div>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right" style="width: 20vw;">
+                    <div class="dropdown-menu dropdown-menu-right" style="width: 30vw; font-family: monospace;">
                         <div id="notf_live" style="width: 100%;"></div>
                     </div>
                 </li>

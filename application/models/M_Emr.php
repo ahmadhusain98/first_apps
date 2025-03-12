@@ -31,6 +31,10 @@ class M_Emr extends CI_Model
 
         $this->db->where("p.kode_cabang", $this->session->userdata("cabang"));
 
+        if ($this->session->userdata("kode_role") == 'R0009') {
+            $this->db->where("p.no_trx IN (SELECT no_trx FROM emr_per WHERE kode_cabang = '" . $this->session->userdata("cabang") . "')");
+        }
+
         if ($tipe == 1) {
             $this->db->where(['p.tgl_daftar >=' => $dari]);
         } else {
