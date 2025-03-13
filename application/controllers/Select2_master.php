@@ -293,4 +293,18 @@ class Select2_master extends CI_Controller
         $key = $this->input->post('searchTerm');
         echo json_encode($this->M_select2->dataKatTarif($key));
     }
+
+    // master icd9
+    function dataIcd9()
+    {
+        $key = $this->input->post('searchTerm');
+        echo json_encode($this->M_select2->dataIcd9($key));
+    }
+
+    // master icd10
+    function dataIcd10()
+    {
+        $key = $this->input->post('searchTerm');
+        echo json_encode($this->M_select2->dataIcd10($key));
+    }
 }

@@ -359,6 +359,97 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     </div>
                                 </div>
                             </div>
+                            <hr>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <span class="font-weight-bold">ICD 9</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" name="input_icd9" id="input_icd9" placeholder="Cari ICD 9..." autofocus>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-primary w-100" onclick="add_icd('9', $('#input_icd9').val())"><i class="fa fa-search"></i> Cari</button>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <table class="table table-striped table-hover table-bordered" id="tableIcd9" style="width: 100%; table-layout: fixed;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 15%; text-align: center;">Hapus</th>
+                                                        <th style="width: 85%; text-align: center;">ICD 9</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="bodyIcd9">
+                                                    <?php if (!empty($icd9)) : ?>
+                                                        <?php $noicd9 = 1;
+                                                        foreach ($icd9 as $icd9_dok) : ?>
+                                                            <tr id="row_Icd9<?= $noicd9 ?>">
+                                                                <td style="width: 15%; text-align: center;">
+                                                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapusIcd9<?= $noicd9 ?>" onclick="hapusIcd9('<?= $noicd9 ?>')"><i class="fa-solid fa-delete-left"></i></button>
+                                                                </td>
+                                                                <td style="width: 85%;">
+                                                                    <input type="hidden" name="icd9[]" id="icd9<?= $noicd9 ?>" class="form-control" value="<?= $icd9_dok->kode_icd ?>">
+                                                                    <span><?= $icd9_dok->kode_icd . ', ' . $this->M_global->getData('icd9', ['kode' => $icd9_dok->kode_icd])->keterangan ?></span>
+                                                                </td>
+                                                            </tr>
+                                                        <?php $noicd9++;
+                                                        endforeach; ?>
+                                                    <?php endif; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <span class="font-weight-bold">ICD 10</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" name="input_icd10" id="input_icd10" placeholder="Cari ICD 10..." autofocus>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-primary w-100" onclick="add_icd('10', $('#input_icd10').val())"><i class="fa fa-search"></i> Cari</button>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <table class="table table-striped table-hover table-bordered" id="tableIcd10" style="width: 100%; table-layout: fixed;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 15%; text-align: center;">Hapus</th>
+                                                        <th style="width: 85%; text-align: center;">ICD 10</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="bodyIcd10">
+                                                    <?php if (!empty($icd10)) : ?>
+                                                        <?php $noicd10 = 1;
+                                                        foreach ($icd10 as $icd10_dok) : ?>
+                                                            <tr id="row_Icd10<?= $noicd10 ?>">
+                                                                <td style="width: 15%; text-align: center;">
+                                                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapusIcd10<?= $noicd10 ?>" onclick="hapusIcd10('<?= $noicd10 ?>')"><i class="fa-solid fa-delete-left"></i></button>
+                                                                </td>
+                                                                <td style="width: 85%;">
+                                                                    <input type="hidden" name="icd10[]" id="icd10<?= $noicd10 ?>" class="form-control" value="<?= $icd10_dok->kode_icd ?>">
+                                                                    <span><?= $icd10_dok->kode_icd . ', ' . $this->M_global->getData('icd10', ['kode' => $icd10_dok->kode_icd])->keterangan ?></span>
+                                                                </td>
+                                                            </tr>
+                                                        <?php $noicd10++;
+                                                        endforeach; ?>
+                                                    <?php endif; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div id="htt_emr">
                             <div class="row mb-3">
@@ -706,6 +797,65 @@ if (is_array($p_kel) && !empty($p_kel)) {
             htt_emr.hide(200);
             order_emr.show(200);
         }
+    }
+
+    var input_icd9 = $('#input_icd9');
+
+    input_icd9.keypress(function(e) {
+        if (e.which == 13) { // jika di enter
+            // jalankan fungsi
+            return add_icd(9, input_icd9.val());
+        }
+    });
+
+    var input_icd10 = $('#input_icd10');
+
+    input_icd10.keypress(function(e) {
+        if (e.which == 13) { // jika di enter
+            // jalankan fungsi
+            return add_icd(10, input_icd10.val());
+        }
+    });
+
+    function add_icd(param, key) {
+        $.ajax({
+            url: `${siteUrl}Emr/getIcd/${param}/${key}`,
+            type: `POST`,
+            dataType: `JSON`,
+            success: function(result) {
+                if (param == '9') {
+                    input_icd9.val('');
+                } else {
+                    input_icd10.val('');
+                }
+                const bodyIcd = $('#bodyIcd' + param);
+
+                var tableICD = document.getElementById('tableIcd' + param);
+                var x = tableICD.rows.length + 1;
+
+                bodyIcd.append(`<tr id="row_Icd${param}${x}">
+                    <td style="width: 15%; text-align: center;">
+                        <button class="btn btn-sm btn-danger" type="button" id="btnHapusIcd${param}${x}" onclick="hapusIcd${param}('${x}')"><i class="fa-solid fa-delete-left"></i></button>
+                    </td>
+                    <td style="width: 85%;">
+                        <input type="hidden" name="icd${param}[]" id="icd${param}${x}" value="${result.id}">
+                        <span>${result.text}</span>
+                    </td>
+                </tr>`);
+
+            },
+            error: function(error) {
+                error_proccess();
+            }
+        });
+    }
+
+    function hapusIcd9(x) {
+        $('#row_Icd9' + x).remove();
+    }
+
+    function hapusIcd10(x) {
+        $('#row_Icd10' + x).remove();
     }
 
     function sel_tab(param) {

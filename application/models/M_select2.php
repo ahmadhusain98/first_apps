@@ -725,4 +725,40 @@ class M_select2 extends CI_Model
 
         return $sintak;
     }
+
+    // fungsi icd9
+    function dataIcd9($key)
+    {
+        $limit = ' LIMIT 20';
+
+        if (!empty($key)) {
+            $add_sintak = ' WHERE (kode LIKE "%' . $key . '%" OR keterangan LIKE "%' . $key . '%") ORDER BY keterangan ASC';
+        } else {
+            $add_sintak = ' ORDER BY keterangan ASC';
+        }
+
+        $sintak = $this->db->query(
+            'SELECT kode AS id, CONCAT(kode, ", ", keterangan) AS text FROM icd9 ' . $add_sintak . $limit
+        )->result();
+
+        return $sintak;
+    }
+
+    // fungsi icd10
+    function dataIcd10($key)
+    {
+        $limit = ' LIMIT 20';
+
+        if (!empty($key)) {
+            $add_sintak = ' WHERE (kode LIKE "%' . $key . '%" OR keterangan LIKE "%' . $key . '%") ORDER BY keterangan ASC';
+        } else {
+            $add_sintak = ' ORDER BY keterangan ASC';
+        }
+
+        $sintak = $this->db->query(
+            'SELECT kode AS id, CONCAT(kode, ", ", keterangan) AS text FROM icd10 ' . $add_sintak . $limit
+        )->result();
+
+        return $sintak;
+    }
 }

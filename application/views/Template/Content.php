@@ -1338,8 +1338,84 @@
         initailizeSelect2_klasifikasi_akun();
         initailizeSelect2_akun_sel(param = '');
         initailizeSelect2_barang_stok();
+        initailizeSelect2_icd9();
+        initailizeSelect2_icd10();
 
         // fungsi
+        function initailizeSelect2_icd9() {
+            // jalan fungsi select2 asli
+            $(".select2_icd9").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih ICD 9',
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 1 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataIcd9/',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_icd10() {
+            // jalan fungsi select2 asli
+            $(".select2_icd10").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih ICD 10',
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 1 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataIcd10/',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
         function initailizeSelect2_barang_stok() {
             // jalan fungsi select2 asli
             $(".select2_barang_stok").select2({

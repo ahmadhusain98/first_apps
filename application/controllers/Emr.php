@@ -974,6 +974,8 @@ class Emr extends CI_Controller
                 'emr_dok_fisik'     => $this->M_global->getDataResult('emr_dok_fisik', ['no_trx' => $no_trx]),
                 'eresep'            => $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $no_trx]),
                 'etarif'            => $this->M_global->getDataResult('emr_tarif', ['no_trx' => $no_trx]),
+                'icd9'              => $this->M_global->getDataResult('emr_dok_icd9', ['no_trx' => $no_trx]),
+                'icd10'             => $this->M_global->getDataResult('emr_dok_icd10', ['no_trx' => $no_trx]),
             ];
 
             $this->template->load('Template/Content', 'Emr/Dokter', $parameter);
@@ -1009,6 +1011,9 @@ class Emr extends CI_Controller
         $kode_tarif           = $this->input->post('kode_tarif');
         $qty_tarif            = $this->input->post('qty_tarif');
 
+        $icd9                 = $this->input->post('icd9');
+        $icd10                = $this->input->post('icd10');
+
         // tampung dalam array
         $data = [
             'no_trx'            => $no_trx,
@@ -1035,6 +1040,8 @@ class Emr extends CI_Controller
                 $this->M_global->delData('emr_per_barang', ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_dok_fisik', ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_tarif', ['no_trx' => $no_trx]),
+                $this->M_global->delData('emr_dok_icd9', ['no_trx' => $no_trx]),
+                $this->M_global->delData('emr_dok_icd10', ['no_trx' => $no_trx]),
             ];
 
             aktifitas_user_transaksi('EMR', 'Mengubah Emr Dokter ' . $kode_member, $no_trx);
@@ -1114,11 +1121,58 @@ class Emr extends CI_Controller
             }
         }
 
+        $loop4 = 0;
+        if (isset($icd9)) {
+            foreach ($icd9 as $i9) {
+                if ($f) {
+                    $kode_  = $i9;
+
+                    $loop4++;
+
+                    $data_icd9 = [
+                        'no_trx'      => $no_trx,
+                        'kode_icd'    => $kode_,
+                    ];
+
+                    $this->M_global->insertData('emr_dok_icd9', $data_icd9);
+                }
+            }
+        }
+
+        $loop5 = 0;
+        if (isset($icd10)) {
+            foreach ($icd10 as $i10) {
+                if ($f) {
+                    $kode_  = $i10;
+
+                    $loop5++;
+
+                    $data_icd10 = [
+                        'no_trx'      => $no_trx,
+                        'kode_icd'    => $kode_,
+                    ];
+
+                    $this->M_global->insertData('emr_dok_icd10', $data_icd10);
+                }
+            }
+        }
+
         if ($cek) { // jika fungsi cek berjalan, maka status 1
 
             echo json_encode(['status' => 1]);
         } else { // selain itu status 0
             echo json_encode(['status' => 0]);
         }
+    }
+
+    public function getIcd($param, $key)
+    {
+        if ($param == 9) {
+            $sintak = $this->db->query("SELECT kode AS id, CONCAT(kode, ', ', keterangan) AS text FROM icd9 WHERE kode LIKE '%$key%' OR keterangan LIKE '%$key%'")->row();
+        } else {
+            $sintak = $this->db->query("SELECT kode AS id, CONCAT(kode, ', ', keterangan) AS text FROM icd10 WHERE kode LIKE '%$key%' OR keterangan LIKE '%$key%'")->row();
+        }
+
+        echo json_encode($sintak);
     }
 }
