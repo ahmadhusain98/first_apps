@@ -493,6 +493,7 @@ class Kasir extends CI_Controller
             // update batal jadi 0
             $cek = [
                 $this->M_global->updateData('pembayaran', ['approved' => 1, 'batal' => 0, 'tgl_batal' => null, 'jam_batal' => null, 'user_batal' => null], ['token_pembayaran' => $token_pembayaran]),
+                $this->M_global->updateData('pendaftaran', ['status_trx' => 1, 'tgl_keluar' => date('Y-m-d'), 'jam_keluar' => date('H:i:s')], ['no_trx' => $pembayaran->no_trx]),
                 $this->M_global->updateData('tarif_paket_pasien', ['status' => 1], ['no_trx' => $pembayaran->no_trx]),
             ];
         } else { // selain itu
@@ -513,6 +514,7 @@ class Kasir extends CI_Controller
             // update batal jadi 1
             $cek = [
                 $this->M_global->updateData('pembayaran', ['approved' => 0, 'batal' => 1, 'tgl_batal' => date('Y-m-d'), 'jam_batal' => date('H:i:s'), 'user_batal' => $user_batal], ['token_pembayaran' => $token_pembayaran]),
+                $this->M_global->updateData('pendaftaran', ['status_trx' => 0, 'tgl_keluar' => null, 'jam_keluar' => null], ['no_trx' => $pembayaran->no_trx]),
                 $this->M_global->updateData('tarif_paket_pasien', ['status' => 0], ['no_trx' => $pembayaran->no_trx]),
             ];
         }
@@ -578,7 +580,7 @@ class Kasir extends CI_Controller
     }
 
     // form kasir page
-    public function form_kasir($param)
+    public function form_kasir($param, $no_trx = '')
     {
         $kode_cabang = $this->session->userdata('cabang');
         // website config
@@ -586,7 +588,14 @@ class Kasir extends CI_Controller
         $web_version = $this->M_global->getData('web_version', ['id_web' => $web_setting->id]);
 
         if ($param == '0') {
-            $pembayaran     = null;
+            $pembayaran = null;
+
+            if ($no_trx == '') {
+                $pendaftaran2 = '';
+            } else {
+                $pendaftaran2 = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+            }
+
             $riwayat        = null;
             $bayar_detail   = null;
             $tarif_paket    = null;
@@ -599,6 +608,7 @@ class Kasir extends CI_Controller
             $bayar_detail   = $this->M_global->getDataResult('bayar_card_detail', ['token_pembayaran' => $param]);
             $pembayaran     = $this->M_global->getData('pembayaran', ['token_pembayaran' => $param]);
             $pendaftaran    = $this->M_global->getData('pendaftaran', ['no_trx' => $pembayaran->no_trx]);
+            $pendaftaran2   = $pendaftaran;
             $jualx          = $this->M_global->getDataResult('barang_out_header', ['kode_cabang' => $kode_cabang, 'invoice' => $pembayaran->inv_jual]);
             if (!empty($pendaftaran)) {
                 $tarif_paket    = $this->M_global->getDataResult('tarif_paket_pasien', ['no_trx' => $pendaftaran->no_trx]);
@@ -627,8 +637,10 @@ class Kasir extends CI_Controller
             'web'               => $web_setting,
             'web_version'       => $web_version->version,
             'list_data'         => '',
+            'no_trx'            => $no_trx,
             'data_pembayaran'   => $pembayaran,
             'pendaftaran'       => $pendaftaranx,
+            'pendaftaran2'      => $pendaftaran2,
             'data_penjualan'    => $jualx,
             'bayar_detail'      => $bayar_detail,
             'tarif_paket'       => $tarif_paket,

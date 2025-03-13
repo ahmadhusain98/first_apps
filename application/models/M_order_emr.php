@@ -3,11 +3,11 @@ defined("BASEPATH") or exit("No direct script access allowed");
 
 class M_order_emr extends CI_Model
 {
-    protected $table = "emr_per_barang";
+    protected $table = "pendaftaran";
 
-    protected $columns = ['epb.id', 'epb.no_trx', 'epb.kode_barang', 'epb.kode_satuan', 'epb.qty', 'epb.signa', 'p.kode_dokter', 'd.nama AS dokter', 'p.kode_member', 'ed.date_dok', 'ed.time_dok', 'ed.eracikan', 'p.status_trx', 'p.kode_poli', 'pol.keterangan AS poli', 'p.kode_user', 'u.nama AS perawat'];
+    protected $columns = ['p.id', 'p.status_trx', 'p.kode_member', 'ed.date_dok', 'ed.time_dok', 'pol.keterangan AS poli', 'p.no_trx', 'm.nama', 'd.nama AS dokter', 'u.nama AS perawat'];
 
-    protected $search_key = ['epb.id', 'epb.no_trx', 'epb.kode_barang', 'epb.kode_satuan', 'epb.qty', 'epb.signa', 'p.kode_dokter', 'd.nama', 'p.kode_member', 'ed.date_dok', 'ed.time_dok', 'ed.eracikan', 'p.status_trx', 'p.kode_poli', 'pol.keterangan', 'p.kode_user', 'u.nama'];
+    protected $search_key = ['p.id', 'p.status_trx', 'p.kode_member', 'ed.date_dok', 'ed.time_dok', 'pol.keterangan', 'p.no_trx', 'm.nama', 'd.dokter', 'u.nama'];
 
     protected $order = ['ed.date_dok' => 'desc'];
 
@@ -23,17 +23,18 @@ class M_order_emr extends CI_Model
         $this->db->query("SET SESSION sql_mode = ''");
 
         $this->db->select($this->columns);
-        $this->db->from($this->table . " AS epb");
+        $this->db->from($this->table . " AS p");
 
-        $this->db->join("emr_dok ed", "ed.no_trx = epb.no_trx");
-        $this->db->join("pendaftaran p", "p.no_trx = epb.no_trx");
+        $this->db->join("emr_dok ed", "ed.no_trx = p.no_trx");
         $this->db->join("dokter d", "d.kode_dokter = p.kode_dokter");
-        $this->db->join("m_poli pol", "pol.kode_poli = p.kode_poli");
         $this->db->join("emr_per ep", "ep.no_trx = p.no_trx");
+        $this->db->join("member m", "m.kode_member = p.kode_member");
+        $this->db->join("m_poli pol", "pol.kode_poli = p.kode_poli");
         $this->db->join("user u", "u.kode_user = ep.kode_user");
 
         $this->db->where("p.kode_cabang", $this->session->userdata("cabang"));
 
+        $this->db->where('(ed.eracikan != "" OR p.no_trx IN (SELECT no_trx FROM emr_per_barang))');
         $this->db->where('p.no_trx NOT IN (SELECT no_trx FROM barang_out_header)');
 
         if ($tipe == 1) {
@@ -89,17 +90,18 @@ class M_order_emr extends CI_Model
         $this->db->query("SET SESSION sql_mode = ''");
 
         $this->db->select($this->columns);
-        $this->db->from($this->table . " AS epb");
+        $this->db->from($this->table . " AS p");
 
-        $this->db->join("emr_dok ed", "ed.no_trx = epb.no_trx");
-        $this->db->join("pendaftaran p", "p.no_trx = epb.no_trx");
+        $this->db->join("emr_dok ed", "ed.no_trx = p.no_trx");
         $this->db->join("dokter d", "d.kode_dokter = p.kode_dokter");
-        $this->db->join("m_poli pol", "pol.kode_poli = p.kode_poli");
         $this->db->join("emr_per ep", "ep.no_trx = p.no_trx");
+        $this->db->join("member m", "m.kode_member = p.kode_member");
+        $this->db->join("m_poli pol", "pol.kode_poli = p.kode_poli");
         $this->db->join("user u", "u.kode_user = ep.kode_user");
 
         $this->db->where("p.kode_cabang", $this->session->userdata("cabang"));
 
+        $this->db->where('(ed.eracikan != "" OR p.no_trx IN (SELECT no_trx FROM emr_per_barang))');
         $this->db->where('p.no_trx NOT IN (SELECT no_trx FROM barang_out_header)');
 
         if ($tipe == 1) {

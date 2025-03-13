@@ -1076,7 +1076,7 @@ class Health extends CI_Controller
         $kunjungan        = $this->input->post('kunjungan');
 
         if ($tipe_daftar == 1) {
-            $get_ruang    = $this->M_global->getData('jadwal_dokter', ['kode_dokter' => $kode_dokter, 'date_start' => $tgl_daftar]);
+            $get_ruang    = $this->M_global->getData('jadwal_dokter', ['kode_dokter' => $kode_dokter, 'date_start <= ' => $tgl_daftar]);
             if ($get_ruang) {
                 $kode_ruang   = $get_ruang->kode_ruang;
             } else {

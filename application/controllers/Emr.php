@@ -447,7 +447,11 @@ class Emr extends CI_Controller
 
                                         foreach ($emr_tarif as $et) :
                                             $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $et->kode_tarif]);
-                                            echo '@' . $tarif->nama . ' | ' . $et->qty . $br;
+                                            if ($tarif) {
+                                                echo '@' . $tarif->nama . ' | ' . $et->qty . $br;
+                                            } else {
+                                                echo '-';
+                                            }
                                         endforeach;
                                     }
                                     ?>
@@ -471,10 +475,10 @@ class Emr extends CI_Controller
                                             $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $epb->kode_satuan]);
                                             echo '@' . $barang->nama . ' | ' . $epb->qty . ' ' . $satuan->keterangan . ' | ' . $epb->signa . $br;
                                         endforeach;
+                                    }
 
-                                        if ($emr_per->eracikan != '') {
-                                            echo '<br>' . $emr_per->eracikan;
-                                        }
+                                    if ($emr_per->eracikan != '') {
+                                        echo '<br>' . $emr_per->eracikan;
                                     }
                                     ?>
                                 </div>
@@ -650,7 +654,11 @@ class Emr extends CI_Controller
 
                                     foreach ($emr_tarif as $et) :
                                         $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $et->kode_tarif]);
-                                        echo '@' . $tarif->nama . ' | ' . $et->qty . $br;
+                                        if ($tarif) {
+                                            echo '@' . $tarif->nama . ' | ' . number_format($et->qty) . $br;
+                                        } else {
+                                            echo '-';
+                                        }
                                     endforeach;
                                 }
                                 ?>
@@ -674,10 +682,10 @@ class Emr extends CI_Controller
                                         $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $epb->kode_satuan]);
                                         echo '@' . $barang->nama . ' | ' . $epb->qty . ' ' . $satuan->keterangan . ' | ' . $epb->signa . $br;
                                     endforeach;
+                                }
 
-                                    if ($emr_per->eracikan != '') {
-                                        echo '<br>' . $emr_per->eracikan;
-                                    }
+                                if ($emr_dok->eracikan != '') {
+                                    echo '<br>' . $emr_dok->eracikan;
                                 }
                                 ?>
                             </div>
@@ -685,40 +693,10 @@ class Emr extends CI_Controller
                         </span>
                     </div>
                 </div>
-                <div class="row mb-1">
-                    <div class="col-md-12">
-                        <span id="his_terapi">
-                            <?php
-                            $emr_per_barang = $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $p->no_trx]);
-
-                            if (empty($emr_per_barang)) {
-                                echo '-';
-                            } else {
-                                if (count($emr_per_barang) > 1) {
-                                    $br = '<br>';
-                                } else {
-                                    $br = '';
-                                }
-
-                                foreach ($emr_per_barang as $epb) :
-                                    $barang = $this->M_global->getData('barang', ['kode_barang' => $epb->kode_barang]);
-                                    $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $epb->kode_satuan]);
-                                    echo $barang->nama . ' | ' . $epb->qty . ' ' . $satuan->keterangan . ' | ' . $epb->signa . $br;
-                                endforeach;
-
-                                if ($emr_per->eracikan != '') {
-                                    echo '<br>' . $emr_per->eracikan;
-                                }
-                            }
-
-                            ?>
-                        </span>
-                    </div>
-                </div>
                 <hr>
                 <div class="row mb-1">
                     <div class="col-md-12">
-                        <span class="font-weight-bold">Rencana
+                        <span class="font-weight-bold">Anjuran
                             <?php if (($cek_dokter) || ($this->session->userdata('kode_role') == 'R0001')) : ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
@@ -823,6 +801,10 @@ class Emr extends CI_Controller
         $tb                   = htmlspecialchars($this->input->post('tb'));
         $pernapasan           = htmlspecialchars($this->input->post('pernapasan'));
         $saturasi             = htmlspecialchars($this->input->post('saturasi'));
+        $gizi                 = $this->input->post('gizi');
+        $hamil                = $this->input->post('hamil');
+        $hpht                 = $this->input->post('hpht');
+        $keterangan_hamil     = htmlspecialchars($this->input->post('keterangan_hamil'));
         $scale                = htmlspecialchars($this->input->post('scale'));
         $bicara               = htmlspecialchars($this->input->post('bicara'));
         $gangguan             = htmlspecialchars($this->input->post('gangguan_bcr'));
@@ -833,6 +815,10 @@ class Emr extends CI_Controller
         $eracikan             = htmlspecialchars($this->input->post('eracikan'));
         $date_per             = date('Y-m-d');
         $time_per             = date('H:i:s');
+        $sempoyongan          = $this->input->post('sempoyongan');
+        $berjalan_dgn_alat    = $this->input->post('berjalan_dgn_alat');
+        $penompang            = $this->input->post('penompang');
+        $keterangan_assesment = $this->input->post('keterangan_assesment');
 
         $kode_barang          = $this->input->post('kode_barang');
         $kode_satuan          = $this->input->post('kode_satuan');
@@ -844,29 +830,37 @@ class Emr extends CI_Controller
 
         // tampung dalam array
         $data = [
-            'no_trx'            => $no_trx,
-            'kode_member'       => $kode_member,
-            'umur'              => $umur,
-            'date_per'          => $date_per,
-            'time_per'          => $time_per,
-            'penyakit_keluarga' => $penyakit_keluarga,
-            'alergi'            => $alergi,
-            'tekanan_darah'     => (($tekanan_darah) ? $tekanan_darah : '-'),
-            'nadi'              => (($nadi) ? $nadi : '-'),
-            'suhu'              => (($suhu) ? $suhu : '-'),
-            'bb'                => (($bb) ? $bb : '-'),
-            'tb'                => (($tb) ? $tb : '-'),
-            'pernapasan'        => (($pernapasan) ? $pernapasan : '-'),
-            'saturasi'          => (($saturasi) ? $saturasi : '-'),
-            'scale'             => $scale,
-            'bicara'            => $bicara,
-            'gangguan'          => $gangguan,
-            'emosi'             => $emosi,
-            'spiritual'         => $spiritual,
-            'diagnosa_per'      => $diagnosa_per,
-            'anamnesa_per'      => $anamnesa_per,
-            'eracikan'          => $eracikan,
-            'kode_user'         => $this->data['kode_user'],
+            'no_trx'                => $no_trx,
+            'kode_member'           => $kode_member,
+            'umur'                  => $umur,
+            'date_per'              => $date_per,
+            'time_per'              => $time_per,
+            'sempoyongan'           => $sempoyongan,
+            'berjalan_dgn_alat'     => $berjalan_dgn_alat,
+            'penompang'             => $penompang,
+            'keterangan_assesment'  => $keterangan_assesment,
+            'penyakit_keluarga'     => $penyakit_keluarga,
+            'alergi'                => $alergi,
+            'tekanan_darah'         => (($tekanan_darah) ? $tekanan_darah : '-'),
+            'nadi'                  => (($nadi) ? $nadi : '-'),
+            'suhu'                  => (($suhu) ? $suhu : '-'),
+            'bb'                    => (($bb) ? $bb : '-'),
+            'tb'                    => (($tb) ? $tb : '-'),
+            'pernapasan'            => (($pernapasan) ? $pernapasan : '-'),
+            'saturasi'              => (($saturasi) ? $saturasi : '-'),
+            'gizi'                  => (($gizi) ? $gizi : '-'),
+            'hamil'                 => $hamil,
+            'hpht'                  => $hpht,
+            'keterangan_hamil'      => $keterangan_hamil,
+            'scale'                 => $scale,
+            'bicara'                => $bicara,
+            'gangguan'              => $gangguan,
+            'emosi'                 => $emosi,
+            'spiritual'             => $spiritual,
+            'diagnosa_per'          => $diagnosa_per,
+            'anamnesa_per'          => $anamnesa_per,
+            'eracikan'              => $eracikan,
+            'kode_user'             => $this->data['kode_user'],
         ];
 
         // pengecekan data emr perawat

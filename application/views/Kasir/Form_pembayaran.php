@@ -41,7 +41,7 @@
                                         <select name="no_trx" id="no_trx" class="form-control select2_global" data-placeholder="~ Pilih Pendaftaran" onchange="getPendaftaran(this.value)">
                                             <option value="">~ Pilih Pendaftaran</option>
                                             <?php foreach ($pendaftaran as $p): ?>
-                                                <option value="<?= $p->no_trx ?>" <?= (!empty($data_pembayaran) ? (($data_pembayaran->no_trx == $p->no_trx) ? 'selected' : '') : '') ?>><?= $p->no_trx . ' | Tgl/Jam: ' . $p->tgl_daftar . '/' . $p->jam_daftar . ' | Poli/Dokter: ' . $this->M_global->getData('m_poli', ['kode_poli' => $p->kode_poli])->keterangan . '/' . $this->M_global->getData('dokter', ['kode_dokter' => $p->kode_dokter])->nama ?></option>
+                                                <option value="<?= $p->no_trx ?>" <?= (!empty($pendaftaran2) ? (($p->no_trx == $pendaftaran2->no_trx) ? 'selected' : '') : ((!empty($data_pembayaran) ? (($data_pembayaran->no_trx == $p->no_trx) ? 'selected' : '') : ''))) ?>><?= $p->no_trx . ' | Tgl/Jam: ' . $p->tgl_daftar . '/' . $p->jam_daftar . ' | Poli/Dokter: ' . $this->M_global->getData('m_poli', ['kode_poli' => $p->kode_poli])->keterangan . '/' . $this->M_global->getData('dokter', ['kode_dokter' => $p->kode_dokter])->nama ?></option>
                                             <?php endforeach ?>
                                         </select>
                                     </div>
@@ -597,6 +597,8 @@
     if (cek_param !== '' && cek_param !== '0') {
         cekPendaftaran(cek_param);
         // alert(cek_param)
+    } else if ('<?= $no_trx ?>' != '') {
+        cekPendaftaran('<?= $pendaftaran2->no_trx ?>');
     }
 
     function cekPendaftaran(param) {

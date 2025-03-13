@@ -184,6 +184,20 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     </div>
                                 </div>
                                 <div class="row mb-3">
+                                    <label for="" class="form-label col-md-3">Perawat</label>
+                                    <?php
+                                    if (!empty($emr_per)) {
+                                        $kode_per = $emr_per->kode_user;
+                                    } else {
+                                        $kode_per = $this->session->userdata('kode_user');
+                                    }
+                                    ?>
+                                    <div class="col-md-9">
+                                        <input type="hidden" class="form-control" id="kode_perawat" name="kode_perawat" value="<?= $kode_per ?>" readonly>
+                                        <input type="text" class="form-control" id="kode_dokter1" name="kode_dokter1" value="<?= $this->M_global->getData('user', ['kode_user' => $kode_per])->nama ?>" readonly>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
                                     <label for="" class="form-label col-md-3">Episode</label>
                                     <div class="col-md-9">
                                         <input type="text" class="form-control" id="episode" name="episode" value="<?= ($pendaftaran) ? count($this->M_global->getDataResult('pendaftaran', ['kode_member' => $pendaftaran->kode_member])) : '0' ?>" readonly>
@@ -205,457 +219,589 @@ if (is_array($p_kel) && !empty($p_kel)) {
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <span class="font-weight-bold h4 text-primary"><i class="fa-solid fa-bookmark text-primary"></i> Anamnesa Perawat **</span>
+                    <div class="card-header text-center card-outline card-primary">
+                        <button type="button" id="btn_assesment" class="btn btn-primary" onclick="sel_tab_emr(1)">Assesment</button>
+                        <button type="button" id="btn_pemeriksaan" class="btn" onclick="sel_tab_emr(2)">Pemeriksaan</button>
+                        <button type="button" id="btn_psiko" class="btn" onclick="sel_tab_emr(3)">Psikologi & Spiritual</button>
+                        <button type="button" id="btn_order" class="btn" onclick="sel_tab_emr(4)">E-Order</button>
                     </div>
                     <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <textarea name="anamnesa_per" id="anamnesa_per" class="form-control" rows="5"><?= ((!empty($emr_per)) ? $emr_per->anamnesa_per : '') ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <span class="font-weight-bold h4 text-primary"><i class="fa-solid fa-bookmark text-primary"></i> Riwayat Kesehatan</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <label for="" class="form-label col-md-3">Penyakit Keluarga</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="penyakit_keluarga_his" name="penyakit_keluarga_his" class="form-control mb-3" readonly value="<?= $p_kel ?>">
-                                        <textarea name="penyakit_keluarga" id="penyakit_keluarga" class="form-control" rows="3" placeholder="Penyakit Baru..."><?= ((!empty($emr_per)) ? $emr_per->penyakit_keluarga : '') ?></textarea>
+                        <div id="assesment_emr">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="sempoyongan" class="form-label col-md-3">Sempoyongan</label>
+                                        <div class="col-md-9">
+                                            <select name="sempoyongan" id="sempoyongan" class="form-control select2_global" data-placeholder="~ Pilih Cara Berjalan" onchange="cek_resiko()">
+                                                <option value="">~ Pilih Cara Berjalan</option>
+                                                <option value="0" <?= (!empty($emr_per) ? (($emr_per->sempoyongan == 0) ? 'selected' : '') : 'selected') ?>>Tidak</option>
+                                                <option value="1" <?= (!empty($emr_per) ? (($emr_per->sempoyongan == 1) ? 'selected' : '') : '') ?>>Ya</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="berjalan_dgn_alat" class="form-label col-md-3">Berjalan dgn Alat</label>
+                                        <div class="col-md-9">
+                                            <select name="berjalan_dgn_alat" id="berjalan_dgn_alat" class="form-control select2_global" data-placeholder="~ Pilih Cara Berjalan" onchange="cek_resiko()">
+                                                <option value="">~ Pilih Cara Berjalan</option>
+                                                <option value="0" <?= (!empty($emr_per) ? (($emr_per->berjalan_dgn_alat == 0) ? 'selected' : '') : 'selected') ?>>Tidak</option>
+                                                <option value="1" <?= (!empty($emr_per) ? (($emr_per->berjalan_dgn_alat == 1) ? 'selected' : '') : '') ?>>Ya</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <label for="" class="form-label col-md-3">Alergi</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="alergi_his" name="alergi_his" class="form-control mb-3" readonly value="<?= $alr ?>">
-                                        <textarea name="alergi" id="alergi" class="form-control" rows="3" placeholder="Alergi Baru..."><?= ((!empty($emr_per)) ? $emr_per->alergi : '') ?></textarea>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="penompang" class="form-label col-md-3">Penompang duduk</label>
+                                        <div class="col-md-9">
+                                            <select name="penompang" id="penompang" class="form-control select2_global" data-placeholder="~ Pilih Penompang" onchange="cek_resiko()">
+                                                <option value="">~ Pilih Cara Berjalan</option>
+                                                <option value="0" <?= (!empty($emr_per) ? (($emr_per->penompang == 0) ? 'selected' : '') : 'selected') ?>>Tidak</option>
+                                                <option value="1" <?= (!empty($emr_per) ? (($emr_per->penompang == 1) ? 'selected' : '') : '') ?>>Ya</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6"></div>
+                            </div>
+                            <hr>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="hasil" class="form-label col-md-3">Hasil</label>
+                                        <div class="col-md-9">
+                                            <input type="text" name="hasil" id="hasil" class="form-control" readonly value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="nilai" class="form-label col-md-3">Nilai</label>
+                                        <div class="col-md-9">
+                                            <input type="text" name="nilai" id="nilai" class="form-control" readonly value="">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <span class="font-weight-bold h4 text-primary"><i class="fa-solid fa-bookmark text-primary"></i> Pemeriksaan Fisik</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <div class="row mb-3">
-                                    <label for="" class="form-label col-md-6 m-auto">Tekanan Darah (mmHg)</label>
-                                    <div class="col-md-6">
-                                        <input type="text" id="tekanan_darah" name="tekanan_darah" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->tekanan_darah : '') ?>">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="" class="form-label col-md-6 m-auto">Nadi (x/mnt)</label>
-                                    <div class="col-md-6">
-                                        <input type="text" id="nadi" name="nadi" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->nadi : '') ?>">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="" class="form-label col-md-6 m-auto">Suhu (°c)</label>
-                                    <div class="col-md-6">
-                                        <input type="text" id="suhu" name="suhu" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->suhu : '') ?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="row mb-3">
-                                    <label for="" class="form-label col-md-6 m-auto">Berat Badan (kg)</label>
-                                    <div class="col-md-6">
-                                        <input type="text" id="bb" name="bb" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->bb : '') ?>">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="" class="form-label col-md-6 m-auto">Tinggi Badan (cm)</label>
-                                    <div class="col-md-6">
-                                        <input type="text" id="tb" name="tb" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->tb : '') ?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="row mb-3">
-                                    <label for="" class="form-label col-md-6 m-auto">Pernapasan (x/mnt)</label>
-                                    <div class="col-md-6">
-                                        <input type="text" id="pernapasan" name="pernapasan" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->pernapasan : '') ?>">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="" class="form-label col-md-6 m-auto">Saturasi O2 (%)</label>
-                                    <div class="col-md-6">
-                                        <input type="text" id="saturasi" name="saturasi" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->saturasi : '') ?>">
-                                    </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <textarea name="keterangan_assesmnet" id="keterangan_assesmnet" class="form-control" rows="3" placeholder="Keterangan Lain"><?= (!empty($emr_per) ? $emr_per->keterangan_assesment : '') ?></textarea>
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <img src="<?= base_url() ?>assets/img/emr/scale.jpg" width="100%">
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card-footer">
-                                    <span class="h5 font-weight-bold">Skala Nyeri</span>
+                        <div id="pemeriksaan_emr">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="anamnesa_per" class="form-label col-md-3">Anamnesa **</label>
+                                        <div class="col-md-9">
+                                            <textarea name="anamnesa_per" id="anamnesa_per" class="form-control" rows="3" placeholder="Anamnesa Perawat..."><?= ((!empty($emr_per)) ? $emr_per->anamnesa_per : '') ?></textarea>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <div class="table-responsive">
-                                            <input type="hidden" id="scale" name="scale" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->scale : '1') ?>">
-                                            <table>
-                                                <tr>
-                                                    <td style="width: 20%;">
-                                                        <input type="checkbox" id="scale1" class="form-control" onclick="cek_scale('1')">
-                                                    </td>
-                                                    <td style="width: 80%;">
-                                                        <label for="">&nbsp; (Skala Nyeri 0-1) Tidak Ada Rasa Sakit</label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 20%;">
-                                                        <input type="checkbox" id="scale2" class="form-control" onclick="cek_scale('2')">
-                                                    </td>
-                                                    <td style="width: 80%;">
-                                                        <label for="">&nbsp; (Skala Nyeri 2-3) Nyeri Ringan</label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 20%;">
-                                                        <input type="checkbox" id="scale3" class="form-control" onclick="cek_scale('3')">
-                                                    </td>
-                                                    <td style="width: 80%;">
-                                                        <label for="">&nbsp; (Skala Nyeri 4-5) Nyeri Sedang</label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 20%;">
-                                                        <input type="checkbox" id="scale4" class="form-control" onclick="cek_scale('4')">
-                                                    </td>
-                                                    <td style="width: 80%;">
-                                                        <label for="">&nbsp; (Skala Nyeri 6-7) Nyeri Parah</label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 20%;">
-                                                        <input type="checkbox" id="scale5" class="form-control" onclick="cek_scale('5')">
-                                                    </td>
-                                                    <td style="width: 80%;">
-                                                        <label for="">&nbsp; (Skala Nyeri 8-9) Nyeri Sangat Parah</label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 20%;">
-                                                        <input type="checkbox" id="scale6" class="form-control" onclick="cek_scale('6')">
-                                                    </td>
-                                                    <td style="width: 80%;">
-                                                        <label for="">&nbsp; (Skala Nyeri 10 >) Nyeri Sangat Buruk</label>
-                                                    </td>
-                                                </tr>
-                                            </table>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="diagnosa_per" class="form-label col-md-3">Diagnosa **</label>
+                                        <div class="col-md-9">
+                                            <textarea name="diagnosa_per" id="diagnosa_per" class="form-control" rows="3" placeholder="Diagnosa Perawat..."><?= ((!empty($emr_per)) ? $emr_per->diagnosa_per : '') ?></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="penyakit_keluarga_his" class="form-label col-md-3">Penyakit Keluarga</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="penyakit_keluarga_his" name="penyakit_keluarga_his" class="form-control mb-3" readonly value="<?= $p_kel ?>">
+                                            <textarea name="penyakit_keluarga" id="penyakit_keluarga" class="form-control" rows="3" placeholder="Penyakit Baru..."><?= ((!empty($emr_per)) ? $emr_per->penyakit_keluarga : '') ?></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="alergi_his" class="form-label col-md-3">Alergi</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="alergi_his" name="alergi_his" class="form-control mb-3" readonly value="<?= $alr ?>">
+                                            <textarea name="alergi" id="alergi" class="form-control" rows="3" placeholder="Alergi Baru..."><?= ((!empty($emr_per)) ? $emr_per->alergi : '') ?></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="tekanan_darah" class="form-label col-md-3">Tekanan Darah</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="tekanan_darah" name="tekanan_darah" class="form-control" placeholder="mmHg" value="<?= ((!empty($emr_per)) ? $emr_per->tekanan_darah : '') ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="nadi" class="form-label col-md-3">Nadi</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="nadi" name="nadi" class="form-control" placeholder="x/mnt" value="<?= ((!empty($emr_per)) ? $emr_per->nadi : '') ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="suhu" class="form-label col-md-3">Suhu</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="suhu" name="suhu" class="form-control" placeholder="°c" value="<?= ((!empty($emr_per)) ? $emr_per->suhu : '') ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="bb" class="form-label col-md-3">Berat Badan</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="bb" name="bb" class="form-control" placeholder="kg" value="<?= ((!empty($emr_per)) ? $emr_per->bb : '') ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="tb" class="form-label col-md-3">Tinggi Badan</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="tb" name="tb" class="form-control" placeholder="cm" value="<?= ((!empty($emr_per)) ? $emr_per->tb : '') ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="pernapasan" class="form-label col-md-3">Pernapasan</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="pernapasan" name="pernapasan" class="form-control" placeholder="x/mnt" value="<?= ((!empty($emr_per)) ? $emr_per->pernapasan : '') ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="saturasi" class="form-label col-md-3">Saturasi O2</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="saturasi" name="saturasi" class="form-control" placeholder="%" value="<?= ((!empty($emr_per)) ? $emr_per->saturasi : '') ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="gizi" class="form-label col-md-3">Status Gizi</label>
+                                        <div class="col-md-9">
+                                            <select name="gizi" id="gizi" class="form-control select2_global" data-placeholder="~ Pilih Status Gizi">
+                                                <option value="">~ Pilih Status Gizi</option>
+                                                <option value="0" <?= (!empty($emr_per) ? (($emr_per->gizi == 0) ? 'selected' : '') : '') ?>>Gizi Buruk</option>
+                                                <option value="1" <?= (!empty($emr_per) ? (($emr_per->gizi == 1) ? 'selected' : '') : '') ?>>Gizi Kurang</option>
+                                                <option value="2" <?= (!empty($emr_per) ? (($emr_per->gizi == 2) ? 'selected' : '') : 'selected') ?>>Gizi Cukup</option>
+                                                <option value="3" <?= (!empty($emr_per) ? (($emr_per->gizi == 3) ? 'selected' : '') : '') ?>>Gizi Lebih</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="hamil" class="form-label col-md-3">Status Hamil</label>
+                                        <div class="col-md-9">
+                                            <select name="hamil" id="hamil" class="form-control select2_global" data-placeholder="~ Pilih Status">
+                                                <option value="">~ Pilih Status</option>
+                                                <option value="0" <?= (!empty($emr_per) ? (($emr_per->hamil == 0) ? 'selected' : '') : 'selected') ?>>Tidak</option>
+                                                <option value="1" <?= (!empty($emr_per) ? (($emr_per->hamil == 1) ? 'selected' : '') : '') ?>>Ya</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="hpht" class="form-label col-md-3">HPHT</label>
+                                        <div class="col-md-9">
+                                            <input type="date" name="hpht" id="hpht" class="form-control" value="<?= (!empty($emr_per) ? date('Y-m-d', strtotime($emr_per->hpht)) : '') ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <textarea name="keterangan_hamil" id="keterangan_hamil" class="form-control" rows="3" placeholder="Keterangan Hamil..."><?= (!empty($emr_per) ? $emr_per->keterangan_hamil : '') ?></textarea>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <img src="<?= base_url() ?>assets/img/emr/scale.jpg" width="100%">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <span class="h5 font-weight-bold">Skala Nyeri</span>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <input type="hidden" id="scale" name="scale" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->scale : '1') ?>">
+                                                <table>
+                                                    <tr>
+                                                        <td style="width: 20%;">
+                                                            <input type="checkbox" id="scale1" class="form-control" onclick="cek_scale('1')">
+                                                        </td>
+                                                        <td style="width: 80%;">
+                                                            <label for="">&nbsp; (Skala Nyeri 0-1) Tidak Ada Rasa Sakit</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="width: 20%;">
+                                                            <input type="checkbox" id="scale2" class="form-control" onclick="cek_scale('2')">
+                                                        </td>
+                                                        <td style="width: 80%;">
+                                                            <label for="">&nbsp; (Skala Nyeri 2-3) Nyeri Ringan</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="width: 20%;">
+                                                            <input type="checkbox" id="scale3" class="form-control" onclick="cek_scale('3')">
+                                                        </td>
+                                                        <td style="width: 80%;">
+                                                            <label for="">&nbsp; (Skala Nyeri 4-5) Nyeri Sedang</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="width: 20%;">
+                                                            <input type="checkbox" id="scale4" class="form-control" onclick="cek_scale('4')">
+                                                        </td>
+                                                        <td style="width: 80%;">
+                                                            <label for="">&nbsp; (Skala Nyeri 6-7) Nyeri Parah</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="width: 20%;">
+                                                            <input type="checkbox" id="scale5" class="form-control" onclick="cek_scale('5')">
+                                                        </td>
+                                                        <td style="width: 80%;">
+                                                            <label for="">&nbsp; (Skala Nyeri 8-9) Nyeri Sangat Parah</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="width: 20%;">
+                                                            <input type="checkbox" id="scale6" class="form-control" onclick="cek_scale('6')">
+                                                        </td>
+                                                        <td style="width: 80%;">
+                                                            <label for="">&nbsp; (Skala Nyeri 10 >) Nyeri Sangat Buruk</label>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-footer">
-                        <span class="font-weight-bold h4 text-primary"><i class="fa-solid fa-bookmark text-primary"></i> Komunikasi, Emosional & Spiritual</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <div class="table-responsive">
-                                    <input type="hidden" id="bicara" name="bicara" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->bicara : '1') ?>">
-                                    <table cellpadding="10px" width="100%">
-                                        <tr>
-                                            <td style="width: 5%;">
-                                                <input type="radio" id="bicara1" class="form-control" onclick="cek_bcr(1)">
-                                            </td>
-                                            <td style="width: 25%;">
-                                                <label for="">&nbsp;&nbsp;&nbsp; Bicara Normal</label>
-                                            </td>
-                                            <td style="width: 5%;">
-                                                <input type="radio" id="bicara2" class="form-control" onclick="cek_bcr(2)">
-                                            </td>
-                                            <td style="width: 25%;">
-                                                <label for="">&nbsp;&nbsp;&nbsp; Bicara Terganggu</label>
-                                            </td>
-                                            <td style="width: 40%;">
-                                                <textarea name="gangguan_bcr" id="gangguan_bcr" class="form-control" rows="3" placeholder="Keterangan Gangguan Bicara..."><?= ((!empty($emr_per)) ? $emr_per->gangguan : '1') ?></textarea>
-                                            </td>
-                                        </tr>
-                                    </table>
+                        <div id="psiko_emr">
+                            <div class="row mb-3">
+                                <div class="col-md-2 my-auto">
+                                    <label for="" class="form-label">Cara Bicara</label>
                                 </div>
-                                <hr>
-                                <div class="table-responsive">
-                                    <input type="hidden" id="emosi" name="emosi" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->emosi : '1') ?>">
-                                    <table cellpadding="10px" width="100%">
-                                        <tr>
-                                            <td style="width: 5%;">
-                                                <input type="radio" id="emosi1" class="form-control" onclick="cek_emosi(1)">
-                                            </td>
-                                            <td style="width: 25%;">
-                                                <label for="">&nbsp;&nbsp;&nbsp; Tenang</label>
-                                            </td>
-                                            <td style="width: 5%;">
-                                                <input type="radio" id="emosi2" class="form-control" onclick="cek_emosi(2)">
-                                            </td>
-                                            <td style="width: 25%;">
-                                                <label for="">&nbsp;&nbsp;&nbsp; Gelisah</label>
-                                            </td>
-                                            <td style="width: 5%;">
-                                                <input type="radio" id="emosi3" class="form-control" onclick="cek_emosi(3)">
-                                            </td>
-                                            <td style="width: 25%;">
-                                                <label for="">&nbsp;&nbsp;&nbsp; Emosional</label>
-                                            </td>
-                                            <td style="width: 15%;"></td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <hr>
-                                <div class="table-responsive">
-                                    <input type="hidden" id="spiritual" name="spiritual" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->spiritual : '1') ?>">
-                                    <table cellpadding="10px" width="100%">
-                                        <tr>
-                                            <td style="width: 5%;">
-                                                <input type="radio" id="spiritual1" class="form-control" onclick="cek_spiritual(1)">
-                                            </td>
-                                            <td style="width: 25%;">
-                                                <label for="">&nbsp;&nbsp;&nbsp; Berdiri</label>
-                                            </td>
-                                            <td style="width: 5%;">
-                                                <input type="radio" id="spiritual2" class="form-control" onclick="cek_spiritual(2)">
-                                            </td>
-                                            <td style="width: 25%;">
-                                                <label for="">&nbsp;&nbsp;&nbsp; Duduk</label>
-                                            </td>
-                                            <td style="width: 5%;">
-                                                <input type="radio" id="spiritual3" class="form-control" onclick="cek_spiritual(3)">
-                                            </td>
-                                            <td style="width: 25%;">
-                                                <label for="">&nbsp;&nbsp;&nbsp; Berbaring</label>
-                                            </td>
-                                            <td style="width: 15%;"></td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <span class="font-weight-bold h4 text-primary"><i class="fa-solid fa-bookmark text-primary"></i> Diagnosa Keperawatan **</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <textarea name="diagnosa_per" id="diagnosa_per" class="form-control" rows="5" placeholder="Diagnosa Perawat..."><?= ((!empty($emr_per)) ? $emr_per->diagnosa_per : '') ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <span class="font-weight-bold h4 text-primary"><i class="fa-solid fa-bookmark text-primary"></i> E-Order</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <button class="btn btn-primary w-100 mb-1" type="button" onclick="sel_tab(0)" id="btn_etarif">E-Tarif</button>
-                                        <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(1)" id="btn_eresep">E-Resep</button>
-                                        <!-- <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(2)" id="btn_elab">E-Laboratorium</button>
-                                        <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(3)" id="btn_erad">E-Radiologi</button> -->
+                                <div class="col-md-10">
+                                    <div class="table-responsive">
+                                        <input type="hidden" id="bicara" name="bicara" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->bicara : '1') ?>">
+                                        <table cellpadding="10px" width="100%">
+                                            <tr>
+                                                <td style="width: 5%;">
+                                                    <input type="radio" id="bicara1" class="form-control" onclick="cek_bcr(1)">
+                                                </td>
+                                                <td style="width: 25%;">
+                                                    <span for="">&nbsp;&nbsp;&nbsp; Bicara Normal</span>
+                                                </td>
+                                                <td style="width: 5%;">
+                                                    <input type="radio" id="bicara2" class="form-control" onclick="cek_bcr(2)">
+                                                </td>
+                                                <td style="width: 25%;">
+                                                    <span for="">&nbsp;&nbsp;&nbsp; Bicara Terganggu</span>
+                                                </td>
+                                                <td style="width: 40%;">
+                                                    <textarea name="gangguan_bcr" id="gangguan_bcr" class="form-control" rows="1" placeholder="Keterangan Gangguan Bicara..."><?= ((!empty($emr_per)) ? $emr_per->gangguan : '') ?></textarea>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </div>
-                                    <div class="col-md-10">
-                                        <div class="card w-100 h-100">
-                                            <div class="card-header">
-                                                <span class="h4" id="title_tab">E-Tarif / Tindakan</span>
-                                            </div>
-                                            <div class="card-body">
-                                                <div id="tab_etarif">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <div class="table-responsive">
-                                                                <table class="table table-hover table-bordered" id="table_etarif" width="100%" style="border-radius: 10px;">
-                                                                    <thead>
-                                                                        <tr class="text-center">
-                                                                            <th width="5%" style="border-radius: 10px 0px 0px 0px;">Hapus</th>
-                                                                            <th width="85%">Tindakan</th>
-                                                                            <th width="10%">Qty</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody id="body_etarif">
-                                                                        <?php if (!empty($eresep)) : ?>
-                                                                            <?php $no_etarif = 1;
-                                                                            foreach ($etarif as $et) : ?>
-                                                                                <tr id="row_etarif<?= $no_etarif ?>">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-2 my-auto">
+                                    <label for="" class="form-label">Psikologi</label>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="table-responsive">
+                                        <input type="hidden" id="emosi" name="emosi" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->emosi : '1') ?>">
+                                        <table cellpadding="10px" width="100%">
+                                            <tr>
+                                                <td style="width: 5%;">
+                                                    <input type="radio" id="emosi1" class="form-control" onclick="cek_emosi(1)">
+                                                </td>
+                                                <td style="width: 25%;">
+                                                    <span for="">&nbsp;&nbsp;&nbsp; Tenang</span>
+                                                </td>
+                                                <td style="width: 5%;">
+                                                    <input type="radio" id="emosi2" class="form-control" onclick="cek_emosi(2)">
+                                                </td>
+                                                <td style="width: 25%;">
+                                                    <span for="">&nbsp;&nbsp;&nbsp; Gelisah</span>
+                                                </td>
+                                                <td style="width: 5%;">
+                                                    <input type="radio" id="emosi3" class="form-control" onclick="cek_emosi(3)">
+                                                </td>
+                                                <td style="width: 25%;">
+                                                    <span for="">&nbsp;&nbsp;&nbsp; Emosional</span>
+                                                </td>
+                                                <td style="width: 15%;"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-2 my-auto">
+                                    <label for="" class="form-label">Spiritual</label>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="table-responsive">
+                                        <input type="hidden" id="spiritual" name="spiritual" class="form-control" value="<?= ((!empty($emr_per)) ? $emr_per->spiritual : '1') ?>">
+                                        <table cellpadding="10px" width="100%">
+                                            <tr>
+                                                <td style="width: 5%;">
+                                                    <input type="radio" id="spiritual1" class="form-control" onclick="cek_spiritual(1)">
+                                                </td>
+                                                <td style="width: 25%;">
+                                                    <span for="">&nbsp;&nbsp;&nbsp; Berdiri</span>
+                                                </td>
+                                                <td style="width: 5%;">
+                                                    <input type="radio" id="spiritual2" class="form-control" onclick="cek_spiritual(2)">
+                                                </td>
+                                                <td style="width: 25%;">
+                                                    <span for="">&nbsp;&nbsp;&nbsp; Duduk</span>
+                                                </td>
+                                                <td style="width: 5%;">
+                                                    <input type="radio" id="spiritual3" class="form-control" onclick="cek_spiritual(3)">
+                                                </td>
+                                                <td style="width: 25%;">
+                                                    <span for="">&nbsp;&nbsp;&nbsp; Berbaring</span>
+                                                </td>
+                                                <td style="width: 15%;"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="order_emr">
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <button class="btn btn-primary w-100 mb-1" type="button" onclick="sel_tab(0)" id="btn_etarif">Tarif</button>
+                                            <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(1)" id="btn_eresep">Resep</button>
+                                            <!-- <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(2)" id="btn_elab">E-Laboratorium</button>
+                                        <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(3)" id="btn_erad">E-Radiologi</button> -->
+                                        </div>
+                                        <div class="col-md-10">
+                                            <div class="card w-100 h-100">
+                                                <div class="card-header">
+                                                    <span class="h4" id="title_tab">Tarif / Tindakan</span>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div id="tab_etarif">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-hover table-bordered" id="table_etarif" width="100%" style="border-radius: 10px;">
+                                                                        <thead>
+                                                                            <tr class="text-center">
+                                                                                <th width="5%" style="border-radius: 10px 0px 0px 0px;">Hapus</th>
+                                                                                <th width="85%">Tindakan</th>
+                                                                                <th width="10%">Qty</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody id="body_etarif">
+                                                                            <?php if (!empty($eresep)) : ?>
+                                                                                <?php $no_etarif = 1;
+                                                                                foreach ($etarif as $et) : ?>
+                                                                                    <tr id="row_etarif<?= $no_etarif ?>">
+                                                                                        <td class="text-center">
+                                                                                            <button class="btn btn-sm btn-danger" type="button" id="btnHapusT<?= $no_etarif ?>" onclick="hapusTarif('<?= $no_etarif ?>')"><i class="fa-solid fa-delete-left"></i></button>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <select name="kode_tarif[]" id="kode_tarif<?= $no_etarif ?>" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tindakan">
+                                                                                                <?php $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $et->kode_tarif]); ?>
+                                                                                                <option value="<?= $et->kode_tarif ?>"><?= $tarif->nama ?></option>
+                                                                                            </select>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input type="text" id="qty_tarif<?= $no_etarif ?>" name="qty_tarif[]" value="<?= number_format($et->qty) ?>" min="1" class="form-control text-right" onchange="formatRp(this.value, 'qty_tarif<?= $no_etarif ?>')">
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                <?php $no_etarif++;
+                                                                                endforeach ?>
+                                                                            <?php else : ?>
+                                                                                <tr id="row_etarif1">
                                                                                     <td class="text-center">
-                                                                                        <button class="btn btn-sm btn-danger" type="button" id="btnHapusT<?= $no_etarif ?>" onclick="hapusTarif('<?= $no_etarif ?>')"><i class="fa-solid fa-delete-left"></i></button>
+                                                                                        <button class="btn btn-sm btn-danger" type="button" id="btnHapusT1" onclick="hapusTarif('1')"><i class="fa-solid fa-delete-left"></i></button>
                                                                                     </td>
                                                                                     <td>
-                                                                                        <select name="kode_tarif[]" id="kode_tarif<?= $no_etarif ?>" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tindakan">
-                                                                                            <?php $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $et->kode_tarif]); ?>
-                                                                                            <option value="<?= $et->kode_tarif ?>"><?= $tarif->nama ?></option>
+                                                                                        <select name="kode_tarif[]" id="kode_tarif1" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tindakan">
+                                                                                            <option value="">~ Pilih Tindakan</option>
                                                                                         </select>
                                                                                     </td>
                                                                                     <td>
-                                                                                        <input type="text" id="qty_tarif<?= $no_etarif ?>" name="qty_tarif[]" value="<?= number_format($et->qty) ?>" min="1" class="form-control text-right" onchange="formatRp(this.value, 'qty_tarif<?= $no_etarif ?>')">
+                                                                                        <input type="text" id="qty_tarif1" name="qty_tarif[]" value="1" min="1" class="form-control text-right" onchange="formatRp(this.value, 'qty_tarif1')">
                                                                                     </td>
                                                                                 </tr>
-                                                                            <?php $no_etarif++;
-                                                                            endforeach ?>
-                                                                        <?php else : ?>
-                                                                            <tr id="row_etarif1">
-                                                                                <td class="text-center">
-                                                                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapusT1" onclick="hapusTarif('1')"><i class="fa-solid fa-delete-left"></i></button>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <select name="kode_tarif[]" id="kode_tarif1" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tindakan">
-                                                                                        <option value="">~ Pilih Tindakan</option>
-                                                                                    </select>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <input type="text" id="qty_tarif1" name="qty_tarif[]" value="1" min="1" class="form-control text-right" onchange="formatRp(this.value, 'qty_tarif1')">
-                                                                                </td>
-                                                                            </tr>
-                                                                        <?php endif; ?>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <button type="button" class="btn btn-primary" onclick="addTarif()" id="btnCari" <?= $btn_diss ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
-                                                                    <button type="button" class="btn btn-danger float-right" onclick="emptyTarif()" id="btnEmpty" <?= $btn_diss ?>><i class="fa-solid fa-trash"></i>&nbsp;&nbsp;Hapus Semua</button>
+                                                                            <?php endif; ?>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <button type="button" class="btn btn-primary" onclick="addTarif()" id="btnCari" <?= $btn_diss ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                                                                        <button type="button" class="btn btn-danger float-right" onclick="emptyTarif()" id="btnEmpty" <?= $btn_diss ?>><i class="fa-solid fa-trash"></i>&nbsp;&nbsp;Hapus Semua</button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div id="tab_eresep">
-                                                    <div class="row">
-                                                        <div class="col-md-8">
-                                                            <div class="row mb-3">
-                                                                <div class="col-md-12">
-                                                                    <span class="h4">Resep</span>
+                                                    <div id="tab_eresep">
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <div class="row mb-3">
+                                                                    <div class="col-md-12">
+                                                                        <span class="h4">Resep</span>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <div class="table-responsive">
-                                                                        <table class="table table-hover table-bordered" id="table_eresep" width="100%" style="border-radius: 10px;">
-                                                                            <thead>
-                                                                                <tr class="text-center">
-                                                                                    <th width="5%" style="border-radius: 10px 0px 0px 0px;">Hapus</th>
-                                                                                    <th width="30%">Barang</th>
-                                                                                    <th width="15%">Satuan</th>
-                                                                                    <th width="15%">Qty</th>
-                                                                                    <th width="35%" style="border-radius: 0px 10px 0px 0px;">Signa</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody id="body_eresep">
-                                                                                <?php if (!empty($eresep)) : ?>
-                                                                                    <?php $no_eresep = 1;
-                                                                                    foreach ($eresep as $er) : ?>
-                                                                                        <tr id="row_eresep<?= $no_eresep ?>">
-                                                                                            <td width="5%" class="text-center">
-                                                                                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no_eresep ?>" onclick="hapusBarang('<?= $no_eresep ?>')" <?= $btn_diss ?>><i class="fa-solid fa-delete-left"></i></button>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="table-responsive">
+                                                                            <table class="table table-hover table-bordered" id="table_eresep" width="100%" style="border-radius: 10px;">
+                                                                                <thead>
+                                                                                    <tr class="text-center">
+                                                                                        <th width="5%" style="border-radius: 10px 0px 0px 0px;">Hapus</th>
+                                                                                        <th width="30%">Barang</th>
+                                                                                        <th width="15%">Satuan</th>
+                                                                                        <th width="15%">Qty</th>
+                                                                                        <th width="35%" style="border-radius: 0px 10px 0px 0px;">Signa</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody id="body_eresep">
+                                                                                    <?php if (!empty($eresep)) : ?>
+                                                                                        <?php $no_eresep = 1;
+                                                                                        foreach ($eresep as $er) : ?>
+                                                                                            <tr id="row_eresep<?= $no_eresep ?>">
+                                                                                                <td width="5%" class="text-center">
+                                                                                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapus<?= $no_eresep ?>" onclick="hapusBarang('<?= $no_eresep ?>')" <?= $btn_diss ?>><i class="fa-solid fa-delete-left"></i></button>
+                                                                                                </td>
+                                                                                                <td width="30%">
+                                                                                                    <select name="kode_barang[]" id="kode_barang<?= $no_eresep ?>" class="form-control select2_barang_stok" data-placeholder="~ Pilih Barang" onchange="getSatuan(this.value, '<?= $no_eresep ?>')">
+                                                                                                        <?php
+                                                                                                        $barang = $this->M_global->getData('barang', ['kode_barang' => $er->kode_barang]);
+                                                                                                        ?>
+                                                                                                        <option value="<?= $er->kode_barang ?>"><?= $barang->nama ?></option>
+                                                                                                    </select>
+                                                                                                </td>
+                                                                                                <td width="15%">
+                                                                                                    <select name="kode_satuan[]" id="kode_satuan<?= $no_eresep ?>" class="form-control select2_global" data-placeholder="~ Pilih Satuan">
+                                                                                                        <?php
+                                                                                                        $barang = $this->M_global->getData('barang', ['kode_barang' => $er->kode_barang]);
+
+                                                                                                        $satuan = [];
+                                                                                                        foreach ([$barang->kode_satuan, $barang->kode_satuan2, $barang->kode_satuan3] as $satuanCode) {
+                                                                                                            $satuanDetail = $this->M_global->getData('m_satuan', ['kode_satuan' => $satuanCode]);
+                                                                                                            if ($satuanDetail) {
+                                                                                                                $satuan[] = [
+                                                                                                                    'kode_satuan' => $satuanCode,
+                                                                                                                    'keterangan' => $satuanDetail->keterangan,
+                                                                                                                ];
+                                                                                                            }
+                                                                                                        }
+                                                                                                        ?>
+                                                                                                        <?php foreach ($satuan as $s) : ?>
+                                                                                                            <option value="<?= $s['kode_satuan'] ?>" <?= (($er->kode_satuan == $s['kode_satuan']) ? 'selected' : '') ?>><?= $s['keterangan'] ?></option>
+                                                                                                        <?php endforeach; ?>
+                                                                                                    </select>
+                                                                                                </td>
+                                                                                                <td width="15%">
+                                                                                                    <input type="text" id="qty<?= $no_eresep ?>" name="qty[]" value="<?= $er->qty ?>" min="<?= $no_eresep ?>" class="form-control text-right" onchange="hitung_st('<?= $no_eresep ?>'); formatRp(this.value, 'qty<?= $no_eresep ?>')" <?= $readonly ?>>
+                                                                                                </td>
+                                                                                                <td width="35%">
+                                                                                                    <textarea name="signa[]" id="signa<?= $no_eresep ?>" class="form-control" <?= $readonly ?>><?= $er->signa ?></textarea>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        <?php $no_eresep++;
+                                                                                        endforeach; ?>
+                                                                                    <?php else : ?>
+                                                                                        <tr id="row_eresep1">
+                                                                                            <td class="text-center">
+                                                                                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus1" onclick="hapusBarang('1')"><i class="fa-solid fa-delete-left"></i></button>
                                                                                             </td>
-                                                                                            <td width="30%">
-                                                                                                <select name="kode_barang[]" id="kode_barang<?= $no_eresep ?>" class="form-control select2_barang_stok" data-placeholder="~ Pilih Barang" onchange="getSatuan(this.value, '<?= $no_eresep ?>')">
-                                                                                                    <?php
-                                                                                                    $barang = $this->M_global->getData('barang', ['kode_barang' => $er->kode_barang]);
-                                                                                                    ?>
-                                                                                                    <option value="<?= $er->kode_barang ?>"><?= $barang->nama ?></option>
+                                                                                            <td>
+                                                                                                <select name="kode_barang[]" id="kode_barang1" class="form-control select2_barang_stok" data-placeholder="~ Pilih Barang" onchange="getSatuan(this.value, '1')">
+                                                                                                    <option value="">~ Pilih Barang</option>
                                                                                                 </select>
                                                                                             </td>
-                                                                                            <td width="15%">
-                                                                                                <select name="kode_satuan[]" id="kode_satuan<?= $no_eresep ?>" class="form-control select2_global" data-placeholder="~ Pilih Satuan">
-                                                                                                    <?php
-                                                                                                    $barang = $this->M_global->getData('barang', ['kode_barang' => $er->kode_barang]);
-
-                                                                                                    $satuan = [];
-                                                                                                    foreach ([$barang->kode_satuan, $barang->kode_satuan2, $barang->kode_satuan3] as $satuanCode) {
-                                                                                                        $satuanDetail = $this->M_global->getData('m_satuan', ['kode_satuan' => $satuanCode]);
-                                                                                                        if ($satuanDetail) {
-                                                                                                            $satuan[] = [
-                                                                                                                'kode_satuan' => $satuanCode,
-                                                                                                                'keterangan' => $satuanDetail->keterangan,
-                                                                                                            ];
-                                                                                                        }
-                                                                                                    }
-                                                                                                    ?>
+                                                                                            <td>
+                                                                                                <select name="kode_satuan[]" id="kode_satuan1" class="form-control select2_global" data-placeholder="~ Pilih Satuan">
+                                                                                                    <option value="">~ Pilih Satuan</option>
                                                                                                     <?php foreach ($satuan as $s) : ?>
                                                                                                         <option value="<?= $s['kode_satuan'] ?>" <?= (($er->kode_satuan == $s['kode_satuan']) ? 'selected' : '') ?>><?= $s['keterangan'] ?></option>
                                                                                                     <?php endforeach; ?>
                                                                                                 </select>
                                                                                             </td>
-                                                                                            <td width="15%">
-                                                                                                <input type="text" id="qty<?= $no_eresep ?>" name="qty[]" value="<?= $er->qty ?>" min="<?= $no_eresep ?>" class="form-control text-right" onchange="hitung_st('<?= $no_eresep ?>'); formatRp(this.value, 'qty<?= $no_eresep ?>')" <?= $readonly ?>>
+                                                                                            <td>
+                                                                                                <input type="text" id="qty1" name="qty[]" value="1" min="1" class="form-control text-right" onchange="hitung_st('1'); formatRp(this.value, 'qty1')">
                                                                                             </td>
-                                                                                            <td width="35%">
-                                                                                                <textarea name="signa[]" id="signa<?= $no_eresep ?>" class="form-control" <?= $readonly ?>><?= $er->signa ?></textarea>
+                                                                                            <td>
+                                                                                                <textarea name="signa[]" id="signa1" class="form-control"></textarea>
                                                                                             </td>
                                                                                         </tr>
-                                                                                    <?php $no_eresep++;
-                                                                                    endforeach; ?>
-                                                                                <?php else : ?>
-                                                                                    <tr id="row_eresep1">
-                                                                                        <td class="text-center">
-                                                                                            <button class="btn btn-sm btn-danger" type="button" id="btnHapus1" onclick="hapusBarang('1')"><i class="fa-solid fa-delete-left"></i></button>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <select name="kode_barang[]" id="kode_barang1" class="form-control select2_barang_stok" data-placeholder="~ Pilih Barang" onchange="getSatuan(this.value, '1')">
-                                                                                                <option value="">~ Pilih Barang</option>
-                                                                                            </select>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <select name="kode_satuan[]" id="kode_satuan1" class="form-control select2_global" data-placeholder="~ Pilih Satuan">
-                                                                                                <option value="">~ Pilih Satuan</option>
-                                                                                                <?php foreach ($satuan as $s) : ?>
-                                                                                                    <option value="<?= $s['kode_satuan'] ?>" <?= (($er->kode_satuan == $s['kode_satuan']) ? 'selected' : '') ?>><?= $s['keterangan'] ?></option>
-                                                                                                <?php endforeach; ?>
-                                                                                            </select>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <input type="text" id="qty1" name="qty[]" value="1" min="1" class="form-control text-right" onchange="hitung_st('1'); formatRp(this.value, 'qty1')">
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <textarea name="signa[]" id="signa1" class="form-control"></textarea>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                <?php endif; ?>
-                                                                            </tbody>
-                                                                        </table>
+                                                                                    <?php endif; ?>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <button type="button" class="btn btn-primary" onclick="addBarang()" id="btnCari" <?= $btn_diss ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
+                                                                        <button type="button" class="btn btn-danger float-right" onclick="emptyBarang()" id="btnEmpty" <?= $btn_diss ?>><i class="fa-solid fa-trash"></i>&nbsp;&nbsp;Hapus Semua</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <button type="button" class="btn btn-primary" onclick="addBarang()" id="btnCari" <?= $btn_diss ?>><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
-                                                                    <button type="button" class="btn btn-danger float-right" onclick="emptyBarang()" id="btnEmpty" <?= $btn_diss ?>><i class="fa-solid fa-trash"></i>&nbsp;&nbsp;Hapus Semua</button>
+                                                            <div class="col-md-4">
+                                                                <div class="row mb-3">
+                                                                    <div class="col-md-12">
+                                                                        <span class="h4">Racikan</span>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <div class="row mb-3">
-                                                                <div class="col-md-12">
-                                                                    <span class="h4">Racikan</span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-md-12">
-                                                                    <textarea name="eracikan" id="eracikan" class="form-control" rows="5" <?= $readonly ?>><?= ((!empty($emr_per)) ? $emr_per->eracikan : '') ?></textarea>
+                                                                <div class="row mb-3">
+                                                                    <div class="col-md-12">
+                                                                        <textarea name="eracikan" id="eracikan" class="form-control" rows="5" <?= $readonly ?>><?= ((!empty($emr_per)) ? $emr_per->eracikan : '') ?></textarea>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div id="tab_elab">Lab Coming Soon</div>
+                                                    <div id="tab_erad">Rad Coming Soon</div>
                                                 </div>
-                                                <div id="tab_elab">Lab Coming Soon</div>
-                                                <div id="tab_erad">Rad Coming Soon</div>
                                             </div>
                                         </div>
                                     </div>
@@ -690,6 +836,14 @@ if (is_array($p_kel) && !empty($p_kel)) {
     var diagnosa_per = $("#diagnosa_per");
     var anamnesa_per = $("#anamnesa_per");
     var filter_dokter = $("#filter_dokter");
+    const btn_assesment = $('#btn_assesment');
+    const btn_pemeriksaan = $('#btn_pemeriksaan');
+    const btn_psiko = $('#btn_psiko');
+    const btn_order = $('#btn_order');
+    const assesment_emr = $('#assesment_emr');
+    const pemeriksaan_emr = $('#pemeriksaan_emr');
+    const psiko_emr = $('#psiko_emr');
+    const order_emr = $('#order_emr');
     const btn_etarif = $('#btn_etarif');
     const btn_eresep = $('#btn_eresep');
     const btn_elab = $('#btn_elab');
@@ -699,6 +853,11 @@ if (is_array($p_kel) && !empty($p_kel)) {
     const tab_elab = $('#tab_elab');
     const tab_erad = $('#tab_erad');
     let title_tab = $('#title_tab');
+    var sempoyongan = $('#sempoyongan');
+    var berjalan_dgn_alat = $('#berjalan_dgn_alat');
+    var penompang = $('#penompang');
+    var hasil = $('#hasil');
+    var nilai = $('#nilai');
     var scale = $('#scale');
     var bicara = $('#bicara');
     var gangguan_bcr = $('#gangguan_bcr');
@@ -711,6 +870,8 @@ if (is_array($p_kel) && !empty($p_kel)) {
     cek_bcr(<?= ((!empty($emr_per)) ? $emr_per->bicara : '1') ?>);
     cek_emosi(<?= ((!empty($emr_per)) ? $emr_per->emosi : '1') ?>);
     cek_spiritual(<?= ((!empty($emr_per)) ? $emr_per->spiritual : '1') ?>);
+    sel_tab_emr(1);
+    cek_resiko();
 
     function history_px() {
         xhttp = new XMLHttpRequest();
@@ -722,6 +883,73 @@ if (is_array($p_kel) && !empty($p_kel)) {
         var param = `/${no_trx.val()}?kode_member=${kode_member.val()}&kode_dokter=${filter_dokter.val()}`;
         xhttp.open("GET", "<?= base_url('Emr/histori_px'); ?>" + param, true);
         xhttp.send();
+    }
+
+    function sel_tab_emr(param) {
+        if (param == 1) {
+            btn_assesment.addClass('btn-primary');
+            btn_pemeriksaan.removeClass('btn-primary');
+            btn_psiko.removeClass('btn-primary');
+            btn_order.removeClass('btn-primary');
+
+            assesment_emr.show(200);
+            pemeriksaan_emr.hide(200);
+            psiko_emr.hide(200);
+            order_emr.hide(200);
+        } else if (param == 2) {
+            btn_assesment.removeClass('btn-primary');
+            btn_pemeriksaan.addClass('btn-primary');
+            btn_psiko.removeClass('btn-primary');
+            btn_order.removeClass('btn-primary');
+
+            assesment_emr.hide(200);
+            pemeriksaan_emr.show(200);
+            psiko_emr.hide(200);
+            order_emr.hide(200);
+        } else if (param == 3) {
+            btn_assesment.removeClass('btn-primary');
+            btn_pemeriksaan.removeClass('btn-primary');
+            btn_psiko.addClass('btn-primary');
+            btn_order.removeClass('btn-primary');
+
+            assesment_emr.hide(200);
+            pemeriksaan_emr.hide(200);
+            psiko_emr.show(200);
+            order_emr.hide(200);
+        } else {
+            btn_assesment.removeClass('btn-primary');
+            btn_pemeriksaan.removeClass('btn-primary');
+            btn_psiko.removeClass('btn-primary');
+            btn_order.addClass('btn-primary');
+
+            assesment_emr.hide(200);
+            pemeriksaan_emr.hide(200);
+            psiko_emr.hide(200);
+            order_emr.show(200);
+        }
+    }
+
+    function cek_resiko() {
+        var a1 = sempoyongan.val();
+        var a2 = berjalan_dgn_alat.val();
+        var b = penompang.val();
+
+        if ((a1 == 1) || (a2 == 1)) {
+            var a = 1;
+        } else {
+            var a = 0;
+        }
+
+        if ((a == 0) && (b == 0)) {
+            hasil.val('Tidak Beresiko');
+            nilai.val('Tidak Ditemukan A & B');
+        } else if ((a == 1) || (b == 1)) {
+            hasil.val('Beresiko Sedang');
+            nilai.val('Ditemukan Salah Satu Antara A & B');
+        } else {
+            hasil.val('Beresiko Tinggi');
+            nilai.val('Ditemukan A & B');
+        }
     }
 
     function cek_scale(param) {
@@ -835,7 +1063,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
             tab_elab.hide(200);
             tab_erad.hide(200);
 
-            title_tab.text('E-Tarif / Tindakan');
+            title_tab.text('Tarif / Tindakan');
         } else if (param == 1) {
             btn_eresep.addClass('btn-primary');
             btn_eresep.removeClass('btn-light');
@@ -852,7 +1080,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
             tab_elab.hide(200);
             tab_erad.hide(200);
 
-            title_tab.text('E-Resep / Racik');
+            title_tab.text('Resep / Racik');
         } else if (param == 2) {
             btn_elab.addClass('btn-primary');
             btn_elab.removeClass('btn-light');
@@ -869,7 +1097,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
             tab_etarif.hide(200);
             tab_erad.hide(200);
 
-            title_tab.text('E-Laboratorium');
+            title_tab.text('Laboratorium');
         } else {
             btn_erad.addClass('btn-primary');
             btn_erad.removeClass('btn-light');
@@ -886,7 +1114,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
             tab_elab.hide(200);
             tab_etarif.hide(200);
 
-            title_tab.text('E-Radiologi');
+            title_tab.text('Radiologi');
         }
     }
 

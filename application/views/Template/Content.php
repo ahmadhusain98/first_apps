@@ -245,6 +245,16 @@
             margin-top: auto;
             border-bottom: 0 !important;
         }
+
+        .collapse {
+            transition: max-height 0.3s ease-in-out;
+            overflow: hidden;
+            max-height: 0;
+        }
+
+        .collapse.show {
+            max-height: 500px;
+        }
     </style>
 
     <?php

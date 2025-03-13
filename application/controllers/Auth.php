@@ -39,45 +39,112 @@ class Auth extends CI_Controller
         $cek_per = $this->M_global->getData('perawat', ['kode_perawat' => $this->session->userdata('kode_user')]);
 
         if ($cek_dok) {
-            $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p WHERE p.kode_dokter = "' . $cek_dok->kode_dokter . '" AND p.status_trx <> 1 AND p.kode_cabang = "' . $cabang . '" AND NOT EXISTS (SELECT 1 FROM emr_dok ed WHERE ed.no_trx = p.no_trx) AND no_trx IN (SELECT no_trx FROM emr_per)')->result();
+            if ($this->session->userdata('kode_role') == 'R0001') {
+                $sintak = $this->db->query('SELECT p.id, p.no_trx AS invoice, "emr" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p WHERE p.status_trx <> 1 AND p.kode_cabang = "' . $cabang . '" AND NOT EXISTS (SELECT 1 FROM emr_dok ed WHERE ed.no_trx = p.no_trx) AND no_trx IN (SELECT no_trx FROM emr_per)')->result();
+            } else {
+                $sintak = $this->db->query('SELECT p.id, p.no_trx AS invoice, "emr" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p WHERE p.kode_dokter = "' . $cek_dok->kode_dokter . '" AND p.status_trx <> 1 AND p.kode_cabang = "' . $cabang . '" AND NOT EXISTS (SELECT 1 FROM emr_dok ed WHERE ed.no_trx = p.no_trx) AND no_trx IN (SELECT no_trx FROM emr_per)')->result();
+            }
         } else if ($cek_per) {
-            $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr2" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p WHERE p.status_trx < 1 AND p.kode_cabang = "' . $cabang . '" AND NOT EXISTS (SELECT 1 FROM emr_per ep WHERE ep.no_trx = p.no_trx)')->result();
+            $sintak = $this->db->query('SELECT p.id, p.no_trx AS invoice, "emr2" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p WHERE p.status_trx < 1 AND p.kode_cabang = "' . $cabang . '" AND NOT EXISTS (SELECT 1 FROM emr_per ep WHERE ep.no_trx = p.no_trx)')->result();
         } else {
-            $sintak = $this->db->query("SELECT * FROM (
-                SELECT id, no_trx AS invoice, 'pembayaran' AS url, tgl_daftar AS tgl, jam_daftar AS jam FROM pendaftaran
-                WHERE kode_cabang = '$cabang' AND status_trx = 0
+            $sintak = $this->db->query("SELECT *
+                FROM (
+                    SELECT
+                        p.id,
+                        p.no_trx AS invoice,
+                        'pembayaran' AS url,
+                        p.tgl_daftar AS tgl,
+                        p.jam_daftar AS jam
+                    FROM pendaftaran p
+                    JOIN tarif_paket_pasien t USING (no_trx)
+                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0
 
-                UNION ALL
+                    UNION ALL
 
-                SELECT id, invoice AS invoice, 'kasir' AS url, tgl_jual AS tgl, jam_jual AS jam FROM barang_out_header 
-                WHERE kode_cabang = '$cabang' AND status_jual = 0 AND no_trx IS NULL
+                    SELECT
+                        id,
+                        no_trx AS invoice,
+                        'kasir' AS url,
+                        tgl_jual AS tgl,
+                        jam_jual AS jam
+                    FROM barang_out_header
+                    WHERE kode_cabang = '$cabang' AND status_jual = 0
 
-                UNION ALL 
-                
-                SELECT id, invoice AS invoice, 'mutasi_cabang' AS url, tgl_po AS tgl, jam_po AS jam FROM mutasi_po_header
-                WHERE dari = '$cabang' AND status_po = 1 AND jenis_po = 1 AND invoice NOT IN (SELECT invoice_po FROM mutasi_header)
+                    UNION ALL
 
-                UNION ALL 
-                
-                SELECT id, invoice AS invoice, 'mutasi_gudang' AS url, tgl_po AS tgl, jam_po AS jam FROM mutasi_po_header
-                WHERE kode_cabang = '$cabang' AND status_po = 1 AND jenis_po = 0 AND invoice NOT IN (SELECT invoice_po FROM mutasi_header)
+                    SELECT
+                        id,
+                        invoice AS invoice,
+                        'mutasi_cabang' AS url,
+                        tgl_po AS tgl,
+                        jam_po AS jam
+                    FROM mutasi_po_header
+                    WHERE dari = '$cabang' AND status_po = 1 AND jenis_po = 1
+                    AND NOT EXISTS (SELECT 1 FROM mutasi_header WHERE invoice_po = mutasi_po_header.invoice)
 
-                UNION ALL
+                    UNION ALL
 
-                SELECT id, invoice AS invoice, 'pre_order' AS url, tgl_po AS tgl, jam_po AS jam FROM barang_po_in_header
-                WHERE kode_cabang = '$cabang' AND is_valid = 1 AND invoice NOT IN (SELECT invoice_po FROM barang_in_header WHERE kode_cabang = '$cabang')
+                    SELECT
+                        id,
+                        invoice AS invoice,
+                        'mutasi_gudang' AS url,
+                        tgl_po AS tgl,
+                        jam_po AS jam
+                    FROM mutasi_po_header
+                    WHERE kode_cabang = '$cabang' AND status_po = 1 AND jenis_po = 0
+                    AND NOT EXISTS (SELECT 1 FROM mutasi_header WHERE invoice_po = mutasi_po_header.invoice)
 
-                UNION ALL
+                    UNION ALL
 
-                SELECT p.id, p.no_trx AS invoice, 'emr' AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p 
-                WHERE p.status_trx <> 1 AND p.kode_cabang = '$cabang' AND p.no_trx AND NOT EXISTS (SELECT 1 FROM emr_dok ed WHERE ed.no_trx = p.no_trx) AND no_trx IN (SELECT no_trx FROM emr_per WHERE kode_cabang = '$cabang')
+                    SELECT
+                        id,
+                        invoice AS invoice,
+                        'pre_order' AS url,
+                        tgl_po AS tgl,
+                        jam_po AS jam
+                    FROM barang_po_in_header
+                    WHERE kode_cabang = '$cabang' AND is_valid = 1
+                    AND NOT EXISTS (SELECT 1 FROM barang_in_header WHERE kode_cabang = '$cabang' AND invoice_po = barang_po_in_header.invoice)
 
-                UNION ALL
+                    UNION ALL
 
-                SELECT p.id, p.no_trx AS invoice, 'emr2' AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam FROM pendaftaran p 
-                WHERE p.status_trx < 1 AND p.kode_cabang = '$cabang' AND p.no_trx AND NOT EXISTS (SELECT 1 FROM emr_per ep WHERE ep.no_trx = p.no_trx)
-            ) AS semuax
-            ORDER BY id DESC LIMIT 10")->result();
+                    SELECT
+                        p.id,
+                        p.no_trx AS invoice,
+                        'emr' AS url,
+                        p.tgl_daftar AS tgl,
+                        p.jam_daftar AS jam
+                    FROM pendaftaran p
+                    WHERE p.status_trx <> 1 AND p.kode_cabang = '$cabang'
+                    AND NOT EXISTS (SELECT 1 FROM emr_dok ed WHERE ed.no_trx = p.no_trx)
+                    AND EXISTS (SELECT 1 FROM emr_per WHERE kode_cabang = '$cabang' AND no_trx = p.no_trx)
+
+                    UNION ALL
+
+                    SELECT
+                        p.id,
+                        p.no_trx AS invoice,
+                        'emr2' AS url,
+                        p.tgl_daftar AS tgl,
+                        p.jam_daftar AS jam
+                    FROM pendaftaran p
+                    WHERE p.status_trx < 1 AND p.kode_cabang = '$cabang'
+                    AND NOT EXISTS (SELECT 1 FROM emr_per ep WHERE ep.no_trx = p.no_trx)
+
+                    UNION ALL
+
+                    SELECT 
+                        d.id, 
+                        d.no_trx AS invoice,
+                        'jual' AS url,
+                        d.date_dok AS tgl,
+                        d.time_dok AS jam
+                    FROM emr_dok d
+                    JOIN pendaftaran p USING (no_trx)
+                    WHERE p.status_trx < 1 AND p.kode_cabang = '$cabang' AND (d.eracikan <> '' OR d.no_trx IN (SELECT no_trx FROM emr_per_barang)) AND d.no_trx NOT IN (SELECT no_trx FROM barang_out_header)
+                ) AS semuax
+                ORDER BY id DESC
+            LIMIT 10")->result();
         }
         if (count($sintak) > 0) {
             echo '<span class="badge badge-warning navbar-badge">
@@ -96,45 +163,120 @@ class Auth extends CI_Controller
         $cek_per = $this->M_global->getData('perawat', ['kode_perawat' => $this->session->userdata('kode_user')]);
 
         if (!empty($cek_dok)) {
-            $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam, p.kode_member FROM pendaftaran p WHERE p.kode_dokter = "' . $cek_dok->kode_dokter . '" AND p.status_trx <> 1 AND p.kode_cabang = "' . $cabang . '" AND NOT EXISTS (SELECT 1 FROM emr_dok ed WHERE ed.no_trx = p.no_trx) AND no_trx IN (SELECT no_trx FROM emr_per)')->result();
+            if ($this->session->userdata('kode_role') == 'R0001') {
+                $sintak = $this->db->query('SELECT p.id, p.no_trx AS invoice, "emr" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam, p.kode_member FROM pendaftaran p WHERE p.status_trx <> 1 AND p.kode_cabang = "' . $cabang . '" AND NOT EXISTS (SELECT 1 FROM emr_dok ed WHERE ed.no_trx = p.no_trx) AND no_trx IN (SELECT no_trx FROM emr_per)')->result();
+            } else {
+                $sintak = $this->db->query('SELECT p.id, p.no_trx AS invoice, "emr" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam, p.kode_member FROM pendaftaran p WHERE p.kode_dokter = "' . $cek_dok->kode_dokter . '" AND p.status_trx <> 1 AND p.kode_cabang = "' . $cabang . '" AND NOT EXISTS (SELECT 1 FROM emr_dok ed WHERE ed.no_trx = p.no_trx) AND no_trx IN (SELECT no_trx FROM emr_per)')->result();
+            }
         } else if ($cek_per) {
-            $sintak = $this->db->query('SELECT p.*, p.no_trx AS invoice, "emr2" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam, p.kode_member FROM pendaftaran p WHERE p.status_trx < 1 AND p.kode_cabang = "' . $cabang . '" AND NOT EXISTS (SELECT 1 FROM emr_per ep WHERE ep.no_trx = p.no_trx)')->result();
+            $sintak = $this->db->query('SELECT p.id, p.no_trx AS invoice, "emr2" AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam, p.kode_member FROM pendaftaran p WHERE p.status_trx < 1 AND p.kode_cabang = "' . $cabang . '" AND NOT EXISTS (SELECT 1 FROM emr_per ep WHERE ep.no_trx = p.no_trx)')->result();
         } else {
-            $sintak = $this->db->query("SELECT * FROM (
-                SELECT id, no_trx AS invoice, 'pembayaran' AS url, tgl_daftar AS tgl, jam_daftar AS jam, p.kode_member FROM pendaftaran
-                WHERE kode_cabang = '$cabang' AND status_trx = 0
+            $sintak = $this->db->query("SELECT *
+                FROM (
+                    SELECT
+                        p.id,
+                        p.no_trx AS invoice,
+                        'pembayaran' AS url,
+                        p.tgl_daftar AS tgl,
+                        p.jam_daftar AS jam,
+                        p.kode_member
+                    FROM pendaftaran p
+                    JOIN tarif_paket_pasien t USING (no_trx)
+                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0
 
-                UNION ALL
+                    UNION ALL
 
-                SELECT id, invoice AS invoice, 'kasir' AS url, tgl_jual AS tgl, jam_jual AS jam, '' AS kode_member FROM barang_out_header 
-                WHERE kode_cabang = '$cabang' AND status_jual = 0 AND no_trx IS NULL
+                    SELECT
+                        id,
+                        no_trx AS invoice,
+                        'kasir' AS url,
+                        tgl_jual AS tgl,
+                        jam_jual AS jam,
+                        '' AS kode_member
+                    FROM barang_out_header
+                    WHERE kode_cabang = '$cabang' AND status_jual = 0
 
-                UNION ALL 
-                
-                SELECT id, invoice AS invoice, 'mutasi_cabang' AS url, tgl_po AS tgl, jam_po AS jam, '' AS kode_member FROM mutasi_po_header
-                WHERE dari = '$cabang' AND status_po = 1 AND jenis_po = 1 AND invoice NOT IN (SELECT invoice_po FROM mutasi_header)
+                    UNION ALL
 
-                UNION ALL 
-                
-                SELECT id, invoice AS invoice, 'mutasi_gudang' AS url, tgl_po AS tgl, jam_po AS jam, '' AS kode_member FROM mutasi_po_header
-                WHERE kode_cabang = '$cabang' AND status_po = 1 AND jenis_po = 0 AND invoice NOT IN (SELECT invoice_po FROM mutasi_header)
+                    SELECT
+                        id,
+                        invoice AS invoice,
+                        'mutasi_cabang' AS url,
+                        tgl_po AS tgl,
+                        jam_po AS jam,
+                        '' AS kode_member
+                    FROM mutasi_po_header
+                    WHERE dari = '$cabang' AND status_po = 1 AND jenis_po = 1
+                    AND NOT EXISTS (SELECT 1 FROM mutasi_header WHERE invoice_po = mutasi_po_header.invoice)
 
-                UNION ALL
+                    UNION ALL
 
-                SELECT id, invoice AS invoice, 'pre_order' AS url, tgl_po AS tgl, jam_po AS jam, '' AS kode_member FROM barang_po_in_header
-                WHERE kode_cabang = '$cabang' AND is_valid = 1 AND invoice NOT IN (SELECT invoice_po FROM barang_in_header WHERE kode_cabang = '$cabang')
+                    SELECT
+                        id,
+                        invoice AS invoice,
+                        'mutasi_gudang' AS url,
+                        tgl_po AS tgl,
+                        jam_po AS jam,
+                        '' AS kode_member
+                    FROM mutasi_po_header
+                    WHERE kode_cabang = '$cabang' AND status_po = 1 AND jenis_po = 0
+                    AND NOT EXISTS (SELECT 1 FROM mutasi_header WHERE invoice_po = mutasi_po_header.invoice)
 
-                UNION ALL
+                    UNION ALL
 
-                SELECT p.id, p.no_trx AS invoice, 'emr' AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam, p.kode_member FROM pendaftaran p 
-                WHERE p.status_trx <> 1 AND p.kode_cabang = '$cabang' AND p.no_trx AND NOT EXISTS (SELECT 1 FROM emr_dok ed WHERE ed.no_trx = p.no_trx) AND no_trx IN (SELECT no_trx FROM emr_per WHERE kode_cabang = '$cabang')
+                    SELECT
+                        id,
+                        invoice AS invoice,
+                        'pre_order' AS url,
+                        tgl_po AS tgl,
+                        jam_po AS jam,
+                        '' AS kode_member
+                    FROM barang_po_in_header
+                    WHERE kode_cabang = '$cabang' AND is_valid = 1
+                    AND NOT EXISTS (SELECT 1 FROM barang_in_header WHERE kode_cabang = '$cabang' AND invoice_po = barang_po_in_header.invoice)
 
-                UNION ALL
+                    UNION ALL
 
-                SELECT p.id, p.no_trx AS invoice, 'emr2' AS url, p.tgl_daftar AS tgl, p.jam_daftar AS jam, p.kode_member FROM pendaftaran p 
-                WHERE p.status_trx < 1 AND p.kode_cabang = '$cabang' AND p.no_trx AND NOT EXISTS (SELECT 1 FROM emr_per ep WHERE ep.no_trx = p.no_trx)
-            ) AS semuax
-            ORDER BY id DESC LIMIT 10")->result();
+                    SELECT
+                        p.id,
+                        p.no_trx AS invoice,
+                        'emr' AS url,
+                        p.tgl_daftar AS tgl,
+                        p.jam_daftar AS jam,
+                        p.kode_member
+                    FROM pendaftaran p
+                    WHERE p.status_trx <> 1 AND p.kode_cabang = '$cabang'
+                    AND NOT EXISTS (SELECT 1 FROM emr_dok ed WHERE ed.no_trx = p.no_trx)
+                    AND EXISTS (SELECT 1 FROM emr_per WHERE kode_cabang = '$cabang' AND no_trx = p.no_trx)
+
+                    UNION ALL
+
+                    SELECT
+                        p.id,
+                        p.no_trx AS invoice,
+                        'emr2' AS url,
+                        p.tgl_daftar AS tgl,
+                        p.jam_daftar AS jam,
+                        p.kode_member
+                    FROM pendaftaran p
+                    WHERE p.status_trx < 1 AND p.kode_cabang = '$cabang'
+                    AND NOT EXISTS (SELECT 1 FROM emr_per ep WHERE ep.no_trx = p.no_trx)
+
+                    UNION ALL
+
+                    SELECT 
+                        d.id, 
+                        d.no_trx AS invoice,
+                        'jual' AS url,
+                        d.date_dok AS tgl,
+                        d.time_dok AS jam,
+                        p.kode_member
+                    FROM emr_dok d
+                    JOIN pendaftaran p USING (no_trx)
+                    WHERE p.status_trx < 1 AND p.kode_cabang = '$cabang' AND (d.eracikan <> '' OR d.no_trx IN (SELECT no_trx FROM emr_per_barang)) AND d.no_trx NOT IN (SELECT no_trx FROM barang_out_header)
+                ) AS semuax
+                ORDER BY id DESC
+            LIMIT 10")->result();
         }
 ?>
         <a type="button" class="dropdown-item p-2" style="width: 100%;">
@@ -149,10 +291,10 @@ class Auth extends CI_Controller
                         $msg = '<i class="fa-solid fa-fw fa-user-nurse"></i> Emr Perawat | ' . $this->M_global->getData('m_prefix', ['kode_prefix' => $member->kode_prefix])->nama . '. ' . singkatTeks($member->nama) . ' | ' . $s->kode_member;
                         $par_url = 'Emr/perawat/' . $s->invoice;
                     } else if ($s->url == 'kasir') {
-                        $msg = '<i class="fa-solid fa-fw fa-file-invoice-dollar"></i> Pembayaran Kasir';
-                        $par_url = 'Kasir/form_kasir/0?invoice=' . $s->invoice;
+                        $msg = '<i class="fa-solid fa-fw fa-file-invoice-dollar"></i> Pembayaran Kasir | ' . $s->invoice;
+                        $par_url = 'Kasir/form_kasir/0/' . $s->invoice;
                     } else if ($s->url == 'pembayaran') {
-                        $msg = '<i class="fa-solid fa-fw fa-file-invoice-dollar"></i> Pembayaran Kasir';
+                        $msg = '<i class="fa-solid fa-fw fa-file-invoice-dollar"></i> Pembayaran Kasir | ' . $s->invoice;
                         $par_url = 'Kasir/form_kasir/0?invoice=' . $s->invoice;
                     } else if ($s->url == 'mutasi_cabang') {
                         $msg = '<i class="fa-solid fa-fw fa-building-circle-check"></i> Mutasi Cabang';
@@ -163,6 +305,9 @@ class Auth extends CI_Controller
                     } else if ($s->url == 'pre_order') {
                         $msg = '<i class="fa-solid fa-fw fa-clipboard-check"></i> Terima Barang';
                         $par_url = 'Transaksi/form_barang_in/0?invoice=' . $s->invoice;
+                    } else if ($s->url == 'jual') {
+                        $msg = '<i class="fa-solid fa-fw fa-gift"></i> Orderan Dokter | ' . $s->invoice;
+                        $par_url = 'Transaksi/form_barang_out/emr/' . $s->invoice;
                     } else {
                         $msg = ' None';
                         $par_url = '';
@@ -175,7 +320,7 @@ class Auth extends CI_Controller
                 <?php
                 endforeach;
             else : ?>
-                <span style="color: grey; margin-bottom: 10px; width: 100%;">Tidak Ada Notifikasi</span>
+                <span class="text-center" style="color: grey; margin-bottom: 10px; width: 100%;">Tidak Ada Notifikasi</span>
             <?php
             endif;
             echo '</a>';
