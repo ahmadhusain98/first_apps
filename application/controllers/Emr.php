@@ -686,6 +686,10 @@ class Emr extends CI_Controller
 
         $emr_per        = $this->M_global->getData('emr_per', ['no_trx' => $no_trx]);
         $emr_dok        = $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]);
+        $emr_dok_fisik  = $this->M_global->getDataResult('emr_dok_fisik', ['no_trx' => $no_trx]);
+
+        $icd9           = $this->M_global->getDataResult('emr_dok_icd9', ['no_trx' => $no_trx]);
+        $icd10          = $this->M_global->getDataResult('emr_dok_icd10', ['no_trx' => $no_trx]);
 
         $cek_dokter     = $this->M_global->getData('dokter', ['kode_dokter' => $this->data['kode_user']]);
 
@@ -723,15 +727,15 @@ class Emr extends CI_Controller
                     </table>
                 </div>
             </div>
-            <div class="card-footer">
+            <div class="card-footer card-outline card-primary">
                 <div class="row mb-1">
                     <div class="col-md-12">
-                        <span class="font-weight-bold">Anamnesa
+                        <span class="font-weight-bold">SOAP
                             <?php if (($cek_dokter) || ($this->session->userdata('kode_role') == 'R0001')) : ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_anamnesa')"><i class="fa fa-copy"></i> Copy</button>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="implement('<?= ((!empty($emr_dok)) ? $emr_dok->anamnesa_dok : '') ?>', 'anamnesa_dok')"><i class="fa-solid fa-clone"></i> Apply</button>
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyTextSoap('anamnesa_dok_emr', 'diagnosa_dok_emr', 'rencana_dok_emr', 'tekanan_darah_emr', 'nadi_emr', 'suhu_emr', 'bb_emr', 'tb_emr', 'pernapasan_emr', 'saturasi_emr', 'gizi_emr', '<?= $no_trx ?>')"><i class="fa fa-copy"></i> Copy</button>
+                                        <button type="button" class="btn btn-primary btn-sm" onclick="implementSoap('<?= ((!empty($emr_dok)) ? $emr_dok->anamnesa_dok : '') ?>', '<?= ((!empty($emr_dok)) ? $emr_dok->diagnosa_dok : '') ?>', '<?= ((!empty($emr_dok)) ? $emr_dok->rencana_dok : '') ?>', '<?= $no_trx ?>')"><i class="fa-solid fa-clone"></i> Apply</button>
                                     </div>
                                 </div>
                             <?php endif; ?>
@@ -740,57 +744,116 @@ class Emr extends CI_Controller
                 </div>
                 <div class="row mb-1">
                     <div class="col-md-12">
-                        <span id="his_anamnesa"><?= ((!empty($emr_dok)) ? $emr_dok->anamnesa_dok : '-') ?></span>
+                        <div class="table-responsive">
+                            <input type="hidden" name="tekanan_darah_emr" id="tekanan_darah_emr" value="<?= (!empty($emr_per) ? $emr_per->tekanan_darah : '') ?>">
+                            <input type="hidden" name="nadi_emr" id="nadi_emr" value="<?= (!empty($emr_per) ? $emr_per->nadi : '') ?>">
+                            <input type="hidden" name="suhu_emr" id="suhu_emr" value="<?= (!empty($emr_per) ? $emr_per->nadi : '') ?>">
+                            <input type="hidden" name="bb_emr" id="bb_emr" value="<?= (!empty($emr_per) ? $emr_per->nadi : '') ?>">
+                            <input type="hidden" name="tb_emr" id="tb_emr" value="<?= (!empty($emr_per) ? $emr_per->nadi : '') ?>">
+                            <input type="hidden" name="pernapasan_emr" id="pernapasan_emr" value="<?= (!empty($emr_per) ? $emr_per->nadi : '') ?>">
+                            <input type="hidden" name="saturasi_emr" id="saturasi_emr" value="<?= (!empty($emr_per) ? $emr_per->nadi : '') ?>">
+                            <input type="hidden" name="gizi_emr" id="gizi_emr" value="<?= (!empty($emr_per) ? $emr_per->nadi : '') ?>">
+                            <table style="width: 100%; border-radius: 10px;" border="0" cellpadding="5px;">
+                                <tr>
+                                    <td style="width: 20%;">Pemeriksaan Fisik</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="his_pem_fisik"><?= ((!empty($emr_per)) ? ('Tekanan Darah : ' . $emr_per->tekanan_darah . ' (mmHg) | Nadi : ' . $emr_per->nadi . ' (x/mnt) | Suhu : ' . $emr_per->suhu . ' (°c) | Berat Badan : ' . $emr_per->bb . ' (kg) | Tinggi Badang : ' . $emr_per->tb . ' (cm) | Pernapasan : ' . $emr_per->pernapasan . ' (x/mnt) | Saturasi : ' . $emr_per->saturasi . ' (%) | Gizi : ' . (($emr_per->gizi == 0) ? 'Buruk' : (($emr_per->gizi == 1) ? 'Kurang' : (($emr_per->gizi == 2) ? 'Cukup' : ''))) . '') : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Anamnesa</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="anamnesa_dok_emr"><?= ((!empty($emr_dok)) ? $emr_dok->anamnesa_dok : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Diagnosa</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="diagnosa_dok_emr"><?= ((!empty($emr_dok)) ? $emr_dok->diagnosa_dok : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Anjuran</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="rencana_dok_emr"><?= ((!empty($emr_dok)) ? $emr_dok->rencana_dok : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">ICD 9</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <table style="width: 100%;" border="1" cellpadding="5px">
+                                            <tr class="text-center">
+                                                <td style="width: 25%;">Kode</td>
+                                                <td style="width: 75%;">Keterangan</td>
+                                            </tr>
+                                            <?php if (!empty($icd9)) : ?>
+                                                <?php foreach ($icd9 as $i9) : ?>
+                                                    <tr>
+                                                        <td style="width: 25%;"><?= $i9->kode_icd ?></td>
+                                                        <td style="width: 75%;"><?= $this->M_global->getData('icd9', ['kode' => $i9->kode_icd])->keterangan ?></td>
+                                                    </tr>
+                                                <?php endforeach ?>
+                                            <?php else : ?>
+                                                <tr>
+                                                    <td style="width: 100%; text-align: center;" colspan="2">Tidak Ada ICD 9</td>
+                                                </tr>
+                                            <?php endif ?>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">ICD 10</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <table style="width: 100%;" border="1" cellpadding="5px">
+                                            <tr class="text-center">
+                                                <td style="width: 25%;">Kode</td>
+                                                <td style="width: 75%;">Keterangan</td>
+                                            </tr>
+                                            <?php if (!empty($icd10)) : ?>
+                                                <?php foreach ($icd10 as $i10) : ?>
+                                                    <tr>
+                                                        <td style="width: 25%;"><?= $i10->kode_icd ?></td>
+                                                        <td style="width: 75%;"><?= $this->M_global->getData('icd10', ['kode' => $i10->kode_icd])->keterangan ?></td>
+                                                    </tr>
+                                                <?php endforeach ?>
+                                            <?php else : ?>
+                                                <tr>
+                                                    <td style="width: 100%; text-align: center;" colspan="2">Tidak Ada ICD 10</td>
+                                                </tr>
+                                            <?php endif ?>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <hr>
                 <div class="row mb-1">
                     <div class="col-md-12">
-                        <span class="font-weight-bold">Pemeriksaan Fisik
+                        <span class="font-weight-bold">Head to Toe
                             <?php if (($cek_dokter) || ($this->session->userdata('kode_role') == 'R0001')) : ?>
-                                <div class="float-right">
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_pem_fisik')"><i class="fa fa-copy"></i> Copy</button>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="implement_fisik('<?= ((!empty($emr_dok)) ? $emr_dok->eracikan : '') ?>', 'eracikan', '<?= $p->no_trx ?>')"><i class="fa-solid fa-clone"></i> Apply</button>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                        </span>
-                    </div>
-                </div>
-                <div class="row mb-1">
-                    <div class="col-md-12">
-                        <span id="his_pem_fisik">
-                            <?php
-                            $emr_dok_fisik = $this->M_global->getDataResult('emr_dok_fisik', ['no_trx' => $p->no_trx]);
-
-                            if (empty($emr_dok_fisik)) {
-                                echo '-';
-                            } else {
-                                if (count($emr_dok_fisik) > 1) {
-                                    $br = '<br>';
+                                <?php
+                                $headtotoe = $this->M_global->getDataResult('emr_dok_fisik', ['no_trx' => $no_trx]);
+                                $htt = '';
+                                if (!empty($headtotoe)) {
+                                    foreach ($headtotoe as $head) {
+                                        $htt .= $head->fisik . ' - ' . $head->desc_fisik . ', ';
+                                    }
                                 } else {
-                                    $br = '';
+                                    $htt .= '';
                                 }
-
-                                foreach ($emr_dok_fisik as $edf) :
-                                    echo $edf->fisik . ' | ' . $edf->desc_fisik . $br;
-                                endforeach;
-                            }
-
-                            ?>
-                        </span>
-                    </div>
-                </div>
-                <hr>
-                <div class="row mb-1">
-                    <div class="col-md-12">
-                        <span class="font-weight-bold">Diagnosa
-                            <?php if (($cek_dokter) || ($this->session->userdata('kode_role') == 'R0001')) : ?>
+                                ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_diagnosa')"><i class="fa fa-copy"></i> Copy</button>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="implement('<?= ((!empty($emr_dok)) ? $emr_dok->diagnosa_dok : '') ?>', 'diagnosa_dok')"><i class="fa-solid fa-clone"></i> Apply</button>
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyTextHead('<?= $htt ?>')"><i class="fa fa-copy"></i> Copy</button>
+                                        <button type="button" class="btn btn-primary btn-sm" onclick="implementHead('<?= $no_trx ?>')"><i class="fa-solid fa-clone"></i> Apply</button>
                                     </div>
                                 </div>
                             <?php endif; ?>
@@ -799,30 +862,67 @@ class Emr extends CI_Controller
                 </div>
                 <div class="row mb-1">
                     <div class="col-md-12">
-                        <span id="his_diagnosa"><?= ((!empty($emr_dok)) ? $emr_dok->diagnosa_dok : '-') ?></span>
+                        <div class="table-responsive">
+                            <table style="width: 100%;" border="1" cellpadding="5px">
+                                <tr class="text-center">
+                                    <td style="width: 25%;">Bagian</td>
+                                    <td style="width: 75%;">Keterangan</td>
+                                </tr>
+                                <?php if (!empty($emr_dok_fisik)) : ?>
+                                    <?php foreach ($emr_dok_fisik as $edf) : ?>
+                                        <tr>
+                                            <td style="width: 25%;"><?= $edf->fisik ?></td>
+                                            <td style="width: 75%;"><?= $edf->desc_fisik ?></td>
+                                        </tr>
+                                    <?php endforeach ?>
+                                <?php else : ?>
+                                    <tr>
+                                        <td style="width: 100%; text-align: center;" colspan="2">Tidak Ada Head to Toe</td>
+                                    </tr>
+                                <?php endif ?>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <hr>
                 <div class="row mb-1">
                     <div class="col-md-12">
-                        <span class="font-weight-bold">Terapi
-                            <?php
-                            if (($cek_dokter) || ($this->session->userdata('kode_role') == 'R0001')) :
-                            ?>
+                        <span class="font-weight-bold">E-Order
+                            <?php if ($cek_dokter) : ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_terapi')"><i class="fa fa-copy"></i> Copy</button>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="implement_err('<?= ((!empty($emr_dok)) ? $emr_dok->eracikan : '') ?>', 'eracikan', '<?= $p->no_trx ?>')"><i class="fa-solid fa-clone"></i> Apply</button>
+                                        <?php
+                                        $tarif_text = '';
+                                        $emr_tarif = $this->M_global->getDataResult('emr_tarif', ['no_trx' => $p->no_trx]);
+                                        $emr_per_barang = $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $p->no_trx]);
+                                        if ($emr_tarif) {
+                                            foreach ($emr_tarif as $et) {
+                                                $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $et->kode_tarif]);
+                                                if ($tarif) {
+                                                    $tarif_text .= '@' . $tarif->nama . ' | ' . $et->qty . ', ';
+                                                } else {
+                                                    $tarif_text .= '-';
+                                                }
+                                            }
+                                        } else {
+                                            $tarif_text .= '';
+                                        }
+                                        ?>
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyTextOrder('<?= $tarif_text ?>')"><i class="fa fa-copy"></i> Copy</button>
+                                        <button type="button" class="btn btn-primary btn-sm" onclick="implementOrder('<?= $no_trx ?>')"><i class="fa-solid fa-clone"></i> Apply</button>
                                     </div>
                                 </div>
                             <?php endif; ?>
                         </span>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-6">
                                 <span class="text-primary"><b>Tarif / Tindakan</b></span>
                                 <br>
                                 <?php
-                                $emr_tarif = $this->M_global->getDataResult('emr_tarif', ['no_trx' => $p->no_trx]);
                                 if (empty($emr_tarif)) {
                                     echo '-';
                                 } else {
@@ -835,7 +935,7 @@ class Emr extends CI_Controller
                                     foreach ($emr_tarif as $et) :
                                         $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $et->kode_tarif]);
                                         if ($tarif) {
-                                            echo '@' . $tarif->nama . ' | ' . number_format($et->qty) . $br;
+                                            echo '@' . $tarif->nama . ' | ' . $et->qty . $br;
                                         } else {
                                             echo '-';
                                         }
@@ -864,35 +964,12 @@ class Emr extends CI_Controller
                                     endforeach;
                                 }
 
-                                if ($emr_dok->eracikan != '') {
-                                    echo '<br>' . $emr_dok->eracikan;
+                                if ($emr_per->eracikan != '') {
+                                    echo '<br>' . $emr_per->eracikan;
                                 }
                                 ?>
                             </div>
                         </div>
-                        </span>
-                    </div>
-                </div>
-                <hr>
-                <div class="row mb-1">
-                    <div class="col-md-12">
-                        <span class="font-weight-bold">Anjuran
-                            <?php if (($cek_dokter) || ($this->session->userdata('kode_role') == 'R0001')) : ?>
-                                <div class="float-right">
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_rencana')"><i class="fa fa-copy"></i> Copy</button>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="implement('<?= ((!empty($emr_dok)) ? $emr_dok->rencana_dok : '') ?>', 'rencana_dok')"><i class="fa-solid fa-clone"></i> Apply</button>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                        </span>
-                    </div>
-                </div>
-                <div class="row mb-1">
-                    <div class="col-md-12">
-                        <span id="his_rencana">
-                            <span id="his_rencana"><?= ((!empty($emr_dok)) ? $emr_dok->rencana_dok : '-') ?></span>
-                        </span>
                     </div>
                 </div>
             </div>
@@ -922,6 +999,22 @@ class Emr extends CI_Controller
         $emr_dok_fisik = $this->M_global->getDataResult('emr_dok_fisik', ['no_trx' => $no_trx]);
 
         echo json_encode($emr_dok_fisik);
+    }
+
+    // emr icd 9
+    public function emr_dok_icd9($no_trx)
+    {
+        $emr_dok_icd9 = $this->db->query('SELECT icd.*, (SELECT keterangan FROM icd9 WHERE kode = icd.kode_icd) AS nama FROM emr_dok_icd9 icd WHERE icd.no_trx = "' . $no_trx . '"')->result();
+
+        echo json_encode($emr_dok_icd9);
+    }
+
+    // emr icd 10
+    public function emr_dok_icd10($no_trx)
+    {
+        $emr_dok_icd10 = $this->db->query('SELECT icd.*, (SELECT keterangan FROM icd10 WHERE kode = icd.kode_icd) AS nama FROM emr_dok_icd10 icd WHERE icd.no_trx = "' . $no_trx . '"')->result();
+
+        echo json_encode($emr_dok_icd10);
     }
 
     // perawat page

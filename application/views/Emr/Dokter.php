@@ -228,7 +228,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     <div class="row">
                                         <label for="tekanan_darah" class="form-label col-md-3">Tekanan Darah</label>
                                         <div class="col-md-9">
-                                            <input type="text" id="tekanan_darah" name="tekanan_darah" class="form-control" placeholder="mmHg" value="<?= ((!empty($emr_per)) ? $emr_per->tekanan_darah : '') ?>">
+                                            <input type="text" id="tekanan_darah" name="tekanan_darah" class="form-control" placeholder="mmHg" value="<?= ((!empty($emr_per)) ? $emr_per->tekanan_darah : '') ?> mmHg" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -236,7 +236,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     <div class="row">
                                         <label for="nadi" class="form-label col-md-3">Nadi</label>
                                         <div class="col-md-9">
-                                            <input type="text" id="nadi" name="nadi" class="form-control" placeholder="x/mnt" value="<?= ((!empty($emr_per)) ? $emr_per->nadi : '') ?>">
+                                            <input type="text" id="nadi" name="nadi" class="form-control" placeholder="x/mnt" value="<?= ((!empty($emr_per)) ? $emr_per->nadi : '') ?> x/mnt" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -246,7 +246,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     <div class="row">
                                         <label for="suhu" class="form-label col-md-3">Suhu</label>
                                         <div class="col-md-9">
-                                            <input type="text" id="suhu" name="suhu" class="form-control" placeholder="°c" value="<?= ((!empty($emr_per)) ? $emr_per->suhu : '') ?>">
+                                            <input type="text" id="suhu" name="suhu" class="form-control" placeholder="°c" value="<?= ((!empty($emr_per)) ? $emr_per->suhu : '') ?> °c" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -254,7 +254,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     <div class="row">
                                         <label for="bb" class="form-label col-md-3">Berat Badan</label>
                                         <div class="col-md-9">
-                                            <input type="text" id="bb" name="bb" class="form-control" placeholder="kg" value="<?= ((!empty($emr_per)) ? $emr_per->bb : '') ?>">
+                                            <input type="text" id="bb" name="bb" class="form-control" placeholder="kg" value="<?= ((!empty($emr_per)) ? $emr_per->bb : '') ?> kg" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -264,7 +264,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     <div class="row">
                                         <label for="tb" class="form-label col-md-3">Tinggi Badan</label>
                                         <div class="col-md-9">
-                                            <input type="text" id="tb" name="tb" class="form-control" placeholder="cm" value="<?= ((!empty($emr_per)) ? $emr_per->tb : '') ?>">
+                                            <input type="text" id="tb" name="tb" class="form-control" placeholder="cm" value="<?= ((!empty($emr_per)) ? $emr_per->tb : '') ?> cm" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -272,7 +272,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     <div class="row">
                                         <label for="pernapasan" class="form-label col-md-3">Pernapasan</label>
                                         <div class="col-md-9">
-                                            <input type="text" id="pernapasan" name="pernapasan" class="form-control" placeholder="x/mnt" value="<?= ((!empty($emr_per)) ? $emr_per->pernapasan : '') ?>">
+                                            <input type="text" id="pernapasan" name="pernapasan" class="form-control" placeholder="x/mnt" value="<?= ((!empty($emr_per)) ? $emr_per->pernapasan : '') ?> x/mnt" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -282,7 +282,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     <div class="row">
                                         <label for="saturasi" class="form-label col-md-3">Saturasi O2</label>
                                         <div class="col-md-9">
-                                            <input type="text" id="saturasi" name="saturasi" class="form-control" placeholder="%" value="<?= ((!empty($emr_per)) ? $emr_per->saturasi : '') ?>">
+                                            <input type="text" id="saturasi" name="saturasi" class="form-control" placeholder="%" value="<?= ((!empty($emr_per)) ? $emr_per->saturasi : '') ?> %" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -290,13 +290,22 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     <div class="row">
                                         <label for="gizi" class="form-label col-md-3">Status Gizi</label>
                                         <div class="col-md-9">
-                                            <select name="gizi" id="gizi" class="form-control select2_global" data-placeholder="~ Pilih Status Gizi">
-                                                <option value="">~ Pilih Status Gizi</option>
-                                                <option value="0" <?= (!empty($emr_per) ? (($emr_per->gizi == 0) ? 'selected' : '') : '') ?>>Gizi Buruk</option>
-                                                <option value="1" <?= (!empty($emr_per) ? (($emr_per->gizi == 1) ? 'selected' : '') : '') ?>>Gizi Kurang</option>
-                                                <option value="2" <?= (!empty($emr_per) ? (($emr_per->gizi == 2) ? 'selected' : '') : 'selected') ?>>Gizi Cukup</option>
-                                                <option value="3" <?= (!empty($emr_per) ? (($emr_per->gizi == 3) ? 'selected' : '') : '') ?>>Gizi Lebih</option>
-                                            </select>
+                                            <?php
+                                            if (!empty($emr_per)) {
+                                                if ($emr_per->gizi == 0) {
+                                                    $gizi = 'Gizi Buruk';
+                                                } else if ($emr_per->gizi == 1) {
+                                                    $gizi = 'Gizi Kurang';
+                                                } else if ($emr_per->gizi == 2) {
+                                                    $gizi = 'Gizi Cukup';
+                                                } else {
+                                                    $gizi = 'Gizi Lebih';
+                                                }
+                                            } else {
+                                                $gizi = '';
+                                            }
+                                            ?>
+                                            <input type="text" name="gizi" id="gizi" class="form-control" value="<?= $gizi ?>" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -510,7 +519,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                 <div class="col-md-12">
                                     <div class="row">
                                         <div class="col-md-2">
-                                            <button class="btn btn-primary w-100 mb-1" type="button" onclick="sel_tab(0)" id="btn_etarif">Tarif / Tindakan</button>
+                                            <button class="btn btn-primary w-100 mb-1" type="button" onclick="sel_tab(0)" id="btn_etarif">Tindakan</button>
                                             <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(1)" id="btn_eresep">Resep</button>
                                             <!-- <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(2)" id="btn_elab">Laboratorium</button>
                                         <button class="btn btn-light w-100 mb-1" type="button" onclick="sel_tab(3)" id="btn_erad">Radiologi</button> -->
@@ -875,7 +884,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
             tab_elab.hide(200);
             tab_erad.hide(200);
 
-            title_tab.text('Tarif / Tindakan');
+            title_tab.text('Tindakan');
         } else if (param == 1) {
             btn_eresep.addClass('btn-primary');
             btn_eresep.removeClass('btn-light');
@@ -1152,9 +1161,140 @@ if (is_array($p_kel) && !empty($p_kel)) {
         popup2.style.display = 'block';
     }
 
-    function copyText(elementId) {
-        const element = document.getElementById(elementId);
-        const text = element.textContent;
+    async function copyTextSoap(anamnesa_dok_emr, diagnosa_dok_emr, anjuran_dok_emr, tekanan_darah_emr, nadi_emr, suhu_emr, bb_emr, tb_emr, pernapasan_emr, saturasi_emr, gizi_emr, param) {
+        var anamnesa_dok_emr = document.getElementById(anamnesa_dok_emr);
+        var diagnosa_dok_emr = document.getElementById(diagnosa_dok_emr);
+        var anjuran_dok_emr = document.getElementById(anjuran_dok_emr);
+        var tekanan_darah_emr = document.getElementById(tekanan_darah_emr);
+        var nadi_emr = document.getElementById(nadi_emr);
+        var suhu_emr = document.getElementById(suhu_emr);
+        var bb_emr = document.getElementById(bb_emr);
+        var tb_emr = document.getElementById(tb_emr);
+        var pernapasan_emr = document.getElementById(pernapasan_emr);
+        var saturasi_emr = document.getElementById(saturasi_emr);
+        var gizi_emr = document.getElementById(gizi_emr);
+
+        var text = '';
+
+        text += "Tekanan Darah: " + tekanan_darah_emr.textContent + ", Nadi: " + nadi_emr.textContent + ", Suhu: " + suhu_emr.textContent + ", Berat Badan: " + bb_emr.textContent + ", Tinggi Badan: " + tb_emr.textContent + ", Pernapasan: " + pernapasan_emr.textContent + ", Saturasi: " + saturasi_emr.textContent + ", Gizi: " + gizi_emr.textContent + ", Anamnesa: " + anamnesa_dok_emr.textContent + ", Diagnosa: " + diagnosa_dok_emr.textContent + ", Anjuran: " + anjuran_dok_emr.textContent + ', ICD 9: ';
+
+        try {
+            const result = await $.ajax({
+                url: `${siteUrl}Emr/emr_dok_icd9/${param}`,
+                type: 'POST',
+                dataType: 'JSON'
+            });
+
+            const result2 = await $.ajax({
+                url: `${siteUrl}Emr/emr_dok_icd10/${param}`,
+                type: 'POST',
+                dataType: 'JSON'
+            });
+
+            if (result.length > 0) {
+                result.forEach(function(value) {
+                    text += `${value.kode_icd} - ${value.nama}, `;
+                });
+            }
+
+            text += ', ICD 10: ';
+
+            if (result2.length > 0) {
+                result2.forEach(function(value) {
+                    text += `${value.kode_icd} - ${value.nama}, `;
+                });
+            }
+        } catch (error) {
+            error_proccess();
+            return; // Hentikan eksekusi jika terjadi kesalahan
+        }
+
+        try {
+            await navigator.clipboard.writeText(text);
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Teks Berhasil Disalin',
+                showConfirmButton: false,
+                timer: 500
+            });
+        } catch (err) {
+            Swal.fire({
+                position: 'center',
+                icon: 'warning',
+                title: 'Teks Gagal Disalin',
+                showConfirmButton: false,
+                timer: 500
+            });
+        }
+    }
+
+    function implementSoap(anamnesa_dok_emr, diagnosa_dok_emr, anjuran_dok_emr, param) {
+        $('#anamnesa_dok').val(anamnesa_dok_emr);
+        $('#diagnosa_dok').val(diagnosa_dok_emr);
+        $('#rencana_dok').val(anjuran_dok_emr);
+
+        $.ajax({
+            url: `${siteUrl}Emr/emr_dok_icd9/${param}`,
+            type: `POST`,
+            dataType: `JSON`,
+            success: function(result) {
+                if (result.length > 0) {
+                    $('#bodyIcd9').empty();
+
+                    var noicd9 = 1;
+                    $.each(result, function(index, value) {
+                        $('#bodyIcd9').append(`<tr id="row_Icd9${noicd9}">
+                            <td style="width: 15%; text-align: center;">
+                                <button class="btn btn-sm btn-danger" type="button" id="btnHapusIcd9${noicd9}" onclick="hapusIcd9('${noicd9}')"><i class="fa-solid fa-delete-left"></i></button>
+                            </td>
+                            <td style="width: 85%;">
+                                <input type="hidden" name="icd9[]" id="icd9${noicd9}" class="form-control" value="${value.kode_icd}">
+                                <span>${value.kode_icd}, ${value.nama}</span>
+                            </td>
+                        </tr>`)
+
+                        noicd9++;
+                    });
+                }
+            },
+            error: function(error) {
+                error_proccess();
+            }
+        });
+
+        $.ajax({
+            url: `${siteUrl}Emr/emr_dok_icd10/${param}`,
+            type: `POST`,
+            dataType: `JSON`,
+            success: function(result) {
+                if (result.length > 0) {
+                    $('#bodyIcd10').empty();
+
+                    var noicd10 = 1;
+                    $.each(result, function(index, value) {
+                        $('#bodyIcd10').append(`<tr id="row_Icd10${noicd10}">
+                            <td style="width: 15%; text-align: center;">
+                                <button class="btn btn-sm btn-danger" type="button" id="btnHapusIcd10${noicd10}" onclick="hapusIcd10('${noicd10}')"><i class="fa-solid fa-delete-left"></i></button>
+                            </td>
+                            <td style="width: 85%;">
+                                <input type="hidden" name="icd10[]" id="icd10${noicd10}" class="form-control" value="${value.kode_icd}">
+                                <span>${value.kode_icd}, ${value.nama}</span>
+                            </td>
+                        </tr>`)
+
+                        noicd10++;
+                    });
+                }
+            },
+            error: function(error) {
+                error_proccess();
+            }
+        });
+    }
+
+    function copyTextHead(param) {
+        const text = param;
         navigator.clipboard.writeText(text)
             .then(() => {
                 Swal.fire({
@@ -1176,12 +1316,63 @@ if (is_array($p_kel) && !empty($p_kel)) {
             });
     }
 
-    function implement(param, x) {
-        $('#' + x).val(param);
+    function implementHead(param) {
+        $.ajax({
+            url: `${siteUrl}Emr/emr_dok_fisik/${param}`,
+            type: `POST`,
+            dataType: `JSON`,
+            success: function(result) {
+                if (result.length > 0) {
+                    $('#body_fisik').empty();
+
+                    var nohead = 1;
+                    $.each(result, function(index, value) {
+                        $('#body_fisik').append(`<tr id="row_fisik${nohead}">
+                            <td>
+                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus${nohead}" onclick="hapusFisik('${nohead}')"><i class="fa-solid fa-delete-left"></i></button>
+                            </td>
+                            <td>
+                                <input type="text" name="fisik[]" id="fisik${nohead}" class="form-control" value="${value.fisik}">
+                            </td>
+                            <td>
+                                <textarea name="desc_fisik[]" id="desc_fisik${nohead}" class="form-control">${value.desc_fisik}</textarea>
+                            </td>
+                        </tr>`);
+
+                        nohead++;
+                    });
+                }
+            },
+            error: function(error) {
+                error_proccess();
+            }
+        });
     }
 
-    function implement_err(param, x, notrx) {
-        $('#' + x).val(param);
+    function copyTextOrder(x1) {
+        const text = x1;
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Teks Berhasil Disalin",
+                    showConfirmButton: false,
+                    timer: 500
+                });
+            })
+            .catch(err => {
+                Swal.fire({
+                    position: "center",
+                    icon: "warning",
+                    title: "Teks Gagal Disalin",
+                    showConfirmButton: false,
+                    timer: 500
+                });
+            });
+    }
+
+    function implementOrder(notrx) {
         var tbody = $('#body_eresep');
         var tbody2 = $('#body_etarif');
         tbody.empty();
@@ -1262,43 +1453,6 @@ if (is_array($p_kel) && !empty($p_kel)) {
                     initailizeSelect2_tarif_single();
 
                     no2++
-                });
-            },
-            error: function(error) {
-                error_proccess();
-            }
-        });
-    }
-
-    function implement_fisik(param, x, notrx) {
-        $('#' + x).val(param);
-        var tbody = $('#body_fisik');
-        var no = 1;
-
-        if (!notrx) {
-            return;
-        }
-
-        tbody.empty();
-
-        $.ajax({
-            url: `${siteUrl}Emr/emr_dok_fisik/${notrx}`,
-            type: `POST`,
-            dataType: `JSON`,
-            success: function(result) {
-                $.each(result, function(index, value) {
-                    tbody.append(`<tr id="row_fisik${no}">
-                        <td>
-                            <button class="btn btn-sm btn-danger" type="button" id="btnHapus${no}" onclick="hapusFisik('${no}')"><i class="fa-solid fa-delete-left"></i></button>
-                        </td>
-                        <td>
-                            <input type="text" name="fisik[]" id="fisik${no}" class="form-control" value="${value.fisik}">
-                        </td>
-                        <td>
-                            <textarea name="desc_fisik[]" id="desc_fisik${no}" class="form-control">${value.desc_fisik}</textarea>
-                        </td>
-                    </tr>`);
-                    no++
                 });
             },
             error: function(error) {

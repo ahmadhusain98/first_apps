@@ -1063,7 +1063,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
             tab_elab.hide(200);
             tab_erad.hide(200);
 
-            title_tab.text('Tarif / Tindakan');
+            title_tab.text('Tindakan');
         } else if (param == 1) {
             btn_eresep.addClass('btn-primary');
             btn_eresep.removeClass('btn-light');
