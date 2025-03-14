@@ -429,7 +429,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     <div class="row">
                                         <label for="hpht" class="form-label col-md-3">HPHT</label>
                                         <div class="col-md-9">
-                                            <input type="date" name="hpht" id="hpht" class="form-control" value="<?= (!empty($emr_per) ? date('Y-m-d', strtotime($emr_per->hpht)) : '') ?>">
+                                            <input type="date" name="hpht" id="hpht" class="form-control" value="<?= (!empty($emr_per) ? (($emr_per->hpht != null) ? date('Y-m-d', strtotime($emr_per->hpht)) : '') : '') ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -1309,9 +1309,12 @@ if (is_array($p_kel) && !empty($p_kel)) {
         popup2.style.display = 'block';
     }
 
-    function copyText(elementId) {
-        const element = document.getElementById(elementId);
-        const text = element.textContent;
+    function copyTextAssesment(sempoyongan_emr, berjalan_dgn_alat_emr, penompang_emr, keterangan_assesment_emr) {
+        const element = document.getElementById(sempoyongan_emr);
+        const element1 = document.getElementById(berjalan_dgn_alat_emr);
+        const element2 = document.getElementById(penompang_emr);
+        const element3 = document.getElementById(keterangan_assesment_emr);
+        const text = 'Sempoyongan: ' + element.textContent + ', Berjalan dengan alat: ' + element1.textContent + ', Penompang: ' + element2.textContent + ', Keterangan lain: ' + element3.textContent;
         navigator.clipboard.writeText(text)
             .then(() => {
                 Swal.fire({
@@ -1333,108 +1336,226 @@ if (is_array($p_kel) && !empty($p_kel)) {
             });
     }
 
-    function implement(param, x) {
-        $('#' + x).val(param);
+    function implementAssesment(param1, x1, param2, x2, param3, x3, param4, x4) {
+        $('#' + x1).val(param1).change();
+        $('#' + x2).val(param2).change();
+        $('#' + x3).val(param3).change();
+        $('#' + x4).val(param4);
     }
 
-    function implement_err(param, x, notrx) {
-        $('#' + x).val(param);
-        var tbody = $('#body_eresep');
-        var tbody2 = $('#body_etarif');
-        tbody.empty();
-        tbody2.empty();
-        var no = 1;
-        var no2 = 1;
+    function copyTextPemeriksaan(anamnesa_per_emr, diagnosa_per_emr, tekanan_darah_emr, nadi_emr, suhu_emr, bb_emr, tb_emr, pernapasan_emr, saturasi_emr, gizi_emr, hamil_emr, hpht_emr, keterangan_hamil_emr, scale_emr) {
+        const element = document.getElementById(anamnesa_per_emr);
+        const element1 = document.getElementById(diagnosa_per_emr);
+        const element2 = document.getElementById(tekanan_darah_emr);
+        const element3 = document.getElementById(nadi_emr);
+        const element4 = document.getElementById(suhu_emr);
+        const element5 = document.getElementById(bb_emr);
+        const element6 = document.getElementById(tb_emr);
+        const element7 = document.getElementById(pernapasan_emr);
+        const element8 = document.getElementById(saturasi_emr);
+        const element9 = document.getElementById(gizi_emr);
+        const element10 = document.getElementById(hamil_emr);
+        const element11 = document.getElementById(hpht_emr);
+        const element12 = document.getElementById(keterangan_hamil_emr);
+        const element13 = document.getElementById(scale_emr);
+        const text = 'Anamnesa: ' + element.textContent + ', Diagnosa: ' + element1.textContent + ', Tekanan Darah: ' + element2.textContent + ', Nadi: ' + element3.textContent + ', Suhu: ' + element4.textContent + ', Berat Badan: ' + element5.textContent + ', Tinggi Badan: ' + element6.textContent + ', Pernapasan: ' + element7.textContent + ', Saturasi: ' + element8.textContent + ', Gizi: ' + element9.textContent + ', Hamil: ' + element10.textContent + ', HPHT: ' + element11.textContent + ', Keterangan Hamil: ' + element12.textContent + ', Skala Nyeri: ' + element13.textContent;
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Teks Berhasil Disalin",
+                    showConfirmButton: false,
+                    timer: 500
+                });
+            })
+            .catch(err => {
+                Swal.fire({
+                    position: "center",
+                    icon: "warning",
+                    title: "Teks Gagal Disalin",
+                    showConfirmButton: false,
+                    timer: 500
+                });
+            });
+    }
 
-        if (!notrx) {
-            return;
-        }
+    function implementPemeriksaan(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14) {
+        $('#anamnesa_per').val(x1);
+        $('#diagnosa_per').val(x2);
+        $('#tekanan_darah').val(x3);
+        $('#nadi').val(x4);
+        $('#suhu').val(x5);
+        $('#bb').val(x6);
+        $('#tb').val(x7);
+        $('#pernapasan').val(x8);
+        $('#saturasi').val(x9);
+        $('#gizi').val(x10).change();
+        $('#hamil').val(x11).change();
+        $('#hpht').val(x12);
+        $('#keterangan_hamil').val(x13);
+        $('#scale').val(x14);
+        document.getElementById('scale' + x14).checked = true;
+        cek_scale(x14);
+        console.log(x14)
+    }
 
-        tbody.empty();
+    function copyTextPsiko(x1, x2, x3, x4) {
+        const text = 'Bicara: ' + ((x1 == 1) ? 'Normal' : 'Terganggu') + ', Psikologi: ' + ((x2 == 1) ? 'Tenang' : ((x2 == 2) ? 'Gelisah' : 'Emosional')) + ', Spiritual: ' + ((x3 == 1) ? 'Berdiri' : ((x3 == 2) ? 'Duduk' : 'Berbaring')) + ', Gangguan Bicara: ' + x3;
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Teks Berhasil Disalin",
+                    showConfirmButton: false,
+                    timer: 500
+                });
+            })
+            .catch(err => {
+                Swal.fire({
+                    position: "center",
+                    icon: "warning",
+                    title: "Teks Gagal Disalin",
+                    showConfirmButton: false,
+                    timer: 500
+                });
+            });
+    }
 
+    function implementPsiko(x1, x2, x3, x4) {
+        $('#gangguan').val(x4);
+        $('#bicara').val(x1);
+        document.getElementById('bicara' + x1).checed = true;
+        cek_bcr(x1);
+        $('#emosi').val(x2);
+        document.getElementById('emosi' + x2).checed = true;
+        cek_emosi(x2);
+        $('#spiritual').val(x3);
+        document.getElementById('spiritual' + x3).checed = true;
+        cek_spiritual(x3);
+    }
+
+    function copyTextOrder(x1) {
+        const text = x1;
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Teks Berhasil Disalin",
+                    showConfirmButton: false,
+                    timer: 500
+                });
+            })
+            .catch(err => {
+                Swal.fire({
+                    position: "center",
+                    icon: "warning",
+                    title: "Teks Gagal Disalin",
+                    showConfirmButton: false,
+                    timer: 500
+                });
+            });
+    }
+
+    function implementOrder(param) {
+        //etarif
         $.ajax({
-            url: `${siteUrl}Emr/emr_per_barang/${notrx}`,
+            url: `${siteUrl}Emr/emr_tarif/${param}`,
             type: `POST`,
             dataType: `JSON`,
             success: function(result) {
-                $.each(result, function(index, value) {
-                    tbody.append(`<tr id="row_eresep${no}">
-                        <td width="5%" class="text-center">
-                            <button class="btn btn-sm btn-danger" type="button" id="btnHapus${no}" onclick="hapusBarang('${no}')" <?= $btn_diss ?>><i class="fa-solid fa-delete-left"></i></button>
-                        </td>
-                        <td width="30%">
-                            <select name="kode_barang[]" id="kode_barang${no}" class="form-control select2_barang_stok" data-placeholder="~ Pilih Barang" onchange="getSatuan(this.value, '${no}')">
-                                <option value="${value.kode_barang}">${value.nama}</option>
-                            </select>
-                        </td>
-                        <td width="15%">
-                            <select name="kode_satuan[]" id="kode_satuan${no}" class="form-control select2_global" data-placeholder="~ Pilih Satuan">
-                                <option value="${value.kode_satuan}">${value.satuan}</option>
-                            </select>
-                        </td>
-                        <td width="15%">
-                            <input type="text" id="qty${no}" name="qty[]" value="${value.qty}" min="1" class="form-control text-right" onchange="hitung_st('${no}'); formatRp(this.value, 'qty${no}')" <?= $readonly ?>>
-                        </td>
-                        <td width="35%">
-                            <textarea name="signa[]" id="signa${no}" class="form-control" <?= $readonly ?>>${value.signa}</textarea>
-                        </td>
-                    </tr>`);
+                if (result.length > 0) {
+                    $('#body_etarif').empty();
 
-                    initailizeSelect2_barang_stok();
+                    var notar = 1;
 
-                    $(".select2_global").select2({
-                        placeholder: $(this).data('placeholder'),
-                        width: '100%',
-                        allowClear: true,
+                    $.each(result, function(index, value) {
+                        $('#body_etarif').append(`<tr id="row_etarif${notar}">
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-danger" type="button" id="btnHapusT${notar}" onclick="hapusTarif('${notar}')"><i class="fa-solid fa-delete-left"></i></button>
+                            </td>
+                            <td>
+                                <select name="kode_tarif[]" id="kode_tarif${notar}" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tindakan">
+                                    <option value="${value.kode_tarif}">${value.kode_tarif}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" id="qty_tarif${notar}" name="qty_tarif[]" value="${value.qty}" min="1" class="form-control text-right" onchange="formatRp(this.value, 'qty_tarif${notar}')">
+                            </td>
+                        </tr>`);
+
+                        initailizeSelect2_tarif_single();
+
+                        notar++;
                     });
 
-                    no++
-                });
+                    return;
+                }
             },
             error: function(error) {
                 error_proccess();
             }
-        });
+        })
 
+        //eresep
         $.ajax({
-            url: `${siteUrl}Emr/emr_tarif/${notrx}`,
+            url: `${siteUrl}Emr/emr_per_barang/${param}`,
             type: `POST`,
             dataType: `JSON`,
             success: function(result) {
-                $.each(result, function(index, value) {
-                    tbody2.append(`<tr id="row_etarif${no2}">
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-danger" type="button" id="btnHapusT${no2}" onclick="hapusTarif('${no2}')"><i class="fa-solid fa-delete-left"></i></button>
-                        </td>
-                        <td>
-                            <select name="kode_tarif[]" id="kode_tarif${no2}" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tindakan">
-                                <option value="${value.kode_tarif}">${value.nama}</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="text" id="qty_tarif${no2}" name="qty_tarif[]" value="${value.qty}" min="1" class="form-control text-right" onchange="formatRp(this.value, 'qty_tarif${no2}')">
-                        </td>
-                    </tr>`);
+                if (result.length > 0) {
+                    $('#body_eresep').empty();
 
-                    initailizeSelect2_tarif_single();
+                    var norsp = 1;
 
-                    no2++
-                });
+                    $.each(result, function(index, value) {
+                        $('#body_eresep').append(`<tr id="row_eresep${norsp}">
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-danger" type="button" id="btnHapus${norsp}" onclick="hapusBarang('${norsp}')">
+                                    <i class="fa-solid fa-delete-left"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <select name="kode_barang[]" id="kode_barang${norsp}" class="form-control select2_barang_stok" data-placeholder="~ Pilih Barang" onchange="getSatuan(this.value, '${norsp}')">
+                                    <option value="${value.kode_barang}">${value.nama}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="kode_satuan[]" id="kode_satuan${norsp}" class="form-control select2_global" data-placeholder="~ Pilih Satuan">
+                                    <option value="">~ Pilih Satuan</option>
+                                    <?php foreach ($satuan as $s) : ?>
+                                        <option value="<?= $s['kode_satuan'] ?>" ${value.kode_satuan == <?= $s['kode_satuan'] ?> ? 'selected' : '' }><?= $s['keterangan'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" id="qty${norsp}" name="qty[]" value="${value.qty}" min="1" class="form-control text-right" onchange="hitung_st('${norsp}'); formatRp(this.value, 'qty${norsp}')">
+                            </td>
+                            <td>
+                                <textarea name="signa[]" id="signa${norsp}" class="form-control">${value.signa}</textarea>
+                            </td>
+                        </tr>`)
+
+                        initailizeSelect2_barang_stok();
+
+                        $(".select2_global").select2({
+                            placeholder: $(this).data('placeholder'),
+                            width: '100%',
+                            allowClear: true,
+                        });
+
+                        norsp++;
+                    });
+
+                    return;
+                }
             },
             error: function(error) {
                 error_proccess();
             }
-        });
-    }
-
-    function implement_fisik(xi1, x1, xi2, x2, xi3, x3, xi4, x4, xi5, x5, xi6, x6, xi7, x7) {
-        $('#' + x1).val(xi1);
-        $('#' + x2).val(xi2);
-        $('#' + x3).val(xi3);
-        $('#' + x4).val(xi4);
-        $('#' + x5).val(xi5);
-        $('#' + x6).val(xi6);
-        $('#' + x7).val(xi7);
+        })
     }
 </script>
 

@@ -342,15 +342,21 @@ class Emr extends CI_Controller
                     </table>
                 </div>
             </div>
-            <div class="card-footer">
+            <div class="card-footer card-outline card-primary">
                 <div class="row mb-1">
-                    <div class="col-md-12">
-                        <span class="font-weight-bold">Anamnesa
+                    <div class="col-dm-12">
+                        <span class="font-weight-bold">Assesment
                             <?php if (!$cek_dokter) : ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_anamnesa')"><i class="fa fa-copy"></i> Copy</button>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="implement('<?= ((!empty($emr_per)) ? $emr_per->anamnesa_per : '') ?>', 'anamnesa_per')"><i class="fa-solid fa-clone"></i> Apply</button>
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyTextAssesment('sempoyongan_emr', 'berjalan_dgn_alat_emr', 'penompang_emr', 'keterangan_assesment_emr')"><i class="fa fa-copy"></i> Copy</button>
+                                        <button type="button" class="btn btn-primary btn-sm"
+                                            onclick="implementAssesment(
+                                                '<?= ((!empty($emr_per)) ? $emr_per->sempoyongan : '') ?>', 'sempoyongan',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->berjalan_dgn_alat : '') ?>', 'berjalan_dgn_alat',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->penompang : '') ?>', 'penompang',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->keterangan_assesment : '') ?>', 'keterangan_assesment',
+                                            )"><i class="fa-solid fa-clone"></i> Apply</button>
                                     </div>
                                 </div>
                             <?php endif; ?>
@@ -359,7 +365,74 @@ class Emr extends CI_Controller
                 </div>
                 <div class="row mb-1">
                     <div class="col-md-12">
-                        <span id="his_anamnesa"><?= ((!empty($emr_per)) ? $emr_per->anamnesa_per : '-') ?></span>
+                        <div class="table-responsive">
+                            <table style="width: 100%; border-radius: 10px;" border="0" cellpadding="5px;">
+                                <?php
+                                $a1 = (!empty($emr_per) ? $emr_per->sempoyongan : 0);
+                                $a2 = (!empty($emr_per) ? $emr_per->berjalan_dgn_alat : 0);
+                                $b = (!empty($emr_per) ? $emr_per->penompang : 0);
+
+                                if (($a1 == 1) || ($a2 == 1)) {
+                                    $a = 1;
+                                } else {
+                                    $a = 0;
+                                }
+
+                                if (($a == 0) && ($b == 0)) {
+                                    $hasil = 'Tidak Beresiko';
+                                    $nilai = 'Tidak Ditemukan A & B';
+                                } else if (($a == 1) || ($b == 1)) {
+                                    $hasil = 'Beresiko Sedang';
+                                    $nilai = 'Ditemukan Salah Satu Antara A & B';
+                                } else {
+                                    $hasil = 'Beresiko Tinggi';
+                                    $nilai = 'Ditemukan A & B';
+                                }
+                                ?>
+                                <tr>
+                                    <td style="width: 20%;">Sempoyongan</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="sempoyongan_emr"><?= ((!empty($emr_per)) ? (($emr_per->sempoyongan == 1) ? 'Ya' : 'Tidak') : '') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Berjalan Dgn Alat</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="berjalan_dgn_alat_emr"><?= ((!empty($emr_per)) ? (($emr_per->berjalan_dgn_alat == 1) ? 'Ya' : 'Tidak') : '') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Penompang Duduk</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="penompang_emr"><?= ((!empty($emr_per)) ? (($emr_per->penompang == 1) ? 'Ya' : 'Tidak') : '') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Hasil</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="hasil_emr"><?= $hasil ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Nilai</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="nilai_emr"><?= $nilai ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Ket Lain</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="keterangan_assesment_emr"><?= ((!empty($emr_per)) ? $emr_per->keterangan_assesment : '-') ?></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <hr>
@@ -369,15 +442,106 @@ class Emr extends CI_Controller
                             <?php if (!$cek_dokter) : ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_pem_fisik')"><i class="fa fa-copy"></i> Copy</button>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="implement_fisik(
-                                        '<?= ((!empty($emr_per)) ? $emr_per->tekanan_darah : '') ?>', 'tekanan_darah',
-                                        '<?= ((!empty($emr_per)) ? $emr_per->nadi : '') ?>', 'nadi',
-                                        '<?= ((!empty($emr_per)) ? $emr_per->suhu : '') ?>', 'suhu',
-                                        '<?= ((!empty($emr_per)) ? $emr_per->bb : '') ?>', 'bb',
-                                        '<?= ((!empty($emr_per)) ? $emr_per->tb : '') ?>', 'tb',
-                                        '<?= ((!empty($emr_per)) ? $emr_per->pernapasan : '') ?>', 'pernapasan',
-                                        '<?= ((!empty($emr_per)) ? $emr_per->saturasi : '') ?>', 'saturasi'
+                                        <button type="button" class="btn btn-secondary btn-sm"
+                                            onclick="copyTextPemeriksaan('anamnesa_per_emr', 'diagnosa_per_emr', 'tekanan_darah_emr', 'nadi_emr', 'suhu_emr', 'bb_emr', 'tb_emr', 'pernapasan_emr', 'saturasi_emr', 'gizi_emr', 'hamil_emr', 'hpht_emr', 'keterangan_hamil_emr', 'scale_emr')"><i class="fa fa-copy"></i> Copy</button>
+                                        <button type="button" class="btn btn-primary btn-sm" onclick="implementPemeriksaan(
+                                                '<?= ((!empty($emr_per)) ? $emr_per->anamnesa_per : '') ?>',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->diagnosa_per : '') ?>',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->tekanan_darah : '') ?>',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->nadi : '') ?>',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->suhu : '') ?>',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->bb : '') ?>',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->tb : '') ?>',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->pernapasan : '') ?>',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->saturasi : '') ?>',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->gizi : '') ?>',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->hamil : '') ?>',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->hpht : '') ?>',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->keterangan_hamil : '') ?>',
+                                                '<?= ((!empty($emr_per)) ? $emr_per->scale : '') ?>'
+                                            )"><i class="fa-solid fa-clone"></i> Apply</button>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        </span>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <input type="hidden" name="tekanan_darah_emr" id="tekanan_darah_emr" value="<?= (!empty($emr_per) ? $emr_per->tekanan_darah : '') ?>">
+                            <input type="hidden" name="nadi_emr" id="nadi_emr" value="<?= (!empty($emr_per) ? $emr_per->nadi : '') ?>">
+                            <input type="hidden" name="suhu_emr" id="suhu_emr" value="<?= (!empty($emr_per) ? $emr_per->nadi : '') ?>">
+                            <input type="hidden" name="bb_emr" id="bb_emr" value="<?= (!empty($emr_per) ? $emr_per->nadi : '') ?>">
+                            <input type="hidden" name="tb_emr" id="tb_emr" value="<?= (!empty($emr_per) ? $emr_per->nadi : '') ?>">
+                            <input type="hidden" name="pernapasan_emr" id="pernapasan_emr" value="<?= (!empty($emr_per) ? $emr_per->nadi : '') ?>">
+                            <input type="hidden" name="saturasi_emr" id="saturasi_emr" value="<?= (!empty($emr_per) ? $emr_per->nadi : '') ?>">
+                            <input type="hidden" name="gizi_emr" id="gizi_emr" value="<?= (!empty($emr_per) ? $emr_per->nadi : '') ?>">
+                            <table style="width: 100%; border-radius: 10px;" border="0" cellpadding="5px;">
+                                <tr>
+                                    <td style="width: 20%;">Anamnesa</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="anamnesa_per_emr"><?= ((!empty($emr_per)) ? $emr_per->anamnesa_per : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Diagnosa</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="diagnosa_per_emr"><?= ((!empty($emr_per)) ? $emr_per->diagnosa_per : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Pemeriksaan Fisik</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="his_pem_fisik"><?= ((!empty($emr_per)) ? ('Tekanan Darah : ' . $emr_per->tekanan_darah . ' (mmHg) | Nadi : ' . $emr_per->nadi . ' (x/mnt) | Suhu : ' . $emr_per->suhu . ' (°c) | Berat Badan : ' . $emr_per->bb . ' (kg) | Tinggi Badang : ' . $emr_per->tb . ' (cm) | Pernapasan : ' . $emr_per->pernapasan . ' (x/mnt) | Saturasi : ' . $emr_per->saturasi . ' (%) | Gizi : ' . (($emr_per->gizi == 0) ? 'Buruk' : (($emr_per->gizi == 1) ? 'Kurang' : (($emr_per->gizi == 2) ? 'Cukup' : ''))) . '') : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Kehamilan</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="hamil_emr"><?= ((!empty($emr_per)) ? (($emr_per->hamil == 1) ? 'Ya' : 'Tidak') : 'Tidak') ?></span> / HPHT: <span id="hpht_emr"><?= ((!empty($emr_per)) ? (($emr_per->hpht != null) ? date('d-m-Y', strtotime($emr_per->hpht)) : '-') : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;"></td>
+                                    <td style="width: 5%;"></td>
+                                    <td style="width: 75%;">
+                                        Ket: <span id="keterangan_hamil_emr"><?= ((!empty($emr_per)) ? (($emr_per->keterangan_hamil == '') ? '-' : $emr_per->keterangan_hamil) : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Skala Nyeri</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="scale_emr"><?= ((!empty($emr_per)) ? $emr_per->scale : '-') ?></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row mb-1">
+                    <div class="col-md-12">
+                        <span class="font-weight-bold">Psikologi & Spiritual
+                            <?php if (!$cek_dokter) : ?>
+                                <div class="float-right">
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyTextPsiko(
+                                            '<?= (!empty($emr_per) ? $emr_per->bicara : '') ?>',
+                                            '<?= (!empty($emr_per) ? $emr_per->emosi : '') ?>',
+                                            '<?= (!empty($emr_per) ? $emr_per->spiritual : '') ?>',
+                                            '<?= (!empty($emr_per) ? $emr_per->gangguan : '') ?>',
+                                        )"><i class="fa fa-copy"></i> Copy</button>
+                                        <button type="button" class="btn btn-primary btn-sm" onclick="implementPsiko(
+                                            '<?= (!empty($emr_per) ? $emr_per->bicara : '') ?>',
+                                            '<?= (!empty($emr_per) ? $emr_per->emosi : '') ?>',
+                                            '<?= (!empty($emr_per) ? $emr_per->spiritual : '') ?>',
+                                            '<?= (!empty($emr_per) ? $emr_per->gangguan : '') ?>',
                                         )"><i class="fa-solid fa-clone"></i> Apply</button>
                                     </div>
                                 </div>
@@ -387,103 +551,119 @@ class Emr extends CI_Controller
                 </div>
                 <div class="row mb-1">
                     <div class="col-md-12">
-                        <span id="his_pem_fisik"><?= ((!empty($emr_per)) ? ('Tekanan Darah : ' . $emr_per->tekanan_darah . ' (mmHg) | Nadi : ' . $emr_per->nadi . ' (x/mnt) | Suhu : ' . $emr_per->suhu . ' (°c) | Berat Badan : ' . $emr_per->bb . ' (kg) | Tinggi Badang : ' . $emr_per->tb . ' (cm) | Pernapasan : ' . $emr_per->pernapasan . ' (x/mnt) | Saturasi : ' . $emr_per->saturasi . ' (%)') : '-') ?></span>
+                        <div class="table-responsive">
+                            <table style="width: 100%; border-radius: 10px;" border="0" cellpadding="5px;">
+                                <tr>
+                                    <td style="width: 20%;">Cara Bicara</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="bicara_emr"><?= (!empty($emr_per) ? ((($emr_per->bicara == 1) ? 'Bicara Normal' : 'Bicara Terganggu') . ', Ket: ' . (($emr_per->bicara == 2) ? $emr_per->gangguan : '')) : '') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Psikologi</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="psiko_emr"><?= (!empty($emr_per) ? (($emr_per->emosi == 1) ? 'Tenang' : (($emr_per->emosi == 2) ? 'Gelisah' : 'Emosional')) : '') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Spiritual</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="spiritual_emr"><?= (!empty($emr_per) ? (($emr_per->spiritual == 1) ? 'Berdiri' : (($emr_per->spiritual == 2) ? 'Duduk' : 'Berbaring')) : '') ?></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <hr>
                 <div class="row mb-1">
                     <div class="col-md-12">
-                        <span class="font-weight-bold">Diagnosa
+                        <span class="font-weight-bold">E-Order
                             <?php if (!$cek_dokter) : ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_diagnosa')"><i class="fa fa-copy"></i> Copy</button>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="implement('<?= ((!empty($emr_per)) ? $emr_per->diagnosa_per : '') ?>', 'diagnosa_per')"><i class="fa-solid fa-clone"></i> Apply</button>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                        </span>
-                    </div>
-                </div>
-                <div class="row mb-1">
-                    <div class="col-md-12">
-                        <span id="his_diagnosa"><?= ((!empty($emr_per)) ? $emr_per->diagnosa_per : '-') ?></span>
-                    </div>
-                </div>
-                <hr>
-                <div class="row mb-1">
-                    <div class="col-md-12">
-                        <span class="font-weight-bold">Terapi
-                            <?php
-                            if (!$cek_dokter) :
-                            ?>
-                                <div class="float-right">
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyText('his_terapi')"><i class="fa fa-copy"></i> Copy</button>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="implement_err('<?= ((!empty($emr_per)) ? $emr_per->eracikan : '') ?>', 'eracikan', '<?= $p->no_trx ?>')"><i class="fa-solid fa-clone"></i> Apply</button>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                        </span>
-                    </div>
-                </div>
-                <div class="row mb-1">
-                    <div class="col-md-12">
-                        <span id="his_terapi">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <span class="text-primary"><b>Tarif / Tindakan</b></span>
-                                    <br>
-                                    <?php
-                                    $emr_tarif = $this->M_global->getDataResult('emr_tarif', ['no_trx' => $p->no_trx]);
-                                    if (empty($emr_tarif)) {
-                                        echo '-';
-                                    } else {
-                                        if (count($emr_tarif) > 1) {
-                                            $br = '<br>';
-                                        } else {
-                                            $br = '';
-                                        }
-
-                                        foreach ($emr_tarif as $et) :
-                                            $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $et->kode_tarif]);
-                                            if ($tarif) {
-                                                echo '@' . $tarif->nama . ' | ' . $et->qty . $br;
-                                            } else {
-                                                echo '-';
+                                        <?php
+                                        $tarif_text = '';
+                                        $emr_tarif = $this->M_global->getDataResult('emr_tarif', ['no_trx' => $p->no_trx]);
+                                        $emr_per_barang = $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $p->no_trx]);
+                                        if ($emr_tarif) {
+                                            foreach ($emr_tarif as $et) {
+                                                $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $et->kode_tarif]);
+                                                if ($tarif) {
+                                                    $tarif_text .= '@' . $tarif->nama . ' | ' . $et->qty . ', ';
+                                                } else {
+                                                    $tarif_text .= '-';
+                                                }
                                             }
-                                        endforeach;
-                                    }
-                                    ?>
-                                </div>
-                                <div class="col-md-6">
-                                    <span class="text-primary"><b>Resep / Racikan</b></span>
-                                    <br>
-                                    <?php
-                                    $emr_per_barang = $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $p->no_trx]);
-                                    if (empty($emr_per_barang)) {
-                                        echo '-';
-                                    } else {
-                                        if (count($emr_per_barang) > 1) {
-                                            $br = '<br>';
                                         } else {
-                                            $br = '';
+                                            $tarif_text .= '';
                                         }
-
-                                        foreach ($emr_per_barang as $epb) :
-                                            $barang = $this->M_global->getData('barang', ['kode_barang' => $epb->kode_barang]);
-                                            $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $epb->kode_satuan]);
-                                            echo '@' . $barang->nama . ' | ' . $epb->qty . ' ' . $satuan->keterangan . ' | ' . $epb->signa . $br;
-                                        endforeach;
-                                    }
-
-                                    if ($emr_per->eracikan != '') {
-                                        echo '<br>' . $emr_per->eracikan;
-                                    }
-                                    ?>
+                                        ?>
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyTextOrder('<?= $tarif_text ?>')"><i class="fa fa-copy"></i> Copy</button>
+                                        <button type="button" class="btn btn-primary btn-sm" onclick="implementOrder('<?= $no_trx ?>')"><i class="fa-solid fa-clone"></i> Apply</button>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php endif; ?>
                         </span>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span class="text-primary"><b>Tarif / Tindakan</b></span>
+                                <br>
+                                <?php
+                                if (empty($emr_tarif)) {
+                                    echo '-';
+                                } else {
+                                    if (count($emr_tarif) > 1) {
+                                        $br = '<br>';
+                                    } else {
+                                        $br = '';
+                                    }
+
+                                    foreach ($emr_tarif as $et) :
+                                        $tarif = $this->M_global->getData('m_tarif', ['kode_tarif' => $et->kode_tarif]);
+                                        if ($tarif) {
+                                            echo '@' . $tarif->nama . ' | ' . $et->qty . $br;
+                                        } else {
+                                            echo '-';
+                                        }
+                                    endforeach;
+                                }
+                                ?>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="text-primary"><b>Resep / Racikan</b></span>
+                                <br>
+                                <?php
+                                $emr_per_barang = $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $p->no_trx]);
+                                if (empty($emr_per_barang)) {
+                                    echo '-';
+                                } else {
+                                    if (count($emr_per_barang) > 1) {
+                                        $br = '<br>';
+                                    } else {
+                                        $br = '';
+                                    }
+
+                                    foreach ($emr_per_barang as $epb) :
+                                        $barang = $this->M_global->getData('barang', ['kode_barang' => $epb->kode_barang]);
+                                        $satuan = $this->M_global->getData('m_satuan', ['kode_satuan' => $epb->kode_satuan]);
+                                        echo '@' . $barang->nama . ' | ' . $epb->qty . ' ' . $satuan->keterangan . ' | ' . $epb->signa . $br;
+                                    endforeach;
+                                }
+
+                                if ($emr_per->eracikan != '') {
+                                    echo '<br>' . $emr_per->eracikan;
+                                }
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
