@@ -15,8 +15,10 @@ if ($cek_jual) {
 
 if ($pendaftaran->status_trx == 1) {
     $btn_sv = 'disabled';
+    $read_sv = 'readonly';
 } else {
     $btn_sv = '';
+    $read_sv = '';
 }
 
 
@@ -217,9 +219,10 @@ if (is_array($p_kel) && !empty($p_kel)) {
                         </div>
                     </div>
                     <div class="card-header text-center card-outline card-primary">
-                        <button type="button" id="btn_soap" class="btn btn-primary" onclick="sel_tab_emr(1)">SOAP</button>
-                        <button type="button" id="btn_htt" class="btn" onclick="sel_tab_emr(2)">Head to Toe</button>
-                        <button type="button" id="btn_order" class="btn" onclick="sel_tab_emr(3)">E-Order</button>
+                        <button type="button" id="btn_soap" class="btn btn-primary" onclick="sel_tab_emr(1)">Pemeriksaan</button>
+                        <button type="button" id="btn_cppt" class="btn" onclick="sel_tab_emr(2)">CPPT</button>
+                        <button type="button" id="btn_htt" class="btn" onclick="sel_tab_emr(3)">Head to Toe</button>
+                        <button type="button" id="btn_order" class="btn" onclick="sel_tab_emr(4)">E-Order</button>
                     </div>
                     <div class="card-body">
                         <div id="soap_emr">
@@ -378,10 +381,10 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-10">
-                                            <input type="text" class="form-control" name="input_icd9" id="input_icd9" placeholder="Cari ICD 9..." autofocus>
+                                            <input type="text" class="form-control" name="input_icd9" id="input_icd9" placeholder="Cari ICD 9..." <?= $read_sv ?>>
                                         </div>
                                         <div class="col-md-2">
-                                            <button type="button" class="btn btn-primary w-100" onclick="add_icd('9', $('#input_icd9').val())"><i class="fa fa-search"></i> Cari</button>
+                                            <button type="button" class="btn btn-primary w-100" onclick="add_icd('9', $('#input_icd9').val())" <?= $btn_sv ?>><i class="fa fa-search"></i></button>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -399,7 +402,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                                         foreach ($icd9 as $icd9_dok) : ?>
                                                             <tr id="row_Icd9<?= $noicd9 ?>">
                                                                 <td style="width: 15%; text-align: center;">
-                                                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapusIcd9<?= $noicd9 ?>" onclick="hapusIcd9('<?= $noicd9 ?>')"><i class="fa-solid fa-delete-left"></i></button>
+                                                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapusIcd9<?= $noicd9 ?>" onclick="hapusIcd9('<?= $noicd9 ?>')" <?= $btn_sv ?>><i class="fa-solid fa-delete-left"></i></button>
                                                                 </td>
                                                                 <td style="width: 85%;">
                                                                     <input type="hidden" name="icd9[]" id="icd9<?= $noicd9 ?>" class="form-control" value="<?= $icd9_dok->kode_icd ?>">
@@ -422,10 +425,10 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-10">
-                                            <input type="text" class="form-control" name="input_icd10" id="input_icd10" placeholder="Cari ICD 10..." autofocus>
+                                            <input type="text" class="form-control" name="input_icd10" id="input_icd10" placeholder="Cari ICD 10..." <?= $read_sv ?>>
                                         </div>
                                         <div class="col-md-2">
-                                            <button type="button" class="btn btn-primary w-100" onclick="add_icd('10', $('#input_icd10').val())"><i class="fa fa-search"></i> Cari</button>
+                                            <button type="button" class="btn btn-primary w-100" onclick="add_icd('10', $('#input_icd10').val())" <?= $btn_sv ?>><i class="fa fa-search"></i></button>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -443,7 +446,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                                         foreach ($icd10 as $icd10_dok) : ?>
                                                             <tr id="row_Icd10<?= $noicd10 ?>">
                                                                 <td style="width: 15%; text-align: center;">
-                                                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapusIcd10<?= $noicd10 ?>" onclick="hapusIcd10('<?= $noicd10 ?>')"><i class="fa-solid fa-delete-left"></i></button>
+                                                                    <button class="btn btn-sm btn-danger" type="button" id="btnHapusIcd10<?= $noicd10 ?>" onclick="hapusIcd10('<?= $noicd10 ?>')" <?= $btn_sv ?>><i class="fa-solid fa-delete-left"></i></button>
                                                                 </td>
                                                                 <td style="width: 85%;">
                                                                     <input type="hidden" name="icd10[]" id="icd10<?= $noicd10 ?>" class="form-control" value="<?= $icd10_dok->kode_icd ?>">
@@ -456,6 +459,83 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                                 </tbody>
                                             </table>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="cppt_emr">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="ppa" class="form-label col-md-3">Perawat PPA</label>
+                                        <div class="col-md-9">
+                                            <select name="ppa" id="ppa" class="form-control select2_dokter_all" data-placeholder="~ Pilih PPA">
+                                                <?php if (!empty($emr_dok_cppt)) : ?>
+                                                    <option value="<?= $emr_dok_cppt->ppa ?>">Dr. <?= $this->M_global->getData('dokter', ['kode_dokter' => $emr_dok_cppt->ppa])->nama ?></option>
+                                                <?php endif; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="instruksi" class="form-label col-md-3">Instruksi</label>
+                                        <div class="col-md-9">
+                                            <input type="text" name="instruksi" id="instruksi" class="form-control" placeholder="Instruksi..." value="<?= (!empty($emr_dok_cppt) ? $emr_dok_cppt->instruksi : '') ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-1">
+                                            <div class="row mb-1">
+                                                <div class="col-md-1 m-auto">
+                                                    <span>S</span>
+                                                </div>
+                                                <div class="col-md-11">
+                                                    <textarea name="soap_s" id="soap_s" class="form-control" rows="3" style="width: 100%;"><?= (!empty($emr_dok_cppt) ? $emr_dok_cppt->soap_s : '') ?></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-1">
+                                                <div class="col-md-1 m-auto">
+                                                    <span>O</span>
+                                                </div>
+                                                <div class="col-md-11">
+                                                    <textarea name="soap_o" id="soap_o" class="form-control" rows="3" style="width: 100%;"><?= (!empty($emr_dok_cppt) ? $emr_dok_cppt->soap_o : '') ?></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-1">
+                                                <div class="col-md-1 m-auto">
+                                                    <span>A</span>
+                                                </div>
+                                                <div class="col-md-11">
+                                                    <textarea name="soap_a" id="soap_a" class="form-control" rows="3" style="width: 100%;"><?= (!empty($emr_dok_cppt) ? $emr_dok_cppt->soap_a : '') ?></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-1">
+                                                <div class="col-md-1 m-auto">
+                                                    <span>P</span>
+                                                </div>
+                                                <div class="col-md-11">
+                                                    <textarea name="soap_p" id="soap_p" class="form-control" rows="3" style="width: 100%;"><?= (!empty($emr_dok_cppt) ? $emr_dok_cppt->soap_p : '') ?></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-bordered" style="width: 100%; border-radius: 10px;">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th style="width: 30%; border-radius: 10px 0px 0px 0px;">Dokter</th>
+                                                    <th style="width: 70%; border-radius: 0px 10px 0px 0px;">SOAP</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="body_cppt"></tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -749,9 +829,11 @@ if (is_array($p_kel) && !empty($p_kel)) {
     var anamnesa_dok = $("#anamnesa_dok");
     var filter_dokter = $("#filter_dokter");
     const btn_soap = $('#btn_soap');
+    const btn_cppt = $('#btn_cppt');
     const btn_htt = $('#btn_htt');
     const btn_order = $('#btn_order');
     const soap_emr = $('#soap_emr');
+    const cppt_emr = $('#cppt_emr');
     const htt_emr = $('#htt_emr');
     const order_emr = $('#order_emr');
     const btn_etarif = $('#btn_etarif');
@@ -765,8 +847,58 @@ if (is_array($p_kel) && !empty($p_kel)) {
     let title_tab = $('#title_tab');
 
     history_px();
+    body_cppt('<?= $pendaftaran->kode_member ?>');
     sel_tab(0);
     sel_tab_emr(1);
+
+    function body_cppt(param) {
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("body_cppt").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "<?= base_url('Emr/body_cppt/'); ?>" + param, true);
+        xhttp.send();
+    }
+
+    function verif_cppt(param, verif) {
+        if (verif == 1) {
+            var message = 'Diverifikasi!';
+        } else {
+            var message = 'Dibatalkan Verifikasi!';
+        }
+
+        $.ajax({
+            url: `${siteUrl}Emr/verif_cppt/${param}/${verif}`,
+            type: `POST`,
+            dataType: `JSON`,
+            success: function(result) {
+                body_cppt('<?= $pendaftaran->kode_member ?>')
+
+                if (result.status == 1) {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Berhasil " + message,
+                        showConfirmButton: false,
+                        timer: 500
+                    });
+                } else {
+                    Swal.fire({
+                        position: "center",
+                        icon: "info",
+                        title: "Gagal " + message,
+                        showConfirmButton: false,
+                        timer: 500
+                    });
+                }
+            },
+            error: function(error) {
+                error_proccess();
+            }
+        });
+    }
 
     function history_px() {
         xhttp = new XMLHttpRequest();
@@ -783,26 +915,42 @@ if (is_array($p_kel) && !empty($p_kel)) {
     function sel_tab_emr(param) {
         if (param == 1) {
             btn_soap.addClass('btn-primary');
+            btn_cppt.removeClass('btn-primary');
             btn_htt.removeClass('btn-primary');
             btn_order.removeClass('btn-primary');
 
             soap_emr.show(200);
+            cppt_emr.hide(200);
             htt_emr.hide(200);
             order_emr.hide(200);
         } else if (param == 2) {
             btn_soap.removeClass('btn-primary');
+            btn_cppt.addClass('btn-primary');
+            btn_htt.removeClass('btn-primary');
+            btn_order.removeClass('btn-primary');
+
+            soap_emr.hide(200);
+            cppt_emr.show(200);
+            htt_emr.hide(200);
+            order_emr.hide(200);
+        } else if (param == 3) {
+            btn_soap.removeClass('btn-primary');
+            btn_cppt.removeClass('btn-primary');
             btn_htt.addClass('btn-primary');
             btn_order.removeClass('btn-primary');
 
             soap_emr.hide(200);
+            cppt_emr.hide(200);
             htt_emr.show(200);
             order_emr.hide(200);
         } else {
             btn_soap.removeClass('btn-primary');
+            btn_cppt.removeClass('btn-primary');
             btn_htt.removeClass('btn-primary');
             btn_order.addClass('btn-primary');
 
             soap_emr.hide(200);
+            cppt_emr.hide(200);
             htt_emr.hide(200);
             order_emr.show(200);
         }
@@ -1459,6 +1607,45 @@ if (is_array($p_kel) && !empty($p_kel)) {
                 error_proccess();
             }
         });
+    }
+
+    function copyTextCppt(soap_s_emr, soap_o_emr, soap_a_emr, soap_p_emr, ppa_emr, instruksi_emr, verifikasi_emr) {
+        var soap_s_emr = document.getElementById(soap_s_emr).textContent;
+        var soap_o_emr = document.getElementById(soap_o_emr).textContent;
+        var soap_a_emr = document.getElementById(soap_a_emr).textContent;
+        var soap_p_emr = document.getElementById(soap_p_emr).textContent;
+        var ppa_emr = document.getElementById(ppa_emr).textContent;
+        var instruksi_emr = document.getElementById(instruksi_emr).textContent;
+        var verifikasi_emr = document.getElementById(verifikasi_emr).textContent;
+        var text = 'PPA: ' + ppa_emr + ', Instruksi: ' + instruksi_emr + ', Verifikasi: ' + verifikasi_emr + ', SOAP (S): ' + soap_s_emr + ', SOAP (O): ' + soap_o_emr + ', SOAP (A): ' + soap_a_emr + ', SOAP (P): ' + soap_p_emr;
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Teks Berhasil Disalin",
+                    showConfirmButton: false,
+                    timer: 500
+                });
+            })
+            .catch(err => {
+                Swal.fire({
+                    position: "center",
+                    icon: "warning",
+                    title: "Teks Gagal Disalin",
+                    showConfirmButton: false,
+                    timer: 500
+                });
+            });
+    }
+
+    function implementCppt(ppa_emr, ppa_emr2, instruksi_emr, soap_s_emr, soap_o_emr, soap_a_emr, soap_p_emr) {
+        $('#ppa').append('<option value="' + ppa_emr + '">' + ppa_emr2 + '</option>');
+        $('#instruksi').val(instruksi_emr);
+        $('#soap_s').val(soap_s_emr);
+        $('#soap_o').val(soap_o_emr);
+        $('#soap_a').val(soap_a_emr);
+        $('#soap_p').val(soap_p_emr);
     }
 </script>
 

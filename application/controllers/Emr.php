@@ -687,6 +687,7 @@ class Emr extends CI_Controller
         $emr_per        = $this->M_global->getData('emr_per', ['no_trx' => $no_trx]);
         $emr_dok        = $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]);
         $emr_dok_fisik  = $this->M_global->getDataResult('emr_dok_fisik', ['no_trx' => $no_trx]);
+        $emr_dok_cppt   = $this->M_global->getData('emr_dok_cppt', ['no_trx' => $no_trx]);
 
         $icd9           = $this->M_global->getDataResult('emr_dok_icd9', ['no_trx' => $no_trx]);
         $icd10          = $this->M_global->getDataResult('emr_dok_icd10', ['no_trx' => $no_trx]);
@@ -730,7 +731,7 @@ class Emr extends CI_Controller
             <div class="card-footer card-outline card-primary">
                 <div class="row mb-1">
                     <div class="col-md-12">
-                        <span class="font-weight-bold">SOAP
+                        <span class="font-weight-bold">Pemeriksaan
                             <?php if (($cek_dokter) || ($this->session->userdata('kode_role') == 'R0001')) : ?>
                                 <div class="float-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
@@ -828,6 +829,88 @@ class Emr extends CI_Controller
                                                 </tr>
                                             <?php endif ?>
                                         </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row mb-1">
+                    <div class="col-md-12">
+                        <span class="font-weight-bold">CPPT
+                            <?php if (($cek_dokter) || ($this->session->userdata('kode_role') == 'R0001')) : ?>
+                                <div class="float-right">
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyTextCppt('soap_s_emr', 'soap_o_emr', 'soap_a_emr', 'soap_p_emr', 'ppa_his', 'instruksi_emr', 'verifikasi_his')"><i class="fa fa-copy"></i> Copy</button>
+                                        <button type="button" class="btn btn-primary btn-sm" onclick="implementCppt(
+                                            '<?= ((!empty($emr_dok_cppt)) ? $emr_dok_cppt->ppa : '') ?>',
+                                            '<?= ((!empty($emr_dok_cppt)) ? 'Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $emr_dok_cppt->ppa])->nama : '') ?>',
+                                            '<?= ((!empty($emr_dok_cppt)) ? $emr_dok_cppt->instruksi : '') ?>',
+                                            '<?= ((!empty($emr_dok_cppt)) ? $emr_dok_cppt->soap_s : '') ?>',
+                                            '<?= ((!empty($emr_dok_cppt)) ? $emr_dok_cppt->soap_o : '') ?>',
+                                            '<?= ((!empty($emr_dok_cppt)) ? $emr_dok_cppt->soap_a : '') ?>',
+                                            '<?= ((!empty($emr_dok_cppt)) ? $emr_dok_cppt->soap_p : '') ?>'
+                                        )"><i class="fa-solid fa-clone"></i> Apply</button>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        </span>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table style="width: 100%;" border="0" cellpadding="5px">
+                                <tr>
+                                    <td style="width: 20%;">Status</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="verifikasi_emr" style="display: none;"><?= ((!empty($emr_dok_cppt)) ? $emr_dok_cppt->verifikasi : '-') ?></span>
+                                        <span id="verifikasi_his"><?= ((!empty($emr_dok_cppt)) ? (($emr_dok_cppt->verifikasi == 1) ? 'Terverifikasi' : 'Belum Diverifikasi') : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">PPA</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="ppa_emr" style="display: none;"><?= ((!empty($emr_dok_cppt)) ? $emr_dok_cppt->ppa : '-') ?></span>
+                                        <span id="ppa_his"><?= ((!empty($emr_dok_cppt)) ? 'Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $emr_dok_cppt->ppa])->nama : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Instruksi</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="instruksi_emr"><?= ((!empty($emr_dok_cppt)) ? $emr_dok_cppt->instruksi : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">S</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="soap_s_emr"><?= ((!empty($emr_dok_cppt)) ? $emr_dok_cppt->soap_s : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">O</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="soap_o_emr"><?= ((!empty($emr_dok_cppt)) ? $emr_dok_cppt->soap_o : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">A</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="soap_a_emr"><?= ((!empty($emr_dok_cppt)) ? $emr_dok_cppt->soap_a : '-') ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">P</td>
+                                    <td style="width: 5%;"> : </td>
+                                    <td style="width: 75%;">
+                                        <span id="soap_p_emr"><?= ((!empty($emr_dok_cppt)) ? $emr_dok_cppt->soap_p : '-') ?></span>
                                     </td>
                                 </tr>
                             </table>
@@ -973,7 +1056,7 @@ class Emr extends CI_Controller
                     </div>
                 </div>
             </div>
-<?php $no_his--;
+            <?php $no_his--;
         endforeach;
     }
 
@@ -1244,6 +1327,7 @@ class Emr extends CI_Controller
                 'kode_dokter'       => $kode_dokter,
                 'emr_per'           => $this->M_global->getData('emr_per', ['no_trx' => $no_trx]),
                 'emr_dok'           => $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]),
+                'emr_dok_cppt'      => $this->M_global->getData('emr_dok_cppt', ['no_trx' => $no_trx]),
                 'emr_dok_fisik'     => $this->M_global->getDataResult('emr_dok_fisik', ['no_trx' => $no_trx]),
                 'eresep'            => $this->M_global->getDataResult('emr_per_barang', ['no_trx' => $no_trx]),
                 'etarif'            => $this->M_global->getDataResult('emr_tarif', ['no_trx' => $no_trx]),
@@ -1287,6 +1371,13 @@ class Emr extends CI_Controller
         $icd9                 = $this->input->post('icd9');
         $icd10                = $this->input->post('icd10');
 
+        $ppa                  = htmlspecialchars($this->input->post('ppa'));
+        $instruksi            = htmlspecialchars($this->input->post('instruksi'));
+        $soap_s               = htmlspecialchars($this->input->post('soap_s'));
+        $soap_o               = htmlspecialchars($this->input->post('soap_o'));
+        $soap_a               = htmlspecialchars($this->input->post('soap_a'));
+        $soap_p               = htmlspecialchars($this->input->post('soap_p'));
+
         // tampung dalam array
         $data = [
             'no_trx'            => $no_trx,
@@ -1306,6 +1397,22 @@ class Emr extends CI_Controller
         // pengecekan data emr perawat
         $cek_emr_dok = $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]);
 
+        // tambung data soal dalam array
+        $data_cppt = [
+            'no_trx'            => $no_trx,
+            'date_cppt'         => date('Y-m-d'),
+            'time_cppt'         => date('H:i:s'),
+            'dpjp'              => $this->data['kode_user'],
+            'ppa'               => $ppa,
+            'instruksi'         => $instruksi,
+            'soap_s'            => $soap_s,
+            'soap_o'            => $soap_o,
+            'soap_a'            => $soap_a,
+            'soap_p'            => $soap_p,
+            'kode_member'       => $kode_member,
+            'verifikasi'        => 0,
+        ];
+
         if ($cek_emr_dok) { // jika ada data, maka update
             $cek = [
                 $this->M_global->updateData('emr_dok', $data, ['no_trx' => $no_trx]),
@@ -1315,6 +1422,7 @@ class Emr extends CI_Controller
                 $this->M_global->delData('emr_tarif', ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_dok_icd9', ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_dok_icd10', ['no_trx' => $no_trx]),
+                $this->M_global->delData('emr_dok_cppt', ['no_trx' => $no_trx]),
             ];
 
             aktifitas_user_transaksi('EMR', 'Mengubah Emr Dokter ' . $kode_member, $no_trx);
@@ -1328,6 +1436,9 @@ class Emr extends CI_Controller
 
             aktifitas_user_transaksi('EMR', 'Menambahkan Emr Dokter ' . $kode_member, $no_trx);
         }
+
+        // simpan data cppt
+        $this->M_global->insertData('emr_dok_cppt', $data_cppt);
 
         $loop = 0;
         if (isset($kode_barang)) {
@@ -1434,6 +1545,70 @@ class Emr extends CI_Controller
 
             echo json_encode(['status' => 1]);
         } else { // selain itu status 0
+            echo json_encode(['status' => 0]);
+        }
+    }
+
+    public function body_cppt($kode_member)
+    {
+        $soap = $this->M_global->getDataResult('emr_dok_cppt', ['kode_member' => $kode_member]);
+        if (!empty($soap)) :
+            echo '<tbody>';
+            foreach ($soap as $s) : ?>
+                <tr>
+                    <td>
+                        <?= date('d-m-Y', strtotime($s->date_cppt)) . ' / ' . date('H:i', strtotime($s->time_cppt)) ?>
+                        <hr>
+                        <?= 'DPJP: Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $s->dpjp])->nama ?>
+                        <br>
+                        <?= 'PPA: Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $s->ppa])->nama ?>
+                        <hr>
+                        <span class="badge badge-<?= (($s->verifikasi == 1) ? 'primary' : 'info') ?>">
+                            <?= ($s->verifikasi == 1) ? 'Terverifikasi' : 'Belum Diverifikasi' ?>
+                        </span><span><?= (($s->date_verif != null) ? '<br>' . date('d-m-Y', strtotime($s->date_verif)) . ' / ' . date('H:i', strtotime($s->time_verif)) : '') ?></span>
+                        <hr>
+                        <?php if ($s->verifikasi == 0) : ?>
+                            <button type="button" class="btn btn-warning" onclick="verif_cppt('<?= $s->no_trx ?>', '1')">Verifikasi</button>
+                        <?php else : ?>
+                            <button type="button" class="btn btn-danger" onclick="verif_cppt('<?= $s->no_trx ?>', '0')">Batal Verifikasi</button>
+                        <?php endif ?>
+                    </td>
+                    <td>
+                        S: <?= $s->soap_s ?>
+                        <hr>
+                        O: <?= $s->soap_o ?>
+                        <hr>
+                        A: <?= $s->soap_a ?>
+                        <hr>
+                        P: <?= $s->soap_p ?>
+                    </td>
+                </tr>
+        <?php endforeach;
+            echo '</tbody>';
+        endif ?>
+<?php
+    }
+
+    public function verif_cppt($no_trx, $param)
+    {
+        if ($param == 1) {
+            $data = [
+                'verifikasi' => 1,
+                'date_verif' => date('Y-m-d'),
+                'time_verif' => date('H:i:s'),
+            ];
+        } else {
+            $data = [
+                'verifikasi' => 0,
+                'date_verif' => null,
+                'time_verif' => null,
+            ];
+        }
+        $cek = $this->M_global->updateData('emr_dok_cppt', $data, ['no_trx' => $no_trx]);
+
+        if ($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
             echo json_encode(['status' => 0]);
         }
     }
