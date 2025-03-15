@@ -75,6 +75,40 @@ function singkatTeks($teks, $panjang = 10)
     }
 }
 
+function nosurat($table)
+{
+    $CI         = &get_instance();
+    $smtp_apps  = $CI->db->query("SELECT * FROM web_setting WHERE id = 1")->row();
+    $surat_ke   = count($CI->M_global->getResult($table));
+    if (date('m') == 12) {
+        $month = 'XII';
+    } else if (date('m') == 11) {
+        $month = 'XI';
+    } else if (date('m') == 10) {
+        $month = 'X';
+    } else if (date('m') == 9) {
+        $month = 'IX';
+    } else if (date('m') == 8) {
+        $month = 'VIII';
+    } else if (date('m') == 7) {
+        $month = 'VII';
+    } else if (date('m') == 6) {
+        $month = 'VI';
+    } else if (date('m') == 5) {
+        $month = 'V';
+    } else if (date('m') == 4) {
+        $month = 'IV';
+    } else if (date('m') == 3) {
+        $month = 'III';
+    } else if (date('m') == 2) {
+        $month = 'II';
+    } else {
+        $month = 'I';
+    }
+
+    return 'No. ' . $surat_ke . '/' . str_replace(' ', '', $smtp_apps->nama) . '/' . $month . '/' . date('Y');
+}
+
 function aktifitas_user($menu, $message, $kode, $value, $detail = [])
 {
     $CI       = &get_instance();

@@ -165,19 +165,19 @@ class Emr extends CI_Controller
             }
 
             $row[] = '<div class="d-flex justify-content-center">
-            ' . $button . '
-            <div class="btn-group dropstart" style="margin-bottom: 5px;">
-                <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-envelope-open-text"></i> Surat
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Surat Keterangan Sakit</a></li>
-                    <li><a class="dropdown-item" href="#">Surat Keterangan Dokter</a></li>
-                    <li><a class="dropdown-item" href="#">Surat Keterangan Diagnosa</a></li>
-                    <li><a class="dropdown-item" href="#">Surat Keterangan Dalam Perawatan</a></li>
-                </ul>
-            </div>
-        </div>';
+                ' . $button . '
+                <div class="btn-group dropstart" style="margin-bottom: 5px;">
+                    <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-envelope-open-text"></i> Surat
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="' . site_url("Emr/suket_sakit/") . $rd->no_trx . '" target="_blank">Surat Keterangan Sakit</a></li>
+                        <li><a class="dropdown-item" href="' . site_url("Emr/suket_dokter/") . $rd->no_trx . '" target="_blank">Surat Keterangan Dokter</a></li>
+                        <li><a class="dropdown-item" href="' . site_url("Emr/suket_diagnosa/") . $rd->no_trx . '" target="_blank">Surat Keterangan Diagnosa</a></li>
+                        <li><a class="dropdown-item" href="' . site_url("Emr/suket_dalam_perawatan/") . $rd->no_trx . '" target="_blank">Surat Keterangan Dalam Perawatan</a></li>
+                    </ul>
+                </div>
+            </div>';
 
             $data[] = $row;
         }
@@ -192,6 +192,344 @@ class Emr extends CI_Controller
 
         // Kirimkan ke view
         echo json_encode($output);
+    }
+
+    // fungsi cetak suket_sakit
+    function suket_sakit($no_trx)
+    {
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $emr_dok        = $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]);
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        $member = $this->M_global->getData('member', ['kode_member' => $emr_dok->kode_member]);
+
+        $prov   = $this->M_global->getData('m_provinsi', ['kode_provinsi' => $member->provinsi])->provinsi;
+        $kab    = $this->M_global->getData('kabupaten', ['kode_kabupaten' => $member->kabupaten])->kabupaten;
+        $kec    = $this->M_global->getData('kecamatan', ['kode_kecamatan' => $member->kecamatan])->kecamatan;
+
+        $judul = 'Suket_sakit_' . $no_trx;
+        $filename = $judul;
+
+        $body .= '<div class="row">
+            <div class="col-md-12" style="text-align: center; margin-top: 10px; font-size: 12px; font-weight: bold;"><u>SURAT KETERANGAN SAKIT</u></div>
+            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 10px;">' . nosurat('emr_dok') . '</div>
+        </div>';
+
+        $body .= '<table style="text-align: left; vertical-align: top;">';
+
+        $body .= '<tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="3">Menerangkan bahwa:</td>
+        </tr>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width: 15%;">Nama</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 83%;">' . $member->nama . ' (' . (($member->jkel == 'P') ? 'Laki-laki' : 'Perempuan') . ')' . '</td>
+        </tr>
+        <tr>
+            <td style="width: 15%;">Umur</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 83%;">' . hitung_umur($member->tgl_lahir) . '</td>
+        </tr>
+        <tr>
+            <td style="width: 15%;">Pekerjaan</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 83%;">' . $this->M_global->getData('m_pekerjaan', ['kode_pekerjaan' => $member->pekerjaan])->keterangan . '</td>
+        </tr>
+        <tr>
+            <td style="width: 15%;">Alamat</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 83%;">Prov: ' . $prov . ', Kab: ' . $kab . ', Kec: ' . $kec . '<br>Desa: ' . $member->desa . ', rt/rw: ' . $member->rt . '/' . $member->rw . ' (' . $member->kodepos . ')' . '</td>
+        </tr>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="3">Setelah diperiksa kesehatannya, ternyata pada saat ini dalam keadaan <b>SAKIT</b> dan memerlukan <b>istirahat selama (.....) Hari</b></td>
+        </tr>
+        <tr>
+            <td colspan="3">Terhitung tanggal (....................) s.d (....................)</td>
+        </tr>
+        <tr>
+            <td colspan="3">Demikian surat keterangan ini untuk dapat dipergunakan seperlunya</td>
+        </tr>';
+
+        $body .= '</table>';
+
+        cetak_pdf_suket($judul, $body, 1, $position, $filename, $web_setting, $emr_dok->kode_user);
+    }
+
+    // fungsi cetak suket_dokter
+    function suket_dokter($no_trx)
+    {
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $emr_dok        = $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]);
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        $member = $this->M_global->getData('member', ['kode_member' => $emr_dok->kode_member]);
+
+        $prov   = $this->M_global->getData('m_provinsi', ['kode_provinsi' => $member->provinsi])->provinsi;
+        $kab    = $this->M_global->getData('kabupaten', ['kode_kabupaten' => $member->kabupaten])->kabupaten;
+        $kec    = $this->M_global->getData('kecamatan', ['kode_kecamatan' => $member->kecamatan])->kecamatan;
+
+        $judul = 'Suket_dokter_' . $no_trx;
+        $filename = $judul;
+
+        $body .= '<div class="row">
+            <div class="col-md-12" style="text-align: center; margin-top: 10px; font-size: 12px; font-weight: bold;"><u>SURAT KETERANGAN DOKTER</u></div>
+            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 10px;">' . nosurat('emr_dok') . '</div>
+        </div>';
+
+        $body .= '<table style="text-align: left; vertical-align: top;">';
+
+        $body .= '<tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="3">Yang bertanda tangan dibawah ini:</td>
+        </tr>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width: 15%;">Nama</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 83%;">' . $member->nama . ' (' . (($member->jkel == 'P') ? 'Laki-laki' : 'Perempuan') . ')' . '</td>
+        </tr>
+        <tr>
+            <td style="width: 15%;">Umur</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 83%;">' . hitung_umur($member->tgl_lahir) . '</td>
+        </tr>
+        <tr>
+            <td style="width: 15%;">Pekerjaan</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 83%;">' . $this->M_global->getData('m_pekerjaan', ['kode_pekerjaan' => $member->pekerjaan])->keterangan . '</td>
+        </tr>
+        <tr>
+            <td style="width: 15%;">Alamat</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 83%;">Prov: ' . $prov . ', Kab: ' . $kab . ', Kec: ' . $kec . '<br>Desa: ' . $member->desa . ', rt/rw: ' . $member->rt . '/' . $member->rw . ' (' . $member->kodepos . ')' . '</td>
+        </tr>
+        <tr>
+            <td style="width: 15%;">No Hp</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 83%;">' . $member->nohp . '</td>
+        </tr>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="3">Membutuhkan <b>istirahat selama (......) Hari</b></td>
+        </tr>
+        <tr>
+            <td colspan="3">Terhitung tanggal (....................) s.d (....................)</td>
+        </tr>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="3">Diagnosa: ' . (($emr_dok->diagnosa != '') ? $emr_dok->diagnosa : '-') . '</td>
+        </tr>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="3">Demikian surat keterangan sakit ini diberikan untuk digunakan sebagai mana mestinya</td>
+        </tr>';
+
+        $body .= '</table>';
+
+        cetak_pdf_suket($judul, $body, 1, $position, $filename, $web_setting, $emr_dok->kode_user);
+    }
+
+    // fungsi cetak suket_diagnosa
+    function suket_diagnosa($no_trx)
+    {
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $emr_dok        = $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]);
+        $emr_per        = $this->M_global->getData('emr_per', ['no_trx' => $no_trx]);
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        $member = $this->M_global->getData('member', ['kode_member' => $emr_dok->kode_member]);
+
+        $prov   = $this->M_global->getData('m_provinsi', ['kode_provinsi' => $member->provinsi])->provinsi;
+        $kab    = $this->M_global->getData('kabupaten', ['kode_kabupaten' => $member->kabupaten])->kabupaten;
+        $kec    = $this->M_global->getData('kecamatan', ['kode_kecamatan' => $member->kecamatan])->kecamatan;
+
+        $judul = 'Suket_diagnosa_' . $no_trx;
+        $filename = $judul;
+
+        $body .= '<div class="row">
+            <div class="col-md-12" style="text-align: center; margin-top: 10px; font-size: 12px; font-weight: bold;"><u>SURAT KETERANGAN DIAGNOSA</u></div>
+            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 10px;">' . nosurat('emr_dok') . '</div>
+        </div>';
+
+        $body .= '<table style="text-align: left; vertical-align: top;">';
+
+        $body .= '<tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="3">Yang bertanda tangan dibawah ini adalah <b>Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $emr_dok->kode_user])->nama . '</b> dari <b>' . $web_setting->nama . '</b> menerangkan bahwa:</td>
+        </tr>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width: 25%;">No RM</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 73%;">' . $member->kode_member . '</td>
+        </tr>
+        <tr>
+            <td style="width: 25%;">Nama</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 73%;">' . $member->nama . ' (' . (($member->jkel == 'P') ? 'Laki-laki' : 'Perempuan') . ')' . '</td>
+        </tr>
+        <tr>
+            <td style="width: 25%;">Lahir</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 73%;">' . $member->tmp_lahir . ' (' . date('d-m-Y', strtotime($member->tgl_lahir)) . ')' . '</td>
+        </tr>
+        <tr>
+            <td style="width: 25%;">Jenis Kelamin</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 73%;">' . (($member->jkel == 'P') ? 'Laki-laki' : 'Perempuan') . '</td>
+        </tr>
+        <tr>
+            <td style="width: 25%;">Berat Badan</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 73%;">' . $emr_per->bb . ' (kg)</td>
+        </tr>
+        <tr>
+            <td style="width: 25%;">Tinggi Badan</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 73%;">' . $emr_per->tb . ' (cm)</td>
+        </tr>
+        <tr>
+            <td style="width: 25%;">Alamat</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 73%;">Prov: ' . $prov . ', Kab: ' . $kab . ', Kec: ' . $kec . '<br>Desa: ' . $member->desa . ', rt/rw: ' . $member->rt . '/' . $member->rw . ' (' . $member->kodepos . ')' . '</td>
+        </tr>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="3">Menerangkan bahwa yang bersangkutan sedang dalam keadaan <b>SAKIT</b> dengan diagnosa: (' . (($emr_dok->diagnosa != '') ? $emr_dok->diagnosa : '-') . ')</td>
+        </tr>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="3">Demikian surat keterangan sakit ini dibuat dengan sebenar-benarnya agar dapat dipergunakan sebaik-baiknya</td>
+        </tr>';
+
+        $body .= '</table>';
+
+        cetak_pdf_suket($judul, $body, 1, $position, $filename, $web_setting, $emr_dok->kode_user);
+    }
+
+    // fungsi cetak suket_dalam_perawatan
+    function suket_dalam_perawatan($no_trx)
+    {
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+
+        $position       = 'P'; // cek posisi l/p
+
+        // body cetakan
+        $body           = '';
+        $body           .= '<br><br>'; // beri jarak antara kop dengan body
+
+        // parameter dari view laporan
+        $emr_dok        = $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]);
+        $pendaftaran    = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+
+        $member = $this->M_global->getData('member', ['kode_member' => $emr_dok->kode_member]);
+
+        $prov   = $this->M_global->getData('m_provinsi', ['kode_provinsi' => $member->provinsi])->provinsi;
+        $kab    = $this->M_global->getData('kabupaten', ['kode_kabupaten' => $member->kabupaten])->kabupaten;
+        $kec    = $this->M_global->getData('kecamatan', ['kode_kecamatan' => $member->kecamatan])->kecamatan;
+
+        $judul = 'Suket_dalam_perawatan_' . $no_trx;
+        $filename = $judul;
+
+        $body .= '<div class="row">
+            <div class="col-md-12" style="text-align: center; margin-top: 10px; font-size: 12px; font-weight: bold;"><u>SURAT KETERANGAN DALAM PERAWATAN</u></div>
+            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 10px;">' . nosurat('emr_dok') . '</div>
+        </div>';
+
+        $body .= '<table style="text-align: left; vertical-align: top;">';
+
+        $body .= '<tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="3">Bersama ini, kami yang bertanda tangan dibawah ini menerangkan bahwa pasien dengan identitas sebagai berikut:</td>
+        </tr>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width: 15%;">Nama</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 83%;">' . $member->nama . ' (' . (($member->jkel == 'P') ? 'Laki-laki' : 'Perempuan') . ')' . '</td>
+        </tr>
+        <tr>
+            <td style="width: 15%;">Umur</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 83%;">' . hitung_umur($member->tgl_lahir) . '</td>
+        </tr>
+        <tr>
+            <td style="width: 15%;">Alamat</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 83%;">Prov: ' . $prov . ', Kab: ' . $kab . ', Kec: ' . $kec . '<br>Desa: ' . $member->desa . ', rt/rw: ' . $member->rt . '/' . $member->rw . ' (' . $member->kodepos . ')' . '</td>
+        </tr>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="3">Saat ini <b>sedang dalam perawatan oleh dokter ' . $this->M_global->getData('m_poli', ['kode_poli' => $pendaftaran->kode_poli])->keterangan . '</b>, dan saat ini tidak memungkinkan untuk melakukan perjalanan jarak jauh</td>
+        </tr>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="3">Demikian surat keterangan ini kami buat untuk dipergunakan sebagaimana mestinya</td>
+        </tr>';
+
+        $body .= '</table>';
+
+        cetak_pdf_suket($judul, $body, 1, $position, $filename, $web_setting, $emr_dok->kode_user);
     }
 
     // get satuan
