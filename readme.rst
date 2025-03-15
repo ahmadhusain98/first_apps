@@ -2,7 +2,8 @@
 INSTALL MPDF
 ###################
 1. instal composer
-2. jalankan perintah "composer require mpdf/mpdf"
+2. jalankan perintah "composer require mpdf/mpdf", untuk mpdf
+3. jalankan perintah "composer require chillerlan/php-qrcode", untuk qr code
 
 ###################
 VENDOR
