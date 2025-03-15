@@ -494,6 +494,7 @@ class Kasir extends CI_Controller
             $cek = [
                 $this->M_global->updateData('pembayaran', ['approved' => 1, 'batal' => 0, 'tgl_batal' => null, 'jam_batal' => null, 'user_batal' => null], ['token_pembayaran' => $token_pembayaran]),
                 $this->M_global->updateData('pendaftaran', ['status_trx' => 1, 'tgl_keluar' => date('Y-m-d'), 'jam_keluar' => date('H:i:s')], ['no_trx' => $pembayaran->no_trx]),
+                $this->M_global->updateData('member', ['status_regist' => 1], ['last_regist' => $pembayaran->no_trx]),
                 $this->M_global->updateData('tarif_paket_pasien', ['status' => 1], ['no_trx' => $pembayaran->no_trx]),
             ];
         } else { // selain itu
@@ -515,6 +516,7 @@ class Kasir extends CI_Controller
             $cek = [
                 $this->M_global->updateData('pembayaran', ['approved' => 0, 'batal' => 1, 'tgl_batal' => date('Y-m-d'), 'jam_batal' => date('H:i:s'), 'user_batal' => $user_batal], ['token_pembayaran' => $token_pembayaran]),
                 $this->M_global->updateData('pendaftaran', ['status_trx' => 0, 'tgl_keluar' => null, 'jam_keluar' => null], ['no_trx' => $pembayaran->no_trx]),
+                $this->M_global->updateData('member', ['status_regist' => 0], ['last_regist' => $pembayaran->no_trx]),
                 $this->M_global->updateData('tarif_paket_pasien', ['status' => 0], ['no_trx' => $pembayaran->no_trx]),
             ];
         }
@@ -544,9 +546,10 @@ class Kasir extends CI_Controller
         $cek_retur = $this->M_global->getData('barang_out_retur_header', ['invoice' => $pembayaran->inv_jual]);
 
         if ($pembayaran->no_trx != null) {
-            $this->M_global->updateData('member', ['status_regist' => 1], ['last_regist' => $pembayaran->no_trx]);
             $this->M_global->updateData('pendaftaran', ['status_trx' => 0], ['no_trx' => $pembayaran->no_trx]);
         }
+
+        $this->M_global->updateData('member', ['status_regist' => 1], ['last_regist' => $pembayaran->no_trx]);
 
         if ($cek_retur) {
             $kasir = $this->M_global->updateData('barang_out_retur_header', ['status_retur' => 0], ['invoice' => $pembayaran->inv_jual]);
@@ -797,6 +800,7 @@ class Kasir extends CI_Controller
 
             // update status_trx di pendaftaran menjadi 1
             $this->M_global->updateData('pendaftaran', ['status_trx' => 1, 'tgl_keluar' => $tgl_pembayaran, 'jam_keluar' => $jam_pembayaran], ['no_trx' => $no_trx]);
+            $this->M_global->updateData('member', ['status_regist' => 1], ['last_regist' => $no_trx]);
         } else { // selain itu
             // notrx null
             // cek kode member
@@ -1222,6 +1226,7 @@ class Kasir extends CI_Controller
         // isi pembayaran
         $isi_pembayaran = [
             'invoice'           => $invoice,
+            'kode_cabang'       => $kode_cabang,
             'kode_member'       => $kode_member,
             'tgl_pembayaran'    => $tgl_pembayaran,
             'jam_pembayaran'    => $jam_pembayaran,

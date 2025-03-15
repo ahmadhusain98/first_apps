@@ -24,9 +24,7 @@ class M_datatables2 extends CI_Model
         $this->db->select($columns);
         $this->db->from($table);
 
-        if ((($this->uri->segment(1) != 'Kasir') && ($this->uri->segment(2) != 'deposit_um'))) {
-            $this->db->where(['kode_cabang' => $this->session->userdata('cabang')]);
-        }
+        $this->db->where(['kode_cabang' => $this->session->userdata('cabang')]);
 
         if ($type == 1) {
             $date = date('Y-m-d');
@@ -82,9 +80,7 @@ class M_datatables2 extends CI_Model
         $this->db->select($columns);
         $this->db->from($table);
 
-        if ((($this->uri->segment(1) != 'Kasir') && ($this->uri->segment(2) != 'deposit_um'))) {
-            $this->db->where(['kode_cabang' => $this->session->userdata('cabang')]);
-        }
+        $this->db->where(['kode_cabang' => $this->session->userdata('cabang')]);
 
         $add_condition = $this->uri->segment(1) == 'Marketing' ? ' <= ' : '';
 

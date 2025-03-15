@@ -384,9 +384,9 @@ class M_select2 extends CI_Model
             $sintak = $this->db->query('SELECT 0 AS id, "Pilih Dokter Dahulu" AS text FROM dokter_poli LIMIT 1')->result();
         } else {
             if (!empty($key)) {
-                $add_sintak = ' AND (dp.kode_dokter LIKE "%' . $key . '%" OR dp.kode_poli LIKE "%' . $key . '%" OR p.keterangan LIKE "%' . $key . '%")  GROUP BY dp.kode_dokter ORDER BY p.keterangan ASC';
+                $add_sintak = ' AND (dp.kode_dokter LIKE "%' . $key . '%" OR dp.kode_poli LIKE "%' . $key . '%" OR p.keterangan LIKE "%' . $key . '%")  GROUP BY dp.kode_poli ORDER BY p.keterangan ASC';
             } else {
-                $add_sintak = '  GROUP BY dp.kode_dokter ORDER BY p.keterangan ASC';
+                $add_sintak = '  GROUP BY dp.kode_poli ORDER BY p.keterangan ASC';
             }
 
             $sintak = $this->db->query(

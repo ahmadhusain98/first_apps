@@ -24,10 +24,8 @@ if ($pendaftaran->status_trx == 1) {
 
 $kode_memberx = $pendaftaran->kode_member;
 
-// Use query binding to prevent SQL injection
 $last_notrx = $this->db->query('SELECT * FROM pendaftaran WHERE kode_member = ? ORDER BY id DESC LIMIT 1', [$kode_memberx])->row();
 
-// Check if last_notrx exists to avoid errors when accessing its properties
 if ($last_notrx) {
     $riwayat = $this->db->query('SELECT * FROM emr_dok WHERE kode_member = ? AND no_trx <> ? ORDER BY id DESC', [$kode_memberx, $last_notrx->no_trx])->result();
 
@@ -35,27 +33,32 @@ if ($last_notrx) {
         $p_kel = [];
         $alr = [];
         foreach ($riwayat as $rwt) {
-            // Check if $rwt has the necessary properties
-            $p_kel[] = $rwt->penyakit_keluarga ?? ''; // Use null coalescing operator to handle missing fields
-            $alr[] = $rwt->alergi ?? ''; // Use null coalescing operator
+            if (!empty($rwt->penyakit_keluarga)) {
+                $p_kel[] = $rwt->penyakit_keluarga;
+            }
+            if (!empty($rwt->alergi)) {
+                $alr[] = $rwt->alergi;
+            }
         }
     } else {
-        // Return empty values if no records are found
         $p_kel = '';
         $alr = '';
     }
 } else {
-    // Handle the case when $last_notrx is null (no records found)
     $p_kel = '';
     $alr = '';
 }
 
 if (is_array($p_kel) && !empty($p_kel)) {
-    $p_kel = implode(", ", $p_kel);  // Join array elements into a string separated by commas
-    $alr = implode(", ", $alr);  // Join array elements into a string separated by commas
+    $p_kel = implode(", ", $p_kel);
 } else {
-    $p_kel = $p_kel;  // In case it's not an array, just print the string
-    $alr = $alr;  // In case it's not an array, just print the string
+    $p_kel = empty($p_kel) ? '' : $p_kel;
+}
+
+if (is_array($alr) && !empty($alr)) {
+    $alr = implode(", ", $alr);
+} else {
+    $alr = empty($alr) ? '' : $alr;
 }
 ?>
 
@@ -467,7 +470,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label for="ppa" class="form-label col-md-3">Perawat PPA</label>
+                                        <label for="ppa" class="form-label col-md-3">Perawat PPA **</label>
                                         <div class="col-md-9">
                                             <select name="ppa" id="ppa" class="form-control select2_dokter_all" data-placeholder="~ Pilih PPA">
                                                 <?php if (!empty($emr_dok_cppt)) : ?>
@@ -479,7 +482,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label for="instruksi" class="form-label col-md-3">Instruksi</label>
+                                        <label for="instruksi" class="form-label col-md-3">Instruksi **</label>
                                         <div class="col-md-9">
                                             <input type="text" name="instruksi" id="instruksi" class="form-control" placeholder="Instruksi..." value="<?= (!empty($emr_dok_cppt) ? $emr_dok_cppt->instruksi : '') ?>">
                                         </div>
@@ -827,6 +830,8 @@ if (is_array($p_kel) && !empty($p_kel)) {
     var rencana_dok = $("#rencana_dok");
     var anamnesa_per = $("#anamnesa_per");
     var anamnesa_dok = $("#anamnesa_dok");
+    var ppa = $("#ppa");
+    var instruksi = $("#instruksi");
     var filter_dokter = $("#filter_dokter");
     const btn_soap = $('#btn_soap');
     const btn_cppt = $('#btn_cppt');
@@ -1661,6 +1666,14 @@ if (is_array($p_kel) && !empty($p_kel)) {
 
         if (anamnesa_dok.val() == '' || anamnesa_dok.val() == null) {
             return Swal.fire("Anamnesa Dokter", "Form sudah diisi?", "question");
+        }
+
+        if (ppa.val() == '' || ppa.val() == null) {
+            return Swal.fire("Perawat PPA", "Form sudah diisi?", "question");
+        }
+
+        if (instruksi.val() == '' || instruksi.val() == null) {
+            return Swal.fire("Instruksi", "Form sudah diisi?", "question");
         }
 
         $.ajax({

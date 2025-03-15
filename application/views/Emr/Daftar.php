@@ -63,9 +63,10 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
                                 <tr class="text-center">
                                     <th width="5%" style="border-radius: 10px 0px 0px 0px;">#</th>
                                     <th width="15%">No. Trx</th>
-                                    <th width="20%">Member</th>
+                                    <th width="15%">Member</th>
                                     <th>Tgl/Jam Masuk - Keluar</th>
-                                    <th width="20%">Dokter</th>
+                                    <th width="15%">Dokter</th>
+                                    <th width="10%">Perawat</th>
                                     <th width="10%">Antri</th>
                                     <th width="15%" style="border-radius: 0px 10px 0px 0px;">Aksi</th>
                                 </tr>
