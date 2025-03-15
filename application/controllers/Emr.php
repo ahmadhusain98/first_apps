@@ -136,7 +136,7 @@ class Emr extends CI_Controller
 
             $cek_dok = $this->M_global->getData('emr_dok', ['no_trx' => $rd->no_trx]);
             if ($cek_dok) {
-                $status_dok = '<span class="badge badge-sm badge-primary">Diperiksa Dokter</span>';
+                $status_dok = '<span class="badge badge-sm badge-success">Diperiksa Dokter</span>';
             } else {
                 $status_dok = '';
             }
@@ -207,6 +207,7 @@ class Emr extends CI_Controller
 
         // parameter dari view laporan
         $emr_dok        = $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]);
+        $pendaftaran    = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
         $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         $member = $this->M_global->getData('member', ['kode_member' => $emr_dok->kode_member]);
@@ -220,7 +221,7 @@ class Emr extends CI_Controller
 
         $body .= '<div class="row">
             <div class="col-md-12" style="text-align: center; margin-top: 10px; font-size: 12px; font-weight: bold;"><u>SURAT KETERANGAN SAKIT</u></div>
-            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 10px;">' . nosurat('emr_dok') . '</div>
+            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 7px;">' . nosurat('emr_dok') . '</div>
         </div>';
 
         $body .= '<table style="text-align: left; vertical-align: top;">';
@@ -269,7 +270,7 @@ class Emr extends CI_Controller
 
         $body .= '</table>';
 
-        cetak_pdf_suket($judul, $body, 1, $position, $filename, $web_setting, $emr_dok->kode_user);
+        cetak_pdf_suket($judul, $body, 1, $position, $filename, $web_setting, $emr_dok->kode_user, $pendaftaran->kode_poli);
     }
 
     // fungsi cetak suket_dokter
@@ -285,6 +286,7 @@ class Emr extends CI_Controller
 
         // parameter dari view laporan
         $emr_dok        = $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]);
+        $pendaftaran    = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
         $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         $member = $this->M_global->getData('member', ['kode_member' => $emr_dok->kode_member]);
@@ -298,7 +300,7 @@ class Emr extends CI_Controller
 
         $body .= '<div class="row">
             <div class="col-md-12" style="text-align: center; margin-top: 10px; font-size: 12px; font-weight: bold;"><u>SURAT KETERANGAN DOKTER</u></div>
-            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 10px;">' . nosurat('emr_dok') . '</div>
+            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 7px;">' . nosurat('emr_dok') . '</div>
         </div>';
 
         $body .= '<table style="text-align: left; vertical-align: top;">';
@@ -361,7 +363,7 @@ class Emr extends CI_Controller
 
         $body .= '</table>';
 
-        cetak_pdf_suket($judul, $body, 1, $position, $filename, $web_setting, $emr_dok->kode_user);
+        cetak_pdf_suket($judul, $body, 1, $position, $filename, $web_setting, $emr_dok->kode_user, $pendaftaran->kode_poli);
     }
 
     // fungsi cetak suket_diagnosa
@@ -378,6 +380,7 @@ class Emr extends CI_Controller
         // parameter dari view laporan
         $emr_dok        = $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]);
         $emr_per        = $this->M_global->getData('emr_per', ['no_trx' => $no_trx]);
+        $pendaftaran    = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
         $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
 
         $member = $this->M_global->getData('member', ['kode_member' => $emr_dok->kode_member]);
@@ -391,7 +394,7 @@ class Emr extends CI_Controller
 
         $body .= '<div class="row">
             <div class="col-md-12" style="text-align: center; margin-top: 10px; font-size: 12px; font-weight: bold;"><u>SURAT KETERANGAN DIAGNOSA</u></div>
-            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 10px;">' . nosurat('emr_dok') . '</div>
+            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 7px;">' . nosurat('emr_dok') . '</div>
         </div>';
 
         $body .= '<table style="text-align: left; vertical-align: top;">';
@@ -455,7 +458,7 @@ class Emr extends CI_Controller
 
         $body .= '</table>';
 
-        cetak_pdf_suket($judul, $body, 1, $position, $filename, $web_setting, $emr_dok->kode_user);
+        cetak_pdf_suket($judul, $body, 1, $position, $filename, $web_setting, $emr_dok->kode_user, $pendaftaran->kode_poli);
     }
 
     // fungsi cetak suket_dalam_perawatan
@@ -485,7 +488,7 @@ class Emr extends CI_Controller
 
         $body .= '<div class="row">
             <div class="col-md-12" style="text-align: center; margin-top: 10px; font-size: 12px; font-weight: bold;"><u>SURAT KETERANGAN DALAM PERAWATAN</u></div>
-            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 10px;">' . nosurat('emr_dok') . '</div>
+            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 7px;">' . nosurat('emr_dok') . '</div>
         </div>';
 
         $body .= '<table style="text-align: left; vertical-align: top;">';
@@ -529,7 +532,7 @@ class Emr extends CI_Controller
 
         $body .= '</table>';
 
-        cetak_pdf_suket($judul, $body, 1, $position, $filename, $web_setting, $emr_dok->kode_user);
+        cetak_pdf_suket($judul, $body, 1, $position, $filename, $web_setting, $emr_dok->kode_user, $pendaftaran->kode_poli);
     }
 
     // get satuan

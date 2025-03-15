@@ -546,7 +546,7 @@ if (is_array($p_kel) && !empty($p_kel)) {
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover table-bordered" id="table_fisik">
                                             <thead>
-                                                <tr>
+                                                <tr class="text-center">
                                                     <th style="width: 5%;">Hapus</th>
                                                     <th style="width: 15%;">Bagian Tubuh</th>
                                                     <th style="width: 80%;">Keterangan</th>

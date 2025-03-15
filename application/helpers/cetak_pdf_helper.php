@@ -1,6 +1,12 @@
 <?php
 
+// mpdf
 use Mpdf\Mpdf;
+
+// qrcode
+use chillerlan\QRCode\{QRCode, Data\QRMatrix};
+use chillerlan\QRCode\Data\QRDataModeInterface;
+use chillerlan\QRCode\Output\{QROutputInterface, QRImage};
 
 function cetak_pdf($judul, $body, $cek_param, $position, $filename, $web, $yes = 0)
 {
@@ -187,7 +193,7 @@ function cetak_pdf_small($judul, $body, $cek_param, $position, $filename, $web, 
     }
 }
 
-function cetak_pdf_suket($judul, $body, $cek_param, $position, $filename, $web, $kode_dokter)
+function cetak_pdf_suket($judul, $body, $cek_param, $position, $filename, $web, $kode_dokter, $kode_poli)
 {
     $CI = &get_instance();
 
@@ -222,22 +228,35 @@ function cetak_pdf_suket($judul, $body, $cek_param, $position, $filename, $web, 
         </tbody>
     </table>';
 
+    $poli = $CI->M_global->getData('m_poli', ['kode_poli' => $kode_poli]);
     $pencetak = $CI->M_global->getData('dokter', ['kode_dokter' => $kode_dokter]);
+    $user = $CI->M_global->getData('user', ['kode_user' => $kode_dokter]);
     $cabang = $CI->M_global->getData('cabang', ['kode_cabang' => $CI->session->userdata('cabang')])->cabang;
-    $role = $CI->M_global->getData('m_role', ['kode_role' => $CI->session->userdata('kode_role')])->keterangan;
+    $role = $CI->M_global->getData('m_role', ['kode_role' => $user->kode_role])->keterangan;
 
-    $body .= '<table style="width: 100%; font-size: 10px; margin-top: 10px;" class="float-right" border=0>
+    $qrcode = new QRCode();
+
+    $data_dokter = 'Dr. ' . $pencetak->nama . ' | ' . $poli->keterangan . ' | ' . $judul;
+
+    $ttd = '<img src="' . $qrcode->render($data_dokter) . '" alt="QR Code" style="width: 40px; height: 40px;"/>';
+
+
+    $body .= '<table style="width: 100%; font-size: 8px; margin-top: 10px;" class="float-right" border=0>
         <tr>
             <td style="width: 50%; text-align: right"></td>
             <td style="width: 50%; text-align: center">' . $cabang . ', ' . date('d M Y') . '</td>
         </tr>
         <tr>
             <td style="width: 50%; text-align: right"></td>
-            <td style="width: 50%; text-align: center; padding-top: 30hv;">Dr. ' . $pencetak->nama . '</td>
+            <td style="width: 50%; text-align: center;">' . $ttd . '</td>
         </tr>
         <tr>
             <td style="width: 50%; text-align: right"></td>
-            <td style="width: 50%; text-align: center">(' . $role . ')</td>
+            <td style="width: 50%; text-align: center;">Dr. ' . $pencetak->nama . '</td>
+        </tr>
+        <tr>
+            <td style="width: 50%; text-align: right"></td>
+            <td style="width: 50%; text-align: center">(SIP: ' . $pencetak->sip . ')</td>
         </tr>
     </table>';
 

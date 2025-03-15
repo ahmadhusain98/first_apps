@@ -10,7 +10,7 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
         <div class="col-md-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">
-                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Pasien</span>
+                    <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> EMR Rawat Jalan</span>
                     <div class="float-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -23,9 +23,6 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
                             </ul>
                         </div>
                         <button type="button" class="btn btn-primary" onclick="reloadTableEmr()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
-                        <?php if ($created == 1) : ?>
-                            <button type="button" class="btn btn-success" onclick="getUrl('Health/form_pendaftaran/0')"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Tambah</button>
-                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="card-footer">
