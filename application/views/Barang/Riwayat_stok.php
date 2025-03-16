@@ -8,6 +8,7 @@
                     <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Riwayat Stok Barang</span>
                     <div class="float-right">
                         <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                        <button type="button" class="btn btn-success" onclick="sinkron()"><i class="fa-solid fa-shuffle"></i>&nbsp;&nbsp;Sinkronisasi</button>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -40,9 +41,20 @@
     </div>
 </form>
 
+<div class="modal fade" id="loading_rs" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="<?= base_url() ?>assets/img/loading_2.gif" style="width: 100%;">
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // variable
     var table = $('#tableRiwayatStok');
+    $('#loadering2').hide();
 
     // fungsi group by gudang
     function getGudang(x) {
@@ -59,5 +71,39 @@
     function lihat(kode_barang, kode_gudang) {
         var param = `?kode_barang=${kode_barang}&kode_gudang=${kode_gudang}`
         window.open(`${siteUrl}Report/riwayat_stok/1${param}`, '_blank');
+    }
+
+    function sinkron() {
+        $.ajax({
+            url: `${siteUrl}Transaksi/sinkron`,
+            type: `POST`,
+            dataType: `JSON`,
+            success: function(result) {
+                reloadTable()
+
+                setTimeout(function() {
+                    if (result.status == 1) {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Berhasil Sinkronisasi!",
+                            showConfirmButton: false,
+                            timer: 1000
+                        });
+                    } else {
+                        Swal.fire({
+                            position: "center",
+                            icon: "info",
+                            title: "Gagal Sinkronisasi!",
+                            showConfirmButton: false,
+                            timer: 1000
+                        });
+                    }
+                }, 1000);
+            },
+            error: function(error) {
+                error_proccess();
+            }
+        });
     }
 </script>

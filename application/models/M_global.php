@@ -539,4 +539,53 @@ class M_global extends CI_Model
 
         return $sintak;
     }
+
+    function stokBarang($kode_cabang, $kode_gudang, $kode_barang)
+    {
+        $sintax = $this->db->query(
+            "SELECT * FROM (
+                -- barang in
+                SELECT bd.kode_barang, bd.qty_konversi AS qty_in, 0 AS qty_out
+                FROM barang_in_header bh 
+                JOIN barang_in_detail bd USING (invoice)
+                WHERE bh.kode_cabang = '$kode_cabang' AND bh.kode_gudang = '$kode_gudang' AND bd.kode_barang = '$kode_barang' AND bh.is_valid = 1 AND bh.batal = 0
+
+                UNION ALL
+
+                SELECT bd.kode_barang, bd.qty_konversi AS qty_in, 0 AS qty_out 
+                FROM barang_out_retur_header bh 
+                JOIN barang_out_retur_detail bd USING (invoice)
+                WHERE bh.kode_cabang = '$kode_cabang' AND bh.kode_gudang = '$kode_gudang' AND bd.kode_barang = '$kode_barang' AND bh.is_valid = 1 AND bh.batal = 0
+
+                UNION ALL
+
+                SELECT bd.kode_barang, bd.qty_konversi AS qty_in, 0 AS qty_out 
+                FROM mutasi_header bh 
+                JOIN mutasi_detail bd USING (invoice)
+                WHERE bh.kode_cabang = '$kode_cabang' AND bh.menuju = '$kode_gudang' AND bd.kode_barang = '$kode_barang' AND bh.status = 1
+
+                -- barang out
+                SELECT bd.kode_barang, 0 AS qty_in, bd.qty_konversi AS qty_out 
+                FROM barang_out_header bh 
+                JOIN barang_out_detail bd USING (invoice)
+                WHERE bh.kode_cabang = '$kode_cabang' AND bh.kode_gudang = '$kode_gudang' AND bd.kode_barang = '$kode_barang' AND bh.status_jual = 1 AND bh.batal = 0
+
+                UNION ALL
+
+                SELECT bd.kode_barang, 0 AS qty_in, bd.qty_konversi AS qty_out 
+                FROM barang_in_retur_header bh 
+                JOIN barang_in_retur_detail bd USING (invoice)
+                WHERE bh.kode_cabang = '$kode_cabang' AND bh.kode_gudang = '$kode_gudang' AND bd.kode_barang = '$kode_barang' AND bh.is_valid = 1 AND bh.batal = 0
+
+                UNION ALL
+
+                SELECT bd.kode_barang, 0 AS qty_in, bd.qty_konversi AS qty_out 
+                FROM mutasi_header bh 
+                JOIN mutasi_detail bd USING (invoice)
+                WHERE bh.kode_cabang = '$kode_cabang' AND bh.dari = '$kode_gudang' AND bd.kode_barang = '$kode_barang' AND bh.status = 1
+            )"
+        );
+
+        return $sintax->result();
+    }
 }

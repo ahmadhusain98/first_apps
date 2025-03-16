@@ -598,7 +598,7 @@
         cekPendaftaran(cek_param);
         // alert(cek_param)
     } else if ('<?= $no_trx ?>' != '') {
-        cekPendaftaran('<?= $pendaftaran2->no_trx ?>');
+        cekPendaftaran('<?= $no_trx ?>');
     }
 
     function cekPendaftaran(param) {

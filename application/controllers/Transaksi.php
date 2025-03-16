@@ -677,6 +677,8 @@ class Transaksi extends CI_Controller
 
         // loop $list
         foreach ($list as $rd) {
+            $returan = $this->M_global->getData('barang_in_retur_header', ['invoice_in' => $rd->invoice]);
+
             if ($updated > 0) {
                 if ($rd->batal > 0) {
                     $upd_diss = 'disabled';
@@ -684,7 +686,11 @@ class Transaksi extends CI_Controller
                     if ($rd->is_valid > 0) {
                         $upd_diss = 'disabled';
                     } else {
-                        $upd_diss =  _lock_button();
+                        if ($returan) {
+                            $upd_diss = 'disabled';
+                        } else {
+                            $upd_diss =  _lock_button();
+                        }
                     }
                 }
             } else {
@@ -698,7 +704,11 @@ class Transaksi extends CI_Controller
                     if ($rd->is_valid > 0) {
                         $del_diss = 'disabled';
                     } else {
-                        $del_diss =  _lock_button();
+                        if ($returan) {
+                            $del_diss =  'disabled';
+                        } else {
+                            $del_diss =  _lock_button();
+                        }
                     }
                 }
             } else {
@@ -706,7 +716,11 @@ class Transaksi extends CI_Controller
             }
 
             if ($confirmed > 0) {
-                $confirm_diss =  _lock_button();
+                if ($returan) {
+                    $confirm_diss =  'disabled';
+                } else {
+                    $confirm_diss =  _lock_button();
+                }
             } else {
                 $confirm_diss = 'disabled';
             }
@@ -2643,6 +2657,8 @@ class Transaksi extends CI_Controller
             }
         }
 
+        $cabang = $this->session->userdata('kode_cabang');
+
         $parameter = [
             $this->data,
             'judul'             => 'Transaksi',
@@ -2658,7 +2674,7 @@ class Transaksi extends CI_Controller
             'barang_detail'     => $barang_detail,
             'role'              => $this->M_global->getResult('m_role'),
             'pajak'             => $this->M_global->getData('m_pajak', ['aktif' => 1])->persentase,
-            'list_barang'       => $this->M_global->getResult('barang'),
+            'list_barang'       => $this->db->query("SELECT b.*, bs.akhir AS stok FROM barang_stok bs JOIN barang b USING (kode_barang) WHERE kode_cabang = '$cabang' AND bs.akhir > 0")->result(),
         ];
 
         $this->template->load('Template/Content', 'Jual/Form_barang_out', $parameter);
@@ -2901,6 +2917,40 @@ class Transaksi extends CI_Controller
         } else {
             echo json_encode(['status' => 0]);
         }
+    }
+
+    // cekQty
+    public function cekQty()
+    {
+        $kode_barang = $this->input->get('kode_barang');
+        $kode_satuan = $this->input->get('kode_satuan');
+        $qty = $this->input->get('qty');
+        $kode_gudang = $this->input->get('kode_gudang');
+        $kode_cabang = $this->session->userdata('kode_cabang');
+
+        $barang1 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan' => $kode_satuan]);
+        $barang2 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan2' => $kode_satuan]);
+        $barang3 = $this->M_global->getData('barang', ['kode_barang' => $kode_barang, 'kode_satuan3' => $kode_satuan]);
+
+        if ($barang1) {
+            $qty_satuan = 1;
+        } else if ($barang2) {
+            $qty_satuan = $barang2->qty_satuan2;
+        } else {
+            $qty_satuan = $barang3->qty_satuan3;
+        }
+
+        $qty_konversi   = $qty * $qty_satuan;
+
+        $stok = $this->M_global->getData('barang_stok', ['kode_barang' => $kode_barang, 'kode_gudang' => $kode_gudang, 'kode_cabang' => $kode_cabang]);
+
+        if ($stok) {
+            $hasil = $stok->akhir;
+        } else {
+            $hasil = 0;
+        }
+
+        echo json_encode(["konversi" => $qty_konversi, "stok" => $hasil]);
     }
 
     // fungsi print single barang_out
@@ -5402,5 +5452,29 @@ class Transaksi extends CI_Controller
             // kirim status 0 ke view
             echo json_encode(['status' => 0]);
         }
+    }
+
+    // fungsi sinkronisasi barang stok
+    public function sinkron()
+    {
+        // ambil parameter
+        $cabang = $this->session->userdata('kode_cabang');
+        $riwayat_stok = $this->M_global->getDataResult('barang_stok', ['kode_cabang' => $cabang]);
+
+        // proses sinkron
+        foreach ($riwayat_stok as $rs) {
+            $gudang = $rs->kode_gudang;
+            $barang = $rs->kode_barang;
+
+            $stok = $this->M_global->stokBarang($cabang, $gudang, $barang);
+
+            foreach ($stok as $s) {
+                $this->db->query(
+                    "UPDATE barang_stok SET masuk = $s->qty_in, keluar = $s->qty_out, akhir = ($s->qty_in - $s->qty_out) WHERE kode_cabang = '$kode_cabang' AND kode_gudang = '$kode_gudang' AND kode_barang = '$kode_barang'"
+                );
+            }
+        }
+
+        echo json_encode(['status' => 1]);
     }
 }

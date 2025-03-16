@@ -307,7 +307,7 @@ if ($param == 'emr') {
                                             <tr>
                                                 <td width="5%"><?= $nolb ?></td>
                                                 <td width="90%">
-                                                    <?= $lb->kode_barang . ' ~ ' . $lb->nama . ' ~ Satuan: ' . $this->M_global->getData('m_satuan', ['kode_satuan' => $lb->kode_satuan])->keterangan . ' ~ Kategori: ' . $this->M_global->getData('m_kategori', ['kode_kategori' => $lb->kode_kategori])->keterangan . ' ~ Harga Jual: Rp. ' . number_format($lb->harga_jual) ?>
+                                                    <?= $lb->kode_barang . ' ~ ' . $lb->nama . ' ~ Harga Jual: Rp. ' . number_format($lb->harga_jual) . ' ~ Stok: ' . number_format($lb->stok) . ' ' . $this->M_global->getData('m_satuan', ['kode_satuan' => $lb->kode_satuan])->keterangan ?>
                                                     <input type="hidden" name="selobat[]" id="selobat<?= $nolb ?>" value="<?= $lb->kode_barang ?>">
                                                 </td>
                                                 <td width="5%" class="text-center">
