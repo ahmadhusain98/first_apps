@@ -355,21 +355,24 @@
 
     // tampilkan fungsi select barang
     function selbarfunc() {
-        var tableBarang = $('#tableSederhanaObat').dataTable(); // ambil id table detail
-        var rowCount = tableBarang.fnGetData().length; // hitung jumlah rownya
-        var tableBarangIn = document.getElementById('tableDetailBarangIn'); // ambil id table detail
-        var no = tableBarangIn.rows.length; // hitung jumlah rownya
+        var tableBarang = $('#tableSederhanaObat').DataTable(); // Inisialisasi DataTable dengan benar
+        var rowCount = tableBarang.rows().count(); // Mendapatkan jumlah baris data
+        var tableBarangIn = document.getElementById('tableDetailBarangIn'); // Ambil table detail
+        var no = tableBarangIn.rows.length; // Hitung jumlah row pada table detail
 
-        // lakukan loop
+        tableBarang.search('').draw(); // Hapus pencarian pada DataTable
+
+        // Loop melalui setiap row pada tableBarang
         for (var i = 1; i <= rowCount; i++) {
+            // Cek apakah barang yang dipilih adalah '1'
             if ($('#select_barang' + i).val() == 1) {
-                $('#select_barang' + i).val(0);
-                document.getElementById('select_barangx' + i).checked = false;
-                var obat = $('#selobat' + i).val();
-                $('#modal_barang').modal('hide');
-                tampilList2(obat, i);
-                no += 1;
-                jumlahBarisBarang.val(no);
+                $('#select_barang' + i).val(0); // Set nilai select_barang menjadi 0
+                document.getElementById('select_barangx' + i).checked = false; // Uncheck checkbox
+                var obat = $('#selobat' + i).val(); // Ambil nilai obat yang dipilih
+                $('#modal_barang').modal('hide'); // Sembunyikan modal
+                tampilList2(obat, no); // Tampilkan list obat dengan no yang sesuai
+                no += 1; // Increment nomor baris
+                jumlahBarisBarang.val(no); // Update nilai jumlahBarisBarang
             }
         }
     }

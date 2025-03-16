@@ -452,10 +452,12 @@ $gutama = $this->M_global->getData('m_gudang', ['utama' => 1]);
 
     // tampilkan fungsi select barang
     function selbarfunc() {
-        var tableBarang = $('#tableSederhanaObat').dataTable(); // ambil id table detail
-        var rowCount = tableBarang.fnGetData().length; // hitung jumlah rownya
+        var tableBarang = $('#tableSederhanaObat').DataTable(); // ambil id table detail
+        var rowCount = tableBarang.rows().count(); // hitung jumlah rownya
         var tableBarangIn = document.getElementById('tableDetailBarangIn'); // ambil id table detail
         var no = tableBarangIn.rows.length; // hitung jumlah rownya
+
+        tableBarang.search('').draw(); // Hapus pencarian pada DataTable
 
         // lakukan loop
         for (var i = 1; i <= rowCount; i++) {
