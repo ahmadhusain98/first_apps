@@ -7,6 +7,7 @@
 </style>
 
 <form method="post" id="form_pendaftaran">
+    <input type="hidden" name="ulang" id="ulang" value="<?= $ulang ?>">
     <div class="row">
         <div class="col-md-12">
             <div class="card card-outline card-primary">
@@ -20,7 +21,7 @@
                                 <div class="row mb-3">
                                     <div class="col-md-12">
                                         <label for="">No. Pendaftaran</label>
-                                        <input type="text" class="form-control" placeholder="Otomatis" id="no_trx" name="no_trx" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_trx : '') ?>" readonly>
+                                        <input type="text" class="form-control" placeholder="Otomatis" id="no_trx" name="no_trx" value="<?= (($ulang == 1) ? '' : (!empty($data_pendaftaran) ? $data_pendaftaran->no_trx : '')) ?>" readonly>
                                     </div>
                                     <div class="col-md-12">
                                         <label for="" class="mt-3">Member <sup class="text-danger">**</sup></label>
@@ -48,10 +49,10 @@
                                                 <label for="">Tgl/Jam Daftar <sup class="text-danger">**</sup></label>
                                                 <div class="row">
                                                     <div class="col-md-6 col-6">
-                                                        <input type="date" class="form-control" id="tgl_masuk" name="tgl_masuk" value="<?= (!empty($data_pendaftaran) ? date('Y-m-d', strtotime($data_pendaftaran->tgl_daftar)) : date('Y-m-d')) ?>" readonly>
+                                                        <input type="date" class="form-control" id="tgl_masuk" name="tgl_masuk" value="<?= (($ulang == 1) ? date('Y-m-d', strtotime($daftar_ulang->tgl_ulang)) : ((!empty($data_pendaftaran) ? date('Y-m-d', strtotime($data_pendaftaran->tgl_daftar)) : date('Y-m-d')))) ?>" readonly>
                                                     </div>
                                                     <div class="col-md-6 col-6">
-                                                        <input type="time" class="form-control" id="jam_masuk" name="jam_masuk" value="<?= (!empty($data_pendaftaran) ? date('H:i:s', strtotime($data_pendaftaran->jam_daftar)) : date('H:i:s')) ?>" readonly>
+                                                        <input type="time" class="form-control" id="jam_masuk" name="jam_masuk" value="<?= (($ulang == 1) ? date('H:i:s') : ((!empty($data_pendaftaran) ? date('H:i:s', strtotime($data_pendaftaran->jam_daftar)) : date('H:i:s')))) ?>" readonly>
                                                     </div>
                                                 </div>
                                             </div>
@@ -87,7 +88,7 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="">No. Antrian</label>
-                                        <input type="text" class="form-control" placeholder="Otomatis" id="no_antrian" name="no_antrian" value="<?= (!empty($data_pendaftaran) ? $data_pendaftaran->no_antrian : '') ?>" readonly>
+                                        <input type="text" class="form-control" placeholder="Otomatis" id="no_antrian" name="no_antrian" value="<?= (($ulang == 1) ? '' : (!empty($data_pendaftaran) ? $data_pendaftaran->no_antrian : '')) ?>" readonly>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="">Poli <sup class="text-danger">**</sup></label>
@@ -308,6 +309,12 @@
 
     $('#btnUMember').attr('disabled', true);
     changeType(1);
+
+    <?php if ($ulang == 1) : ?>
+        getRiwayat('<?= $daftar_ulang->kode_member ?>');
+
+        Swal.fire("Pasien Appointment", "Pastikan jadwal dokter tersedia sebelum mendaftarkan ulang pasien!", "info");
+    <?php endif ?>
 
     function tambahTarifPaket() {
         var jum = Number($('#jumPaket').val());
@@ -559,7 +566,7 @@
 
         // jalankan fungsi
         $.ajax({
-            url: siteUrl + 'Health/getRiwayat/' + kode_member,
+            url: '<?= site_url() ?>Health/getRiwayat/' + kode_member,
             type: 'POST',
             dataType: 'JSON',
             success: function(result) { // jika fungsi berjalan

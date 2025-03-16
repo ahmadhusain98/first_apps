@@ -652,6 +652,7 @@ class Kasir extends CI_Controller
             'penjualan'         => $penjualan,
             'role'              => $this->M_global->getResult('m_role'),
             'promo'             => $this->M_global->getDataResult('m_promo', ['kode_cabang' => $kode_cabang]),
+            'ulang'             => $this->M_global->getData('daftar_ulang', ['no_trx']),
         ];
 
         $this->template->load('Template/Content', 'Kasir/Form_pembayaran', $parameter);
@@ -662,10 +663,60 @@ class Kasir extends CI_Controller
         $cek = $this->M_global->getData('pendaftaran', ['no_trx' => $notrx]);
 
         if ($cek) {
-            echo json_encode(['status' => 1]);
+            echo json_encode(['status' => 1, 'norm' => $cek->kode_member, 'no_trx' => $cek->no_trx]);
         } else {
             echo json_encode(['status' => 0]);
         }
+    }
+
+    public function getMember($kode_member, $no_trx = '')
+    {
+        $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+        $member = $this->M_global->getData('member', ['kode_member' => $kode_member]);
+
+        $prov   = $this->M_global->getData('m_provinsi', ['kode_provinsi' => $member->provinsi])->provinsi;
+        $kab    = $this->M_global->getData('kabupaten', ['kode_kabupaten' => $member->kabupaten])->kabupaten;
+        $kec    = $this->M_global->getData('kecamatan', ['kode_kecamatan' => $member->kecamatan])->kecamatan;
+
+        $prefix = $this->M_global->getData('m_prefix', ['kode_prefix' => $member->kode_prefix]);
+
+        if ($prefix) {
+            $prefix = $prefix->nama;
+        } else {
+            $prefix = 'None';
+        }
+
+        if ($member) {
+            if ($member->kode_member == 'U00001') {
+                $data = [
+                    'status' => 1,
+                    'cek' => 0,
+                    'norm' => 'U00001',
+                    'nama' => 'Umum',
+                    'umur' => 'x tahun x bulan x hari',
+                    'nohp' => '-',
+                    'poli' => 'Umum',
+                    'dokter' => '-',
+                    'alamat' => '-'
+                ];
+            } else {
+                $data = [
+                    'status' => 1,
+                    'cek' => 1,
+                    'norm' => $kode_member,
+                    'nama' => $prefix . '. ' . $member->nama,
+                    'umur' => hitung_umur($member->tgl_lahir),
+                    'nohp' => $member->nohp,
+                    'poli' => $this->M_global->getData('m_poli', ['kode_poli' => $pendaftaran->kode_poli])->keterangan,
+                    'dokter' => 'Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $pendaftaran->kode_dokter])->nama,
+                    'alamat' => 'Prov. ' . $prov . ', ' . $kab . ', Kec. ' . $kec . ', Ds. ' . $member->desa . ', (POS: ' . $member->kodepos . '), RT.' . $member->rt . '/RW.' . $member->rw
+                ];
+            }
+        } else {
+            $data = ['status' => 0];
+        }
+
+        echo json_encode($data);
     }
 
     public function getJual($invoice)
@@ -790,6 +841,9 @@ class Kasir extends CI_Controller
         $discrp                 = $this->input->post('discrp_tarif');
         $jumlah                 = $this->input->post('jumlah_tarif');
 
+        $tgl_ulang              = $this->input->post('tgl_ulang');
+        $status_ulang           = $this->input->post('status_ulang');
+
         // query barang out header
         $cek_pendaftaran        = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
         // ambil kode member
@@ -801,6 +855,24 @@ class Kasir extends CI_Controller
             // update status_trx di pendaftaran menjadi 1
             $this->M_global->updateData('pendaftaran', ['status_trx' => 1, 'tgl_keluar' => $tgl_pembayaran, 'jam_keluar' => $jam_pembayaran], ['no_trx' => $no_trx]);
             $this->M_global->updateData('member', ['status_regist' => 1], ['last_regist' => $no_trx]);
+
+            if ($param == 1) {
+                if ($status_ulang == 1) {
+                    $this->M_global->insertData('daftar_ulang', ['kode_member' => $kode_member, 'kode_cabang' => $kode_cabang, 'no_trx' => $no_trx, 'tgl_ulang' => $tgl_ulang, 'status_ulang' => $status_ulang, 'kode_dokter' => $cek_pendaftaran->kode_dokter, 'kode_poli' => $cek_pendaftaran->kode_poli]);
+                }
+            } else {
+                if ($status_ulang == 0) {
+                    $this->M_global->delData('daftar_ulang', ['no_trx' => $no_trx]);
+                } else {
+                    $cek_ulang = $this->M_global->getData('daftar_ulang', ['no_trx' => $no_trx]);
+
+                    if ($cek_ulang) {
+                        $this->M_global->updateData('daftar_ulang', ['tgl_ulang' => $tgl_ulang, 'status_ulang' => $status_ulang], ['no_trx' => $no_trx]);
+                    } else {
+                        $this->M_global->insertData('daftar_ulang', ['kode_member' => $kode_member, 'kode_cabang' => $kode_cabang, 'no_trx' => $no_trx, 'tgl_ulang' => $tgl_ulang, 'status_ulang' => $status_ulang, 'kode_dokter' => $cek_pendaftaran->kode_dokter, 'kode_poli' => $cek_pendaftaran->kode_poli]);
+                    }
+                }
+            }
         } else { // selain itu
             // notrx null
             // cek kode member

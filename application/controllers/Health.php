@@ -952,7 +952,7 @@ class Health extends CI_Controller
     }
 
     // form pendaftaran page
-    public function form_pendaftaran($param)
+    public function form_pendaftaran($param, $no_trx = '')
     {
         // website config
         $web_setting              = $this->M_global->getData('web_setting', ['id' => 1]);
@@ -960,6 +960,7 @@ class Health extends CI_Controller
 
         if ($param != '0') {
             $pendaftaran          = $this->M_global->getData('pendaftaran', ['no_trx' => $param]);
+            $daftar_ulang         = null;
             $kode_member          = $pendaftaran->kode_member;
 
             $riwayat = $this->db->where(['kode_member' => $kode_member])
@@ -968,9 +969,23 @@ class Health extends CI_Controller
                 ->result();
             $tarif_paket_pasien   = $this->M_global->getDataResult('tarif_paket_pasien', ['no_trx' => $param]);
         } else {
-            $pendaftaran          = null;
-            $riwayat              = null;
-            $tarif_paket_pasien   = null;
+            if ($no_trx == '') {
+                $pendaftaran          = null;
+                $daftar_ulang         = null;
+                $riwayat              = null;
+                $tarif_paket_pasien   = null;
+            } else {
+                $pendaftaran          = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+                $daftar_ulang         = $this->M_global->getData('daftar_ulang', ['no_trx' => $no_trx]);
+
+                $kode_member          = $pendaftaran->kode_member;
+
+                $riwayat = $this->db->where(['kode_member' => $kode_member])
+                    ->order_by('id', 'DESC')
+                    ->get('pendaftaran')
+                    ->result();
+                $tarif_paket_pasien   = null;
+            }
         }
 
         $parameter = [
@@ -985,6 +1000,8 @@ class Health extends CI_Controller
             'riwayat'           => $riwayat,
             'role'              => $this->M_global->getResult('m_role'),
             'pasien_paket'      => $tarif_paket_pasien,
+            'ulang'             => (($param == 1) ? '0' : '1'),
+            'daftar_ulang'      => $daftar_ulang,
         ];
 
         $this->template->load('Template/Content', 'Pendaftaran/Form_pendaftaran', $parameter);
@@ -1075,6 +1092,8 @@ class Health extends CI_Controller
         $kode_tarif       = $this->input->post('kode_tarif');
         $kunjungan        = $this->input->post('kunjungan');
 
+        $ulang            = $this->input->post('ulang');
+
         if ($tipe_daftar == 1) {
             $get_ruang    = $this->M_global->getData('jadwal_dokter', ['kode_dokter' => $kode_dokter, 'date_start <= ' => $tgl_daftar]);
             if ($get_ruang) {
@@ -1117,6 +1136,7 @@ class Health extends CI_Controller
                 $this->M_global->insertData('pendaftaran', $isi),
                 $this->M_global->updateData('member', ['status_regist' => 1, 'last_regist' => $no_trx], ['kode_member' => $kode_member]),
                 $this->M_global->updateData('bed_cabang', ['status_bed' => 1], ['kode_bed' => $kode_bed, 'kode_cabang' => $kode_cabang]),
+                $this->M_global->delData('daftar_ulang', ['kode_member' => $kode_member]),
             ];
         } else { // selain itu
             aktifitas_user_transaksi('Pendaftaran', 'mengubah Pendaftaran Member ' . $kode_member, $no_trx);

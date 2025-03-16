@@ -19,13 +19,10 @@ if ($pendaftaran->status_trx == 1) {
     $btn_sv = '';
 }
 
-
 $kode_memberx = $pendaftaran->kode_member;
 
-// Use query binding to prevent SQL injection
 $last_notrx = $this->db->query('SELECT * FROM pendaftaran WHERE kode_member = ? ORDER BY id DESC LIMIT 1', [$kode_memberx])->row();
 
-// Check if last_notrx exists to avoid errors when accessing its properties
 if ($last_notrx) {
     $riwayat = $this->db->query('SELECT * FROM emr_dok WHERE kode_member = ? AND no_trx <> ? ORDER BY id DESC', [$kode_memberx, $last_notrx->no_trx])->result();
 
@@ -33,27 +30,32 @@ if ($last_notrx) {
         $p_kel = [];
         $alr = [];
         foreach ($riwayat as $rwt) {
-            // Check if $rwt has the necessary properties
-            $p_kel[] = $rwt->penyakit_keluarga ?? ''; // Use null coalescing operator to handle missing fields
-            $alr[] = $rwt->alergi ?? ''; // Use null coalescing operator
+            if (!empty($rwt->penyakit_keluarga)) {
+                $p_kel[] = $rwt->penyakit_keluarga;
+            }
+            if (!empty($rwt->alergi)) {
+                $alr[] = $rwt->alergi;
+            }
         }
     } else {
-        // Return empty values if no records are found
         $p_kel = '';
         $alr = '';
     }
 } else {
-    // Handle the case when $last_notrx is null (no records found)
     $p_kel = '';
     $alr = '';
 }
 
 if (is_array($p_kel) && !empty($p_kel)) {
-    $p_kel = implode(", ", $p_kel);  // Join array elements into a string separated by commas
-    $alr = implode(", ", $alr);  // Join array elements into a string separated by commas
+    $p_kel = implode(", ", $p_kel);
 } else {
-    $p_kel = $p_kel;  // In case it's not an array, just print the string
-    $alr = $alr;  // In case it's not an array, just print the string
+    $p_kel = empty($p_kel) ? '' : $p_kel;
+}
+
+if (is_array($alr) && !empty($alr)) {
+    $alr = implode(", ", $alr);
+} else {
+    $alr = empty($alr) ? '' : $alr;
 }
 
 ?>

@@ -1001,8 +1001,10 @@ class Emr extends CI_Controller
                                     endforeach;
                                 }
 
-                                if ($emr_per->eracikan != '') {
-                                    echo '<br>' . $emr_per->eracikan;
+                                if (!empty($emr_per)) {
+                                    if ($emr_per->eracikan != '') {
+                                        echo '<br>' . $emr_per->eracikan;
+                                    }
                                 }
                                 ?>
                             </div>
