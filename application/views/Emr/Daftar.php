@@ -77,6 +77,42 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="m_buatSurat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <span class="h5 text-center">Buat <span id="title_surat"></span></span>
+                    <input type="hidden" name="notrx_surat" id="notrx_surat" value="">
+                    <input type="hidden" name="paramSurat" id="paramSurat" value="0">
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="tgl_a" class="form-label">Dari Tanggal</label>
+                                <input type="date" name="tgl_a" id="tgl_a" class="form-control" value="<?= date('Y-m-d') ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="tgl_b" class="form-label">Sampai Tanggal</label>
+                                <input type="date" name="tgl_b" id="tgl_b" class="form-control" value="<?= date('Y-m-d') ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                <button type="button" class="btn btn-secondary" onclick="tutupSurat()"><i class="fa fa-solid fa-times"></i> Tutup</button>
+                                <button type="button" class="btn btn-success" onclick="prosesSurat()"><i class="fa fa-solid fa-plus-circle"></i> Buat Surat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 
 
@@ -253,5 +289,32 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
                 }
             });
         }
+    }
+
+    function buatSurat(notrx, param, nox) {
+        $('#m_buatSurat').modal('show');
+        $('#title_surat').text(param);
+        $('#notrx_surat').val(notrx);
+        $('#paramSurat').val(nox);
+    }
+
+    function prosesSurat() {
+        $('#m_buatSurat').modal('hide');
+        var nox = $('#paramSurat').val();
+        var notrx = $('#notrx_surat').val();
+        var dari = $('#tgl_a').val();
+        var sampai = $('#tgl_b').val();
+        var param = '?dari=' + dari + '&sampai=' + sampai;
+
+        if (nox == 1) {
+            var url = '<?= site_url() ?>Emr/suket_sakit/' + notrx + param;
+        } else {
+            var url = '<?= site_url() ?>Emr/suket_dokter/' + notrx + param;
+        }
+        window.open(url, "_blank");
+    }
+
+    function tutupSurat() {
+        $('#m_buatSurat').modal('hide');
     }
 </script>

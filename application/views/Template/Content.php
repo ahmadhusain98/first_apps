@@ -1242,6 +1242,37 @@
             }, ],
         });
 
+        $('#tableNonSearch').DataTable({
+            "destroy": true,
+            "processing": true,
+            "responsive": true,
+            "serverSide": false,
+            "scrollCollapse": false,
+            "paging": true,
+            "searching": false,
+            "oLanguage": {
+                "sEmptyTable": "<div class='text-center'>Data Kosong</div>",
+                "sInfoEmpty": "",
+                "sInfoFiltered": "",
+                "sSearch": "",
+                "sInfo": " Jumlah _TOTAL_ Data (_START_ - _END_)",
+                "sLengthMenu": "_MENU_ Baris",
+                "sZeroRecords": "<div class='text-center'>Data Kosong</div>",
+                "oPaginate": {
+                    "sPrevious": "Sebelumnya",
+                    "sNext": "Berikutnya"
+                }
+            },
+            "aLengthMenu": [
+                [5, 20, 50, 75, 100, -1],
+                [5, 20, 50, 75, 100, "Semua"]
+            ],
+            "columnDefs": [{
+                "targets": [-1],
+                "orderable": false,
+            }, ],
+        });
+
         <?php if (!empty($list_data)) : ?>
             table.DataTable({
                 "destroy": true,

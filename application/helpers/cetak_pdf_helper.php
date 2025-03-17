@@ -230,13 +230,24 @@ function cetak_pdf_suket($judul, $body, $cek_param, $position, $filename, $web, 
 
     $poli = $CI->M_global->getData('m_poli', ['kode_poli' => $kode_poli]);
     $pencetak = $CI->M_global->getData('dokter', ['kode_dokter' => $kode_dokter]);
+
+    if ($pencetak) {
+        $pencetak = $pencetak;
+        $nama = 'Dr. ' . $pencetak->nama;
+        $sip = 'SIP: ' . $pencetak->sip;
+    } else {
+        $pencetak = $CI->M_global->getData('user', ['kode_user' => $kode_dokter]);
+        $nama = $pencetak->nama;
+        $sip = 'NOHP: ' . $pencetak->nohp;
+    }
+
     $user = $CI->M_global->getData('user', ['kode_user' => $kode_dokter]);
     $cabang = $CI->M_global->getData('cabang', ['kode_cabang' => $CI->session->userdata('cabang')])->cabang;
     $role = $CI->M_global->getData('m_role', ['kode_role' => $user->kode_role])->keterangan;
 
     $qrcode = new QRCode();
 
-    $data_dokter = 'Dr. ' . $pencetak->nama . ' | ' . $poli->keterangan . ' | ' . $judul;
+    $data_dokter = $nama . ' | ' . $poli->keterangan . ' | ' . $judul;
 
     $ttd = '<img src="' . $qrcode->render($data_dokter) . '" alt="QR Code" style="width: 40px; height: 40px;"/>';
 
@@ -252,11 +263,11 @@ function cetak_pdf_suket($judul, $body, $cek_param, $position, $filename, $web, 
         </tr>
         <tr>
             <td style="width: 50%; text-align: right"></td>
-            <td style="width: 50%; text-align: center;">Dr. ' . $pencetak->nama . '</td>
+            <td style="width: 50%; text-align: center;">' . $nama . '</td>
         </tr>
         <tr>
             <td style="width: 50%; text-align: right"></td>
-            <td style="width: 50%; text-align: center">(SIP: ' . $pencetak->sip . ')</td>
+            <td style="width: 50%; text-align: center">(' . $sip . ')</td>
         </tr>
     </table>';
 

@@ -496,6 +496,7 @@ class Kasir extends CI_Controller
                 $this->M_global->updateData('pendaftaran', ['status_trx' => 1, 'tgl_keluar' => date('Y-m-d'), 'jam_keluar' => date('H:i:s')], ['no_trx' => $pembayaran->no_trx]),
                 $this->M_global->updateData('member', ['status_regist' => 1], ['last_regist' => $pembayaran->no_trx]),
                 $this->M_global->updateData('tarif_paket_pasien', ['status' => 1], ['no_trx' => $pembayaran->no_trx]),
+                $this->M_global->updateData('daftar_ulang', ['status_ulang' => 1], ['no_trx' => $pembayaran->no_trx]),
             ];
         } else { // selain itu
             // cek um keluar
@@ -518,6 +519,7 @@ class Kasir extends CI_Controller
                 $this->M_global->updateData('pendaftaran', ['status_trx' => 0, 'tgl_keluar' => null, 'jam_keluar' => null], ['no_trx' => $pembayaran->no_trx]),
                 $this->M_global->updateData('member', ['status_regist' => 0], ['last_regist' => $pembayaran->no_trx]),
                 $this->M_global->updateData('tarif_paket_pasien', ['status' => 0], ['no_trx' => $pembayaran->no_trx]),
+                $this->M_global->updateData('daftar_ulang', ['status_ulang' => 0], ['no_trx' => $pembayaran->no_trx]),
             ];
         }
 
@@ -534,13 +536,20 @@ class Kasir extends CI_Controller
     public function delPembayaran($token_pembayaran)
     {
         $pembayaran = $this->M_global->getData('pembayaran', ['token_pembayaran' => $token_pembayaran]);
+
         $jual       = $this->M_global->getData('barang_out_header', ['invoice' => $pembayaran->inv_jual]);
+        if ($jual) {
+            $km = $jual->kode_member;
+        } else {
+            $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $pembayaran->no_trx]);
+            $km = $pendaftaran->kode_member;
+        }
 
         if ($pembayaran->cek_um == 1) {
             $um_awal = $pembayaran;
             $total_awal = $um_awal->kembalian;
 
-            updateUangMukaUpdate($jual->kode_member, $pembayaran->invoice, $pembayaran->tgl_pembayaran, $pembayaran->jam_pembayaran, 0, $total_awal);
+            updateUangMukaUpdate($km, $pembayaran->invoice, $pembayaran->tgl_pembayaran, $pembayaran->jam_pembayaran, 0, $total_awal);
         }
 
         $cek_retur = $this->M_global->getData('barang_out_retur_header', ['invoice' => $pembayaran->inv_jual]);
@@ -573,6 +582,7 @@ class Kasir extends CI_Controller
             $this->M_global->delData('pembayaran_tarif_single', ['token_pembayaran' => $token_pembayaran]),
             $this->M_global->delData('bayar_card_detail', ['token_pembayaran' => $token_pembayaran]),
             $this->M_global->updateData('tarif_paket_pasien', ['status' => 0], ['no_trx' => $pembayaran->no_trx]),
+            $this->M_global->delData('daftar_ulang', ['no_trx' => $pembayaran->no_trx]),
         ];
 
         if ($cek) {

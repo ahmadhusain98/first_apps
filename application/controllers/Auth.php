@@ -48,10 +48,10 @@ class Auth extends CI_Controller
                         p.jam_daftar AS jam,
                         p.kode_member
                     FROM pendaftaran p
+                    JOIN emr_dok ed USING (no_trx)
                     LEFT JOIN tarif_paket_pasien t USING (no_trx)
                     LEFT JOIN barang_out_header bh USING (no_trx)
-                    LEFT JOIN emr_dok ed USING (no_trx)
-                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001'
+                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran)
 
                     UNION ALL
 
@@ -129,7 +129,7 @@ class Auth extends CI_Controller
 
             $sintak = $this->db->query(
                 "SELECT du.id, du.no_trx AS invoice, 'daftar' AS url, du.tgl_ulang AS tgl, '' AS jam, du.kode_member FROM daftar_ulang du
-                WHERE du.status_ulang = 1 AND du.tgl_ulang > '$now'"
+                WHERE du.status_ulang = 1 AND du.tgl_ulang > '$now' AND du.kode_cabang = '$cabang'"
             )->result();
         } else if ($this->session->userdata('kode_role') == 'R0009') {
             // role dokter
@@ -151,10 +151,10 @@ class Auth extends CI_Controller
                         p.jam_daftar AS jam,
                         p.kode_member
                     FROM pendaftaran p
+                    JOIN emr_dok ed USING (no_trx)
                     LEFT JOIN tarif_paket_pasien t USING (no_trx)
                     LEFT JOIN barang_out_header bh USING (no_trx)
-                    LEFT JOIN emr_dok ed USING (no_trx)
-                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001'
+                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran)
 
                     UNION ALL
 
@@ -251,7 +251,7 @@ class Auth extends CI_Controller
 
                     SELECT du.id, du.no_trx AS invoice, 'daftar' AS url, du.tgl_ulang AS tgl, '' AS jam, du.kode_member 
                     FROM daftar_ulang du
-                    WHERE du.status_ulang = 1 AND du.tgl_ulang > '$now'
+                    WHERE du.status_ulang = 1 AND du.tgl_ulang > '$now' AND du.kode_cabang = '$cabang'
                 ) AS semuax
                 ORDER BY id DESC LIMIT 10"
             )->result();
@@ -283,10 +283,10 @@ class Auth extends CI_Controller
                         p.jam_daftar AS jam,
                         p.kode_member
                     FROM pendaftaran p
+                    JOIN emr_dok ed USING (no_trx)
                     LEFT JOIN tarif_paket_pasien t USING (no_trx)
                     LEFT JOIN barang_out_header bh USING (no_trx)
-                    LEFT JOIN emr_dok ed USING (no_trx)
-                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001'
+                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran)
 
                     UNION ALL
 
@@ -364,7 +364,7 @@ class Auth extends CI_Controller
 
             $sintak = $this->db->query(
                 "SELECT du.id, du.no_trx AS invoice, 'daftar' AS url, du.tgl_ulang AS tgl, '' AS jam, du.kode_member FROM daftar_ulang du
-                WHERE du.status_ulang = 1 AND du.tgl_ulang > '$now'"
+                WHERE du.status_ulang = 1 AND du.tgl_ulang > '$now' AND du.kode_cabang = '$cabang'"
             )->result();
         } else if ($this->session->userdata('kode_role') == 'R0009') {
             // role dokter
@@ -386,10 +386,10 @@ class Auth extends CI_Controller
                         p.jam_daftar AS jam,
                         p.kode_member
                     FROM pendaftaran p
+                    JOIN emr_dok ed USING (no_trx)
                     LEFT JOIN tarif_paket_pasien t USING (no_trx)
                     LEFT JOIN barang_out_header bh USING (no_trx)
-                    LEFT JOIN emr_dok ed USING (no_trx)
-                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001'
+                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran)
 
                     UNION ALL
 
@@ -486,7 +486,7 @@ class Auth extends CI_Controller
 
                     SELECT du.id, du.no_trx AS invoice, 'daftar' AS url, du.tgl_ulang AS tgl, '' AS jam, du.kode_member 
                     FROM daftar_ulang du
-                    WHERE du.status_ulang = 1 AND du.tgl_ulang > '$now'
+                    WHERE du.status_ulang = 1 AND du.tgl_ulang > '$now' AND du.kode_cabang = '$cabang'
                 ) AS semuax
                 ORDER BY id DESC LIMIT 10"
             )->result();

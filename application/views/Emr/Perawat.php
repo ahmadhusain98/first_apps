@@ -64,7 +64,7 @@ if (is_array($alr) && !empty($alr)) {
     <div class="card shadow card-lg" style="border: 1px solid grey;">
         <div class="card-header card-draggable">
             <span class="h4">
-                History Pasien - Perawat
+                Riwayat Pasien - Perawat
                 <i type="button" class="fa fa-times float-right" onclick="close_popup()"></i>
             </span>
         </div>
@@ -76,7 +76,7 @@ if (is_array($alr) && !empty($alr)) {
     <div class="card shadow card-lg" style="border: 1px solid grey;">
         <div class="card-header card-draggable2">
             <span class="h4">
-                History Pasien - Dokter
+                Riwayat Pasien - Dokter
                 <i type="button" class="fa fa-times float-right" onclick="close_popup2()"></i>
             </span>
         </div>
@@ -92,7 +92,7 @@ if (is_array($alr) && !empty($alr)) {
             <div class="col-md-3">
                 <div class="card card-outline card-primary" style="position: fixed; width: 19%;">
                     <div class="card-header">
-                        <span class="font-weight-bold h4 text-primary">History Pasien</span>
+                        <span class="font-weight-bold h4 text-primary">Riwayat Pasien</span>
                     </div>
                     <div class="card-body">
                         <select name="filter_dokter" id="filter_dokter" class="form-control select2_dokter_all" data-placeholder="~ Pilih Dokter" onchange="history_px()">
@@ -299,7 +299,7 @@ if (is_array($alr) && !empty($alr)) {
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label for="anamnesa_per" class="form-label col-md-3">Anamnesa **</label>
+                                        <label for="anamnesa_per" class="form-label col-md-3">Anamnesa <sup class="text-danger">**</sup></label>
                                         <div class="col-md-9">
                                             <textarea name="anamnesa_per" id="anamnesa_per" class="form-control" rows="3" placeholder="Anamnesa Perawat..."><?= ((!empty($emr_per)) ? $emr_per->anamnesa_per : '') ?></textarea>
                                         </div>
@@ -307,7 +307,7 @@ if (is_array($alr) && !empty($alr)) {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label for="diagnosa_per" class="form-label col-md-3">Diagnosa **</label>
+                                        <label for="diagnosa_per" class="form-label col-md-3">Diagnosa <sup class="text-danger">**</sup></label>
                                         <div class="col-md-9">
                                             <textarea name="diagnosa_per" id="diagnosa_per" class="form-control" rows="3" placeholder="Diagnosa Perawat..."><?= ((!empty($emr_per)) ? $emr_per->diagnosa_per : '') ?></textarea>
                                         </div>

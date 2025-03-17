@@ -66,7 +66,7 @@ if (is_array($alr) && !empty($alr)) {
     <div class="card shadow card-lg" style="border: 1px solid grey;">
         <div class="card-header card-draggable">
             <span class="h4">
-                History Pasien - Perawat
+                Riwayat Pasien - Perawat
                 <i type="button" class="fa fa-times float-right" onclick="close_popup()"></i>
             </span>
         </div>
@@ -78,7 +78,7 @@ if (is_array($alr) && !empty($alr)) {
     <div class="card shadow card-lg" style="border: 1px solid grey;">
         <div class="card-header card-draggable2">
             <span class="h4">
-                History Pasien - Dokter
+                Riwayat Pasien - Dokter
                 <i type="button" class="fa fa-times float-right" onclick="close_popup2()"></i>
             </span>
         </div>
@@ -94,7 +94,7 @@ if (is_array($alr) && !empty($alr)) {
             <div class="col-md-3">
                 <div class="card card-outline card-primary" style="position: fixed; width: 19%;">
                     <div class="card-header">
-                        <span class="font-weight-bold h4 text-primary">History Pasien</span>
+                        <span class="font-weight-bold h4 text-primary">Riwayat Pasien</span>
                     </div>
                     <div class="card-body">
                         <select name="filter_dokter" id="filter_dokter" class="form-control select2_dokter_all" data-placeholder="~ Pilih Dokter" onchange="history_px()">
@@ -349,7 +349,7 @@ if (is_array($alr) && !empty($alr)) {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label for="anamnesa_dok" class="form-label col-md-3">Anamnesa Dokter</label>
+                                        <label for="anamnesa_dok" class="form-label col-md-3">Anamnesa Dokter <sup class="text-danger">**</sup></label>
                                         <div class="col-md-9">
                                             <textarea name="anamnesa_dok" id="anamnesa_dok" class="form-control" rows="3"><?= ((!empty($emr_dok)) ? $emr_dok->anamnesa_dok : '') ?></textarea>
                                         </div>
@@ -359,7 +359,7 @@ if (is_array($alr) && !empty($alr)) {
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label for="diagnosa_dok" class="form-label col-md-3">Diagnosa Dokter</label>
+                                        <label for="diagnosa_dok" class="form-label col-md-3">Diagnosa Dokter <sup class="text-danger">**</sup></label>
                                         <div class="col-md-9">
                                             <textarea name="diagnosa_dok" id="diagnosa_dok" class="form-control" rows="3" placeholder="Diagnosa Dokter..."><?= ((!empty($emr_dok)) ? $emr_dok->diagnosa_dok : '') ?></textarea>
                                         </div>
@@ -367,7 +367,7 @@ if (is_array($alr) && !empty($alr)) {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label for="rencana_dok" class="form-label col-md-3">Anjuran/Saran</label>
+                                        <label for="rencana_dok" class="form-label col-md-3">Anjuran/Saran <sup class="text-danger">**</sup></label>
                                         <div class="col-md-9">
                                             <textarea name="rencana_dok" id="rencana_dok" class="form-control" rows="3" placeholder="Anjuran Dokter..."><?= ((!empty($emr_dok)) ? $emr_dok->rencana_dok : '') ?></textarea>
                                         </div>
@@ -470,7 +470,7 @@ if (is_array($alr) && !empty($alr)) {
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label for="ppa" class="form-label col-md-3">Perawat PPA **</label>
+                                        <label for="ppa" class="form-label col-md-3">Perawat PPA <sup class="text-danger">**</sup></label>
                                         <div class="col-md-9">
                                             <select name="ppa" id="ppa" class="form-control select2_dokter_all" data-placeholder="~ Pilih PPA">
                                                 <?php if (!empty($emr_dok_cppt)) : ?>
@@ -482,15 +482,15 @@ if (is_array($alr) && !empty($alr)) {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label for="instruksi" class="form-label col-md-3">Instruksi **</label>
+                                        <label for="instruksi" class="form-label col-md-3">Instruksi <sup class="text-danger">**</sup></label>
                                         <div class="col-md-9">
                                             <input type="text" name="instruksi" id="instruksi" class="form-control" placeholder="Instruksi..." value="<?= (!empty($emr_dok_cppt) ? $emr_dok_cppt->instruksi : '') ?>">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12">
                                     <div class="row">
                                         <div class="col-md-12 mb-1">
                                             <div class="row mb-1">
@@ -528,13 +528,22 @@ if (is_array($alr) && !empty($alr)) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+                            <hr>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <span class="h5 text-primary font-weight-bold">Riwayat SOAP</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
                                     <div class="table-responsive">
-                                        <table class="table table-hover table-bordered" style="width: 100%; border-radius: 10px;">
+                                        <table class="table table-hover table-bordered" style="width: 100%; border-radius: 10px;" id="tableNonSearch">
                                             <thead>
                                                 <tr class="text-center">
-                                                    <th style="width: 30%; border-radius: 10px 0px 0px 0px;">Dokter</th>
-                                                    <th style="width: 70%; border-radius: 0px 10px 0px 0px;">SOAP</th>
+                                                    <th style="width: 10%; border-radius: 10px 0px 0px 0px;">Aksi</th>
+                                                    <th style="width: 35%; border-radius: 10px 0px 0px 0px;">Dokter</th>
+                                                    <th style="width: 55%; border-radius: 0px 10px 0px 0px;">SOAP</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="body_cppt"></tbody>
@@ -551,8 +560,8 @@ if (is_array($alr) && !empty($alr)) {
                                             <thead>
                                                 <tr class="text-center">
                                                     <th style="width: 5%;">Hapus</th>
-                                                    <th style="width: 15%;">Bagian Tubuh</th>
-                                                    <th style="width: 80%;">Keterangan</th>
+                                                    <th style="width: 25%;">Bagian Tubuh</th>
+                                                    <th style="width: 70%;">Keterangan</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="body_fisik">
@@ -621,8 +630,8 @@ if (is_array($alr) && !empty($alr)) {
                                                                         <thead>
                                                                             <tr class="text-center">
                                                                                 <th width="5%" style="border-radius: 10px 0px 0px 0px;">Hapus</th>
-                                                                                <th width="85%">Tindakan</th>
-                                                                                <th width="10%">Qty</th>
+                                                                                <th width="75%">Tindakan</th>
+                                                                                <th width="20%">Qty</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody id="body_etarif">
@@ -674,7 +683,7 @@ if (is_array($alr) && !empty($alr)) {
                                                     </div>
                                                     <div id="tab_eresep">
                                                         <div class="row">
-                                                            <div class="col-md-8">
+                                                            <div class="col-md-12">
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-12">
                                                                         <span class="h4">Resep</span>
@@ -777,17 +786,16 @@ if (is_array($alr) && !empty($alr)) {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-4">
-                                                                <div class="row mb-3">
-                                                                    <div class="col-md-12">
-                                                                        <span class="h4">Racikan</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row mb-3">
-                                                                    <div class="col-md-12">
-                                                                        <textarea name="eracikan" id="eracikan" class="form-control" rows="5" <?= $readonly ?>><?= ((!empty($emr_per)) ? $emr_per->eracikan : '') ?></textarea>
-                                                                    </div>
-                                                                </div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-12">
+                                                                <span class="h4">Racikan</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-12">
+                                                                <textarea name="eracikan" id="eracikan" class="form-control" rows="5" <?= $readonly ?>><?= ((!empty($emr_per)) ? $emr_per->eracikan : '') ?></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1661,7 +1669,7 @@ if (is_array($alr) && !empty($alr)) {
         }
 
         if (rencana_dok.val() == '' || rencana_dok.val() == null) {
-            return Swal.fire("Rencana Dokter", "Form sudah diisi?", "question");
+            return Swal.fire("Anjuran/Saran Dokter", "Form sudah diisi?", "question");
         }
 
         if (anamnesa_dok.val() == '' || anamnesa_dok.val() == null) {

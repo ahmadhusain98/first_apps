@@ -49,7 +49,7 @@
                                                 <label for="">Tgl/Jam Daftar <sup class="text-danger">**</sup></label>
                                                 <div class="row">
                                                     <div class="col-md-6 col-6">
-                                                        <input type="date" class="form-control" id="tgl_masuk" name="tgl_masuk" value="<?= (($ulang == 1) ? date('Y-m-d', strtotime($daftar_ulang->tgl_ulang)) : ((!empty($data_pendaftaran) ? date('Y-m-d', strtotime($data_pendaftaran->tgl_daftar)) : date('Y-m-d')))) ?>" readonly>
+                                                        <input type="date" class="form-control" id="tgl_masuk" name="tgl_masuk" value="<?= (($ulang == 1) ? ((!empty($daftar_ulang)) ? date('Y-m-d', strtotime($daftar_ulang->tgl_ulang)) : '') : ((!empty($data_pendaftaran) ? date('Y-m-d', strtotime($data_pendaftaran->tgl_daftar)) : date('Y-m-d')))) ?>" readonly>
                                                     </div>
                                                     <div class="col-md-6 col-6">
                                                         <input type="time" class="form-control" id="jam_masuk" name="jam_masuk" value="<?= (($ulang == 1) ? date('H:i:s') : ((!empty($data_pendaftaran) ? date('H:i:s', strtotime($data_pendaftaran->jam_daftar)) : date('H:i:s')))) ?>" readonly>
@@ -311,9 +311,11 @@
     changeType(1);
 
     <?php if ($ulang == 1) : ?>
-        getRiwayat('<?= $daftar_ulang->kode_member ?>');
+        getRiwayat('<?= (!empty($daftar_ulang) ? $daftar_ulang->kode_member : '') ?>');
 
-        Swal.fire("Pasien Appointment", "Pastikan jadwal dokter tersedia sebelum mendaftarkan ulang pasien!", "info");
+        <?php if (!empty($daftar_ulang)) : ?>
+            Swal.fire("Pasien Appointment", "Pastikan jadwal dokter tersedia sebelum mendaftarkan ulang pasien!", "info");
+        <?php endif; ?>
     <?php endif ?>
 
     function tambahTarifPaket() {

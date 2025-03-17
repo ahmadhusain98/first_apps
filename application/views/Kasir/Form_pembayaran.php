@@ -361,17 +361,6 @@
                     <br>
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="row not_umum">
-                                <div class="col-md-6 col-6">
-                                    <label for="" class="text-success font-weight-bold">Uang Muka Tersedia</label>
-                                    <input type="text" class="form-control text-right text-primary font-weight-bold" placeholder="Uang Muka Tersedia" id="uang_sisa" name="uang_sisa" value="0" readonly>
-                                </div>
-                                <div class="col-md-6 col-6">
-                                    <label for="" class="font-weight-bold">Uang Muka Pakai</label>
-                                    <input type="text" class="form-control text-right" placeholder="Uang Muka Pakai" id="um_keluar" name="um_keluar" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->um_keluar) : '0') ?>" onkeyup="pakai_um()">
-                                </div>
-                            </div>
-                            <br>
                             <div class="row">
                                 <div class="col-md-12" id="fortableCash">
                                     <label for="">Cash</label>
@@ -467,6 +456,17 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <hr class="not_umum">
+                            <div class="row not_umum">
+                                <div class="col-md-6 col-6">
+                                    <label for="" class="text-success font-weight-bold">Uang Muka Tersedia</label>
+                                    <input type="text" class="form-control text-right text-primary font-weight-bold" placeholder="Uang Muka Tersedia" id="uang_sisa" name="uang_sisa" value="0" readonly>
+                                </div>
+                                <div class="col-md-6 col-6">
+                                    <label for="" class="font-weight-bold">Uang Muka Pakai</label>
+                                    <input type="text" class="form-control text-right" placeholder="Uang Muka Pakai" id="um_keluar" name="um_keluar" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->um_keluar) : '0') ?>" onkeyup="pakai_um()">
                                 </div>
                             </div>
                             <hr class="not_umum">
@@ -580,8 +580,8 @@
             $('.not_umum').hide();
         <?php else : ?>
             getDataPx('<?= $this->M_global->getData('barang_out_header', ['invoice' => $data_pembayaran->inv_jual])->kode_member ?>', '<?= $this->M_global->getData('barang_out_header', ['invoice' => $data_pembayaran->inv_jual])->no_trx ?> ');
-            $('.not_umum').show();
 
+            $('.not_umum').show();
         <?php endif ?>
 
         <?php if (!empty($bayar_detail)) : ?> fortableCard.show();
@@ -725,6 +725,9 @@
                         $('#alamat_px').text(result.alamat);
 
                         $('#daftar_ulang').show(200);
+
+                        $('.not_umum').show();
+                        get_um(norm, 0);
                     } else {
                         $('#norm_px').text('U00001');
                         $('#nama_px').text('Umum');
@@ -736,6 +739,7 @@
 
                         $('#daftar_ulang').hide(200);
                     }
+
                 } else {
                     Swal.fire({
                         position: "center",

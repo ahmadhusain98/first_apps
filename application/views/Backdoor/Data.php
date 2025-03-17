@@ -101,7 +101,7 @@
     function empty_trx() {
         Swal.fire({
             title: "Kamu yakin?",
-            html: "<b style='color: red;'>Semua Log User, Transaksi (PO, Pembelian, dan Penjualan) beserta history kasir dan pendaftaran akan di kosongkan!</b>",
+            html: "<b style='color: red;'>Semua Log User, Transaksi (PO, Pembelian, dan Penjualan) beserta riwayat pasien dan kasir akan di kosongkan!</b>",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",

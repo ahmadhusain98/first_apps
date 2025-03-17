@@ -122,6 +122,15 @@ class Backdoor extends CI_Controller
             $this->db->query("TRUNCATE TABLE piutang"),
             $this->db->query("TRUNCATE TABLE tarif_paket_pasien"),
             $this->db->query("TRUNCATE TABLE uang_muka"),
+            $this->db->query("TRUNCATE TABLE emr_dok"),
+            $this->db->query("TRUNCATE TABLE emr_dok_cppt"),
+            $this->db->query("TRUNCATE TABLE emr_dok_fisik"),
+            $this->db->query("TRUNCATE TABLE emr_dok_icd9"),
+            $this->db->query("TRUNCATE TABLE emr_dok_icd10"),
+            $this->db->query("TRUNCATE TABLE emr_per"),
+            $this->db->query("TRUNCATE TABLE emr_per_barang"),
+            $this->db->query("TRUNCATE TABLE emr_tarif"),
+            $this->db->query("TRUNCATE TABLE daftar_ulang"),
         ];
 
         if ($sintak) {

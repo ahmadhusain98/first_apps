@@ -1397,6 +1397,52 @@ function hitung_umur($tgl_lahir)
     return $thn . " tahun " . $bln . " bulan " . $tgl . " hari";
 }
 
+function tgl_indo($tgl)
+{
+    if (date('m', strtotime($tgl)) == 1) {
+        $bulan = 'Januari';
+    } else if (date('m', strtotime($tgl)) == 2) {
+        $bulan = 'Februari';
+    } else if (date('m', strtotime($tgl)) == 3) {
+        $bulan = 'Maret';
+    } else if (date('m', strtotime($tgl)) == 4) {
+        $bulan = 'April';
+    } else if (date('m', strtotime($tgl)) == 5) {
+        $bulan = 'Mei';
+    } else if (date('m', strtotime($tgl)) == 6) {
+        $bulan = 'Juni';
+    } else if (date('m', strtotime($tgl)) == 7) {
+        $bulan = 'Juli';
+    } else if (date('m', strtotime($tgl)) == 8) {
+        $bulan = 'Agustus';
+    } else if (date('m', strtotime($tgl)) == 9) {
+        $bulan = 'September';
+    } else if (date('m', strtotime($tgl)) == 10) {
+        $bulan = 'Oktober';
+    } else if (date('m', strtotime($tgl)) == 11) {
+        $bulan = 'November';
+    } else {
+        $bulan = 'Desember';
+    }
+    $tanggal = date('d', strtotime($tgl)) . ' ' . $bulan . ' ' . date('Y', strtotime($tgl));
+
+    return $tanggal;
+}
+
+function hitung_jarak_hari($tanggal_awal, $tanggal_akhir)
+{
+    try {
+        $awal = new DateTime($tanggal_awal);
+        $akhir = new DateTime($tanggal_akhir);
+
+        $selisih = $awal->getTimestamp() - $akhir->getTimestamp();
+
+        return abs(floor($selisih / (60 * 60 * 24)));
+    } catch (Exception $e) {
+        return 'Format tanggal tidak valid: ' . $e->getMessage();
+    }
+}
+
 function barcode($kode_barang)
 {
     $redColor = [255, 0, 0];

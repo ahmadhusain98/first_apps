@@ -154,16 +154,24 @@ class Emr extends CI_Controller
 
             if ($rd->status_trx == 2) {
                 $disabled = 'disabled';
+                $disabled2 = 'disabled';
             } else {
-                $disabled = '';
+                $emr_dok = $this->M_global->getData('emr_dok', ['no_trx' => $rd->no_trx]);
+                if ($emr_dok) {
+                    $disabled = '';
+                } else {
+                    $disabled = 'disabled';
+                }
+
+                $disabled2 = '';
             }
 
             if (
                 $rd->kode_dokter == $this->data['kode_user']
             ) {
-                $button = '<button ' . $disabled . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-primary" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Dokter" onclick="getUrl(' . "'" . "Emr/dokter/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-doctor"></i> Doctor</button>';
+                $button = '<button ' . $disabled2 . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-primary" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Dokter" onclick="getUrl(' . "'" . "Emr/dokter/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-doctor"></i> Doctor</button>';
             } else {
-                $button = '<button ' . $disabled . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-success" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Perawat" onclick="getUrl(' . "'" . "Emr/perawat/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-nurse"></i> Nurse</button>';
+                $button = '<button ' . $disabled2 . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-success" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Perawat" onclick="getUrl(' . "'" . "Emr/perawat/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-nurse"></i> Nurse</button>';
             }
 
             $row[] = '<div class="d-flex justify-content-center">
@@ -173,10 +181,10 @@ class Emr extends CI_Controller
                         <i class="fa-solid fa-envelope-open-text"></i> Surat
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="' . site_url("Emr/suket_sakit/") . $rd->no_trx . '" target="_blank">Surat Keterangan Sakit</a></li>
-                        <li><a class="dropdown-item" href="' . site_url("Emr/suket_dokter/") . $rd->no_trx . '" target="_blank">Surat Keterangan Dokter</a></li>
-                        <li><a class="dropdown-item" href="' . site_url("Emr/suket_diagnosa/") . $rd->no_trx . '" target="_blank">Surat Keterangan Diagnosa</a></li>
-                        <li><a class="dropdown-item" href="' . site_url("Emr/suket_dalam_perawatan/") . $rd->no_trx . '" target="_blank">Surat Keterangan Dalam Perawatan</a></li>
+                        <li><a class="dropdown-item" onclick="buatSurat(' . "'" . $rd->no_trx . "', 'Surat Keterangan Sakit', '1'" . ')" ' . $disabled . ' type="button">Surat Keterangan Sakit</a></li>
+                        <li><a class="dropdown-item" onclick="buatSurat(' . "'" . $rd->no_trx . "', 'Surat Keterangan Dokter', '2'" . ')" ' . $disabled . ' type="button">Surat Keterangan Dokter</a></li>
+                        <li><a class="dropdown-item" href="' . site_url("Emr/suket_diagnosa/") . $rd->no_trx . '" target="_blank" ' . $disabled . ' type="button">Surat Keterangan Diagnosa</a></li>
+                        <li><a class="dropdown-item"  href="' . site_url("Emr/suket_dalam_perawatan/") . $rd->no_trx . '" target="_blank" ' . $disabled . ' type="button">Surat Keterangan Dalam Perawatan</a></li>
                     </ul>
                 </div>
             </div>';
@@ -200,6 +208,26 @@ class Emr extends CI_Controller
     function suket_sakit($no_trx)
     {
         $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+        $dari           = $this->input->get('dari');
+        $sampai         = $this->input->get('sampai');
+
+        if (($dari == '' || $dari == null) && ($sampai == '' || $sampai == null)) {
+            $jarak = '(.....)';
+        } else {
+            $jarak = hitung_jarak_hari(date('Y-m-d', strtotime($dari)), date('Y-m-d', strtotime($sampai)));
+        }
+
+        if ($dari != '' || $dari != null) {
+            $dari = tgl_indo($dari);
+        } else {
+            $dari = '(....................)';
+        }
+
+        if ($sampai != '' || $sampai != null) {
+            $sampai = tgl_indo($sampai);
+        } else {
+            $sampai = '(....................)';
+        }
 
         $position       = 'P'; // cek posisi l/p
 
@@ -261,10 +289,10 @@ class Emr extends CI_Controller
             <td colspan="3">&nbsp;</td>
         </tr>
         <tr>
-            <td colspan="3">Setelah diperiksa kesehatannya, ternyata pada saat ini dalam keadaan <b>SAKIT</b> dan memerlukan <b>istirahat selama (.....) Hari</b></td>
+            <td colspan="3">Setelah diperiksa kesehatannya, ternyata pada saat ini dalam keadaan <b>SAKIT</b> dan memerlukan <b>istirahat selama ' . $jarak . ' Hari</b></td>
         </tr>
         <tr>
-            <td colspan="3">Terhitung tanggal (....................) s.d (....................)</td>
+            <td colspan="3">Terhitung tanggal ' . $dari . ' s.d ' . $sampai . '</td>
         </tr>
         <tr>
             <td colspan="3">Demikian surat keterangan ini untuk dapat dipergunakan seperlunya</td>
@@ -279,6 +307,26 @@ class Emr extends CI_Controller
     function suket_dokter($no_trx)
     {
         $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+        $dari           = $this->input->get('dari');
+        $sampai         = $this->input->get('sampai');
+
+        if (($dari == '' || $dari == null) && ($sampai == '' || $sampai == null)) {
+            $jarak = '(.....)';
+        } else {
+            $jarak = hitung_jarak_hari(date('Y-m-d', strtotime($dari)), date('Y-m-d', strtotime($sampai)));
+        }
+
+        if ($dari != '' || $dari != null) {
+            $dari = tgl_indo($dari);
+        } else {
+            $dari = '(....................)';
+        }
+
+        if ($sampai != '' || $sampai != null) {
+            $sampai = tgl_indo($sampai);
+        } else {
+            $sampai = '(....................)';
+        }
 
         $position       = 'P'; // cek posisi l/p
 
@@ -345,16 +393,16 @@ class Emr extends CI_Controller
             <td colspan="3">&nbsp;</td>
         </tr>
         <tr>
-            <td colspan="3">Membutuhkan <b>istirahat selama (......) Hari</b></td>
+            <td colspan="3">Membutuhkan <b>istirahat selama ' . $jarak . ' Hari</b></td>
         </tr>
         <tr>
-            <td colspan="3">Terhitung tanggal (....................) s.d (....................)</td>
+            <td colspan="3">Terhitung tanggal ' . $dari . ' s.d ' . $sampai . '</td>
         </tr>
         <tr>
             <td colspan="3">&nbsp;</td>
         </tr>
         <tr>
-            <td colspan="3">Diagnosa: ' . (($emr_dok->diagnosa != '') ? $emr_dok->diagnosa : '-') . '</td>
+            <td colspan="3">Diagnosa: ' . (($emr_dok->diagnosa_dok != '') ? $emr_dok->diagnosa_dok : '-') . '</td>
         </tr>
         <tr>
             <td colspan="3">&nbsp;</td>
@@ -383,7 +431,12 @@ class Emr extends CI_Controller
         $emr_dok        = $this->M_global->getData('emr_dok', ['no_trx' => $no_trx]);
         $emr_per        = $this->M_global->getData('emr_per', ['no_trx' => $no_trx]);
         $pendaftaran    = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
-        $pencetak       = $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama;
+        $dokter         = $this->M_global->getData('dokter', ['kode_dokter' => $emr_dok->kode_user]);
+        if ($dokter) {
+            $pencetak = $dokter;
+        } else {
+            $pencetak = $this->M_global->getData('user', ['kode_user' => $emr_dok->kode_user]);
+        }
 
         $member = $this->M_global->getData('member', ['kode_member' => $emr_dok->kode_member]);
 
@@ -405,7 +458,7 @@ class Emr extends CI_Controller
             <td colspan="3">&nbsp;</td>
         </tr>
         <tr>
-            <td colspan="3">Yang bertanda tangan dibawah ini adalah <b>Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $emr_dok->kode_user])->nama . '</b> dari <b>' . $web_setting->nama . '</b> menerangkan bahwa:</td>
+            <td colspan="3">Yang bertanda tangan dibawah ini adalah <b>Dr. ' . $pencetak->nama . '</b> dari <b>' . $web_setting->nama . '</b> menerangkan bahwa:</td>
         </tr>
         <tr>
             <td colspan="3">&nbsp;</td>
@@ -449,7 +502,7 @@ class Emr extends CI_Controller
             <td colspan="3">&nbsp;</td>
         </tr>
         <tr>
-            <td colspan="3">Menerangkan bahwa yang bersangkutan sedang dalam keadaan <b>SAKIT</b> dengan diagnosa: (' . (($emr_dok->diagnosa != '') ? $emr_dok->diagnosa : '-') . ')</td>
+            <td colspan="3">Menerangkan bahwa yang bersangkutan sedang dalam keadaan <b>SAKIT</b> dengan diagnosa: (' . (($emr_dok->diagnosa_dok != '') ? $emr_dok->diagnosa_dok : '-') . ')</td>
         </tr>
         <tr>
             <td colspan="3">&nbsp;</td>
@@ -1774,6 +1827,7 @@ class Emr extends CI_Controller
         } else { // selain itu maka tambah
             $cek = [
                 $this->M_global->insertData('emr_dok', $data),
+                $this->M_global->updateData('emr_per', ['penyakit_keluarga' => $penyakit_keluarga, 'alergi' => $alergi, 'eracikan' => $eracikan], ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_per_barang', ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_dok_fisik', ['no_trx' => $no_trx]),
                 $this->M_global->delData('emr_tarif', ['no_trx' => $no_trx]),
@@ -1896,27 +1950,59 @@ class Emr extends CI_Controller
 
     public function body_cppt($kode_member)
     {
-        $soap = $this->M_global->getDataResult('emr_dok_cppt', ['kode_member' => $kode_member]);
+        $soap = $this->db->query('SELECT * FROM emr_dok_cppt WHERE kode_member = "' . $kode_member . '" ORDER BY id DESC')->result();
         if (!empty($soap)) :
             echo '<tbody>';
-            foreach ($soap as $s) : ?>
+            foreach ($soap as $s) :
+                $dokter = $this->M_global->getData('dokter', ['kode_dokter' => $s->dpjp]);
+                $ppa = $this->M_global->getData('dokter', ['kode_dokter' => $s->ppa]);
+
+                if ($dokter) {
+                    $dokter = 'Dr. ' . $dokter->nama;
+                } else {
+                    $dokter = $this->M_global->getData('user', ['kode_user' => $s->dpjp])->nama;
+                }
+
+                if ($ppa) {
+                    $ppa = 'Dr. ' . $ppa->nama;
+                } else {
+                    $ppa = $this->M_global->getData('user', ['kode_user' => $s->ppa])->nama;
+                }
+
+                if ($s->kode_verifikasi != null) {
+                    $verif = $this->M_global->getData('dokter', ['kode_dokter' => $s->kode_verifikasi]);
+
+                    if ($verif) {
+                        $verif = 'Dr. ' . $verif->nama;
+                    } else {
+                        $verif = $this->M_global->getData('user', ['kode_user' => $s->kode_verifikasi])->nama;
+                    }
+                } else {
+                    $verif = '';
+                }
+            ?>
                 <tr>
                     <td>
-                        <?= date('d-m-Y', strtotime($s->date_cppt)) . ' / ' . date('H:i', strtotime($s->time_cppt)) ?>
-                        <hr>
-                        <?= 'DPJP: Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $s->dpjp])->nama ?>
-                        <br>
-                        <?= 'PPA: Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $s->ppa])->nama ?>
-                        <hr>
-                        <span class="badge badge-<?= (($s->verifikasi == 1) ? 'primary' : 'info') ?>">
-                            <?= ($s->verifikasi == 1) ? 'Terverifikasi' : 'Belum Diverifikasi' ?>
-                        </span><span><?= (($s->date_verif != null) ? '<br>' . date('d-m-Y', strtotime($s->date_verif)) . ' / ' . date('H:i', strtotime($s->time_verif)) : '') ?></span>
-                        <hr>
                         <?php if ($s->verifikasi == 0) : ?>
                             <button type="button" class="btn btn-warning" onclick="verif_cppt('<?= $s->no_trx ?>', '1')">Verifikasi</button>
                         <?php else : ?>
                             <button type="button" class="btn btn-danger" onclick="verif_cppt('<?= $s->no_trx ?>', '0')">Batal Verifikasi</button>
                         <?php endif ?>
+                    </td>
+                    <td>
+                        <?= date('d-m-Y', strtotime($s->date_cppt)) . ' / ' . date('H:i', strtotime($s->time_cppt)) ?>
+                        <hr>
+                        <?= 'DPJP: <span class="float-right">' . $dokter . '</span>' ?>
+                        <br>
+                        <?= 'PPA:  <span class="float-right">' . $ppa . '</span>' ?>
+                        <hr>
+                        <?php if ($verif != '') : ?>
+                            <span><?= $verif ?></span>
+                            <br>
+                        <?php endif ?>
+                        <span class="badge badge-<?= (($s->verifikasi == 1) ? 'primary' : 'info') ?>">
+                            <?= ($s->verifikasi == 1) ? 'Terverifikasi' : 'Belum Diverifikasi' ?>
+                        </span><span class="float-right"><?= (($s->date_verif != null) ? date('d-m-Y', strtotime($s->date_verif)) . ' / ' . date('H:i', strtotime($s->time_verif)) : '') ?></span>
                     </td>
                     <td>
                         S: <?= $s->soap_s ?>
