@@ -196,6 +196,20 @@
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 
     <script>
+        // nonaktif inspect element
+        // Menonaktifkan klik kanan
+        // document.addEventListener('contextmenu', function(e) {
+        //     e.preventDefault();
+        // });
+
+        // Menonaktifkan F12 (DevTools)
+        // document.addEventListener('keydown', function(e) {
+        //     if (e.keyCode === 123) { // F12
+        //         e.preventDefault();
+        //     }
+        // });
+
+
         // variable
         const siteUrl = '<?= site_url() ?>';
 

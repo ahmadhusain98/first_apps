@@ -20,10 +20,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="mb-3" id="forshift">
+                <div id="forshift">
                     <input type="hidden" name="kode_role" id="kode_role" value="">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <select name="shift" id="shift" class="form-control select2_global" data-placeholder="~ Pilih Shift">
                                 <option value="">~ Pilih Shift</option>
                                 <option value="1">1</option>
@@ -31,7 +31,7 @@
                                 <option value="3">3</option>
                             </select>
                         </div>
-                        <div class="col-md-6" id="forcabang">
+                        <div class="col-md-6 mb-3" id="forcabang">
                             <select name="cabang" id="cabang" class="form-control select2_cabang" data-placeholder="~ Pilih Cabang">
                                 <option value="">~ Pilih Cabang</option>
                             </select>
