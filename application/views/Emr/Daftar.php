@@ -96,7 +96,7 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="tgl_b" class="form-label">Sampai Tanggal</label>
-                                <input type="date" name="tgl_b" id="tgl_b" class="form-control" value="<?= date('Y-m-d') ?>">
+                                <input type="date" name="tgl_b" id="tgl_b" class="form-control" value="<?= date('Y-m-d', strtotime('+1 Day')) ?>">
                             </div>
                         </div>
                     </div>

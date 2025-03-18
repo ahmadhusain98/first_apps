@@ -251,7 +251,7 @@ class Emr extends CI_Controller
 
         $body .= '<div class="row">
             <div class="col-md-12" style="text-align: center; margin-top: 10px; font-size: 12px; font-weight: bold;"><u>SURAT KETERANGAN SAKIT</u></div>
-            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 7px;">' . nosurat('emr_dok') . '</div>
+            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 7px;">' . nosurat('emr_dok', $no_trx, $judul) . '</div>
         </div>';
 
         $body .= '<table style="text-align: left; vertical-align: top;">';
@@ -350,7 +350,7 @@ class Emr extends CI_Controller
 
         $body .= '<div class="row">
             <div class="col-md-12" style="text-align: center; margin-top: 10px; font-size: 12px; font-weight: bold;"><u>SURAT KETERANGAN DOKTER</u></div>
-            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 7px;">' . nosurat('emr_dok') . '</div>
+            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 7px;">' . nosurat('emr_dok', $no_trx, $judul) . '</div>
         </div>';
 
         $body .= '<table style="text-align: left; vertical-align: top;">';
@@ -449,7 +449,7 @@ class Emr extends CI_Controller
 
         $body .= '<div class="row">
             <div class="col-md-12" style="text-align: center; margin-top: 10px; font-size: 12px; font-weight: bold;"><u>SURAT KETERANGAN DIAGNOSA</u></div>
-            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 7px;">' . nosurat('emr_dok') . '</div>
+            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 7px;">' . nosurat('emr_dok', $no_trx, $judul) . '</div>
         </div>';
 
         $body .= '<table style="text-align: left; vertical-align: top;">';
@@ -543,7 +543,7 @@ class Emr extends CI_Controller
 
         $body .= '<div class="row">
             <div class="col-md-12" style="text-align: center; margin-top: 10px; font-size: 12px; font-weight: bold;"><u>SURAT KETERANGAN DALAM PERAWATAN</u></div>
-            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 7px;">' . nosurat('emr_dok') . '</div>
+            <div class="col-md-12" style="text-align: center; margin-bottom: 10px; font-size: 7px;">' . nosurat('emr_dok', $no_trx, $judul) . '</div>
         </div>';
 
         $body .= '<table style="text-align: left; vertical-align: top;">';

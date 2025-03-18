@@ -2727,6 +2727,14 @@ class Master extends CI_Controller
         $cek = $this->M_global->updateData('dokter', ['status' => $param], ['kode_dokter' => $kode_dokter]);
 
         if ($cek) { // jika fungsi berjalan
+            if ($param == 1) {
+                $cek_param = 'di aktifkan';
+            } else {
+                $cek_param = 'di non-aktifkan';
+            }
+
+            aktifitas_user('Master Dokter', $cek_param, $kode_dokter, $this->M_global->getData('dokter', ['kode_dokter' => $kode_dokter])->nama);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -3078,6 +3086,14 @@ class Master extends CI_Controller
         $cek = $this->M_global->updateData('perawat', ['status' => $param], ['kode_perawat' => $kode_perawat]);
 
         if ($cek) { // jika fungsi berjalan
+            if ($param == 1) {
+                $cek_param = 'di aktifkan';
+            } else {
+                $cek_param = 'di nonaktifkan';
+            }
+
+            aktifitas_user('Master Perawat', $cek_param, $kode_perawat, $this->M_global->getData('perawat', ['kode_perawat' => $kode_perawat])->nama);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -3786,6 +3802,8 @@ class Master extends CI_Controller
 
         if ($cek) {
             $cek2 = $this->db->query("UPDATE m_pajak SET aktif = 1 WHERE kode_pajak = '$kode_pajak'");
+
+            aktifitas_user('Master Pajak', 'menjadikan pajak aktif', $kode_pajak, $this->M_global->getData('m_pajak', ['kode_pajak' => $kode_poli])->nama);
         } else {
             $cek2 = TRUE;
         }
@@ -5686,15 +5704,15 @@ class Master extends CI_Controller
     public function wilayah_proses()
     {
         // variable
-        $id_wil = $this->input->post('id_wil');
-        $cektab = $this->input->post('cektab');
+        $id_wil           = $this->input->post('id_wil');
+        $cektab           = $this->input->post('cektab');
 
-        $kode_provinsi = $this->input->post('kode_provinsi');
-        $provinsi = $this->input->post('provinsi');
-        $kode_kabupaten = $this->input->post('kode_kabupaten');
-        $kabupaten = $this->input->post('kabupaten');
-        $kode_kecamatan = $this->input->post('kode_kecamatan');
-        $kecamatan = $this->input->post('kecamatan');
+        $kode_provinsi    = $this->input->post('kode_provinsi');
+        $provinsi         = $this->input->post('provinsi');
+        $kode_kabupaten   = $this->input->post('kode_kabupaten');
+        $kabupaten        = $this->input->post('kabupaten');
+        $kode_kecamatan   = $this->input->post('kode_kecamatan');
+        $kecamatan        = $this->input->post('kecamatan');
 
         if ($cektab == 1) {
             $data = [
@@ -5702,10 +5720,10 @@ class Master extends CI_Controller
                 'provinsi'      => $provinsi,
             ];
 
-            $table = 'm_provinsi';
-            $kode = $kode_provinsi;
-            $nama = $provinsi;
-            $where = ['kode_provinsi' => $id_wil];
+            $table        = 'm_provinsi';
+            $kode         = $kode_provinsi;
+            $nama         = $provinsi;
+            $where        = ['kode_provinsi' => $id_wil];
         } else if ($cektab == 2) {
             $data = [
                 'kode_provinsi'     => $provinsi,
@@ -5713,10 +5731,10 @@ class Master extends CI_Controller
                 'kabupaten'         => $kabupaten,
             ];
 
-            $table = 'kabupaten';
-            $kode = $kode_kabupaten;
-            $nama = $kabupaten;
-            $where = ['kode_kabupaten' => $id_wil];
+            $table        = 'kabupaten';
+            $kode         = $kode_kabupaten;
+            $nama         = $kabupaten;
+            $where        = ['kode_kabupaten' => $id_wil];
         } else {
             $data = [
                 'kode_kabupaten'    => $kabupaten,
@@ -5724,18 +5742,18 @@ class Master extends CI_Controller
                 'kecamatan'         => $kecamatan,
             ];
 
-            $table = 'kecamatan';
-            $kode = $kode_kecamatan;
-            $nama = $kecamatan;
-            $where = ['kode_kecamatan' => $id_wil];
+            $table        = 'kecamatan';
+            $kode         = $kode_kecamatan;
+            $nama         = $kecamatan;
+            $where        = ['kode_kecamatan' => $id_wil];
         }
 
         if ($id_wil == '') {
-            $cek_param = 'Menambahkan';
-            $cek = $this->M_global->insertData($table, $data);
+            $cek_param    = 'Menambahkan';
+            $cek          = $this->M_global->insertData($table, $data);
         } else {
-            $cek_param = 'Mengubah';
-            $cek = $this->M_global->updateData($table, $data, $where);
+            $cek_param    = 'Mengubah';
+            $cek          = $this->M_global->updateData($table, $data, $where);
         }
 
         if ($cek) { // jika fungsi berjalan

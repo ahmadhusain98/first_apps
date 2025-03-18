@@ -75,11 +75,26 @@ function singkatTeks($teks, $panjang = 10)
     }
 }
 
-function nosurat($table)
+function nosurat($table, $no_trx, $nama)
 {
-    $CI         = &get_instance();
-    $smtp_apps  = $CI->db->query("SELECT * FROM web_setting WHERE id = 1")->row();
-    $surat_ke   = count($CI->M_global->getResult($table));
+    $CI           = &get_instance();
+    $smtp_apps    = $CI->db->query("SELECT * FROM web_setting WHERE id = 1")->row();
+    $surat        = $CI->db->query('SELECT * FROM surat WHERE nama = "' . $nama . '" AND no_trx = "' . $no_trx . '" ORDER BY id DESC LIMIT 1')->row();
+    $pendaftaran  = $CI->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+
+    if (!$surat) {
+        $CI->M_global->insertData('surat', ['no_trx' => $no_trx, 'tgl_admisi' => $pendaftaran->tgl_daftar, 'kode_member' => $pendaftaran->kode_member, 'nomor' => 1, 'nama' => $nama]);
+    } else {
+        $surat2   = $CI->db->query('SELECT * FROM surat WHERE nama = "' . $nama . '" AND no_trx = "' . $no_trx . '" ORDER BY id DESC LIMIT 1')->row();
+
+        $CI->M_global->updateData('surat', ['tgl_admisi' => $pendaftaran->tgl_daftar, 'kode_member' => $pendaftaran->kode_member, 'nomor' => $surat2->id], ['no_trx' => $no_trx, 'nama' => $nama]);
+    }
+
+    $surat3       = $CI->db->query('SELECT * FROM surat WHERE nama = "' . $nama . '" AND no_trx = "' . $no_trx . '"')->result();
+
+    $number       = count($surat3) + 1;
+    $surat_ke     = $number;
+
     if (date('m') == 12) {
         $month = 'XII';
     } else if (date('m') == 11) {

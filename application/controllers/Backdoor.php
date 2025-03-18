@@ -131,9 +131,21 @@ class Backdoor extends CI_Controller
             $this->db->query("TRUNCATE TABLE emr_per_barang"),
             $this->db->query("TRUNCATE TABLE emr_tarif"),
             $this->db->query("TRUNCATE TABLE daftar_ulang"),
+            $this->db->query("TRUNCATE TABLE surat"),
         ];
 
         if ($sintak) {
+
+            // hapus file
+            $folderPath = 'assets/file/pdf/';
+            $files = glob($folderPath . '*');
+
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+
             echo json_encode(['status' => 1]);
         } else {
             echo json_encode(['status' => 0]);

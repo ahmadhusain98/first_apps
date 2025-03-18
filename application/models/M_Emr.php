@@ -82,12 +82,15 @@ class M_Emr extends CI_Model
     public function get_datatables($dari, $sampai, $kode_poli, $kode_dokter, $tipe)
     {
         $this->_get_datatables_query($dari, $sampai, $kode_poli, $kode_dokter, $tipe);
-        if ($_POST["length"] != -1) {
+
+        if (isset($_POST["length"]) && $_POST["length"] != -1) {
             $this->db->limit($_POST["length"], $_POST["start"]);
         }
+
         $query = $this->db->get();
         return $query->result();
     }
+
 
     public function count_filtered($dari, $sampai, $kode_poli, $kode_dokter, $tipe)
     {
