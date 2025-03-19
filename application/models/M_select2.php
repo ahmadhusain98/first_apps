@@ -308,7 +308,7 @@ class M_select2 extends CI_Model
         $limit = ' LIMIT 50';
 
         if (!empty($key)) {
-            $add_sintak = ' AND (nik LIKE "%' . $key . '%" OR kode_user LIKE "%' . $key . '%" OR nama LIKE "%' . $key . '%" OR email LIKE "%' . $key . '%") ORDER BY nama ASC';
+            $add_sintak = ' AND (kode_user LIKE "%' . $key . '%" OR nama LIKE "%' . $key . '%" OR email LIKE "%' . $key . '%") ORDER BY nama ASC';
         } else {
             $add_sintak = ' ORDER BY nama ASC';
         }

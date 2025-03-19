@@ -188,15 +188,17 @@ class Profile extends CI_Controller
         }
     }
 
-    public function aktifitas_user($date)
+    public function aktifitas_user($date, $kode_user)
     {
-        $email = $this->session->userdata("email");
+        $user = $this->M_global->getData('user', ['kode_user' => $kode_user]);
+        $email = $user->email;
+
         $jum_aktif = $this->db->query("SELECT * FROM activity_user WHERE email = '$email' AND waktu LIKE '%$date%'")->num_rows();
         $aktifitas = $this->db->query("SELECT * FROM activity_user WHERE email = '$email' AND waktu LIKE '%$date%' ORDER BY id_activity DESC")->result();
         if ($aktifitas) :
 ?>
             <br>
-            <span class="badge bg-info" type="button" onclick="lihat_aktifitas($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
+            <span class="badge bg-info" type="button" onclick="lihat_aktifitas()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
             <span class="badge bg-warning" type="button" onclick="download_au($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Cetak</span>
             <span class="badge bg-danger float-right">Banyaknya aktifitas : <?= $jum_aktif; ?></span>
             <br>
@@ -219,7 +221,7 @@ class Profile extends CI_Controller
             <br>
             <div class="row">
                 <div class="col-md-12">
-                    <span class="badge bg-info" type="button" onclick="lihat_aktifitas($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
+                    <span class="badge bg-info" type="button" onclick="lihat_aktifitas()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
                     <span class="badge bg-warning" type="button" onclick="download_au($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Cetak</span>
                     <span class="badge bg-danger float-right">Banyaknya aktifitas : 0</span>
                     <br>

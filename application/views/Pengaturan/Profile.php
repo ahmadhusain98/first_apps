@@ -186,17 +186,30 @@ if ($data_user->on_off == 1) {
                                 <div class="row bg-white">
                                     <div class="col-12">
                                         <div class="row">
-                                            <div class="col-sm-9" style="margin-bottom: 5px;">
+                                            <div class="col-sm-6" style="margin-bottom: 5px;">
                                                 <div class="h4 text-primary font-weight-bold">Aktifitas Ketika di dalam Sistem</div>
                                             </div>
-                                            <div class="col-sm-3">
-                                                <input type="date" class="form-control float-right" name="tgl" id="tgl" value="<?= date('Y-m-d'); ?>" onchange="lihat_aktifitas(this.value)">
+                                            <div class="col-sm-6">
+                                                <div class="float-right">
+                                                    <div class="row">
+                                                        <?php if ($this->session->userdata('kode_role') == 'R0001') : ?>
+                                                            <div class="col-md-8">
+                                                                <select name="kode_user" id="kode_user" class="form-control select2_user" data-placeholder="~ Pilih User" onchange="lihat_aktifitas()">
+                                                                    <option value="<?= $this->session->userdata('kode_user') ?>">Status: <?= $this->M_global->getData('m_role', ['kode_role' => $this->session->userdata('kode_role')])->keterangan ?> ~ Nama: <?= $this->M_global->getData('user', ['kode_user' => $this->session->userdata('kode_user')])->nama ?></option>
+                                                                </select>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                        <div class="col-md-<?= (($this->session->userdata('kode_role') == 'R0001') ? '4' : '12') ?>">
+                                                            <input type="date" class="form-control" name="tgl" id="tgl" value="<?= date('Y-m-d'); ?>" onchange="lihat_aktifitas()">
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div id="cekaktif_user">
                                             <?php if ($aktifitas) : ?>
                                                 <br>
-                                                <span class="badge bg-info" type="button" onclick="lihat_aktifitas($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
+                                                <span class="badge bg-info" type="button" onclick="lihat_aktifitas()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
                                                 <span class="badge bg-warning" type="button" onclick="download_au($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Cetak</span>
                                                 <span class="badge bg-danger float-right">Banyaknya aktifitas : <?= $jum_aktif; ?></span>
                                                 <br>
@@ -219,7 +232,7 @@ if ($data_user->on_off == 1) {
                                                 <br>
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <span class="badge bg-info" type="button" onclick="lihat_aktifitas($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
+                                                        <span class="badge bg-info" type="button" onclick="lihat_aktifitas()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>
                                                         <span class="badge bg-warning" type="button" onclick="download_au($('#tgl').val())"><i class="fa-solid fa-arrows-rotate"></i> Cetak</span>
                                                         <span class="badge bg-danger float-right">Banyaknya aktifitas : 0</span>
                                                         <br>
@@ -403,7 +416,11 @@ if ($data_user->on_off == 1) {
     }
 
     // aktifitas
-    function lihat_aktifitas(params) {
+    function lihat_aktifitas() {
+        var tgl = $('#tgl').val();
+        var kode_user = $('#kode_user').val();
+        var params = tgl + "/" + kode_user;
+
         xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
