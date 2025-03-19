@@ -361,18 +361,25 @@ class M_select2 extends CI_Model
                 $add_sintak = ' GROUP BY dp.kode_dokter ORDER BY dp.kode_dokter ASC ';
             }
 
+            // Menentukan hari yang sesuai dengan hari saat ini (next <hari>)
+            $this_day = date('l'); // hari ini dalam bahasa inggris
+
             $sintak = $this->db->query(
-                'SELECT dp.kode_dokter AS id, CONCAT("Dr. ", d.nama) AS text 
-                FROM dokter_poli dp 
-                JOIN dokter d ON dp.kode_dokter = d.kode_dokter 
-                JOIN m_poli p ON p.kode_poli = dp.kode_poli
-                JOIN jadwal_dokter jd ON (jd.kode_dokter = d.kode_dokter AND jd.kode_poli = "' . $kode_poli . '")
-                WHERE jd.status = 1 AND jd.kode_cabang = "' . $this->session->userdata('cabang') . '" AND jd.date_start <= "' . $now . '" AND jd.date_end >= "' . $now . '" AND dp.kode_poli = "' . $kode_poli . '" ' . $add_sintak . $limit
+                'SELECT dp.kode_dokter AS id, CONCAT("Dr. ", d.nama) AS text
+            FROM dokter_poli dp
+            JOIN dokter d ON dp.kode_dokter = d.kode_dokter
+            JOIN m_poli p ON p.kode_poli = dp.kode_poli
+            JOIN jadwal_dokter jd ON (jd.kode_dokter = d.kode_dokter AND jd.kode_poli = "' . $kode_poli . '")
+            WHERE jd.status = 1
+            AND jd.kode_cabang = "' . $this->session->userdata('cabang') . '"
+            AND jd.hari = "' . $this_day . '" 
+            AND dp.kode_poli = "' . $kode_poli . '" ' . $add_sintak . $limit
             )->result();
         }
 
         return $sintak;
     }
+
 
     // fungsi poli_dokter
     function getPoliDokter($key, $kode_dokter)

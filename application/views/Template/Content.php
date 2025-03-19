@@ -748,7 +748,6 @@
             xhttp.send();
         }
 
-
         display_ct();
 
         function close_popup() {
@@ -757,6 +756,27 @@
 
         function close_popup2() {
             popup2.style.display = 'none';
+        }
+
+        const hariIndo = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+        // Fungsi untuk memformat tanggal dengan nama hari
+        function formatDateWithDay(date) {
+            const yyyy = date.getFullYear();
+            let mm = date.getMonth() + 1; // Bulan dimulai dari 0, jadi tambahkan 1
+            let dd = date.getDate();
+            const dayName = hariIndo[date.getDay()]; // Ambil nama hari sesuai index getDay()
+
+            if (dd < 10) dd = '0' + dd;
+            if (mm < 10) mm = '0' + mm;
+
+            // Format tanggal menjadi "Hari, dd-mm-yyyy"
+            return `${dayName}`;
+        }
+
+        function formatTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':'); // Misalnya "09:30" menjadi [9, 30]
+            return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`; // Formatkan jam dan menit
         }
 
         function ganti_shift() {
@@ -882,12 +902,35 @@
         }
 
         function display_ct() {
-            var x = new Date()
-            var x1 = x.getMonth() + 1 + "/" + x.getDate() + "/" + x.getFullYear();
-            x1 = x1 + " - " + x.getHours() + ":" + x.getMinutes() + ":" + x.getSeconds();
+            var x = new Date();
+
+            // Array nama hari dalam Bahasa Indonesia
+            var days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+
+            // Array nama bulan dalam Bahasa Indonesia
+            var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+            // Mendapatkan nama hari
+            var dayName = days[x.getDay()];
+
+            // Mendapatkan tanggal, bulan, dan tahun
+            var day = x.getDate();
+            var month = months[x.getMonth()];
+            var year = x.getFullYear();
+
+            // Mendapatkan jam, menit, dan detik
+            var hours = x.getHours();
+            var minutes = x.getMinutes();
+            var seconds = x.getSeconds();
+
+            // Format waktu
+            var x1 = hours + ":" + minutes + ":" + seconds + " / " + dayName + ", " + day + " " + month + " " + year;
+
+            // Menampilkan waktu pada elemen dengan id 'time'
             document.getElementById('time').innerHTML = x1;
-            display_c();
+            setTimeout(display_ct, 1000); // Memperbarui setiap detik
         }
+
 
         // fungsi hyperlink js
         function getUrl(url) {

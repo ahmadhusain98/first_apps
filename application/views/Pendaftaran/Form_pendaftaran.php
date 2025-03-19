@@ -784,7 +784,7 @@
                 }
             },
             events: { // load data fullcalendar
-                url: siteUrl + 'Health/jadwal_list',
+                url: siteUrl + 'Health/jdokter_list',
                 method: 'GET',
                 failure: function() {
                     Swal.fire("Jadwal Dokter", "Gagal diload", "error");
@@ -797,54 +797,64 @@
                     html: title
                 };
             },
-            eventDidMount: function(info) { //mengatur warna by status kehadiran
+            eventDidMount: function(info) {
+                // Mengatur warna teks menjadi putih
+                info.el.style.color = 'white';
+
+                // Mengatur warna latar belakang berdasarkan status
                 switch (info.event.extendedProps.status_dokter) {
                     case '1': // Hadir
-                        info.el.style.backgroundColor = '#007bff';
+                        info.el.style.backgroundColor = '#007bff'; // Biru
                         break;
                     case '2': // Izin
-                        info.el.style.backgroundColor = '#ffd000';
+                        info.el.style.backgroundColor = '#ffd000'; // Kuning
                         break;
                     case '3': // Sakit
-                        info.el.style.backgroundColor = '#ed1e32';
+                        info.el.style.backgroundColor = '#ed1e32'; // Merah
                         break;
                     case '4': // Cuti
-                        info.el.style.backgroundColor = '#2aae47';
+                        info.el.style.backgroundColor = '#2aae47'; // Hijau
                         break;
                     default:
-                        info.el.style.backgroundColor = '#76818d';
+                        info.el.style.backgroundColor = '#76818d'; // Warna default jika status tidak dikenali
                 }
             },
-            eventMouseEnter: function(info) { // saat di hover
-                // date format tgl mulai
-                const start_date = new Date(info.event.startStr);
-                const yyyy = start_date.getFullYear();
-                let mm = start_date.getMonth() + 1;
-                let dd = start_date.getDate();
+            eventMouseEnter: function(info) {
+                // Fungsi untuk memformat tanggal
+                function formatDate(date) {
+                    const yyyy = date.getFullYear();
+                    let mm = date.getMonth() + 1;
+                    let dd = date.getDate();
 
-                if (dd < 10) dd = '0' + dd;
-                if (mm < 10) mm = '0' + mm;
+                    if (dd < 10) dd = '0' + dd;
+                    if (mm < 10) mm = '0' + mm;
 
-                const formattedToday = dd + '-' + mm + '-' + yyyy;
+                    return dd + '-' + mm + '-' + yyyy;
+                }
 
-                // date format tgl mulai
-                const end_date = new Date(info.event.endStr);
-                const yyyy2 = end_date.getFullYear();
-                let mm2 = end_date.getMonth() + 1;
-                let dd2 = end_date.getDate();
+                const start_date = info.event.start || new Date(info.event.startStr); // fallback ke startStr jika start tidak ada
+                const formattedStartDate = formatDateWithDay(start_date); // Memformat tanggal mulai
 
-                if (dd2 < 10) dd2 = '0' + dd2;
-                if (mm2 < 10) mm2 = '0' + mm2;
+                const end_date = info.event.end || new Date(info.event.endStr); // fallback ke endStr jika end tidak ada
+                const formattedEndDate = formatDateWithDay(end_date); // Memformat tanggal selesai
 
-                const formattedToday2 = dd2 + '-' + mm2 + '-' + yyyy2;
+                const formattedStartTime = formatTime(info.event.extendedProps.time_start);
+                const formattedEndTime = formatTime(info.event.extendedProps.time_end);
 
+                if (info.event.extendedProps.limit_px == 0) {
+                    var limit_px = 'Tidak Terbatas';
+                } else {
+                    var limit_px = info.event.extendedProps.limit_px + ' Pasien';
+                }
+
+                // Buat tooltip dengan informasi dokter, waktu mulai dan selesai, serta catatan
                 $(info.el).tooltip({
-                    title: 'Nama Dokter: ' + info.event.extendedProps.nama_dokter + '<br>Mulai: ' + formattedToday + ' / ' + info.event.extendedProps.time_start + '<br>Selesai: ' + formattedToday2 + ' / ' + info.event.extendedProps.time_end + '<br>Catatan: ' + info.event.extendedProps.comment,
+                    title: 'Nama: ' + info.event.extendedProps.nama_dokter + '<br>Hari: ' + formattedStartDate + ' (' + formattedStartTime + ' - ' + formattedEndTime + ')<br>Limit Pasien: ' + limit_px + '<br>Catatan: ' + info.event.extendedProps.comment,
                     html: true,
                     placement: 'top'
                 });
 
-                // tampilkan tooltip
+                // Tampilkan tooltip
                 $(info.el).tooltip('show');
             },
             eventMouseLeave: function(info) { // saat tidak di hover

@@ -352,6 +352,8 @@ class Health extends CI_Controller
             ];
             // jalankan fungsi simpan
             $cek = $this->M_global->insertData('member', $isi);
+
+            $cek_param = 'Menambahkan';
         } else { // selain itu
 
             $isi = [
@@ -382,9 +384,13 @@ class Health extends CI_Controller
             ];
             // jalankan fungsi update
             $cek = $this->M_global->updateData('member', $isi, ['kode_member' => $kode_member]);
+
+            $cek_param = 'Mengubah';
         }
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Data Member', $cek_param, $kode_member, $nama);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -399,7 +405,15 @@ class Health extends CI_Controller
         // jalankan fungsi update actived member
         $cek = $this->M_global->updateData('member', ['actived' => $param], ['kode_member' => $kode_member]);
 
+        if ($param == 1) {
+            $cek_param = 'Di aktifkan';
+        } else {
+            $cek_param = 'Di nonaktifkan';
+        }
+
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Data Member', $cek_param, $kode_member, $this->M_global->getData('member', ['kode_member' => $kode_member])->nama);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -423,6 +437,8 @@ class Health extends CI_Controller
         $cek = $this->M_global->delData('member', ['kode_member' => $kode_member]);
 
         if ($cek) { // jika fungsi berjalan
+            aktifitas_user('Data Member', 'Menghapus', $kode_member, $this->M_global->getData('member', ['kode_member' => $kode_member])->nama);
+
             // kirimkan status 1 ke view
             echo json_encode(['status' => 1]);
         } else { // selain itu
@@ -1129,7 +1145,7 @@ class Health extends CI_Controller
 
 
         if ($param == 1) { // jika param = 1
-            aktifitas_user_transaksi('Pendaftaran', 'mendaftarkan Member ' . $kode_member, $no_trx);
+            aktifitas_user_transaksi('Pendaftaran', 'Mendaftarkan ' . $kode_member, $no_trx);
 
             // lakukan fungsi tambah ke table pendaftaran
             $cek = [
@@ -1139,7 +1155,7 @@ class Health extends CI_Controller
                 $this->M_global->delData('daftar_ulang', ['kode_member' => $kode_member]),
             ];
         } else { // selain itu
-            aktifitas_user_transaksi('Pendaftaran', 'mengubah Pendaftaran Member ' . $kode_member, $no_trx);
+            aktifitas_user_transaksi('Pendaftaran', 'Mengubah Pendaftaran' . $kode_member, $no_trx);
             // lakukan fungsi ubah ke table pendaftaran
             $cek = [
                 $this->M_global->updateData('pendaftaran', $isi, ['no_trx' => $no_trx]),
@@ -1180,7 +1196,7 @@ class Health extends CI_Controller
     {
         // jalankan fungsi update actived pendaftaran
         $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
-        aktifitas_user_transaksi('Pendaftaran', 'membatalkan Pendaftaran Member ' . $pendaftaran->kode_member, $no_trx);
+        aktifitas_user_transaksi('Pendaftaran', 'Membatalkan Pendaftaran ' . $pendaftaran->kode_member, $no_trx);
 
         $cek = [
             $this->M_global->updateData('pendaftaran', ['status_trx' => 2, 'tgl_keluar' => date('Y-m-d'), 'jam_keluar' => date('H:i:s')], ['no_trx' => $no_trx]),
@@ -1204,7 +1220,7 @@ class Health extends CI_Controller
         // jalankan fungsi hapus pendaftaran berdasarkan no_trx
         $member = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
 
-        aktifitas_user_transaksi('Pendaftaran', 'menghapus Pendaftaran Member ' . $member->kode_member, $no_trx);
+        aktifitas_user_transaksi('Pendaftaran', 'Menghapus Pendaftaran ' . $member->kode_member, $no_trx);
 
         $cek = [
             $this->M_global->delData('pendaftaran', ['no_trx' => $no_trx]),
@@ -1229,7 +1245,7 @@ class Health extends CI_Controller
      */
 
     // jadwal_dokter page
-    public function jadwal_dokter()
+    public function jdokter()
     {
         // website config
         $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
@@ -1242,52 +1258,79 @@ class Health extends CI_Controller
             'page'          => 'Jadwal Dokter',
             'web'           => $web_setting,
             'web_version'   => $web_version->version,
-            'list_data'     => 'Health/jadwal_list',
+            'list_data'     => 'Health/jdokter_list',
             'param1'        => '',
         ];
 
-        $this->template->load('Template/Content', 'Pendaftaran/Jadwal_dokter', $parameter);
+        $this->template->load('Template/Content', 'Pendaftaran/Jdokter', $parameter);
     }
 
-    // jadwal list
-    public function jadwal_list()
+    public function jdokter_list()
     {
-        // sintak untuk tampil ke view
+        // Ambil data jadwal dari database
         $events = $this->db->query(
-            'SELECT CONCAT("Dokter: ", d.nama, ", Cabang: ", c.cabang, ", Poli: ", p.keterangan) AS title, d.nama,
-             jd.id, jd.kode_dokter, jd.kode_cabang, jd.status, jd.date_start AS start_date, jd.date_end AS end_date, jd.time_start, jd.time_end, jd.comment
+            'SELECT CONCAT("Dokter: ", d.nama, ", Cabang: ", c.cabang, ", Poli: ", p.keterangan) AS title, 
+            d.nama, jd.id, jd.kode_dokter, jd.kode_cabang, jd.status, jd.hari AS hari, jd.time_start, jd.time_end, jd.comment, jd.limit_px
             FROM jadwal_dokter jd
             JOIN cabang c ON c.kode_cabang = jd.kode_cabang
             JOIN dokter d ON d.kode_dokter = jd.kode_dokter
             JOIN m_poli p ON (p.kode_poli = jd.kode_poli)'
         )->result();
 
-        // buat data untuk menampung data array
         $data = [];
-        foreach ($events as $event) { // lakukan loop untuk mengambil data
+        foreach ($events as $event) {
+            // Tentukan hari yang dipilih (misalnya Senin, Selasa, dll.)
+            // Kita akan mengulangi jadwal setiap minggu untuk hari yang sama
+            // Menggunakan strtotime untuk mendapatkan tanggal hari berikutnya pada minggu depan sesuai dengan hari yang dipilih.
+            $start_date = date('Y-m-d', strtotime("next $event->hari")) . 'T' . $event->time_start; // start time
+            $end_date = date('Y-m-d', strtotime("next $event->hari")) . 'T' . $event->time_end; // end time
 
-            // simpan kedalam array
+            // Simpan data jadwal ke array, yang akan digunakan di kalender
             $data[] = [
-                'id'            => $event->id,
-                'title'         => $event->title,
-                'start'         => $event->start_date . 'T' . $event->time_start,
-                'end'           => $event->end_date . 'T' . $event->time_end,
-                'time_start'    => date('H:i', strtotime($event->time_start)),
-                'time_end'      => date('H:i', strtotime($event->time_end)),
-                'status_dokter' => $event->status,
-                'nama_dokter'   => "Dr. " . $event->nama,
-                'kode_dokter'   => $event->kode_dokter,
-                'comment'       => (($event->comment == '') ? 'Tidak ada catatan' : $event->comment),
-                'displayEventTime' => true, // Display the event time
+                'id'                => $event->id,
+                'title'             => $event->title,
+                'start'             => $start_date, // Format ISO 8601 (YYYY-MM-DDTHH:mm:ss)
+                'end'               => $end_date,   // Format ISO 8601 (YYYY-MM-DDTHH:mm:ss)
+                'time_start'        => $event->time_start,
+                'time_end'          => $event->time_end,
+                'status_dokter'     => $event->status,
+                'limit_px'          => number_format($event->limit_px),
+                'nama_dokter'       => "Dr. " . $event->nama,
+                'kode_dokter'       => $event->kode_dokter,
+                'comment'           => (($event->comment == '') ? 'Tidak ada catatan' : $event->comment),
+                'displayEventTime'  => true, // Menampilkan waktu acara
             ];
+
+            // Tambahkan event berulang selama beberapa minggu (misalnya 12 minggu ke depan) 
+            // Jika ingin menjadwalkan lebih panjang, Anda bisa menambahkan loop disini.
+            for ($i = 1; $i <= 12; $i++) {
+                // Menambahkan 7 hari ke setiap tanggal untuk membuat acara ini berulang setiap minggu
+                $next_start = date('Y-m-d', strtotime("+$i week", strtotime($start_date))) . 'T' . $event->time_start;
+                $next_end = date('Y-m-d', strtotime("+$i week", strtotime($end_date))) . 'T' . $event->time_end;
+
+                // Menambahkan event berulang ke dalam array data
+                $data[] = [
+                    'id'                => $event->id . "_$i", // Mengganti ID agar unik untuk setiap minggu
+                    'title'             => $event->title,
+                    'start'             => $next_start, // Format ISO 8601 (YYYY-MM-DDTHH:mm:ss)
+                    'end'               => $next_end,   // Format ISO 8601 (YYYY-MM-DDTHH:mm:ss)
+                    'time_start'        => $event->time_start,
+                    'time_end'          => $event->time_end,
+                    'status_dokter'     => $event->status,
+                    'limit_px'          => number_format($event->limit_px),
+                    'nama_dokter'       => "Dr. " . $event->nama,
+                    'kode_dokter'       => $event->kode_dokter,
+                    'comment'           => (($event->comment == '') ? 'Tidak ada catatan' : $event->comment),
+                    'displayEventTime'  => true, // Menampilkan waktu acara
+                ];
+            }
         }
 
-        // lempar ke view dengan json
+        // Kembalikan data dalam format JSON untuk ditampilkan di kalender
         echo json_encode($data);
     }
 
-    // jadwal proses
-    public function jadwal_insert()
+    public function jdokter_insert()
     {
         // ambil semua data dari veiw
         $kodeJadwal   = $this->input->post('kodeJadwal');
@@ -1296,8 +1339,8 @@ class Health extends CI_Controller
         $kode_ruang   = $this->input->post('kode_ruang');
         $kode_cabang  = $this->input->post('kode_cabang');
         $status       = $this->input->post('status_dokter');
-        $date_start   = $this->input->post('date_start');
-        $date_end     = $this->input->post('date_end');
+        $limit_px     = $this->input->post('limit_px');
+        $hari         = $this->input->post('hari');
         $time_start   = $this->input->post('time_start');
         $time_end     = $this->input->post('time_end');
         $comment      = $this->input->post('comment');
@@ -1312,8 +1355,8 @@ class Health extends CI_Controller
             'kode_cabang'   => $kode_cabang,
             'kode_ruang'    => $kode_ruang,
             'status'        => $status,
-            'date_start'    => $date_start,
-            'date_end'      => $date_end,
+            'limit_px'      => $limit_px,
+            'hari'          => $hari,
             'time_start'    => $time_start,
             'time_end'      => $time_end,
             'comment'       => $comment,
@@ -1323,7 +1366,7 @@ class Health extends CI_Controller
 
         if ($cek) { // jika function cek berjalan, lempar status 1 ke view
             // simpan aktifitas user
-            aktifitas_user('Jadwal Dokter', 'Menambahkan', $kodeJadwal, "Jadwal dokter: " . $dokter->nama . " Start: " . $date_start . " End: " . $date_end);
+            aktifitas_user('Jadwal Dokter', 'Menambahkan', $kodeJadwal, "Jadwal dokter: " . $dokter->nama . " Hari: " . $hari . " Jam: (" . $time_start . " - " . $time_end . ")");
 
             echo json_encode(['status' => 1]);
         } else { // selain itu lempar status 0 ke veiw
@@ -1334,30 +1377,47 @@ class Health extends CI_Controller
     // update jadwal
     public function jadwal_update()
     {
-        // ambil data
+        // Ambil data dari input
         $id           = $this->input->post('kode_jadwal');
         $kode_dokter  = $this->input->post('kode_dokter');
-        $date_start   = date('Y-m-d', strtotime($this->input->post('date_start')));
-        $date_end     = date('Y-m-d', strtotime($this->input->post('date_end')));
+        $hari         = $this->input->post('hari');  // Mengambil data 'hari' dari request POST
 
-        // ambil data dokter by kode_dokter
-        $dokter       = $this->M_global->getData('dokter', ['kode_dokter' => $kode_dokter]);
+        // Mengonversi ISO 8601 ke format yang dibutuhkan
+        $date        = new DateTime($hari);  // Buat objek DateTime dari string ISO 8601
+        $nama_hari   = $date->format('l');
 
-        // tampung ke dalam array
+        // Cek apakah 'hari' kosong
+        if (empty($nama_hari)) {
+            echo json_encode(['status' => 0, 'message' => 'nama_hari tidak valid atau kosong']);
+            return;
+        }
+
+        // Ambil data jadwal dokter berdasarkan id
+        $jadwal_dokter  = $this->M_global->getData('jadwal_dokter', ['id' => $id]);
+        $dokter          = $this->M_global->getData('dokter', ['kode_dokter' => $kode_dokter]);
+
+        // Pastikan jadwal dan dokter ditemukan
+        if (!$jadwal_dokter || !$dokter) {
+            echo json_encode(['status' => 0, 'message' => 'Jadwal atau dokter tidak ditemukan']);
+            return;
+        }
+
+        // Membuat data array untuk update jadwal
         $data = [
-            'date_start'    => $date_start,
-            'date_end'      => $date_end,
+            'hari' => $nama_hari,  // Perbarui hanya hari
         ];
 
-        // buat fungsi cek untuk update data
+        // Update data jadwal
         $cek = $this->M_global->updateData('jadwal_dokter', $data, ['id' => $id]);
 
-        if ($cek) { // jika fungsi cek berjalan, lempar status 1 ke view
-            // simpan aktifitas user
-            aktifitas_user('Jadwal Dokter', 'Mengubah', $id, "Jadwal dokter: " . $dokter->nama . " Start: " . $date_start . " End: " . $date_end);
+        if ($cek) {
+            // Jika berhasil, simpan aktivitas pengguna
+            aktifitas_user('Jadwal Dokter', 'Mengubah', $id, "Jadwal dokter: " . $dokter->nama . " Hari: " . $nama_hari . " (" . $jadwal_dokter->time_start . " - " . $jadwal_dokter->time_end . ")");
 
+            // Kirimkan status sukses
             echo json_encode(['status' => 1]);
-        } else { // selain itu lempar status 0 ke view
+        } else {
+            // Jika gagal, kirimkan status gagal
             echo json_encode(['status' => 0]);
         }
     }
@@ -1379,7 +1439,7 @@ class Health extends CI_Controller
 
         if ($cek) { // jika fungsi cek berjalan, lempar status 1 ke view
             // simpan aktifitas user
-            aktifitas_user('Jadwal Dokter', 'Menghapus', $id, "Jadwal dokter: " . $dokter->nama . " Start: " . $jadwal_dokter->date_start . " End: " . $jadwal_dokter->date_end);
+            aktifitas_user('Jadwal Dokter', 'Menghapus', $id, "Jadwal dokter: " . $dokter->nama . " Hari: " . $jadwal_dokter->hari . " (" . $jadwal_dokter->time_start . " - " . $jadwal_dokter->time_end . ")");
 
             echo json_encode(['status' => 1]);
         } else { // selain itu lempar status 0 ke view
