@@ -241,6 +241,13 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                         <li>Saat Muncul Pop Up, klik "Ya, Hapus"</li>
                     </ul>
                 </p>
+                <li style="font-weight: bold;">Pembatalan Pendaftaran</li>
+                <p>
+                    <ul>
+                        <li>Klik tombol Batal pada list data yang ingin di batalkan</li>
+                        <li>Saat Muncul Pop Up, klik "Ya, Batalkan"</li>
+                    </ul>
+                </p>
             </ol>
         `);
     }

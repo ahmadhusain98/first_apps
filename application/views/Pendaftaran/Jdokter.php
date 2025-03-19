@@ -117,7 +117,12 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                         </div>
                                         <div class="col-md-6 col-12">
                                             <label for="limit_px" class="control-label">Limit Pasien</label>
-                                            <input type="number" name="limit_px" id="limit_px" value="0" class="form-control">
+                                            <div class="input-group mb-3">
+                                                <input type="number" name="limit_px" id="limit_px" value="0" class="form-control text-right" aria-describedby="basic-addon2">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" id="basic-addon2">Pasien</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -424,5 +429,50 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                 reseting();
             }
         })
+    }
+
+    function showGuide() {
+        // clean text
+        $('#modal_mgLabel').text(``);
+        $('#modal-isi').text(``);
+
+        $('#modal_mg').modal('show'); // show modal
+
+        // isi text
+        $('#modal_mgLabel').append(`Manual Guide Jadwal Dokter`);
+        $('#modal-isi').append(`
+            <ol>
+                <li style="font-weight: bold;">Tambah Jadwal</li>
+                <p>
+                    <ul>
+                        <li>Pastikan Form Dokter, Poli, Ruangan tidak kosong</li>
+                        <li>Jika tidak terdapat batasan pada pendaftaran pasien, maka isikan Form limit ke angka 0</li>
+                        <li>Isikan Form Hari, Jam, dan Catatan sesuai dengan kebutuhan</li>
+                        <li>Klik Proses</li>
+                    </ul>
+                </p>
+                <li style="font-weight: bold;">Ubah Jadwal</li>
+                <p>
+                    <ul>
+                        <li>Klik dan tahan jadwal dokter yang ingin diubah</li>
+                        <li>Arahkan ke hari yang ingin di harapkan</li>
+                    </ul>
+                </p>
+                <li style="font-weight: bold;">Hapus Jadwal</li>
+                <p>
+                    <ul>
+                        <li>Klik jadwal dokter yang ingin hapus</li>
+                        <li>Saat Muncul Pop Up, klik "Ya, Hapus"</li>
+                    </ul>
+                </p>
+                <li style="font-weight: bold; color: red;">Catatan</li>
+                <p>
+                    <ul>
+                        <li>Pembuatan jadwal berlaku hingga akhir tahun <?= date('Y') ?></li>
+                        <li>Sehingga pada tahun berikutnya (<?= date('Y', strtotime('+1 Year')) ?>), harus membuat ulang jadwal dokter</li>
+                    </ul>
+                </p>
+            </ol>
+        `);
     }
 </script>

@@ -513,7 +513,9 @@
             success: function(result) { // jika fungsi berjalan dengan baik
                 btnSimpan.attr('disabled', false);
 
-                if (result.status == 1) { // jika mendapatkan respon 1
+                if (result.status == 2) {
+                    Swal.fire("Limit Pendaftaran " + result.limit + " Pasien", "Pasien Dr. " + result.dokter + " sudah penuh, mohon maaf silahkan lakukan diesok hari, Terima kasih!", "info");
+                } else if (result.status == 1) { // jika mendapatkan respon 1
 
                     Swal.fire("Pendaftaran", "Berhasil " + message, "success").then(() => {
                         // querstion(result.no_trx);
@@ -718,13 +720,6 @@
                         </p>
                         <li>Tanda (<span style="color: red;">**</span>) mengartikan wajib terisi</li>
                         <li>Klik tombol Proses</li>
-                    </ul>
-                </p>
-                <li style="font-weight: bold;">Hapus Data</li>
-                <p>
-                    <ul>
-                        <li>Klik tombol Hapus pada list data yang ingin di hapus</li>
-                        <li>Saat Muncul Pop Up, klik "Ya, Hapus"</li>
                     </ul>
                 </p>
             </ol>

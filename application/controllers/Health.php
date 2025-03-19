@@ -1111,15 +1111,42 @@ class Health extends CI_Controller
         $ulang            = $this->input->post('ulang');
 
         if ($tipe_daftar == 1) {
-            $get_ruang    = $this->M_global->getData('jadwal_dokter', ['kode_dokter' => $kode_dokter, 'date_start <= ' => $tgl_daftar]);
+            // Mendapatkan jadwal dokter berdasarkan kode_dokter, hari, dan kode_cabang
+            $get_ruang = $this->M_global->getData('jadwal_dokter', [
+                'kode_dokter' => $kode_dokter,
+                'hari' => date('l', strtotime($tgl_daftar)),
+                'kode_cabang' => $kode_cabang
+            ]);
+
             if ($get_ruang) {
-                $kode_ruang   = $get_ruang->kode_ruang;
+                // Mengecek apakah ada pasien yang sudah mendaftar
+                $cek_px_daftar = $this->M_global->getDataResult('pendaftaran', [
+                    'kode_dokter' => $get_ruang->kode_dokter,
+                    'kode_cabang' => $kode_cabang
+                ]);
+
+                // Memeriksa apakah ada batasan jumlah pasien (limit_px)
+                if ($get_ruang->limit_px > 0) {
+                    // Jika jumlah pendaftaran pasien melebihi limit
+                    if (count($cek_px_daftar) >= $get_ruang->limit_px) {
+                        // Mengirimkan status 2 (limit penuh)
+                        echo json_encode(['status' => 2, 'limit' => number_format($get_ruang->limit_px), 'dokter' => $this->M_global->getData('dokter', ['kode_dokter' => $get_ruang->kode_dokter])->nama]);
+                        return;
+                    }
+                }
+
+                // Menentukan kode ruang
+                $kode_ruang = $get_ruang->kode_ruang;
             } else {
-                $kode_ruang   = '';
+                // Jika jadwal dokter tidak ditemukan
+                $kode_ruang = '';
             }
         } else {
-            $kode_ruang   = $this->input->post('kode_ruang');
+            // Jika tipe pendaftaran bukan 1, menggunakan kode ruang yang dikirimkan
+            $kode_ruang = $this->input->post('kode_ruang');
         }
+
+
 
         // jika ada last antrian + 1, jika tidak ada 0 + 1
 
@@ -1269,12 +1296,12 @@ class Health extends CI_Controller
     {
         // Ambil data jadwal dari database
         $events = $this->db->query(
-            'SELECT CONCAT("Dokter: ", d.nama, ", Cabang: ", c.cabang, ", Poli: ", p.keterangan) AS title, 
-            d.nama, jd.id, jd.kode_dokter, jd.kode_cabang, jd.status, jd.hari AS hari, jd.time_start, jd.time_end, jd.comment, jd.limit_px
-            FROM jadwal_dokter jd
-            JOIN cabang c ON c.kode_cabang = jd.kode_cabang
-            JOIN dokter d ON d.kode_dokter = jd.kode_dokter
-            JOIN m_poli p ON (p.kode_poli = jd.kode_poli)'
+            'SELECT CONCAT("Dokter: ", d.nama, ", Cabang: ", c.cabang, ", Poli: ", p.keterangan, ", Limit: ", IF(jd.limit_px = 0, "Tidak Terbatas", jd.limit_px), " Pasien") AS title, 
+        d.nama, jd.id, jd.kode_dokter, jd.kode_cabang, jd.status, jd.hari AS hari, jd.time_start, jd.time_end, jd.comment, jd.limit_px
+        FROM jadwal_dokter jd
+        JOIN cabang c ON c.kode_cabang = jd.kode_cabang
+        JOIN dokter d ON d.kode_dokter = jd.kode_dokter
+        JOIN m_poli p ON (p.kode_poli = jd.kode_poli)'
         )->result();
 
         $data = [];
@@ -1301,9 +1328,20 @@ class Health extends CI_Controller
                 'displayEventTime'  => true, // Menampilkan waktu acara
             ];
 
-            // Tambahkan event berulang selama beberapa minggu (misalnya 12 minggu ke depan) 
-            // Jika ingin menjadwalkan lebih panjang, Anda bisa menambahkan loop disini.
-            for ($i = 1; $i <= 12; $i++) {
+            // Tanggal hari ini
+            $today = new DateTime();
+
+            // Tanggal terakhir di tahun ini (31 Desember)
+            $endOfYear = new DateTime('last day of December this year');
+
+            // Menghitung selisih antara tanggal hari ini dan 31 Desember
+            $interval = $today->diff($endOfYear);
+
+            // Mendapatkan jumlah minggu yang tersisa dalam tahun ini
+            $remainingWeeks = floor($interval->days / 7);
+
+            // Menambahkan event berulang selama minggu-minggu yang tersisa
+            for ($i = 1; $i <= $remainingWeeks; $i++) {
                 // Menambahkan 7 hari ke setiap tanggal untuk membuat acara ini berulang setiap minggu
                 $next_start = date('Y-m-d', strtotime("+$i week", strtotime($start_date))) . 'T' . $event->time_start;
                 $next_end = date('Y-m-d', strtotime("+$i week", strtotime($end_date))) . 'T' . $event->time_end;
@@ -1329,6 +1367,7 @@ class Health extends CI_Controller
         // Kembalikan data dalam format JSON untuk ditampilkan di kalender
         echo json_encode($data);
     }
+
 
     public function jdokter_insert()
     {
