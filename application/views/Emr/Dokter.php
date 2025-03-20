@@ -1684,24 +1684,39 @@ if (is_array($alr) && !empty($alr)) {
             return Swal.fire("Instruksi", "Form sudah diisi?", "question");
         }
 
-        $.ajax({
-            url: `${siteUrl}Emr/proses_dok`,
-            type: `POST`,
-            dataType: `JSON`,
-            data: form.serialize(),
-            success: function(result) {
-                if (result.status == 1) { // jika mendapatkan respon 1
+        Swal.fire({
+            title: "Pastikan Ulang",
+            html: "Data yang disimpan sudah sesuai ?<br>Jika <b>YA</b>, data akan dikirim ke masing-masing unit untuk diproses!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, simpan!",
+            cancelButtonText: "Tidak!"
+        }).then((result) => {
+            if (result.isConfirmed) { // jika yakin
 
-                    Swal.fire("EMR Dokter", "Berhasil diproses", "success").then(() => {
-                        location.href = siteUrl + 'Emr';
-                    });
-                } else { // selain itu
+                // jalankan fungsi
+                $.ajax({
+                    url: `${siteUrl}Emr/proses_dok`,
+                    type: `POST`,
+                    dataType: `JSON`,
+                    data: form.serialize(),
+                    success: function(result) {
+                        if (result.status == 1) { // jika mendapatkan respon 1
 
-                    Swal.fire("EMR Dokter", "Gagal diproses, silahkan dicoba kembali", "info");
-                }
-            },
-            error: function(error) {
-                error_proccess();
+                            Swal.fire("EMR Dokter", "Berhasil diproses", "success").then(() => {
+                                location.href = siteUrl + 'Emr';
+                            });
+                        } else { // selain itu
+
+                            Swal.fire("EMR Dokter", "Gagal diproses, silahkan dicoba kembali", "info");
+                        }
+                    },
+                    error: function(error) {
+                        error_proccess();
+                    }
+                });
             }
         });
     }
