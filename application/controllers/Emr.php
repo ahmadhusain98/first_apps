@@ -627,13 +627,30 @@ class Emr extends CI_Controller
         $kode_member = $this->input->get('kode_member');
         $kode_dokter = $this->input->get('kode_dokter');
 
-        if ($kode_dokter == '' || $kode_dokter == null || $kode_dokter == 'null') {
-            $where_dokter = '';
-        } else {
-            $where_dokter = ' AND kode_dokter = "' . $kode_dokter . '"';
+        // Default value for where_dokter
+        $where_dokter = '';
+
+        // Check if $kode_dokter is set and not empty
+        if (!empty($kode_dokter) && $kode_dokter !== 'null') {
+            $where_dokter = ' AND kode_dokter = ?';
         }
 
-        $pendaftaran = $this->db->query('SELECT *, ROW_NUMBER() OVER (ORDER BY id DESC) AS eps FROM pendaftaran WHERE kode_member = "' . $kode_member . '" ' . $where_dokter . '  ORDER BY id DESC')->result();
+        // Use a parameterized query to prevent SQL injection
+        $sql = 'SELECT *, ROW_NUMBER() OVER (ORDER BY id DESC) AS eps 
+        FROM pendaftaran 
+        WHERE kode_member = ? ' . $where_dokter . ' 
+        ORDER BY id DESC';
+
+        $queryParams = [$kode_member];
+
+        // Add the $kode_dokter if it's set
+        if ($where_dokter !== '') {
+            $queryParams[] = $kode_dokter;
+        }
+
+        // Execute the query with parameter binding
+        $pendaftaran = $this->db->query($sql, $queryParams)->result();
+
 
         $no_his = count($pendaftaran);
         foreach ($pendaftaran as $p) : ?>
