@@ -1527,9 +1527,11 @@ if (is_array($alr) && !empty($alr)) {
                             <td>
                                 <select name="kode_satuan[]" id="kode_satuan${norsp}" class="form-control select2_global" data-placeholder="~ Pilih Satuan">
                                     <option value="">~ Pilih Satuan</option>
+                                    <?php if (!empty($satuan)) : ?>
                                     <?php foreach ($satuan as $s) : ?>
                                         <option value="<?= $s['kode_satuan'] ?>" ${value.kode_satuan == <?= $s['kode_satuan'] ?> ? 'selected' : '' }><?= $s['keterangan'] ?></option>
                                     <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </select>
                             </td>
                             <td>
