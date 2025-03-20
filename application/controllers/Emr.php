@@ -166,13 +166,17 @@ class Emr extends CI_Controller
                 $disabled2 = '';
             }
 
-            if (
-                $rd->kode_dokter == $this->data['kode_user']
-            ) {
-                $button = '<button ' . $disabled2 . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-primary" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Dokter" onclick="getUrl(' . "'" . "Emr/dokter/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-doctor"></i> Doctor</button>';
+            if ($this->session->userdata('kode_role') == 'R0001') {
+                $button = '<button ' . $disabled2 . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-success" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Perawat" onclick="getUrl(' . "'" . "Emr/perawat/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-nurse"></i> Nurse</button>
+                <button ' . ((!empty($this->M_global->getData('emr_per', ['no_trx' => $rd->no_trx]))) ? '' : 'disabled') . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-primary" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Dokter" onclick="getUrl(' . "'" . "Emr/dokter/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-doctor"></i> Doctor</button>';
             } else {
-                $button = '<button ' . $disabled2 . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-success" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Perawat" onclick="getUrl(' . "'" . "Emr/perawat/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-nurse"></i> Nurse</button>';
+                if ($rd->kode_dokter == $this->data['kode_user']) {
+                    $button = '<button ' . $disabled2 . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-primary" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Dokter" onclick="getUrl(' . "'" . "Emr/dokter/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-doctor"></i> Doctor</button>';
+                } else {
+                    $button = '<button ' . $disabled2 . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-success" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Perawat" onclick="getUrl(' . "'" . "Emr/perawat/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-nurse"></i> Nurse</button>';
+                }
             }
+
 
             $row[] = '<div class="d-flex justify-content-center">
                 ' . $button . '
@@ -690,7 +694,7 @@ class Emr extends CI_Controller
     // histori kunjungan px
     public function his_px($no_trx, $eps, $kode_member)
     {
-        $pendaftaran    = $this->db->query('SELECT *, ROW_NUMBER() OVER (ORDER BY id DESC) AS eps FROM pendaftaran WHERE no_trx = "' . $no_trx . '"  ORDER BY id DESC')->result();
+        $pendaftaran    = $this->db->query('SELECT *, (@row_number := @row_number + 1) AS eps FROM pendaftaran, (SELECT @row_number := 0) AS init WHERE no_trx = "' . $no_trx . '"  ORDER BY id DESC')->result();
 
         $member         = $this->M_global->getData('member', ['kode_member' => $kode_member]);
 
@@ -1072,7 +1076,7 @@ class Emr extends CI_Controller
     // histori kunjungan px2
     public function his_px2($no_trx, $eps, $kode_member)
     {
-        $pendaftaran    = $this->db->query('SELECT *, ROW_NUMBER() OVER (ORDER BY id DESC) AS eps FROM pendaftaran WHERE no_trx = "' . $no_trx . '"  ORDER BY id DESC')->result();
+        $pendaftaran    = $this->db->query('SELECT *, (@row_number := @row_number + 1) AS eps FROM pendaftaran, (SELECT @row_number := 0) AS init WHERE no_trx = "' . $no_trx . '"  ORDER BY id DESC')->result();
 
         $member         = $this->M_global->getData('member', ['kode_member' => $kode_member]);
 

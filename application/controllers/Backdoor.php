@@ -174,6 +174,10 @@ class Backdoor extends CI_Controller
         if ($cek->num_rows() > 0) {
             foreach ($cek->result() as $c) {
                 $selain = [
+                    'm_satuan',
+                    'm_kategori',
+                    'm_jenis',
+                    'm_supplier',
                     'akses_menu',
                     'backup_db',
                     'cabang',
@@ -190,12 +194,21 @@ class Backdoor extends CI_Controller
                     'member',
                     'member_token',
                     'm_poli',
+                    'kas_bank',
+                    'm_pajak',
+                    'm_akun',
+                    'tipe_bank',
+                    'bed',
+                    'bed_cabang',
+                    'prefix',
                     'm_provinsi',
                     'm_role',
                     'm_ruang', // cek lagi
                     'jadwal_dokter',
                     'sub_menu',
                     'sub_menu2',
+                    'icd9',
+                    'icd10',
                     'user',
                     'user_token',
                     'web_setting',
