@@ -3803,7 +3803,7 @@ class Master extends CI_Controller
         if ($cek) {
             $cek2 = $this->db->query("UPDATE m_pajak SET aktif = 1 WHERE kode_pajak = '$kode_pajak'");
 
-            aktifitas_user('Master Pajak', 'menjadikan pajak aktif', $kode_pajak, $this->M_global->getData('m_pajak', ['kode_pajak' => $kode_poli])->nama);
+            aktifitas_user('Master Pajak', 'menjadikan pajak aktif', $kode_pajak, $this->M_global->getData('m_pajak', ['kode_pajak' => $kode_pajak])->nama);
         } else {
             $cek2 = TRUE;
         }
