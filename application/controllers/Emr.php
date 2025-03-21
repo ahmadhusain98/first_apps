@@ -1849,24 +1849,25 @@ class Emr extends CI_Controller
         if (isset($kode_barang)) {
             foreach ($kode_barang as $k) {
                 if ($k) {
-                    $kode_barang_   = $k;
-                    $kode_satuan_   = $kode_satuan[$loop];
-                    $qty_           = $qty[$loop];
-                    $signa_         = $signa[$loop];
+                    $kode_barang_ = $k;
+                    $kode_satuan_ = $kode_satuan[$loop];
+                    $qty_         = $qty[$loop];
+                    $signa_       = $signa[$loop];
 
+                    // Increment loop here only once
                     $loop++;
 
                     $data_barang = [
-                        'no_trx'        => $no_trx,
-                        'kode_barang'   => $kode_barang_,
-                        'kode_satuan'   => $kode_satuan_,
-                        'qty'           => $qty_,
-                        'signa'         => $signa_,
+                        'no_trx'      => $no_trx,
+                        'kode_barang' => $kode_barang_,
+                        'kode_satuan' => $kode_satuan_,
+                        'qty'         => $qty_,
+                        'signa'       => $signa_,
                     ];
 
+                    // Insert data into the database
                     $this->M_global->insertData('emr_per_barang', $data_barang);
                 }
-                $loop++;
             }
         }
 
