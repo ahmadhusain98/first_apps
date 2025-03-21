@@ -1894,7 +1894,7 @@ class Emr extends CI_Controller
         $loop3 = 0;
         if (isset($kode_tarif)) {
             foreach ($kode_tarif as $kt) {
-                if ($f) {
+                if ($kt) {
                     $kode_tarif_  = $kt;
                     $qty_tarif_   = $qty_tarif[$loop3];
 
@@ -1914,7 +1914,7 @@ class Emr extends CI_Controller
         $loop4 = 0;
         if (isset($icd9)) {
             foreach ($icd9 as $i9) {
-                if ($f) {
+                if ($i9) {
                     $kode_  = $i9;
 
                     $loop4++;
@@ -1932,7 +1932,7 @@ class Emr extends CI_Controller
         $loop5 = 0;
         if (isset($icd10)) {
             foreach ($icd10 as $i10) {
-                if ($f) {
+                if ($i10) {
                     $kode_  = $i10;
 
                     $loop5++;
