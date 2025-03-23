@@ -143,11 +143,11 @@ class Emr extends CI_Controller
 
             $row = [];
             $row[] = $no++;
-            $row[] = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-sm badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-sm badge-danger">Batal</span>' : '<span class="badge badge-sm badge-primary">Selesai</span>')) . '<br>' . $status_per . ' ' . $status_dok;
+            $row[] = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-sm badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-sm badge-danger">Batal</span>' : '<span class="badge badge-sm badge-primary">Selesai</span>')) . '<br>' . $status_per . ' ' . $status_dok . '<br><span class="badge badge-dark badge-sm">' . $rd->jenis_bayar . '</span>';
             $row[] = 'No. RM: <span class="float-right">' . $rd->kode_member . '</span><hr>Nama: <span class="float-right">' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama . '</span>';
             $row[] = 'Datang: <span class="float-right">' . date('d/m/Y', strtotime($rd->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_daftar)) . '</span><br>' .
                 '<hr>Selesai: <span class="float-right">' . (($rd->status_trx < 1) ? '<i class="text-secondary">Null</i>' : (($rd->tgl_keluar == null) ? 'xx/xx/xxxx' : date('d/m/Y', strtotime($rd->tgl_keluar))) . ' ~ ' . (($rd->jam_keluar == null) ? 'xx:xx:xx' : date('H:i:s', strtotime($rd->jam_keluar)))) . '</span>';
-            $row[] = 'Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $rd->kode_dokter])->nama . '<hr>(Poli: ' . $this->M_global->getData('m_poli', ['kode_poli' => $rd->kode_poli])->keterangan . ')';
+            $row[] = 'Dr. ' . $this->M_global->getData('dokter', ['kode_dokter' => $rd->kode_dokter])->nama . (($rd->verifikasi == 0) ? '<span class="badge badge-warning badge-sm float-right" title="Belum Verifikasi">CPPT&nbsp;&nbsp;<i class="fa fa-info-circle"></i></span>' : '<span class="badge badge-success badge-sm float-right" title="Sudah Verifikasi">CPPT&nbsp;&nbsp;<i class="fa fa-circle-check"></i></span>') . '<hr>(Poli: ' . $this->M_global->getData('m_poli', ['kode_poli' => $rd->kode_poli])->keterangan . ')';
             $perawat = $this->M_global->getData('emr_per', ['no_trx' => $rd->no_trx]);
             $row[] = ((!empty($perawat) ? $this->M_global->getData('user', ['kode_user' => $perawat->kode_user])->nama : '-'));
             $row[] = '<span>' . $this->M_global->getData('m_poli', ['kode_poli' => $rd->kode_poli])->keterangan . (($rd->kode_ruang == null) ? '' : ' (' . $this->M_global->getData('m_ruang', ['kode_ruang' => $rd->kode_ruang])->keterangan . ')</span>') . '<hr>No Urut <span class="float-right">' . $rd->no_antrian . '</span>';
@@ -648,6 +648,7 @@ class Emr extends CI_Controller
                             <span class="h5">Kunj : <?= $no_his ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-sm badge-danger float-right">Jalan</span>' : '<span class="badge badge-sm badge-warning float-right">Inap</span>' ?></span>
                             <br>
                             <span style="font-size: 14px;"><?= (($p->status_trx == 0) ? '<span class="badge badge-sm badge-success">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-sm badge-danger">Batal</span>' : '<span class="badge badge-sm badge-primary">Selesai</span>')) ?></span>
+                            <span style="font-size: 14px;" class="badge badge-dark badge-sm float-right"><?= $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $p->kode_jenis_bayar])->keterangan ?></span>
                         </div>
                         <div class="card-footer text-center">
                             <button type="button" class="btn btn-sm btn-info" style="width: 49%;" <?= (($p->status_trx == 2) ? 'disabled' : '') ?> onclick="show_his('<?= $p->no_trx ?>', '<?= $no_his ?>', '<?= $p->kode_member ?>')"> Nurs &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-angles-right"></i></button>
@@ -714,7 +715,9 @@ class Emr extends CI_Controller
                 <span class="h4">Kunj : <?= $eps ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-sm badge-danger float-right">Jalan</span>' : '<span class="badge badge-sm badge-warning float-right">Inap</span>' ?></span>
             </div>
             <div class="card-footer">
-                <span class="h5">Status : <?= (($p->status_trx == 0) ? '<span class="badge badge-sm badge-success float-right">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-sm badge-danger float-right">Batal</span>' : '<span class="badge badge-sm badge-primary float-right">Selesai</span>')) ?></span>
+                <span class="h5">Status :
+                    <span style="font-size: 14px;" class="badge badge-dark badge-sm float-right"><?= $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $p->kode_jenis_bayar])->keterangan ?></span><?= (($p->status_trx == 0) ? '<span class="badge badge-sm badge-success float-right">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-sm badge-danger float-right">Batal</span>' : '<span class="badge badge-sm badge-primary float-right">Selesai</span>')) ?>
+                </span>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -1102,7 +1105,9 @@ class Emr extends CI_Controller
                 <span class="h4">Kunj : <?= $eps ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-sm badge-danger float-right">Jalan</span>' : '<span class="badge badge-sm badge-warning float-right">Inap</span>' ?></span>
             </div>
             <div class="card-footer">
-                <span class="h5">Status : <?= (($p->status_trx == 0) ? '<span class="badge badge-sm badge-success float-right">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-sm badge-danger float-right">Batal</span>' : '<span class="badge badge-sm badge-primary float-right">Selesai</span>')) ?></span>
+                <span class="h5">Status :
+                    <span style="font-size: 14px;" class="badge badge-dark badge-sm float-right"><?= $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $p->kode_jenis_bayar])->keterangan ?></span><?= (($p->status_trx == 0) ? '<span class="badge badge-sm badge-success float-right">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-sm badge-danger float-right">Batal</span>' : '<span class="badge badge-sm badge-primary float-right">Selesai</span>')) ?>
+                </span>
             </div>
             <div class="card-body">
                 <div class="table-responsive">

@@ -70,7 +70,7 @@ class Health extends CI_Controller
         $colum            = ['id', 'kode_prefix', 'kode_member', 'nama', 'email', 'password', 'secondpass', 'jkel', 'foto', 'kode_role', 'actived', 'joined', 'on_off', 'nohp', 'tmp_lahir', 'tgl_lahir', 'provinsi', 'kabupaten', 'kecamatan', 'desa', 'kodepos', 'nik', 'last_regist', 'status_regist', 'rt', 'rw'];
         $order            = 'id';
         $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
+        $order_arr        = ['id' => 'desc'];
         $kondisi_param1   = 'kode_role';
 
         // kondisi role
@@ -127,7 +127,7 @@ class Health extends CI_Controller
             $row[]  = $no++;
             $row[]  = $rd->kode_member . (($rd->actived == 1) ? '<br><span class="badge badge-success">Aktif</span>' : '<br><span class="badge badge-dark">Non-aktif</span>');
             $row[]  = $rd->nik;
-            $row[]  = $prefix . '. ' . $rd->nama . '<br><span class="badge badge-info">' . hitung_umur($rd->tgl_lahir) . '</span>';
+            $row[]  = $prefix . '. ' . $rd->nama . (($rd->kode_member == 'U00001') ? '' : (($rd->jkel == 'P') ? ' / Pria' : ' / Wanita')) . '<br><span class="badge badge-info">' . hitung_umur($rd->tgl_lahir) . '</span>';
             $row[]  = 'Prov. ' . $prov . ',<br>' . $kab . ',<br>Kec. ' . $kec . ',<br>Ds. ' . $rd->desa . ',<br>(POS: ' . $rd->kodepos . '), RT.' . $rd->rt . '/RW.' . $rd->rw;
             $row[]  = $rd->last_regist . (($rd->status_regist == 1) ? '<span class="badge badge-primary float-right">Buka</span>' : '<span class="badge badge-danger float-right">Tutup</span>');
 
@@ -473,10 +473,10 @@ class Health extends CI_Controller
     {
         // parameter untuk list table
         $table            = 'pendaftaran';
-        $colum            = ['id', 'no_trx', 'tgl_daftar', 'jam_daftar', 'kode_member', 'kode_poli', 'kode_ruang', 'kode_dokter', 'no_antrian', 'tgl_keluar', 'jam_keluar', 'tipe_daftar', 'status_trx', 'kode_user', 'shift'];
+        $colum            = ['id', 'no_trx', 'kode_jenis_bayar', 'tgl_daftar', 'jam_daftar', 'kode_member', 'kode_poli', 'kode_ruang', 'kode_dokter', 'no_antrian', 'tgl_keluar', 'jam_keluar', 'tipe_daftar', 'status_trx', 'kode_user', 'shift'];
         $order            = 'id';
         $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
+        $order_arr        = ['id' => 'desc'];
         $kondisi_param2   = 'kode_poli';
         $kondisi_param1   = 'tgl_daftar';
 
@@ -530,7 +530,7 @@ class Health extends CI_Controller
 
             $row    = [];
             $row[]  = $no++;
-            $row[]  = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>')) . (($rd->tipe_daftar == 1) ? ' <span class="badge badge-danger">Rawat Jalan</span>' : ' <span class="badge badge-warning">Rawat Inap</span>');
+            $row[]  = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>')) . (($rd->tipe_daftar == 1) ? ' <span class="badge badge-danger">Rawat Jalan</span>' : ' <span class="badge badge-warning">Rawat Inap</span>') . ' <span class="badge badge-dark badge-sm">' . $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $rd->kode_jenis_bayar])->keterangan . '</span>';
             $row[]  = $rd->kode_member . '<br>' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama;
             $row[]  = date('d/m/Y', strtotime($rd->tgl_daftar)) . '<br>' . date('H:i:s', strtotime($rd->jam_daftar));
             $row[]  = '<span class="text-center">' . (($rd->status_trx < 1) ? '-' : (($rd->tgl_keluar == null) ? '' : date('d/m/Y', strtotime($rd->tgl_keluar))) . ' ~ ' . (($rd->jam_keluar == null) ? '' : date('H:i:s', strtotime($rd->jam_keluar)))) . '</>';
@@ -1109,6 +1109,7 @@ class Health extends CI_Controller
         $kunjungan        = $this->input->post('kunjungan');
 
         $ulang            = $this->input->post('ulang');
+        $kode_jenis_bayar = $this->input->post('kode_jenis_bayar');
 
         if ($tipe_daftar == 1) {
             // Mendapatkan jadwal dokter berdasarkan kode_dokter, hari, dan kode_cabang
@@ -1146,30 +1147,28 @@ class Health extends CI_Controller
             $kode_ruang = $this->input->post('kode_ruang');
         }
 
-
-
         // jika ada last antrian + 1, jika tidak ada 0 + 1
 
         // masukan kedalam variable $isi
         $isi = [
-            'kode_cabang'   => $kode_cabang,
-            'no_trx'        => $no_trx,
-            'tgl_daftar'    => $tgl_daftar,
-            'jam_daftar'    => $jam_daftar,
-            'kode_member'   => $kode_member,
-            'no_antrian'    => $no_antrian,
-            'kode_poli'     => $kode_poli,
-            'kode_dokter'   => $kode_dokter,
-            'tgl_keluar'    => null,
-            'jam_keluar'    => null,
-            'status_trx'    => 0,
-            'kode_ruang'    => $kode_ruang,
-            'kode_bed'      => $kode_bed,
-            'kode_user'     => $kode_user,
-            'tipe_daftar'   => $tipe_daftar,
-            'shift'         => $shift,
+            'kode_cabang'       => $kode_cabang,
+            'no_trx'            => $no_trx,
+            'tgl_daftar'        => $tgl_daftar,
+            'jam_daftar'        => $jam_daftar,
+            'kode_member'       => $kode_member,
+            'no_antrian'        => $no_antrian,
+            'kode_jenis_bayar'  => $kode_jenis_bayar,
+            'kode_poli'         => $kode_poli,
+            'kode_dokter'       => $kode_dokter,
+            'tgl_keluar'        => null,
+            'jam_keluar'        => null,
+            'status_trx'        => 0,
+            'kode_ruang'        => $kode_ruang,
+            'kode_bed'          => $kode_bed,
+            'kode_user'         => $kode_user,
+            'tipe_daftar'       => $tipe_daftar,
+            'shift'             => $shift,
         ];
-
 
         if ($param == 1) { // jika param = 1
             aktifitas_user_transaksi('Pendaftaran', 'Mendaftarkan ' . $kode_member, $no_trx);

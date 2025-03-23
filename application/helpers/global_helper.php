@@ -358,6 +358,23 @@ function _kodePajak()
     return $kode_user;
 }
 
+function _kodeJenisBayar()
+{
+    $CI                     = &get_instance();
+
+    $inisial                = "JB";
+    $lastNumber             = $CI->db->query('SELECT * FROM m_jenis_bayar ORDER BY kode_jenis_bayar DESC LIMIT 1')->row();
+    $number                 = 1;
+    if ($lastNumber) {
+        $number             = count($CI->db->query('SELECT * FROM m_jenis_bayar')->result()) + 1;
+        $kode_jenis_bayar   = $inisial . sprintf("%08d", $number);
+    } else {
+        $number             = 0;
+        $kode_jenis_bayar   = $inisial . "00000001";
+    }
+    return $kode_jenis_bayar;
+}
+
 function _kodePoli()
 {
     $CI               = &get_instance();

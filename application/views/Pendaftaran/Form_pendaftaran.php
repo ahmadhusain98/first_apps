@@ -24,7 +24,7 @@
                                         <input type="text" class="form-control" placeholder="Otomatis" id="no_trx" name="no_trx" value="<?= (($ulang == 1) ? '' : (!empty($data_pendaftaran) ? $data_pendaftaran->no_trx : '')) ?>" readonly>
                                     </div>
                                     <div class="col-md-12">
-                                        <label for="" class="mt-3">Member <sup class="text-danger">**</sup></label>
+                                        <label for="kode_member" class="mt-3">Member <sup class="text-danger">**</sup></label>
                                         <div class="row">
                                             <div class="col-md-8">
                                                 <select name="kode_member" id="kode_member" class="form-control select2_member" data-placeholder="~ Cari Member" onchange="getRiwayat(this.value)">
@@ -87,24 +87,41 @@
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="">No. Antrian</label>
+                                        <label for="no_antrian">No. Antrian</label>
                                         <input type="text" class="form-control" placeholder="Otomatis" id="no_antrian" name="no_antrian" value="<?= (($ulang == 1) ? '' : (!empty($data_pendaftaran) ? $data_pendaftaran->no_antrian : '')) ?>" readonly>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="">Poli <sup class="text-danger">**</sup></label>
-                                        <select name="kode_poli" id="kode_poli" class="form-control select2_poli" data-placeholder="~ Pilih Poli" onchange="getDokter(this.value)">
-                                            <?php
-                                            if (!empty($data_pendaftaran)) :
-                                                $poli = $this->M_global->getData('m_poli', ['kode_poli' => $data_pendaftaran->kode_poli]);
-                                                echo '<option value="' . $poli->kode_poli . '">' . $poli->keterangan . '</option>';
-                                            endif;
-                                            ?>
-                                        </select>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="kode_poli">Poli <sup class="text-danger">**</sup></label>
+                                                <select name="kode_poli" id="kode_poli" class="form-control select2_poli" data-placeholder="~ Pilih Poli" onchange="getDokter(this.value)">
+                                                    <?php
+                                                    if (!empty($data_pendaftaran)) :
+                                                        $poli = $this->M_global->getData('m_poli', ['kode_poli' => $data_pendaftaran->kode_poli]);
+                                                        echo '<option value="' . $poli->kode_poli . '">' . $poli->keterangan . '</option>';
+                                                    endif;
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="kode_jenis_bayar">Jenis Bayar <sup class="text-danger">**</sup></label>
+                                                <select name="kode_jenis_bayar" id="kode_jenis_bayar" class="form-control select2_jenis_bayar" data-placeholder="~ Pilih Jenis Bayar">
+                                                    <?php
+                                                    if (!empty($data_pendaftaran)) :
+                                                        $jenis_bayar = $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $data_pendaftaran->kode_jenis_bayar]);
+                                                        echo '<option value="' . $jenis_bayar->kode_jenis_bayar . '">' . $jenis_bayar->keterangan . '</option>';
+                                                    else :
+                                                        echo '<option value="JB0000001">Perorangan</option>';
+                                                    endif;
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="">Dokter Poli <sup class="text-danger">**</sup></label>
+                                        <label for="kode_dokter">Dokter Poli <sup class="text-danger">**</sup></label>
                                         <div class="row">
                                             <div class="col-md-9">
                                                 <select name="kode_dokter" id="kode_dokter" class="form-control select2_dokter_poli" data-placeholder="~ Pilih Dokter">
@@ -296,6 +313,7 @@
     var no_trx = $('#no_trx');
     var kode_member = $('#kode_member');
     var kode_poli = $('#kode_poli');
+    var kode_jenis_bayar = $('#kode_jenis_bayar');
     var tipe_daftar = $('#tipe_daftar');
     var kode_dokter = $('#kode_dokter');
     var kode_ruang = $('#kode_ruang');
@@ -437,6 +455,12 @@
             btnSimpan.attr('disabled', false);
 
             return Swal.fire("Dokter", "Sudah dipilih?", "question");
+        }
+
+        if (kode_jenis_bayar.val() == '' || kode_jenis_bayar.val() == null) { // jika kode_jenis_bayar kosong/ null
+            btnSimpan.attr('disabled', false);
+
+            return Swal.fire("Jenis Bayar", "Sudah dipilih?", "question");
         }
 
         if (tipe_daftar.val() == 1) {

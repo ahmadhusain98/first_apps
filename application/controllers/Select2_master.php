@@ -133,6 +133,13 @@ class Select2_master extends CI_Controller
         echo json_encode($this->M_select2->getUser($key));
     }
 
+    // master jenis bayar
+    function dataJenisBayar()
+    {
+        $key = $this->input->post('searchTerm');
+        echo json_encode($this->M_select2->getJenisBayar($key));
+    }
+
     // master poli
     function dataPoli()
     {

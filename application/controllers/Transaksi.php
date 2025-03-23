@@ -71,7 +71,7 @@ class Transaksi extends CI_Controller
         $colum            = ['id', 'invoice', 'tgl_po', 'jam_po', 'kode_supplier', 'kode_gudang', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid', 'shift'];
         $order            = 'id';
         $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
+        $order_arr        = ['id' => 'desc'];
         $kondisi_param2   = 'kode_gudang';
         $kondisi_param1   = 'tgl_po';
 
@@ -648,7 +648,7 @@ class Transaksi extends CI_Controller
         $colum            = ['id', 'invoice', 'tgl_beli', 'jam_beli', 'kode_supplier', 'kode_gudang', 'surat_jalan', 'no_faktur', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid', 'shift'];
         $order            = 'id';
         $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
+        $order_arr        = ['id' => 'desc'];
         $kondisi_param2   = 'kode_gudang';
         $kondisi_param1   = 'tgl_beli';
 
@@ -1495,7 +1495,7 @@ class Transaksi extends CI_Controller
         $colum            = ['id', 'invoice', 'invoice_in', 'tgl_retur', 'jam_retur', 'kode_supplier', 'kode_gudang', 'surat_jalan', 'no_faktur', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid', 'shift'];
         $order            = 'id';
         $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
+        $order_arr        = ['id' => 'desc'];
         $kondisi_param2   = 'kode_gudang';
         $kondisi_param1   = 'tgl_retur';
 
@@ -2341,7 +2341,7 @@ class Transaksi extends CI_Controller
         $colum            = ['id', 'invoice', 'kode_member', 'no_trx', 'tgl_jual', 'jam_jual', 'status_jual', 'kode_gudang', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'shift'];
         $order            = 'id';
         $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
+        $order_arr        = ['id' => 'desc'];
         $kondisi_param2   = 'kode_gudang';
         $kondisi_param1   = 'tgl_jual';
 
@@ -3262,7 +3262,7 @@ class Transaksi extends CI_Controller
         $colum                      = ['id', 'invoice', 'invoice_jual', 'tgl_retur', 'jam_retur', 'kode_gudang', 'pajak', 'diskon', 'total', 'kode_user', 'batal', 'tgl_batal', 'jam_batal', 'user_batal', 'is_valid', 'tgl_valid', 'jam_valid', 'kode_member', 'shift'];
         $order                      = 'id';
         $order2                     = 'desc';
-        $order_arr                  = ['id' => 'asc'];
+        $order_arr                  = ['id' => 'desc'];
         $kondisi_param2             = 'kode_gudang';
         $kondisi_param1             = 'tgl_retur';
 
@@ -3833,7 +3833,7 @@ class Transaksi extends CI_Controller
         $colum            = ['id', 'invoice', 'tgl_penyesuaian', 'jam_penyesuaian', 'kode_user', 'kode_gudang', 'tipe_penyesuaian', 'acc', 'user_acc', 'tgl_acc', 'jam_acc'];
         $order            = 'id';
         $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
+        $order_arr        = ['id' => 'desc'];
         $kondisi_param2   = 'tipe_penyesuaian';
         $kondisi_param1   = 'tgl_penyesuaian';
 
@@ -4141,7 +4141,7 @@ class Transaksi extends CI_Controller
         $colum            = ['id', 'tgl_dari', 'jam_dari', 'tgl_sampai', 'jam_sampai', 'status', 'kode_user', 'shift'];
         $order            = 'id';
         $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
+        $order_arr        = ['id' => 'desc'];
         $kondisi_param2   = '';
         $kondisi_param1   = 'tgl_dari';
 
@@ -4369,7 +4369,7 @@ class Transaksi extends CI_Controller
         $colum                      = ['id', 'invoice', 'tgl_po', 'jam_po', 'jenis_po', 'dari', 'menuju', 'total', 'user', 'status_po', 'shift'];
         $order                      = 'id';
         $order2                     = 'desc';
-        $order_arr                  = ['id' => 'asc'];
+        $order_arr                  = ['id' => 'desc'];
         $kondisi_param2             = '';
         $kondisi_param1             = 'tgl_po';
 
@@ -4906,7 +4906,7 @@ class Transaksi extends CI_Controller
         $colum                  = ['id', 'invoice', 'tgl', 'jam', 'jenis', 'dari', 'menuju', 'total', 'user', 'status', 'shift'];
         $order                  = 'id';
         $order2                 = 'desc';
-        $order_arr              = ['id' => 'asc'];
+        $order_arr              = ['id' => 'desc'];
         $kondisi_param2         = '';
         $kondisi_param1         = 'tgl';
 

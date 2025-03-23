@@ -318,6 +318,23 @@ class M_select2 extends CI_Model
         return $sintak;
     }
 
+    // fungsi jenis bayar
+    function getJenisBayar($key)
+    {
+        $limit = ' LIMIT 50';
+
+        if (!empty($key)) {
+            $add_sintak = ' WHERE (keterangan LIKE "%' . $key . '%") ORDER BY keterangan ASC';
+        } else {
+            $add_sintak = ' ORDER BY keterangan ASC';
+        }
+
+        $sintak = $this->db->query('SELECT kode_jenis_bayar AS id, CONCAT(keterangan) AS text FROM m_jenis_bayar
+        ' . $add_sintak . $limit)->result();
+
+        return $sintak;
+    }
+
     // fungsi poli
     function getPoli($key)
     {

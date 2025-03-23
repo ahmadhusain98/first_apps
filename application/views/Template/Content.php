@@ -1384,6 +1384,7 @@
         initailizeSelect2_member("<?= (($this->uri->segment(1) == 'Health') ? 'Health' : 'Transaksi') ?>");
         initailizeSelect2_user();
         initailizeSelect2_poli();
+        initailizeSelect2_jenis_bayar();
         initailizeSelect2_dokter_poli(param = 'POL0000001');
         initailizeSelect2_poli_dokter(param = '');
         initailizeSelect2_dokter_all();
@@ -2125,6 +2126,43 @@
                 },
                 ajax: {
                     url: siteUrl + 'Select2_master/dataUser',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_jenis_bayar() {
+            $(".select2_jenis_bayar").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Jenis Bayar',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataJenisBayar',
                     type: 'POST',
                     dataType: 'JSON',
                     delay: 100,
