@@ -129,21 +129,21 @@ class Emr extends CI_Controller
 
             $cek_per = $this->M_global->getData('emr_per', ['no_trx' => $rd->no_trx]);
             if ($cek_per) {
-                $status_per = '<span class="badge badge-sm badge-info">Diperiksa Perawat</span>';
+                $status_per = '<span class="badge badge-sm badge-info">Perawat&nbsp;&nbsp;<i class="fa fa-circle-check"></i></span>';
             } else {
                 $status_per = '';
             }
 
             $cek_dok = $this->M_global->getData('emr_dok', ['no_trx' => $rd->no_trx]);
             if ($cek_dok) {
-                $status_dok = '<span class="badge badge-sm badge-success">Diperiksa Dokter</span>';
+                $status_dok = '<span class="badge badge-sm badge-success">Dokter&nbsp;&nbsp;<i class="fa fa-circle-check"></i></span>';
             } else {
                 $status_dok = '';
             }
 
             $row = [];
             $row[] = $no++;
-            $row[] = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-sm badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-sm badge-danger">Batal</span>' : '<span class="badge badge-sm badge-primary">Selesai</span>')) . '<br>' . $status_per . ' ' . $status_dok . '<br><span class="badge badge-dark badge-sm">' . $rd->jenis_bayar . '</span>';
+            $row[] = $rd->no_trx . '<br><span class="badge badge-dark badge-sm">' . $rd->jenis_bayar . '</span> ' . (($rd->status_trx == 0) ? '<span class="badge badge-sm badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-sm badge-danger">Batal</span>' : '<span class="badge badge-sm badge-primary">Selesai</span>')) . '<br>' . $status_per . ' ' . $status_dok;
             $row[] = 'No. RM: <span class="float-right">' . $rd->kode_member . '</span><hr>Nama: <span class="float-right">' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama . '</span>';
             $row[] = 'Datang: <span class="float-right">' . date('d/m/Y', strtotime($rd->tgl_daftar)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_daftar)) . '</span><br>' .
                 '<hr>Selesai: <span class="float-right">' . (($rd->status_trx < 1) ? '<i class="text-secondary">Null</i>' : (($rd->tgl_keluar == null) ? 'xx/xx/xxxx' : date('d/m/Y', strtotime($rd->tgl_keluar))) . ' ~ ' . (($rd->jam_keluar == null) ? 'xx:xx:xx' : date('H:i:s', strtotime($rd->jam_keluar)))) . '</span>';
