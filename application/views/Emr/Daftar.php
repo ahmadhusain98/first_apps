@@ -117,15 +117,15 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
 
 
 <script>
-    // var timeLeft = 10;
-    // var countdownTimer = setInterval(function() {
-    //     if (timeLeft <= 0) {
-    //         timeLeft = 10; // Reset the timer
-    //         reloadTableEmr(); // Call reloadTable function
-    //     }
-    //     document.getElementById("countdown").innerHTML = timeLeft + " Detik";
-    //     timeLeft -= 1;
-    // }, 1000);
+    var timeLeft = 10;
+    var countdownTimer = setInterval(function() {
+        if (timeLeft <= 0) {
+            timeLeft = 10; // Reset the timer
+            reloadTableEmr(); // Call reloadTable function
+        }
+        document.getElementById("countdown").innerHTML = timeLeft + " Detik";
+        timeLeft -= 1;
+    }, 1000);
 
     function reloadTableEmr() {
         tableEmr.DataTable().ajax.reload(null, false);
