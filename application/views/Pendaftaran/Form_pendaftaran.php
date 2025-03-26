@@ -667,6 +667,7 @@
         $('#kode_poli').val('').change();
         $('#kode_dokter').val('').change();
         $('#kode_ruang').val('').change();
+        $('#kode_jenis_bayar').val('').change();
         bodyPaket.empty();
         body.empty();
     }

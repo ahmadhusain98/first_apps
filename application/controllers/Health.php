@@ -528,9 +528,11 @@ class Health extends CI_Controller
                 $del_diss = 'disabled';
             }
 
+            $jenis_bayar = $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $rd->kode_jenis_bayar]);
+
             $row    = [];
             $row[]  = $no++;
-            $row[]  = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>')) . (($rd->tipe_daftar == 1) ? ' <span class="badge badge-danger">Rawat Jalan</span>' : ' <span class="badge badge-warning">Rawat Inap</span>') . ' <span class="badge badge-dark badge-sm">' . $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $rd->kode_jenis_bayar])->keterangan . '</span>';
+            $row[]  = $rd->no_trx . '<br>' . (($rd->status_trx == 0) ? '<span class="badge badge-success">Buka</span>' : (($rd->status_trx == 2) ? '<span class="badge badge-danger">Batal</span>' : '<span class="badge badge-primary">Selesai</span>')) . (($rd->tipe_daftar == 1) ? ' <span class="badge badge-danger">Rawat Jalan</span>' : ' <span class="badge badge-warning">Rawat Inap</span>') . ' <span class="badge badge-dark badge-sm">' . (($jenis_bayar) ? $jenis_bayar->keterangan : '') . '</span>';
             $row[]  = $rd->kode_member . '<br>' . $this->M_global->getData('member', ['kode_member' => $rd->kode_member])->nama;
             $row[]  = date('d/m/Y', strtotime($rd->tgl_daftar)) . '<br>' . date('H:i:s', strtotime($rd->jam_daftar));
             $row[]  = '<span class="text-center">' . (($rd->status_trx < 1) ? '-' : (($rd->tgl_keluar == null) ? '' : date('d/m/Y', strtotime($rd->tgl_keluar))) . ' ~ ' . (($rd->jam_keluar == null) ? '' : date('H:i:s', strtotime($rd->jam_keluar)))) . '</>';
@@ -1016,7 +1018,7 @@ class Health extends CI_Controller
             'riwayat'           => $riwayat,
             'role'              => $this->M_global->getResult('m_role'),
             'pasien_paket'      => $tarif_paket_pasien,
-            'ulang'             => (($param == 1) ? '0' : '1'),
+            'ulang'             => (($param != '0') ? '0' : '1'),
             'daftar_ulang'      => $daftar_ulang,
         ];
 

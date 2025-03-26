@@ -29,7 +29,7 @@ class M_Emr extends CI_Model
         $this->db->join("dokter d", "d.kode_dokter = p.kode_dokter");
         $this->db->join("m_poli pol", "pol.kode_poli = p.kode_poli");
         $this->db->join("m_jenis_bayar jb", "jb.kode_jenis_bayar = p.kode_jenis_bayar");
-        $this->db->join("emr_dok_cppt edc", "edc.no_trx = p.no_trx");
+        $this->db->join("emr_dok_cppt edc", "edc.no_trx = p.no_trx", "LEFT");
 
         $this->db->where("p.kode_cabang", $this->session->userdata("cabang"));
 
@@ -112,7 +112,7 @@ class M_Emr extends CI_Model
         $this->db->join("dokter d", "d.kode_dokter = p.kode_dokter");
         $this->db->join("m_poli pol", "pol.kode_poli = p.kode_poli");
         $this->db->join("m_jenis_bayar jb", "jb.kode_jenis_bayar = p.kode_jenis_bayar");
-        $this->db->join("emr_dok_cppt edc", "edc.no_trx = p.no_trx");
+        $this->db->join("emr_dok_cppt edc", "edc.no_trx = p.no_trx", "LEFT");
 
         $this->db->where("p.kode_cabang", $this->session->userdata("cabang"));
 
