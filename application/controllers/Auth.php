@@ -56,6 +56,21 @@ class Auth extends CI_Controller
                     UNION ALL
 
                     SELECT
+                        p.id,
+                        p.no_trx AS invoice,
+                        'pembayaran2' AS url,
+                        p.tgl_daftar AS tgl,
+                        p.jam_daftar AS jam,
+                        p.kode_member
+                    FROM pendaftaran p
+                    JOIN emr_dok ed USING (no_trx)
+                    LEFT JOIN tarif_paket_pasien t USING (no_trx)
+                    LEFT JOIN barang_out_header bh USING (no_trx)
+                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran)
+
+                    UNION ALL
+
+                    SELECT
                         id,
                         invoice AS invoice,
                         'kasir' AS url,
@@ -155,6 +170,21 @@ class Auth extends CI_Controller
                     LEFT JOIN tarif_paket_pasien t USING (no_trx)
                     LEFT JOIN barang_out_header bh USING (no_trx)
                     WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran) AND (ed.eracikan <> '' OR ed.no_trx IN (SELECT no_trx FROM emr_per_barang)) AND ed.no_trx IN (SELECT no_trx FROM barang_out_header)
+
+                    UNION ALL
+
+                    SELECT
+                        p.id,
+                        p.no_trx AS invoice,
+                        'pembayaran2' AS url,
+                        p.tgl_daftar AS tgl,
+                        p.jam_daftar AS jam,
+                        p.kode_member
+                    FROM pendaftaran p
+                    JOIN emr_dok ed USING (no_trx)
+                    LEFT JOIN tarif_paket_pasien t USING (no_trx)
+                    LEFT JOIN barang_out_header bh USING (no_trx)
+                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran)
 
                     UNION ALL
 
@@ -291,6 +321,21 @@ class Auth extends CI_Controller
                     UNION ALL
 
                     SELECT
+                        p.id,
+                        p.no_trx AS invoice,
+                        'pembayaran2' AS url,
+                        p.tgl_daftar AS tgl,
+                        p.jam_daftar AS jam,
+                        p.kode_member
+                    FROM pendaftaran p
+                    JOIN emr_dok ed USING (no_trx)
+                    LEFT JOIN tarif_paket_pasien t USING (no_trx)
+                    LEFT JOIN barang_out_header bh USING (no_trx)
+                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran)
+
+                    UNION ALL
+
+                    SELECT
                         id,
                         invoice AS invoice,
                         'kasir' AS url,
@@ -390,6 +435,21 @@ class Auth extends CI_Controller
                     LEFT JOIN tarif_paket_pasien t USING (no_trx)
                     LEFT JOIN barang_out_header bh USING (no_trx)
                     WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran) AND (ed.eracikan <> '' OR ed.no_trx IN (SELECT no_trx FROM emr_per_barang)) AND ed.no_trx IN (SELECT no_trx FROM barang_out_header)
+
+                    UNION ALL
+
+                    SELECT
+                        p.id,
+                        p.no_trx AS invoice,
+                        'pembayaran2' AS url,
+                        p.tgl_daftar AS tgl,
+                        p.jam_daftar AS jam,
+                        p.kode_member
+                    FROM pendaftaran p
+                    JOIN emr_dok ed USING (no_trx)
+                    LEFT JOIN tarif_paket_pasien t USING (no_trx)
+                    LEFT JOIN barang_out_header bh USING (no_trx)
+                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran)
 
                     UNION ALL
 
@@ -508,6 +568,9 @@ class Auth extends CI_Controller
                         $par_url = 'Kasir/form_kasir/0/' . $s->invoice;
                     } else if ($s->url == 'pembayaran') {
                         $msg = '<i class="fa-solid fa-fw fa-file-invoice-dollar"></i> Pembayaran | ' . $this->M_global->getData('m_prefix', ['kode_prefix' => $member->kode_prefix])->nama . '. ' . singkatTeks($member->nama) . ' | ' . $s->invoice;
+                        $par_url = 'Kasir/form_kasir/0?invoice=' . $s->invoice;
+                    } else if ($s->url == 'pembayaran2') {
+                        $msg = '<i class="fa-solid fa-fw fa-file-invoice-dollar"></i> Pembayaran Non-resep | ' . $this->M_global->getData('m_prefix', ['kode_prefix' => $member->kode_prefix])->nama . '. ' . singkatTeks($member->nama) . ' | ' . $s->invoice;
                         $par_url = 'Kasir/form_kasir/0?invoice=' . $s->invoice;
                     } else if ($s->url == 'mutasi_cabang') {
                         $msg = '<i class="fa-solid fa-fw fa-building-circle-check"></i> Mutasi Cabang';
