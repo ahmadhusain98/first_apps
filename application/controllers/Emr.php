@@ -645,7 +645,7 @@ class Emr extends CI_Controller
                 <div class="col-md-12">
                     <div class="card" style="background-color: <?= ($p->no_trx == $no_trx) ? '#272a3f; color: white;' : 'white' ?>; border: 1px solid grey;">
                         <div class="card-header">
-                            <span class="h5">Kunj : <?= $no_his ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-sm badge-danger float-right">Jalan</span>' : '<span class="badge badge-sm badge-warning float-right">Inap</span>' ?></span>
+                            <span class="h5">Kunj : <?= $no_his ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-sm badge-danger float-right">Rawat Jalan</span>' : '<span class="badge badge-sm badge-warning float-right">Rawat Inap</span>' ?></span>
                             <br>
                             <span style="font-size: 14px;"><?= (($p->status_trx == 0) ? '<span class="badge badge-sm badge-success">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-sm badge-danger">Batal</span>' : '<span class="badge badge-sm badge-primary">Selesai</span>')) ?></span>
                             <span style="font-size: 14px;" class="badge badge-dark badge-sm float-right"><?= $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $p->kode_jenis_bayar])->keterangan ?></span>
@@ -712,11 +712,13 @@ class Emr extends CI_Controller
         $no_his         = count($pendaftaran);
         foreach ($pendaftaran as $p) : ?>
             <div class="card-header">
-                <span class="h4">Kunj : <?= $eps ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-sm badge-danger float-right">Jalan</span>' : '<span class="badge badge-sm badge-warning float-right">Inap</span>' ?></span>
+                <span class="h4">Kunj : <?= $eps ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-sm badge-danger float-right">Rawat Jalan</span>' : '<span class="badge badge-sm badge-warning float-right">Rawat Inap</span>' ?></span>
             </div>
             <div class="card-footer">
                 <span class="h5">Status :
-                    <span style="font-size: 14px;" class="badge badge-dark badge-sm float-right"><?= $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $p->kode_jenis_bayar])->keterangan ?></span><?= (($p->status_trx == 0) ? '<span class="badge badge-sm badge-success float-right">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-sm badge-danger float-right">Batal</span>' : '<span class="badge badge-sm badge-primary float-right">Selesai</span>')) ?>
+                    <span class="float-right">
+                        <span class="badge badge-dark badge-sm"><?= $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $p->kode_jenis_bayar])->keterangan ?></span>&nbsp;<?= (($p->status_trx == 0) ? '<span class="badge badge-sm badge-success">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-sm badge-danger">Batal</span>' : '<span class="badge badge-sm badge-primary">Selesai</span>')) ?>
+                    </span>
                 </span>
             </div>
             <div class="card-body">
@@ -1102,11 +1104,13 @@ class Emr extends CI_Controller
         $no_his         = count($pendaftaran);
         foreach ($pendaftaran as $p) : ?>
             <div class="card-header">
-                <span class="h4">Kunj : <?= $eps ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-sm badge-danger float-right">Jalan</span>' : '<span class="badge badge-sm badge-warning float-right">Inap</span>' ?></span>
+                <span class="h4">Kunj : <?= $eps ?> <?= ($p->tipe_daftar == 1) ? '<span class="badge badge-sm badge-danger float-right">Rawat Jalan</span>' : '<span class="badge badge-sm badge-warning float-right">Rawat Inap</span>' ?></span>
             </div>
             <div class="card-footer">
                 <span class="h5">Status :
-                    <span style="font-size: 14px;" class="badge badge-dark badge-sm float-right"><?= $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $p->kode_jenis_bayar])->keterangan ?></span><?= (($p->status_trx == 0) ? '<span class="badge badge-sm badge-success float-right">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-sm badge-danger float-right">Batal</span>' : '<span class="badge badge-sm badge-primary float-right">Selesai</span>')) ?>
+                    <span class="float-right">
+                        <span class="badge badge-dark badge-sm"><?= $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $p->kode_jenis_bayar])->keterangan ?></span>&nbsp;<?= (($p->status_trx == 0) ? '<span class="badge badge-sm badge-success">Buka</span>' : (($p->status_trx == 2) ? '<span class="badge badge-sm badge-danger">Batal</span>' : '<span class="badge badge-sm badge-primary">Selesai</span>')) ?>
+                    </span>
                 </span>
             </div>
             <div class="card-body">
