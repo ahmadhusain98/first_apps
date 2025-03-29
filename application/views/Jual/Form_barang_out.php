@@ -1101,7 +1101,7 @@ if ($param == 'emr') {
         }
 
         // buat rumus total
-        var ttotal = tjumlah + tppn;
+        var ttotal = tjumlah - tdiskon + tppn;
 
         // tampilkan hasil ke dalam format koma
         $('#subtotal').val(formatRpNoId(tjumlah));

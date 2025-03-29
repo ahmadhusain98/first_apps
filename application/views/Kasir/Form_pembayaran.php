@@ -586,7 +586,9 @@
 
         <?php if (!empty($bayar_detail)) : ?> fortableCard.show();
         <?php else : ?> fortableCard.hide();
-        <?php endif; ?> <?php else :  ?> $('.not_umum').hide();
+        <?php endif; ?>
+    <?php else :  ?>
+        $('.not_umum').hide();
         kode_promo.attr('disabled', true);
         document.getElementById('cek_cash').checked = true;
         fortableCard.hide();
@@ -909,6 +911,8 @@
                     $('.not_umum').show();
                     get_um(result[0]['kode_member'], '');
                 }
+
+                getDataPx(result[0]['kode_member'], notrx)
             },
             error: function(result) { // jika fungsi error
                 error_proccess();
