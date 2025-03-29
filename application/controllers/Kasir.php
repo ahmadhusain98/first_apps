@@ -673,7 +673,8 @@ class Kasir extends CI_Controller
         $cek = $this->M_global->getData('pendaftaran', ['no_trx' => $notrx]);
 
         if ($cek) {
-            echo json_encode(['status' => 1, 'norm' => $cek->kode_member, 'no_trx' => $cek->no_trx]);
+            $jenis_bayar = $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $cek->kode_jenis_bayar]);
+            echo json_encode(['status' => 1, 'norm' => $cek->kode_member, 'no_trx' => $cek->no_trx, 'jenis_bayar' => $jenis_bayar->keterangan, 'kode_jenis_bayar' => $cek->kode_jenis_bayar]);
         } else {
             echo json_encode(['status' => 0]);
         }
@@ -842,6 +843,9 @@ class Kasir extends CI_Controller
         $single                 = str_replace(',', '', $this->input->post('sumTarif'));
         $disc_single            = str_replace(',', '', $this->input->post('discTarif'));
 
+        $tercover               = str_replace(',', '', $this->input->post('tercover'));
+        $kode_jenis_bayar       = $this->input->post('kode_jenis_bayar');
+
         $kode_tarif             = $this->input->post('kode_tarif');
         $kunjungan              = $this->input->post('kunjungan');
 
@@ -929,6 +933,18 @@ class Kasir extends CI_Controller
             'kembalian'         => ($cek_um > 0) ? 0 : $kembalian,
             'um_masuk'          => ($cek_um > 0) ? $kembalian : 0,
             'cek_um'            => $cek_um,
+            'tercover'          => $tercover,
+            'kode_jenis_bayar'  => $kode_jenis_bayar,
+        ];
+
+        $data_cover = [
+            'piutang_no' => _noPiutang($kode_cabang),
+            'referensi' => $token_pembayaran,
+            'kode_cabang' => $kode_cabang,
+            'tanggal' => $tgl_pembayaran,
+            'jam' => $jam_pembayaran,
+            'jumlah' => $tercover,
+            'status' => 0,
         ];
 
         if ($param == 1) { // jika param = 1
@@ -956,6 +972,10 @@ class Kasir extends CI_Controller
                 for ($x = 0; $x <= ($jumPaket - 1); $x++) {
                     $this->M_global->updateData('tarif_paket_pasien', ['status' => 1], ['no_trx' => $no_trx, 'kode_tarif' => $kode_tarif[$x], 'kunjungan' => $kunjungan[$x]]);
                 }
+            }
+
+            if($kode_jenis_bayar != 'JB00000001') {
+                $this->M_global->insertData('piutang', $data_cover);
             }
         } else { // selain itu
             // delete piutang
@@ -986,6 +1006,10 @@ class Kasir extends CI_Controller
                 $this->M_global->delData('bayar_card_detail', ['token_pembayaran' => $token_pembayaran]),
                 $this->M_global->delData('pembayaran_tarif_single', ['token_pembayaran' => $token_pembayaran]),
             ];
+
+            if($kode_jenis_bayar != 'JB00000001') {
+                $this->M_global->updateData('piutang', $data_cover, ['referensi' => $token_pembayaran]);
+            }
         }
 
         if ($um_keluar > 0) { // jika ada penggunaan um

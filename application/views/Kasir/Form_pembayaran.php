@@ -154,40 +154,7 @@
                                             <th style="width: 10%;">Jumlah</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="bodyJual">
-                                        <?php if (!empty($penjualan)) : ?>
-                                            <?php $noj = 1;
-                                            foreach ($penjualan as $pen) : ?>
-                                                <tr id="rowJual<?= $noj ?>">
-                                                    <td style="text-align: right;">
-                                                        <label style="font-weight: normal;"><?= $noj ?></label>
-                                                    </td>
-                                                    <td>
-                                                        <label style="font-weight: normal;">(<?= $pen->kode_barang ?>) <?= $pen->nama_barang ?></label>
-                                                    </td>
-                                                    <td>
-                                                        <label style="font-weight: normal;"><?= $pen->nama_satuan ?></label>
-                                                    </td>
-                                                    <td style="text-align: right;">
-                                                        <label style="font-weight: normal;"><?= number_format($pen->qty) ?></label>
-                                                    </td>
-                                                    <td style="text-align: right;">
-                                                        <label style="font-weight: normal;"><?= number_format($pen->harga) ?></label>
-                                                    </td>
-                                                    <td style="text-align: right;">
-                                                        <label style="font-weight: normal;"><?= number_format($pen->discrp) ?></label>
-                                                    </td>
-                                                    <td style="text-align: right;">
-                                                        <label style="font-weight: normal;"><?= number_format($pen->pajakrp) ?></label>
-                                                    </td>
-                                                    <td style="text-align: right;">
-                                                        <label style="font-weight: normal;"><?= number_format($pen->jumlah) ?></label>
-                                                    </td>
-                                                </tr>
-                                            <?php $noj++;
-                                            endforeach; ?>
-                                        <?php endif; ?>
-                                    </tbody>
+                                    <tbody id="bodyJual"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -325,7 +292,28 @@
                 <div class="card-footer">
                     <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Pembayaran</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body" id="bodyNonPerorangan">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" class="font-weight-bold">Jenis Bayar</label>
+                            <?php
+                            if (!empty($data_pembayaran)) {
+                                $jb = $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $data_pembayaran->kode_jenis_bayar]);
+                                $jenis_bayar = $jb->keterangan;
+                            } else {
+                                $jenis_bayar = '';
+                            }
+                            ?>
+                            <input type="text" class="form-control text-right font-weight-bold" placeholder="Jenis Pembayaran" id="jenis_bayar" name="jenis_bayar" value="<?= (!empty($data_pembayaran) ? $jenis_bayar : '') ?>" readonly>
+                            <input type="hidden" name="kode_jenis_bayar" id="kode_jenis_bayar" value="<?= (!empty($data_pembayaran) ? $data_pembayaran->kode_jenis_bayar : '') ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" class="text-primary font-weight-bold">Tercover</label>
+                            <input type="text" class="form-control text-right text-primary font-weight-bold" placeholder="Pembayaran Dicover" id="tercover" name="tercover" value="<?= (!empty($data_pembayaran) ? number_format($data_pembayaran->tercover) : '0') ?>" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" id="bodyPerorangan">
                     <div class="row">
                         <div class="col-md-12">
                             <label for="jenis_pembayaran">Jenis Pembayaran <sup class="text-danger">**</sup></label>
@@ -562,6 +550,8 @@
     var fortableCard = $('#fortableCard');
     var fortableCash = $('#fortableCash');
     var bodyCard = $('#bodyBayarCard');
+    var bodyNonPerorangan = $('#bodyNonPerorangan');
+    var bodyPerorangan = $('#bodyPerorangan');
 
     const btnSimpan = $('#btnSimpan');
     const form = $('#form_pembayaran');
@@ -584,6 +574,8 @@
             $('.not_umum').show();
         <?php endif ?>
 
+        cekPendaftaran('<?= $data_pembayaran->no_trx ?>')
+
         <?php if (!empty($bayar_detail)) : ?> fortableCard.show();
         <?php else : ?> fortableCard.hide();
         <?php endif; ?>
@@ -592,6 +584,7 @@
         kode_promo.attr('disabled', true);
         document.getElementById('cek_cash').checked = true;
         fortableCard.hide();
+        bodyNonPerorangan.hide();
     <?php endif;  ?>
 
     function cek_cc(isi) {
@@ -700,6 +693,17 @@
                     $('#inv_jual').val(param).change();
                     var norm_px = 'U00001';
                     var notrx_px = '';
+                }
+
+                $('#jenis_bayar').val(result.jenis_bayar);
+                $('#kode_jenis_bayar').val(result.kode_jenis_bayar);
+
+                if (result.kode_jenis_bayar == 'JB00000001') {
+                    bodyPerorangan.show(200);
+                    bodyNonPerorangan.hide(200);
+                } else {
+                    bodyPerorangan.hide(200);
+                    bodyNonPerorangan.show(200);
                 }
 
                 getDataPx(norm_px, notrx_px);
@@ -1208,6 +1212,14 @@
         var sumPaket = parseFloat(($('#sumPaket').val()).replaceAll(',', ''));
         var sumJual = parseFloat(($('#sumJual').val()).replaceAll(',', ''));
         var total = parseFloat(($('#total').val()).replaceAll(',', ''));
+
+        if ($('#kode_jenis_bayar').val() == 'JB00000001') {
+            var kurang = total - (sumJual + sumTarif + sumPaket);
+        } else {
+            var total = (sumJual + sumTarif + sumPaket);
+            $('#tercover').val(formatRpNoId(total));
+            $('#total').val(formatRpNoId(total));
+        }
 
         var kurang = total - (sumJual + sumTarif + sumPaket);
 
