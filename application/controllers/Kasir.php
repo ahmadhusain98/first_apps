@@ -69,7 +69,7 @@ class Kasir extends CI_Controller
 
         // parameter untuk list table
         $table            = 'pembayaran';
-        $colum            = ['id', 'approved', 'token_pembayaran', 'invoice', 'inv_jual', 'no_trx', 'tgl_pembayaran', 'jam_pembayaran', 'kembalian', 'total', 'kode_user', 'jenis_pembayaran', 'cash', 'card', 'shift', 'um_masuk'];
+        $colum            = ['id', 'approved', 'token_pembayaran', 'invoice', 'inv_jual', 'no_trx', 'tgl_pembayaran', 'jam_pembayaran', 'kembalian', 'total', 'kode_user', 'jenis_pembayaran', 'cash', 'card', 'shift', 'um_masuk', 'kode_jenis_bayar', 'tercover'];
         $order            = 'id';
         $order2           = 'desc';
         $order_arr        = ['id' => 'asc'];
@@ -101,6 +101,8 @@ class Kasir extends CI_Controller
 
         // loop $list
         foreach ($list as $rd) {
+            $jenis_bayar      = $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $rd->kode_jenis_bayar]);
+
             if ($updated > 0) {
                 if ($rd->approved < 1) {
                     $upd_diss = '';
@@ -129,21 +131,34 @@ class Kasir extends CI_Controller
 
             $row    = [];
             $row[]  = $no++;
-            $row[]  = date('d/m/Y', strtotime($rd->tgl_pembayaran)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_pembayaran)) . '<br>' . (($rd->approved > 0) ? '<span class="badge badge-primary">Acc</span>' : '<span class="badge badge-danger">Belum diAcc</span>');
+            $row[]  = date('d/m/Y', strtotime($rd->tgl_pembayaran)) . ' ~ ' . date('H:i:s', strtotime($rd->jam_pembayaran)) . '<br>' . (($rd->approved > 0) ? '<span class="badge badge-primary">Acc</span>' : '<span class="badge badge-danger">Belum diAcc</span>') . ' <span class="badge badge-dark">'. $jenis_bayar->keterangan.'</span>';
             $row[]  = $rd->invoice;
             $row[]  = ($rd->no_trx == null) ? 'UMUM' : $rd->no_trx;
-            $row[]  = ($rd->jenis_pembayaran == 0 ? 'CASH' : (($rd->jenis_pembayaran == 1) ? 'CARD' : 'CASH & CARD'));
-            $row[]  = 'Rp. ' . '<span class="float-right">' . number_format($rd->total - $rd->kembalian - $rd->um_masuk) . '</span>';
+            $row[]  = (($rd->kode_jenis_bayar != 'JB00000001') ? '<span class="text-danger font-weight-bold">TERCOVER</span>' : ($rd->jenis_pembayaran == 0 ? 'CASH' : (($rd->jenis_pembayaran == 1) ? 'CARD' : 'CASH & CARD')));
+            $row[]  = 'Rp. ' . '<span class="float-right">' . (($rd->tercover > 0) ? number_format($rd->tercover) : number_format($rd->total - $rd->kembalian - $rd->um_masuk) )  . '</span>';
             $row[]  = $this->M_global->getData('user', ['kode_user' => $rd->kode_user])->nama . '<br><span class="badge badge-danger">Shift: ' . $rd->shift . '</span>';
 
             if ($confirmed > 0) {
                 $cek_date = (strtotime($date_now) <= strtotime($rd->tgl_pembayaran)) ? '' : 'disabled';
 
-                if ($rd->approved > 0) {
-                    $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-dark" onclick="actived(' . "'" . $rd->token_pembayaran . "', 1" . ')" ' . $confirm_diss . ' ' . $cek_date . '><i class="fa-solid fa-circle-xmark"></i></button>';
+                if($rd->approved > 0) {
+                    $acc_approved = 1;
+                    $icon = '<i class="fa-solid fa-circle-xmark"></i>';
+
+                    if(strtotime($date_now) <= strtotime($rd->tgl_pembayaran)) {
+                        $cek_date = '';
+                    } else {
+                        $cek_date = 'disabled';
+                    }
+                    $color= 'btn-dark';
                 } else {
-                    $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-primary" onclick="actived(' . "'" . $rd->token_pembayaran . "', 0" . ')" ' . $confirm_diss . ' ' . $cek_date . '><i class="fa-solid fa-circle-check"></i></button>';
+                    $acc_approved = 0;
+                    $icon = '<i class="fa-solid fa-circle-check"></i>';
+                    $cek_date = '';
+                    $color= 'btn-primary';
                 }
+
+                $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn '.$color.'" onclick="actived(' . "'" . $rd->token_pembayaran . "', " . $acc_approved . ')" ' . $confirm_diss . ' ' . $cek_date . '>'.$icon.'</button>';
             } else {
                 $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn btn-primary" disabled><i class="fa-solid fa-circle-check"></i></button>';
             }
