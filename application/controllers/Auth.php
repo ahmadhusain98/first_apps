@@ -66,7 +66,7 @@ class Auth extends CI_Controller
                     JOIN emr_dok ed USING (no_trx)
                     LEFT JOIN tarif_paket_pasien t USING (no_trx)
                     LEFT JOIN barang_out_header bh USING (no_trx)
-                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran) AND ed.eracikan = ''
+                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran) AND (ed.no_trx NOT IN (SELECT no_trx FROM emr_per_barang)) AND ed.no_trx NOT IN (SELECT no_trx FROM barang_out_header)
 
                     UNION ALL
 
@@ -184,7 +184,7 @@ class Auth extends CI_Controller
                     JOIN emr_dok ed USING (no_trx)
                     LEFT JOIN tarif_paket_pasien t USING (no_trx)
                     LEFT JOIN barang_out_header bh USING (no_trx)
-                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran) AND ed.eracikan = ''
+                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran) AND (ed.no_trx NOT IN (SELECT no_trx FROM emr_per_barang)) AND ed.no_trx NOT IN (SELECT no_trx FROM barang_out_header)
 
                     UNION ALL
 
@@ -331,7 +331,7 @@ class Auth extends CI_Controller
                     JOIN emr_dok ed USING (no_trx)
                     LEFT JOIN tarif_paket_pasien t USING (no_trx)
                     LEFT JOIN barang_out_header bh USING (no_trx)
-                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran) AND ed.eracikan = ''
+                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran) AND (ed.no_trx NOT IN (SELECT no_trx FROM emr_per_barang)) AND ed.no_trx NOT IN (SELECT no_trx FROM barang_out_header)
 
                     UNION ALL
 
@@ -449,7 +449,7 @@ class Auth extends CI_Controller
                     JOIN emr_dok ed USING (no_trx)
                     LEFT JOIN tarif_paket_pasien t USING (no_trx)
                     LEFT JOIN barang_out_header bh USING (no_trx)
-                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran) AND ed.eracikan = ''
+                    WHERE p.kode_cabang = '$cabang' AND p.status_trx = 0 AND p.kode_member <> 'U00001' AND no_trx NOT IN (SELECT no_trx FROM pembayaran) AND ed.no_trx NOT IN (SELECT no_trx FROM emr_per_barang) AND ed.no_trx NOT IN (SELECT no_trx FROM barang_out_header)
 
                     UNION ALL
 

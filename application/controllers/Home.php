@@ -41,23 +41,23 @@ class Home extends CI_Controller
     // home page
     public function index()
     {
-        $sess_cabang = $this->session->userdata('cabang');
-        $sess_web = $this->session->userdata('web_id');
+        $sess_cabang    = $this->session->userdata('cabang');
+        $sess_web       = $this->session->userdata('web_id');
 
         // website config
-        $web_setting = $this->M_global->getData('web_setting', ['id' => 1]);
-        $web_version = $this->M_global->getData('web_version', ['id_web' => $sess_web]);
+        $web_setting    = $this->M_global->getData('web_setting', ['id' => 1]);
+        $web_version    = $this->M_global->getData('web_version', ['id_web' => $sess_web]);
 
-        $now = date('Y-m-d');
+        $now            = date('Y-m-d');
 
-        $header_out = $this->db->query("SELECT * FROM barang_out_header WHERE kode_cabang = '$sess_cabang' AND tgl_jual LIKE '%$now%' AND status_jual = 1")->result();
-        $header_bayar = $this->db->query("SELECT * FROM pembayaran WHERE kode_cabang = '$sess_cabang' AND tgl_pembayaran LIKE '%$now%' AND approved = 1")->result();
-        $header_daftar = $this->db->query("SELECT * FROM pendaftaran WHERE kode_cabang = '$sess_cabang' AND tgl_daftar LIKE '%$now%' AND status_trx != 2")->result();
+        $header_out     = $this->db->query("SELECT * FROM barang_out_header WHERE kode_cabang = '$sess_cabang' AND tgl_jual LIKE '%$now%' AND status_jual = 1")->result();
+        $header_bayar   = $this->db->query("SELECT * FROM pembayaran WHERE kode_cabang = '$sess_cabang' AND tgl_pembayaran LIKE '%$now%' AND approved = 1")->result();
+        $header_daftar  = $this->db->query("SELECT * FROM pendaftaran WHERE kode_cabang = '$sess_cabang' AND tgl_daftar LIKE '%$now%' AND status_trx != 2")->result();
 
-        $saldo_utama = $this->M_global->getData('kas_utama', ['kode_cabang' => $sess_cabang]);
-        $saldo_second = $this->db->query("SELECT SUM(sisa) AS saldo FROM kas_second WHERE kode_cabang = '$sess_cabang'")->row();
+        $saldo_utama    = $this->M_global->getData('kas_utama', ['kode_cabang' => $sess_cabang]);
+        $saldo_second   = $this->db->query("SELECT SUM(sisa) AS saldo FROM kas_second WHERE kode_cabang = '$sess_cabang'")->row();
 
-        $saldo = ((!empty($saldo_utama)) ? $saldo_utama->sisa : 0) + ((!empty($saldo_second)) ? $saldo_second->saldo : 0);
+        $saldo          = ((!empty($saldo_utama)) ? $saldo_utama->sisa : 0) + ((!empty($saldo_second)) ? $saldo_second->saldo : 0);
 
         $parameter = [
             $this->data,
@@ -71,8 +71,8 @@ class Home extends CI_Controller
             'jumlah_bayar'      => count($header_bayar),
             'saldo_kas'         => $saldo,
             'jumlah_daftar'     => count($header_daftar),
-            'hutang'            => $this->db->query("SELECT SUM(jumlah) AS hutang FROM piutang WHERE kode_cabang = '$sess_cabang' AND jumlah > 0 AND status = 0")->row(),
-            'piutang'           => $this->db->query("SELECT SUM(jumlah) AS piutang FROM piutang WHERE kode_cabang = '$sess_cabang' AND jumlah < 0 AND status = 0")->row(),
+            'hutang'            => $this->db->query("SELECT SUM(jumlah) AS hutang FROM piutang WHERE kode_cabang = '$sess_cabang' AND jenis > 0 AND status = 0")->row(),
+            'piutang'           => $this->db->query("SELECT SUM(jumlah) AS piutang FROM piutang WHERE kode_cabang = '$sess_cabang' AND jenis < 1 AND status = 0")->row(),
         ];
 
         $this->template->load('Template/Content', 'Home/Dashboard', $parameter);

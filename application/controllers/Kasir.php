@@ -142,20 +142,20 @@ class Kasir extends CI_Controller
                 $cek_date = (strtotime($date_now) <= strtotime($rd->tgl_pembayaran)) ? '' : 'disabled';
 
                 if($rd->approved > 0) {
-                    $acc_approved = 1;
-                    $icon = '<i class="fa-solid fa-circle-xmark"></i>';
+                    $acc_approved   = 1;
+                    $icon           = '<i class="fa-solid fa-circle-xmark"></i>';
 
                     if(strtotime($date_now) <= strtotime($rd->tgl_pembayaran)) {
-                        $cek_date = '';
+                        $cek_date   = '';
                     } else {
-                        $cek_date = 'disabled';
+                        $cek_date   = 'disabled';
                     }
-                    $color= 'btn-dark';
+                    $color          = 'btn-dark';
                 } else {
-                    $acc_approved = 0;
-                    $icon = '<i class="fa-solid fa-circle-check"></i>';
-                    $cek_date = '';
-                    $color= 'btn-primary';
+                    $acc_approved   = 0;
+                    $icon           = '<i class="fa-solid fa-circle-check"></i>';
+                    $cek_date       = '';
+                    $color          = 'btn-primary';
                 }
 
                 $actived_akun = '<button type="button" style="margin-bottom: 5px;" class="btn '.$color.'" onclick="actived(' . "'" . $rd->token_pembayaran . "', " . $acc_approved . ')" ' . $confirm_diss . ' ' . $cek_date . '>'.$icon.'</button>';
@@ -400,7 +400,7 @@ class Kasir extends CI_Controller
                     <td style="width: 40%;">' . $barang->nama . '(' . $this->M_global->getData('m_satuan', ['kode_satuan' => $barang->kode_satuan])->keterangan . ')' . '</td>
                     <td style="text-align: right; width: 20%;">' . number_format($bod->qty) . ' @ ' . number_format($bod->harga) . '</td>
                     <td style="text-align: right; width: 20%;">' . number_format($bod->discrp) . '</td>
-                    <td style="text-align: right; width: 20%;">' . number_format(($bod->jumlah + $bod->discrp)) . '</td>
+                    <td style="text-align: right; width: 20%;">' . number_format(($bod->jumlah)) . '</td>
                 </tr>';
             }
 
@@ -430,15 +430,26 @@ class Kasir extends CI_Controller
 
         $body .= '<table style="width: 100%; font-size: 9px;" cellpadding="2px">';
 
+        if($pembayaran->kode_jenis_bayar == 'JB00000001') {
+            $jenis_bayar = '(Cash: Rp. ' . number_format($pembayaran->cash) . ') @ (Card: Rp. ' . number_format($pembayaran->card) . ')';
+        } else {
+            $jenis_bayar = '(Tercover: Rp. '.number_format($pembayaran->tercover).')';
+        }
+
         $body .= '<tr>
             <td style="width: 23%;">Invoice</td>
             <td style="width: 2%;">:</td>
             <td style="width: 75%;">' . $pembayaran->invoice . '</td>
         </tr>
         <tr>
+            <td style="width: 23%;">Jenis</td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 75%;">'.$this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $pembayaran->kode_jenis_bayar])->keterangan.'</td>
+        </tr>
+        <tr>
             <td style="width: 23%;">Bayar</td>
             <td style="width: 2%;">:</td>
-            <td style="width: 75%;">(Cash: Rp. ' . number_format($pembayaran->cash) . ') @ (Card: Rp. ' . number_format($pembayaran->card) . ')</td>
+            <td style="width: 75%;">'.$jenis_bayar.'</td>
         </tr>
         <tr>
             <td style="width: 23%;">Status</td>
@@ -953,13 +964,14 @@ class Kasir extends CI_Controller
         ];
 
         $data_cover = [
-            'piutang_no' => _noPiutang($kode_cabang),
-            'referensi' => $token_pembayaran,
-            'kode_cabang' => $kode_cabang,
-            'tanggal' => $tgl_pembayaran,
-            'jam' => $jam_pembayaran,
-            'jumlah' => $tercover,
-            'status' => 0,
+            'piutang_no'    => _noPiutang($kode_cabang),
+            'referensi'     => $invoice,
+            'kode_cabang'   => $kode_cabang,
+            'tanggal'       => $tgl_pembayaran,
+            'jam'           => $jam_pembayaran,
+            'jumlah'        => $tercover,
+            'status'        => 0,
+            'jenis'         => 0,
         ];
 
         if ($param == 1) { // jika param = 1

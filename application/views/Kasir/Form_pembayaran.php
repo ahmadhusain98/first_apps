@@ -60,6 +60,7 @@
                                 <div class="col-md-6">
                                     <label for="kode_promo">Promo</label>
                                     <select name="kode_promo" id="kode_promo" class="form-control select2_global" data-placeholder="~ Pilih Promo" onchange="cek_promo(this.value)">
+                                        <option value="">~ Pilih Promo</option>
                                         <?php foreach ($promo as $p) : ?>
                                             <option value="<?= $p->kode_promo ?>" <?= (!empty($data_pembayaran) ? (($data_pembayaran->kode_promo == $p->kode_promo) ? 'selected' : '') : '') ?>><?= $p->nama ?></option>
                                         <?php endforeach; ?>
@@ -665,9 +666,17 @@
         var sumJual = parseFloat(($('#sumJual').val()).replaceAll(',', ''));
         var discpr_prom = parseFloat((potongan_promo.val()).replaceAll(',', ''));
 
-        var new_total_jual = (sumJual + sumPaket + sumTarif) - ((sumJual + sumPaket + sumTarif) * (discpr_prom / 100));
-
-        $('#total_kurang').val(formatRpNoId((0 - new_total_jual)));
+        if ($('#kode_jenis_bayar').val() == 'JB00000001') {
+            var new_total_jual = (sumJual + sumPaket + sumTarif) - ((sumJual + sumPaket + sumTarif) * (discpr_prom / 100));
+            $('#tercover').val(formatRpNoId(0));
+            $('#total').val(formatRpNoId(0));
+            $('#total_kurang').val(formatRpNoId(new_total_jual));
+        } else {
+            var new_total_jual = (sumJual + sumPaket + sumTarif) - ((sumJual + sumPaket + sumTarif) * (discpr_prom / 100));
+            $('#tercover').val(formatRpNoId(new_total_jual));
+            $('#total').val(formatRpNoId(new_total_jual));
+            $('#total_kurang').val(formatRpNoId(0));
+        }
     }
 
     var cek_param = "<?= $this->input->get('invoice') ?>";
