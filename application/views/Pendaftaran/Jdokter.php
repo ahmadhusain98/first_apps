@@ -78,12 +78,19 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                             <div class="row">
                                                 <div class="col-md-6 col-12">
                                                     <label for="kode_poli" class="control-label">Poli <span class="text-danger">**</span></label>
-                                                    <select name="kode_poli" id="kode_poli" class="form-control select2_poli_dokter" data-placeholder="~ Pilih Dokter Terlebih Dahulu"></select>
+                                                    <select name="kode_poli" id="kode_poli" class="form-control select2_poli_dokter" data-placeholder="~ Pilih Dokter Terlebih Dahulu" onchange="getRuang()"></select>
                                                 </div>
                                                 <div class="col-md-6 col-12">
-                                                    <label for="kode_ruang" class="control-label">Ruangan <span class="text-danger">**</span></label>
-                                                    <select name="kode_ruang" id="kode_ruang" class="form-control select2_ruang
-                                                    " data-placeholder="~ Pilih Ruangan"></select>
+                                                    <label for="hari" class="control-label">Hari <span class="text-danger">**</span></label>
+                                                    <select name="hari" id="hari" class="form-control select2_global" onchange="getRuang()">
+                                                        <option value="Monday">Senin</option>
+                                                        <option value="Tuesday">Selasa</option>
+                                                        <option value="Wednesday">Rabu</option>
+                                                        <option value="Thursday">Kamis</option>
+                                                        <option value="Friday">Jumat</option>
+                                                        <option value="Saturday">Sabtu</option>
+                                                        <option value="Sunday">Ahad</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -105,6 +112,24 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="time_start" class="control-label">Dari Jam <span class="text-danger">**</span></label>
+                                            <input type="time" name="time_start" id="time_start" class="form-control" value="<?= date('H:' . '00') ?>">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="time_end" class="control-label">Sampai Jam <span class="text-danger">**</span></label>
+                                            <input type="time" name="time_end" id="time_end" class="form-control" value="<?= date('H:' . '00', strtotime('+1 Hour')) ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="kode_ruang" class="control-label">Ruangan <span class="text-danger">**</span></label>
+                                    <select name="kode_ruang" id="kode_ruang" class="form-control select2_ruang_jd" data-placeholder="~ Pilih Ruangan" disabled></select>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
                                         <div class="col-md-6 col-12">
                                             <label for="status_dokter" class="control-label">Status <span class="text-danger">**</span></label>
                                             <select name="status_dokter" id="status_dokter" class="form-control select2_global" data-placeholder="~ Pilih Status">
@@ -123,32 +148,6 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                                                     <span class="input-group-text" id="basic-addon2">Pasien</span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="hari" class="control-label">Hari <span class="text-danger">**</span></label>
-                                    <select name="hari" id="hari" class="form-control select2_global">
-                                        <option value="Monday">Senin</option>
-                                        <option value="Tuesday">Selasa</option>
-                                        <option value="Wednesday">Rabu</option>
-                                        <option value="Thursday">Kamis</option>
-                                        <option value="Friday">Jumat</option>
-                                        <option value="Saturday">Sabtu</option>
-                                        <option value="Sunday">Ahad</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label for="time_start" class="control-label">Dari Jam <span class="text-danger">**</span></label>
-                                            <input type="time" name="time_start" id="time_start" class="form-control" value="<?= date('H:' . '00') ?>">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="time_end" class="control-label">Sampai Jam <span class="text-danger">**</span></label>
-                                            <input type="time" name="time_end" id="time_end" class="form-control" value="<?= date('H:' . '00', strtotime('+1 Hour')) ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -393,12 +392,29 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
         initailizeSelect2_poli_dokter(param);
     }
 
+    // get ruang
+    function getRuang() {
+        var kode_poli = $('#kode_poli').val();
+        var hari = $('#hari').val();
+        var kode_cabang = $('#kode_cabang').val();
+
+        if (kode_poli == '' || hari == '' || kode_cabang == '') {
+            $('#kode_ruang').attr('disabled', true);
+            return Swal.fire("Poli/Hari/Cabang", "Sudah dipilih?", "question");
+        }
+
+        $('#kode_ruang').attr('disabled', false);
+
+        initailizeSelect2_ruang_jd(kode_poli, hari, kode_cabang);
+    }
+
     // fungsi reset
     function reseting() { // membuat semua param kembali ke default
         kodeJadwal.val('');
-        kode_dokter.val('').trigger('change');
-        kode_cabang.val("<?= $this->session->userdata('cabang') ?>").trigger('change');
-        status_dokter.val('1').trigger('change');
+        kode_dokter.val('').change();
+        kode_ruang.val('').change();
+        kode_cabang.val("<?= $this->session->userdata('cabang') ?>").change();
+        status_dokter.val('1').change();
         hari.val("Monday").change();
         time_start.val("<?= date('H:i') ?>");
         time_end.val("<?= date('H:i') ?>");

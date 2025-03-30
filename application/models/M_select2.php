@@ -466,6 +466,38 @@ class M_select2 extends CI_Model
         return $sintak;
     }
 
+    // fungsi ruang jd
+    function getRuangJd($key, $kode_poli, $hari, $kode_cabang)
+    {
+        $limit = ' LIMIT 50';
+
+        $sintak_where = '';
+
+        if (!empty($key)) {
+            $sintak_where .= ' AND (r.keterangan LIKE "%' . $key . '%")';
+        }
+
+        // Kondisi tambahan untuk memeriksa ketersediaan ruang berdasarkan kode poli dan hari ini
+        if (!empty($kode_poli) && !empty($hari) && !empty($kode_cabang)) {
+            $sintak_where .= ' WHERE r.kode_ruang NOT IN (
+                SELECT jd.kode_ruang
+                FROM jadwal_dokter jd
+                WHERE jd.hari = "' . $hari . '"
+                AND jd.kode_cabang = "'.$kode_cabang.'"
+            )';
+        } else {
+            $sintak_where .= '';
+        }
+
+        $sintak_order = ' ORDER BY r.keterangan ASC';
+
+        $sintak = $this->db->query("SELECT r.kode_ruang AS id, r.keterangan AS text 
+        FROM m_ruang r 
+        " . $sintak_where . $sintak_order . $limit)->result();
+
+        return $sintak;
+    }
+
     // fungsi ruang
     function getRuang($key)
     {

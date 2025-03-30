@@ -1389,6 +1389,7 @@
         initailizeSelect2_poli_dokter(param = '');
         initailizeSelect2_dokter_all();
         initailizeSelect2_ruang();
+        initailizeSelect2_ruang_jd(kode_poli = '', hari = '', kode_cabang = '');
         initailizeSelect2_bed(param = '');
         initailizeSelect2_supplier();
         initailizeSelect2_gudang_int();
@@ -2320,6 +2321,43 @@
                 },
                 ajax: {
                     url: siteUrl + 'Select2_master/dataDokterAll',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    delay: 100,
+                    data: function(result) {
+                        return {
+                            searchTerm: result.term
+                        };
+                    },
+
+                    processResults: function(result) {
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initailizeSelect2_ruang_jd(kode_poli, hari, kode_cabang) {
+            $(".select2_ruang_jd").select2({
+                allowClear: true,
+                multiple: false,
+                placeholder: '~ Pilih Ruang',
+                //minimumInputLength: 2,
+                dropdownAutoWidth: true,
+                width: '100%',
+                language: {
+                    inputTooShort: function() {
+                        return 'Ketikan Nomor minimal 2 huruf';
+                    },
+                    noResults: function() {
+                        return 'Data Tidak Ditemukan';
+                    }
+                },
+                ajax: {
+                    url: siteUrl + 'Select2_master/dataRuangJd/' + kode_poli + '/' + hari + '/' + kode_cabang,
                     type: 'POST',
                     dataType: 'JSON',
                     delay: 100,

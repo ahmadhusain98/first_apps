@@ -182,6 +182,13 @@ class Select2_master extends CI_Controller
         echo json_encode($this->M_select2->getDokterAll($key));
     }
 
+    // master ruang jd
+    function dataRuangJd($kode_poli, $hari, $kode_cabang)
+    {
+        $key = $this->input->post('searchTerm');
+        echo json_encode($this->M_select2->getRuangJd($key, $kode_poli, $hari, $kode_cabang));
+    }
+
     // master ruang
     function dataRuang()
     {
