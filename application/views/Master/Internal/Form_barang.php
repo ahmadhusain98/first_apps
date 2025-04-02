@@ -263,7 +263,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if (!empty($barang)) : ?>
+                                <?php if (!empty($barang_stok)) : ?>
+                                    <?php foreach($barang_stok as $bs) :
+                                        $gudang = $this->M_global->getData('m_gudang', ['kode_gudang'  => $bs->kode_gudang]);
+                                        ?>
+                                        <tr>
+                                            <td>
+                                                <?= $gudang->nama ?>
+                                            </td>
+                                            <td class="text-right">
+                                                <?= number_format($bs->akhir) ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach ?>
                                 <?php else: ?>
                                     <tr>
                                         <td colspan="2" class="text-center">

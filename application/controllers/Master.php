@@ -1241,8 +1241,10 @@ class Master extends CI_Controller
 
         if ($param == '0') {
             $barang = null;
+            $barang_stok = null;
         } else {
             $barang = $this->M_global->getData('barang', ['kode_barang' => $param]);
+            $barang_stok = $this->M_global->getDataResult('barang_stok', ['kode_barang' => $param, 'kode_cabang' => $this->session->userdata('kode_cabang')]);
         }
 
         $parameter = [
@@ -1254,6 +1256,8 @@ class Master extends CI_Controller
             'web_version'   => $web_version->version,
             'list_data'     => '',
             'barang'        => $barang,
+            'barang_stok'   => $barang_stok,
+            'gudang'        => $this->M_global->getResult('m_gudang'),
             'satuan1'       => $this->M_global->getData('barang_satuan', ['kode_barang' => $param, 'ke' => 1]),
             'satuan2'       => $this->M_global->getData('barang_satuan', ['kode_barang' => $param, 'ke' => 2]),
             'satuan3'       => $this->M_global->getData('barang_satuan', ['kode_barang' => $param, 'ke' => 3]),
