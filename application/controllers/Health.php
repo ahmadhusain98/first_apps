@@ -1296,13 +1296,14 @@ class Health extends CI_Controller
     public function jdokter_list()
     {
         // Ambil data jadwal dari database
+        $cabang = $this->session->userdata('cabang');
         $events = $this->db->query(
             'SELECT CONCAT("Dokter: ", d.nama, ", Cabang: ", c.cabang, ", Poli: ", p.keterangan, ", Limit: ", IF(jd.limit_px = 0, "Tidak Terbatas", jd.limit_px), " Pasien") AS title, 
         d.nama, jd.id, jd.kode_dokter, jd.kode_cabang, jd.status, jd.hari AS hari, jd.time_start, jd.time_end, jd.comment, jd.limit_px
         FROM jadwal_dokter jd
         JOIN cabang c ON c.kode_cabang = jd.kode_cabang
         JOIN dokter d ON d.kode_dokter = jd.kode_dokter
-        JOIN m_poli p ON (p.kode_poli = jd.kode_poli)'
+        JOIN m_poli p ON (p.kode_poli = jd.kode_poli) WHERE jd.kode_cabang = "' . $cabang . '" AND jd.status = 1'
         )->result();
 
         $data = [];

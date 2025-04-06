@@ -777,6 +777,7 @@
         }
 
         cekPaket(notrx);
+        cekTarif(notrx);
     }
 
     // fungsi cek jual
@@ -870,6 +871,70 @@
                 })
             },
             error: function(result) {
+                error_proccess();
+            }
+        });
+    }
+
+    function cekTarif(notrx) {
+        $.ajax({
+            url: '<?= site_url() ?>Kasir/getTarif/' + notrx,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(result) { // jika fungsi berjalan dengan baik
+                if (result[0]['status'] == 1) { // jika mendapatkan respon 1
+
+                    bodyTarif.empty();
+                    var sumTarif = 0;
+                    var row = 1;
+                    $.each(result[1], function(index, value) {
+                        sumTarif += value.harga;
+
+                        bodyTarif.append(`<tr id="rowTarif${row}">
+                            <td>
+                                <button type="button" class="btn btn-danger" onclick="hapusTindakanTarif('${row}')">
+                                    <i class="fa-solid fa-delete-left"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <select name="kode_tarif_single[]" id="kode_tarif_single${row}" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tarif" onchange="getTarifSingle(this.value, '${row}')">
+                                    <option valie="${value.kode_tarif}">${value.nama_tarif}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control text-right" name="jasa_total[]" id="jasa_total${row}" value="${formatRpNoId(value.harga)}" readonly>
+                                <input type="hidden" class="form-control text-right" name="jasa_rs[]" id="jasa_rs${row}" value="${(value.jasa_rs)}" readonly>
+                                <input type="hidden" class="form-control text-right" name="jasa_dokter[]" id="jasa_dokter${row}" value="${(value.jasa_dokter)}" readonly>
+                                <input type="hidden" class="form-control text-right" name="jasa_pelayanan[]" id="jasa_pelayanan${row}" value="${(value.jasa_pelayanan)}" readonly>
+                                <input type="hidden" class="form-control text-right" name="jasa_poli[]" id="jasa_poli${row}" value="${(value.jasa_poli)}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control text-right" name="discpr_tarif[]" id="discpr_tarif${row}" value="0" onchange="changediscpr(this.value, '${row}')">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control text-right" name="discrp_tarif[]" id="discrp_tarif${row}" value="0" onchange="changediscrp(this.value, '${row}')">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control text-right" name="jumlah_tarif[]" id="jumlah_tarif${row}" value="${formatRpNoId(value.harga)}" readonly>
+                            </td>
+                        </tr>`);
+
+                        initailizeSelect2_tarif_single();
+
+                        $('#forRowTarif').val(row);
+
+                        row++;
+
+                    });
+                } else {
+                    var sumTarif = 0;
+                }
+
+                $('#sumTarif').val(sumTarif);
+
+                hitung_kurang();
+            },
+            error: function(result) { // jika fungsi error
                 error_proccess();
             }
         });

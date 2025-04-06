@@ -781,6 +781,29 @@ class Kasir extends CI_Controller
         echo json_encode($data);
     }
 
+    public function getTarif($no_trx)
+    {
+        $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+        $tarif = $this->M_global->getDataResult('emr_tarif', ['no_trx' => $no_trx]);
+
+        $data = [];
+        foreach ($tarif as $t) {
+            $m_tarif = $this->M_global->getData('tarif_jasa', ['kode_tarif' => $t->kode_tarif]);
+            $m_tarif2 = $this->M_global->getData('m_tarif', ['kode_tarif' => $t->kode_tarif]);
+            $data[] = [
+                'kode_tarif' => $m_tarif->kode_tarif,
+                'nama_tarif' => $m_tarif2->nama,
+                'jasa_rd' => $m_tarif->jasa_rs,
+                'jasa_dokter' => $m_tarif->jasa_dokter,
+                'jasa_pelayanan' => $m_tarif->jasa_pelayanan,
+                'jasa_poli' => $m_tarif->jasa_poli,
+                'harga' => ($m_tarif->jasa_rs + $m_tarif->jasa_dokter + $m_tarif->jasa_pelayanan + $m_tarif->jasa_poli),
+            ];
+        }
+
+        echo json_encode([['status' => 1, 'kode_member' => $pendaftaran->kode_member], $data]);
+    }
+
     public function getPaket($no_trx)
     {
         $kode_cabang = $this->session->userdata('cabang');

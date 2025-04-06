@@ -635,7 +635,7 @@ if (is_array($alr) && !empty($alr)) {
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody id="body_etarif">
-                                                                            <?php if (!empty($eresep)) : ?>
+                                                                            <?php if (!empty($etarif)) : ?>
                                                                                 <?php $no_etarif = 1;
                                                                                 foreach ($etarif as $et) : ?>
                                                                                     <tr id="row_etarif<?= $no_etarif ?>">

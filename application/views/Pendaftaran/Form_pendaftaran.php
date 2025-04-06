@@ -111,7 +111,7 @@
                                                         $jenis_bayar = $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $data_pendaftaran->kode_jenis_bayar]);
                                                         echo '<option value="' . $jenis_bayar->kode_jenis_bayar . '">' . $jenis_bayar->keterangan . '</option>';
                                                     else :
-                                                        echo '<option value="JB0000001">Perorangan</option>';
+                                                        echo '<option value="JB00000001">Perorangan</option>';
                                                     endif;
                                                     ?>
                                                 </select>
@@ -464,7 +464,7 @@
         }
 
         if (tipe_daftar.val() == 1) {
-            if (kode_poli.val() == '' || kode_poli.val() == null) { // jika kode_poli kosong/ null
+            if ($('#kode_poli').val() == '' || $('#kode_poli').val() == null) { // jika kode_poli kosong/ null
                 btnSimpan.attr('disabled', false);
 
                 return Swal.fire("Poli", "Sudah dipilih?", "question");
