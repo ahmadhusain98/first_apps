@@ -10,6 +10,7 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
                     <span class="font-weight-bold h4"><i class="fa-solid fa-bookmark text-primary"></i> Daftar Uang Muka Member</span>
                     <div class="float-right">
                         <button type="button" class="btn btn-primary" onclick="reloadTable()"><i class="fa-solid fa-rotate-right"></i>&nbsp;&nbsp;Refresh</button>
+                        <button type="button" class="btn btn-success" onclick="sinkron()"><i class="fa-solid fa-shuffle"></i>&nbsp;&nbsp;Sinkronisasi</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -132,5 +133,40 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
     function ubah(token_uangmuka) {
         // jalankan fungsi
         getUrl('Kasir/form_uangmuka/' + token_uangmuka);
+    }
+
+    // sinkron um
+    function sinkron() {
+        $.ajax({
+            url: `${siteUrl}Kasir/sinkron_um`,
+            type: `POST`,
+            dataType: `JSON`,
+            success: function(result) {
+                reloadTable()
+
+                setTimeout(function() {
+                    if (result.status == 1) {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Berhasil Sinkronisasi!",
+                            showConfirmButton: false,
+                            timer: 1000
+                        });
+                    } else {
+                        Swal.fire({
+                            position: "center",
+                            icon: "info",
+                            title: "Gagal Sinkronisasi!",
+                            showConfirmButton: false,
+                            timer: 1000
+                        });
+                    }
+                }, 1000);
+            },
+            error: function(error) {
+                error_proccess();
+            }
+        });
     }
 </script>

@@ -72,7 +72,7 @@ class Kasir extends CI_Controller
         $colum            = ['id', 'approved', 'token_pembayaran', 'invoice', 'inv_jual', 'no_trx', 'tgl_pembayaran', 'jam_pembayaran', 'kembalian', 'total', 'kode_user', 'jenis_pembayaran', 'cash', 'card', 'shift', 'um_masuk', 'kode_jenis_bayar', 'tercover'];
         $order            = 'id';
         $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
+        $order_arr        = ['id' => 'desc'];
         $kondisi_param2   = '';
         $kondisi_param1   = 'tgl_pembayaran';
 
@@ -444,7 +444,7 @@ class Kasir extends CI_Controller
         <tr>
             <td style="width: 23%;">Jenis</td>
             <td style="width: 2%;">:</td>
-            <td style="width: 75%;">'.$this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $pembayaran->kode_jenis_bayar])->keterangan.'</td>
+            <td style="width: 75%;">'.(($pembayaran->kode_jenis_bayar == '') ? 'Perorangan' : $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $pembayaran->kode_jenis_bayar])->keterangan ).'</td>
         </tr>
         <tr>
             <td style="width: 23%;">Bayar</td>
@@ -516,6 +516,11 @@ class Kasir extends CI_Controller
                 $this->db->query("UPDATE uang_muka SET uang_masuk = uang_masuk + '$um_masuk', uang_sisa = uang_sisa + '$um_masuk' WHERE last_invoice = '$pembayaran->invoice'");
             }
 
+            // jika non tunai
+            if ($pembayaran->kode_jenis_bayar != 'JB00000001') {
+                $this->M_global->updateData('piutang', ['tanggal' => date('Y-md'), 'jam' => date('H:i:s'), 'jumlah' => $pembayaran->total], ['referensi' => $pembayaran->invoice]);
+            }
+
             // update batal jadi 0
             $cek = [
                 $this->M_global->updateData('pembayaran', ['approved' => 1, 'batal' => 0, 'tgl_batal' => null, 'jam_batal' => null, 'user_batal' => null], ['token_pembayaran' => $token_pembayaran]),
@@ -537,6 +542,11 @@ class Kasir extends CI_Controller
             if ($pembayaran->cek_um > 0) {
                 $um_masuk = $pembayaran->um_masuk;
                 $this->db->query("UPDATE uang_muka SET uang_masuk = uang_masuk - '$um_masuk', uang_sisa = uang_sisa - '$um_masuk' WHERE last_invoice = '$pembayaran->invoice'");
+            }
+
+            // jika non tunai
+            if ($pembayaran->kode_jenis_bayar != 'JB00000001') {
+                $this->M_global->updateData('piutang', ['tanggal' => null, 'jam' => null, 'jumlah' => 0], ['referensi' => $pembayaran->invoice]);
             }
 
             // update batal jadi 1
@@ -600,6 +610,10 @@ class Kasir extends CI_Controller
             $kasir = $kasir;
         } else {
             $kasir = '';
+        }
+
+        if ($pembayaran->kode_jenis_bayar != 'JB00000001') {
+            $this->M_global->delData('piutang', ['referensi' => $pembayaran->invoice]);
         }
 
         $cek = [
@@ -854,7 +868,7 @@ class Kasir extends CI_Controller
         } else {
             echo json_encode(['status' => 0, 'kode_member' => $kode_member]);
             if ($kode_member == '') {
-                echo json_encode(['status' => 1]);
+                echo json_encode(['status' => 1, 'total' => $data->total]);
             } else {
                 echo json_encode(['status' => 0, 'kode_member' => $kode_member]);
             }
@@ -897,6 +911,7 @@ class Kasir extends CI_Controller
         $inv_jual               = $this->input->post('inv_jual');
         $kode_promo             = $this->input->post('kode_promo');
         $cek_um                 = $this->input->post('cek_um');
+        $kode_member            = $this->input->post('kode_member');
         $discpr_promo           = str_replace(',', '', $this->input->post('potongan_promo'));
         $paket                  = str_replace(',', '', $this->input->post('sumPaket'));
         $jual                   = str_replace(',', '', $this->input->post('sumJual'));
@@ -905,6 +920,12 @@ class Kasir extends CI_Controller
 
         $tercover               = str_replace(',', '', $this->input->post('tercover'));
         $kode_jenis_bayar       = $this->input->post('kode_jenis_bayar');
+
+        if($kode_jenis_bayar == '') {
+            $kode_jenis_bayar   = 'JB00000001';
+        } else {
+            $kode_jenis_bayar   = $kode_jenis_bayar;
+        }
 
         $kode_tarif             = $this->input->post('kode_tarif');
         $kunjungan              = $this->input->post('kunjungan');
@@ -920,6 +941,7 @@ class Kasir extends CI_Controller
 
         // query barang out header
         $cek_pendaftaran        = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+        
         // ambil kode member
         if ($cek_pendaftaran) { // jika ada di barang out header
             $kode_member        = $cek_pendaftaran->kode_member;
@@ -1069,7 +1091,7 @@ class Kasir extends CI_Controller
             ];
 
             if($kode_jenis_bayar != 'JB00000001') {
-                $this->M_global->updateData('piutang', $data_cover, ['referensi' => $token_pembayaran]);
+                $this->M_global->updateData('piutang', $data_cover, ['referensi' => $invoice]);
             }
         }
 
@@ -1174,6 +1196,11 @@ class Kasir extends CI_Controller
         }
     }
 
+    public function getDataJual($invoice) {
+        $penjualan = $this->M_global->getData('barang_out_header', ['invoice' => $invoice]);
+        $this->getMember($penjualan->kode_member);
+    }
+
     // report_um page
     public function report_um()
     {
@@ -1195,6 +1222,43 @@ class Kasir extends CI_Controller
         $this->template->load('Template/Content', 'Kasir/Uangmuka', $parameter);
     }
 
+    // sinkron um
+    public function sinkron_um() {
+        // Fetch all members
+        $members = $this->M_global->getResult('member');
+
+        foreach ($members as $member) {
+            $um_masuk = 0;
+            $um_keluar = 0;
+
+            // Calculate um_masuk and um_keluar from pembayaran
+            $pembayaran = $this->M_global->getDataResult('pembayaran', ['kode_member' => $member->kode_member]);
+            foreach ($pembayaran as $p) {
+                $um_masuk += $p->um_masuk;
+                $um_keluar += $p->um_keluar;
+            }
+
+            // Calculate um_masuk from pembayaran_uangmuka
+            $deposit = $this->M_global->getDataResult('pembayaran_uangmuka', ['kode_member' => $member->kode_member]);
+            foreach ($deposit as $d) {
+                $um_masuk += $d->total;
+            }
+
+            // Calculate um_sisa
+            $um_sisa = $um_masuk - $um_keluar;
+
+            // Update uang_muka for the current kode_member
+            $this->db->query("UPDATE uang_muka SET uang_masuk = ?, uang_keluar = ?, uang_sisa = ? WHERE kode_member = ?", [
+                $um_masuk,
+                $um_keluar,
+                $um_sisa,
+                $member->kode_member
+            ]);
+        }
+
+        echo json_encode(['status' => 1]);
+    }
+
     // fungsi list uang muka
     public function uangmuka_list($param1 = '')
     {
@@ -1203,7 +1267,7 @@ class Kasir extends CI_Controller
         $colum            = ['id', 'last_tgl', 'last_jam', 'last_invoice', 'kode_member', 'uang_masuk', 'uang_keluar', 'uang_sisa'];
         $order            = 'id';
         $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
+        $order_arr        = ['id' => 'desc'];
         $kondisi_param1   = '';
 
         // table server side tampung kedalam variable $list
@@ -1265,7 +1329,7 @@ class Kasir extends CI_Controller
         $colum            = ['id', 'invoice', 'tgl_pembayaran', 'jam_pembayaran', 'kode_member', 'jenis_pembayaran', 'cash', 'card', 'total', 'shift', 'kode_user'];
         $order            = 'id';
         $order2           = 'desc';
-        $order_arr        = ['id' => 'asc'];
+        $order_arr        = ['id' => 'desc'];
         $kondisi_param2   = '';
         $kondisi_param1   = 'tgl_pembayaran';
 

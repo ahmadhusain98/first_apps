@@ -84,6 +84,7 @@
                                             <td style="width: 5%;"> : </td>
                                             <td style="width: 75%;">
                                                 <span id="norm_px"></span>
+                                                <input type="hidden" id="kode_member" name="kode_member">
                                             </td>
                                         </tr>
                                         <tr>
@@ -707,13 +708,19 @@
                 $('#jenis_bayar').val(result.jenis_bayar);
                 $('#kode_jenis_bayar').val(result.kode_jenis_bayar);
 
-                if (result.kode_jenis_bayar == 'JB00000001') {
+                if (norm_px == 'U00001') {
                     bodyPerorangan.show(200);
                     bodyNonPerorangan.hide(200);
                 } else {
-                    bodyPerorangan.hide(200);
-                    bodyNonPerorangan.show(200);
+                    if (result.kode_jenis_bayar == 'JB00000001') {
+                        bodyPerorangan.show(200);
+                        bodyNonPerorangan.hide(200);
+                    } else {
+                        bodyPerorangan.hide(200);
+                        bodyNonPerorangan.show(200);
+                    }
                 }
+
 
                 getDataPx(norm_px, notrx_px);
             },
@@ -732,6 +739,7 @@
                 if (result.status == 1) {
                     if (result.cek == 1) {
                         $('#norm_px').text(result.norm);
+                        $('#kode_member').val(result.norm);
                         $('#nama_px').text(result.nama);
                         $('#umur_px').text(result.umur);
                         $('#nohp_px').text(result.nohp);
@@ -745,6 +753,7 @@
                         get_um(norm, 0);
                     } else {
                         $('#norm_px').text('U00001');
+                        $('#kode_member').val('U00001');
                         $('#nama_px').text('Umum');
                         $('#umur_px').text('-');
                         $('#nohp_px').text('-');
@@ -764,6 +773,8 @@
                         timer: 500
                     });
                 }
+
+                hitung_kurang();
             },
             error: function(error) {
                 error_proccess();
@@ -811,11 +822,45 @@
         });
     }
 
+    function getDataPx2(inv) {
+        $.ajax({
+            url: `${siteUrl}Kasir/getDataJual/${inv}`,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(result) {
+                console.table(result);
+                if (result.status == 1) {
+                    $('#norm_px').text(result.norm);
+                    $('#kode_member').val(result.norm);
+                    $('#nama_px').text(result.nama);
+                    $('#umur_px').text(result.umur);
+                    $('#nohp_px').text(result.nohp);
+                    $('#poli_px').text(result.poli);
+                    $('#dokter_px').text(result.dokter);
+                    $('#alamat_px').text(result.alamat);
+                } else {
+                    Swal.fire({
+                        position: "center",
+                        icon: "info",
+                        title: "Data pasien tidak ditemukan!",
+                        showConfirmButton: false,
+                        timer: 500
+                    });
+                }
+            },
+            error: function(error) {
+                error_proccess();
+            }
+        })
+    }
+
     // fungsi cek jual
     function cekJual(x) {
         if (x == '' || x == null) { // jika x kosong/ null
             return;
         }
+
+        getDataPx2(x);
 
         // jalankan fungsi
         $.ajax({
@@ -894,7 +939,7 @@
                             Rp. <span class="float-right" style="font-weight: normal;">${formatRpNoId(value.pajakrp)}</span>
                         </td>
                         <td>
-                            Rp. <span class="float-right" style="font-weight: normal;">${formatRpNoId(value.jumlah)}</span>
+                            Rp. <span class="float-right" style="font-weight: normal;">${formatRpNoId((Number(value.jumlah) + Number(value.pajakrp)))}</span>
                         </td>
                     </tr>`);
 
@@ -1318,17 +1363,18 @@
         var sumJual = parseFloat(($('#sumJual').val()).replaceAll(',', ''));
         var total = parseFloat(($('#total').val()).replaceAll(',', ''));
 
-        if ($('#kode_jenis_bayar').val() == 'JB00000001') {
+        if ($('#norm_px').text() == 'U00001') {
             var kurang = total - (sumJual + sumTarif + sumPaket);
         } else {
-            var cover = (sumJual + sumTarif + sumPaket);
-            $('#tercover').val(formatRpNoId(cover));
-            $('#total').val(formatRpNoId(cover));
-            var kurang = cover - (sumJual + sumTarif + sumPaket);
+            if ($('#kode_jenis_bayar').val() == 'JB00000001') {
+                var kurang = total - (sumJual + sumTarif + sumPaket);
+            } else {
+                var cover = (sumJual + sumTarif + sumPaket);
+                $('#tercover').val(formatRpNoId(cover));
+                $('#total').val(formatRpNoId(cover));
+                var kurang = cover - (sumJual + sumTarif + sumPaket);
+            }
         }
-
-        console.log($('#kode_jenis_bayar').val());
-        console.log(sumTarif + ' - ' + sumPaket + ' - ' + sumJual + ' - ' + total + ' - ' + kurang);
 
         $('#total_kurang').val(formatRpNoId(kurang));
 

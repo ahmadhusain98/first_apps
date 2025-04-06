@@ -1041,7 +1041,7 @@ class Transaksi extends CI_Controller
             'barang_po_in'      => $this->db->query('SELECT dpo.invoice, hpo.tgl_po, hpo.jam_po FROM barang_po_in_detail dpo JOIN barang_po_in_header hpo ON dpo.invoice = hpo.invoice WHERE hpo.kode_cabang = "' . $kode_cabang . '" AND (hpo.invoice NOT IN (SELECT ht.invoice_po FROM barang_in_header ht WHERE ht.kode_cabang = "' . $kode_cabang . '") OR dpo.qty != (SELECT COALESCE(SUM(dt.qty), 0) FROM barang_in_detail dt JOIN barang_in_header ht ON dt.invoice = ht.invoice WHERE ht.invoice_po = hpo.invoice AND dt.kode_barang = dpo.kode_barang AND ht.kode_cabang = "' . $kode_cabang . '"))GROUP BY dpo.invoice, hpo.tgl_po, hpo.jam_po')->result(),
             'role'              => $this->M_global->getResult('m_role'),
             'pajak'             => $this->M_global->getData('m_pajak', ['aktif' => 1])->persentase,
-            'list_barang'       => $this->M_global->getResult('barang'),
+            'list_barang'       => $this->db->query("SELECT b.* FROM barang b JOIN barang_cabang bc USING (kode_barang) WHERE bc.kode_cabang = '$kode_cabang'")->result(),
         ];
 
         $this->template->load('Template/Content', 'Barang/Form_barang_in', $parameter);
@@ -2674,7 +2674,7 @@ class Transaksi extends CI_Controller
             'barang_detail'     => $barang_detail,
             'role'              => $this->M_global->getResult('m_role'),
             'pajak'             => $this->M_global->getData('m_pajak', ['aktif' => 1])->persentase,
-            'list_barang'       => $this->db->query("SELECT b.*, bs.akhir AS stok FROM barang_stok bs JOIN barang b USING (kode_barang) WHERE kode_cabang = '$cabang' AND bs.akhir > 0")->result(),
+            'list_barang'       => $this->db->query("SELECT b.*, bs.akhir AS stok FROM barang_stok bs JOIN barang b USING (kode_barang) WHERE bs.kode_cabang = '$cabang' AND bs.akhir > 0")->result(),
         ];
 
         $this->template->load('Template/Content', 'Jual/Form_barang_out', $parameter);

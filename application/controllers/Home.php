@@ -59,6 +59,16 @@ class Home extends CI_Controller
 
         $saldo          = ((!empty($saldo_utama)) ? $saldo_utama->sisa : 0) + ((!empty($saldo_second)) ? $saldo_second->saldo : 0);
 
+        $barang_out     = $this->db->query('SELECT bd.*, b.hpp, b.harga_jual, IFNULL(bd.discrp, 0) AS discrp, IFNULL(bd.pajakrp, 0) AS pajakrp FROM barang_out_header bh JOIN barang_out_detail bd USING (invoice) JOIN barang b USING (kode_barang) WHERE bh.kode_cabang = "'.$sess_cabang.'"')->result();
+        
+        $total_untung = 0;
+        foreach ($barang_out as $bo) {
+            $qty_jual = $bo->qty;
+            $untung = ($bo->harga_jual - $bo->hpp);
+            $total = ($qty_jual * $untung) - (isset($bo->discrp) ? $bo->discrp : 0) + (isset($bo->pajakrp) ? $bo->pajakrp : 0);
+            $total_untung += $total;
+        }
+
         $parameter = [
             $this->data,
             'judul'             => 'Selamat Datang',
@@ -73,6 +83,7 @@ class Home extends CI_Controller
             'jumlah_daftar'     => count($header_daftar),
             'hutang'            => $this->db->query("SELECT SUM(jumlah) AS hutang FROM piutang WHERE kode_cabang = '$sess_cabang' AND jenis > 0 AND status = 0")->row(),
             'piutang'           => $this->db->query("SELECT SUM(jumlah) AS piutang FROM piutang WHERE kode_cabang = '$sess_cabang' AND jenis < 1 AND status = 0")->row(),
+            'result_jual'       => $total_untung,
         ];
 
         $this->template->load('Template/Content', 'Home/Dashboard', $parameter);
