@@ -92,7 +92,9 @@ if (is_array($alr) && !empty($alr)) {
         <input type="hidden" name="kode_member" id="kode_member" value="<?= $pendaftaran->kode_member ?>">
         <div class="row">
             <div class="col-md-3">
-                <div class="card card-outline card-primary" style="position: fixed; width: 19%;">
+                <div class="card card-outline card-primary" style="position: fixed; width: 19%;" data-aos="fade-up"
+                    data-aos-easing="linear"
+                    data-aos-duration="1000">
                     <div class="card-header">
                         <span class="font-weight-bold h4 text-primary">Riwayat Pasien</span>
                     </div>
@@ -110,7 +112,9 @@ if (is_array($alr) && !empty($alr)) {
                 </div>
             </div>
             <div class="col-md-9">
-                <div class="card card-outline card-primary">
+                <div class="card card-outline card-primary" data-aos="fade-down"
+                    data-aos-easing="linear"
+                    data-aos-duration="1000">
                     <div class="card-header">
                         <span class="font-weight-bold h4 text-primary"><i class="fa-solid fa-bookmark text-primary"></i> EMR Dokter</span>
                     </div>

@@ -2,7 +2,9 @@
 $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['kode_role']])->created;
 ?>
 
-<div class="row mb-3">
+<div class="row mb-3" data-aos="fade-down"
+    data-aos-easing="linear"
+    data-aos-duration="1000">
     <div class="col-lg-6 col-6">
         <div class="small-box bg-light">
             <div class="inner">
@@ -28,7 +30,9 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 </div>
 
 <form method="post" id="form_piutang">
-    <div class="row">
+    <div class="row" data-aos="fade-up"
+        data-aos-easing="linear"
+        data-aos-duration="1000">
         <div class="col-md-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">

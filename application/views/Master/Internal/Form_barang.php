@@ -1,5 +1,7 @@
 <form method="post" id="form_barang">
-    <div class="row">
+    <div class="row" data-aos="fade-down"
+        data-aos-easing="linear"
+        data-aos-duration="1000">
         <div class="col-md-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">
@@ -264,9 +266,9 @@
                             </thead>
                             <tbody>
                                 <?php if (!empty($barang_stok)) : ?>
-                                    <?php foreach($barang_stok as $bs) :
+                                    <?php foreach ($barang_stok as $bs) :
                                         $gudang = $this->M_global->getData('m_gudang', ['kode_gudang'  => $bs->kode_gudang]);
-                                        ?>
+                                    ?>
                                         <tr>
                                             <td>
                                                 <?= $gudang->nama ?>

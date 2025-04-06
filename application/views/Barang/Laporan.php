@@ -1,11 +1,15 @@
 <form method="post" id="form_report">
-    <div class="row">
+    <div class="row" data-aos="fade-down"
+        data-aos-easing="linear"
+        data-aos-duration="1000">
         <div class="col-md-12">
             <span class="font-weight-bold h4"><ion-icon name="bookmark-outline" style="color: red;"></ion-icon> Parameter</span>
         </div>
     </div>
     <br>
-    <div class="row">
+    <div class="row" data-aos="fade-down"
+        data-aos-easing="linear"
+        data-aos-duration="1000">
         <div class="col-md-6 offset-3 col-12">
             <div class="row mb-3">
                 <label for="laporan" class="control-label col-md-3 m-auto">Laporan</label>

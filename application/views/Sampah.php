@@ -25,7 +25,9 @@
 </style>
 
 <form method="post" id="form_sampah">
-    <div class="row">
+    <div class="row" data-aos="fade-down"
+        data-aos-easing="linear"
+        data-aos-duration="1000">
         <div class="col-md-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">

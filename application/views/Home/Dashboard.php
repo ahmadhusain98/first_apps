@@ -1,5 +1,12 @@
 <div class="row">
-    <div class="col-lg-3 col-6">
+    <div class="col-lg-3 col-6" data-aos="flip-left"
+        data-aos-offset="200"
+        data-aos-delay="50"
+        data-aos-duration="1500"
+        data-aos-easing="ease-in-out"
+        data-aos-mirror="true"
+        data-aos-once="false"
+        data-aos-anchor-placement="top-center">
         <div class="small-box bg-info">
             <div class="inner">
                 <h3>Rp. <span id="trx_out-counter">0</span></h3>
@@ -29,7 +36,14 @@
             <a type="button" onclick="getUrl('Transaksi/barang_out')" class="small-box-footer">Info Lanjut <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
-    <div class="col-lg-3 col-6">
+    <div class="col-lg-3 col-6" data-aos="flip-left"
+        data-aos-offset="200"
+        data-aos-delay="50"
+        data-aos-duration="1500"
+        data-aos-easing="ease-in-out"
+        data-aos-mirror="true"
+        data-aos-once="false"
+        data-aos-anchor-placement="top-center">
         <div class="small-box bg-success">
             <div class="inner">
                 <h3>Rp. <span id="trx_today-counter">0</span></h3>
@@ -59,7 +73,14 @@
             <a type="button" onclick="getUrl('Kasir')" class="small-box-footer">Info Lanjut <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
-    <div class="col-lg-3 col-6">
+    <div class="col-lg-3 col-6" data-aos="flip-left"
+        data-aos-offset="200"
+        data-aos-delay="50"
+        data-aos-duration="1500"
+        data-aos-easing="ease-in-out"
+        data-aos-mirror="true"
+        data-aos-once="false"
+        data-aos-anchor-placement="top-center">
         <div class="small-box bg-primary">
             <div class="inner">
                 <h3>Rp. <span id="profit-counter">0</span></h3>
@@ -89,7 +110,14 @@
             <a type="button" class="small-box-footer">&ensp;</a>
         </div>
     </div>
-    <div class="col-lg-3 col-6">
+    <div class="col-lg-3 col-6" data-aos="flip-left"
+        data-aos-offset="200"
+        data-aos-delay="50"
+        data-aos-duration="1500"
+        data-aos-easing="ease-in-out"
+        data-aos-mirror="true"
+        data-aos-once="false"
+        data-aos-anchor-placement="top-center">
         <div class="small-box bg-light">
             <div class="inner">
                 <h3>Rp. <span id="saldo-counter">0</span></h3>
@@ -129,13 +157,20 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-3 col-6">
+    <div class="col-lg-3 col-6" data-aos="flip-left"
+        data-aos-offset="200"
+        data-aos-delay="50"
+        data-aos-duration="1500"
+        data-aos-easing="ease-in-out"
+        data-aos-mirror="true"
+        data-aos-once="false"
+        data-aos-anchor-placement="top-center">
         <div class="small-box bg-warning">
             <div class="inner">
                 <h3>Rp. <span id="piutang-counter">0</span></h3>
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
-                        const targetValue = <?= (!empty($piutang) ? number_format($piutang->piutang) : 0) ?>;
+                        const targetValue = '<?= (!empty($piutang) ? number_format((float)$piutang->piutang) : 0) ?>';
                         const duration = 2000; // Animation duration in milliseconds
                         const counterElement = document.getElementById('piutang-counter');
                         let startValue = 0;
@@ -159,13 +194,20 @@
             <a type="button" class="small-box-footer">&ensp;</a>
         </div>
     </div>
-    <div class="col-lg-3 col-6">
+    <div class="col-lg-3 col-6" data-aos="flip-left"
+        data-aos-offset="200"
+        data-aos-delay="50"
+        data-aos-duration="1500"
+        data-aos-easing="ease-in-out"
+        data-aos-mirror="true"
+        data-aos-once="false"
+        data-aos-anchor-placement="top-center">
         <div class="small-box bg-danger">
             <div class="inner">
                 <h3>Rp. <span id="hutang-counter">0</span></h3>
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
-                        const targetValue = <?= (!empty($hutang) ? number_format($hutang->hutang) : 0) ?>;
+                        const targetValue = '<?= (!empty($hutang) ? number_format((float)$hutang->hutang, 2) : 0) ?>';
                         const duration = 2000; // Animation duration in milliseconds
                         const counterElement = document.getElementById('hutang-counter');
                         let startValue = 0;

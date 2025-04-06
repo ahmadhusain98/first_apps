@@ -6,7 +6,9 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
 ?>
 
 <form id="">
-    <div class="row mb-3">
+    <div class="row mb-3" data-aos="fade-down"
+        data-aos-easing="linear"
+        data-aos-duration="1000">
         <div class="col-md-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">

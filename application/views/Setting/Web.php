@@ -3,7 +3,14 @@ $created    = $this->M_global->getData('m_role', ['kode_role' => $this->data['ko
 ?>
 
 <form method="post" id="form_web">
-    <div class="row">
+    <div class="row" data-aos="zoom-in"
+        data-aos-offset="200"
+        data-aos-delay="50"
+        data-aos-duration="1500"
+        data-aos-easing="ease-in-out"
+        data-aos-mirror="true"
+        data-aos-once="false"
+        data-aos-anchor-placement="top-center">
         <div class="col-md-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">
