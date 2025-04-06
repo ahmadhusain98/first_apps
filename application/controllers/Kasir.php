@@ -706,6 +706,17 @@ class Kasir extends CI_Controller
         }
     }
 
+    public function cekJenisBayar($no_trx) {
+        $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);
+
+        if ($pendaftaran) {
+            $jenis_bayar = $this->M_global->getData('m_jenis_bayar', ['kode_jenis_bayar' => $pendaftaran->kode_jenis_bayar]);
+            echo json_encode(['status' => 1, 'jenis_bayar' => $jenis_bayar->keterangan, 'kode_jenis_bayar' => $pendaftaran->kode_jenis_bayar]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
+    }
+
     public function getMember($kode_member, $no_trx = '')
     {
         $pendaftaran = $this->M_global->getData('pendaftaran', ['no_trx' => $no_trx]);

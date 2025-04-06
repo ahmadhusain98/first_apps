@@ -776,8 +776,39 @@
             return Swal.fire("Pendaftaran", "Form sudah dipilih?", "info");
         }
 
+        cekJenisBayar(notrx);
+
         cekPaket(notrx);
         cekTarif(notrx);
+    }
+
+    function cekJenisBayar(notrx) {
+        $.ajax({
+            url: '<?= site_url() ?>Kasir/cekJenisBayar/' + notrx,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(result) { // jika fungsi berjalan dengan baik
+                if (result.status == 1) { // jika mendapatkan respon 1
+                    $('#kode_jenis_bayar').val(result.kode_jenis_bayar);
+                    $('#jenis_bayar').val(result.jenis_bayar);
+
+                    if (result.kode_jenis_bayar == 'JB00000001') {
+                        bodyPerorangan.show(200);
+                        bodyNonPerorangan.hide(200);
+                    } else {
+                        bodyPerorangan.hide(200);
+                        bodyNonPerorangan.show(200);
+                    }
+                } else {
+                    Swal.fire("Pendaftaran", "Tidak ditemukan!, coba lagi", "info");
+                }
+            },
+            error: function(result) { // jika fungsi error
+                btnSimpan.attr('disabled', false);
+
+                error_proccess();
+            }
+        });
     }
 
     // fungsi cek jual
@@ -898,7 +929,7 @@
                             </td>
                             <td>
                                 <select name="kode_tarif_single[]" id="kode_tarif_single${row}" class="form-control select2_tarif_single" data-placeholder="~ Pilih Tarif" onchange="getTarifSingle(this.value, '${row}')">
-                                    <option valie="${value.kode_tarif}">${value.nama_tarif}</option>
+                                    <option value="${value.kode_tarif}">${value.nama_tarif}</option>
                                 </select>
                             </td>
                             <td>
@@ -1290,12 +1321,14 @@
         if ($('#kode_jenis_bayar').val() == 'JB00000001') {
             var kurang = total - (sumJual + sumTarif + sumPaket);
         } else {
-            var total = (sumJual + sumTarif + sumPaket);
-            $('#tercover').val(formatRpNoId(total));
-            $('#total').val(formatRpNoId(total));
+            var cover = (sumJual + sumTarif + sumPaket);
+            $('#tercover').val(formatRpNoId(cover));
+            $('#total').val(formatRpNoId(cover));
+            var kurang = cover - (sumJual + sumTarif + sumPaket);
         }
 
-        var kurang = total - (sumJual + sumTarif + sumPaket);
+        console.log($('#kode_jenis_bayar').val());
+        console.log(sumTarif + ' - ' + sumPaket + ' - ' + sumJual + ' - ' + total + ' - ' + kurang);
 
         $('#total_kurang').val(formatRpNoId(kurang));
 
