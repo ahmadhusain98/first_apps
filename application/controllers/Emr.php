@@ -167,20 +167,23 @@ class Emr extends CI_Controller
             }
 
             if ($this->session->userdata('kode_role') == 'R0001') {
-                $button = '<button ' . $disabled2 . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-success" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Perawat" onclick="getUrl(' . "'" . "Emr/perawat/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-nurse"></i> Nurse</button>
-                <button ' . ((!empty($this->M_global->getData('emr_per', ['no_trx' => $rd->no_trx]))) ? '' : 'disabled') . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-primary" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Dokter" onclick="getUrl(' . "'" . "Emr/dokter/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-doctor"></i> Doctor</button>';
+                $button = '<button ' . $disabled2 . ' type="button" style="margin-bottom: 5px; margin-right: 5px; width: 49%;" class="btn btn-success" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Perawat" onclick="getUrl(' . "'" . "Emr/perawat/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-nurse"></i> Nurse</button>
+                <button ' . ((!empty($this->M_global->getData('emr_per', ['no_trx' => $rd->no_trx]))) ? '' : 'disabled') . ' type="button" style="margin-bottom: 5px; margin-right: 5px; width: 49%;" class="btn btn-primary" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Dokter" onclick="getUrl(' . "'" . "Emr/dokter/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-doctor"></i> Doctor</button>';
             } else {
                 if ($rd->kode_dokter == $this->data['kode_user']) {
-                    $button = '<button ' . $disabled2 . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-primary" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Dokter" onclick="getUrl(' . "'" . "Emr/dokter/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-doctor"></i> Doctor</button>';
+                    $button = '<button ' . $disabled2 . ' type="button" style="margin-bottom: 5px; margin-right: 5px; width: 49%;" class="btn btn-primary" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Dokter" onclick="getUrl(' . "'" . "Emr/dokter/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-doctor"></i> Doctor</button>';
                 } else {
-                    $button = '<button ' . $disabled2 . ' type="button" style="margin-bottom: 5px; margin-right: 5px;" class="btn btn-success" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Perawat" onclick="getUrl(' . "'" . "Emr/perawat/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-nurse"></i> Nurse</button>';
+                    $button = '<button ' . $disabled2 . ' type="button" style="margin-bottom: 5px; margin-right: 5px; width: 49%;" class="btn btn-success" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" title="Perawat" onclick="getUrl(' . "'" . "Emr/perawat/" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-user-nurse"></i> Nurse</button>';
                 }
             }
 
 
-            $row[] = '<div class="d-flex justify-content-center">
-                ' . $button . '
-                <div class="btn-group dropstart" style="margin-bottom: 5px;">
+            $row[] = '<div class="">
+                <button type="button" class="btn btn-info w-100" style="margin-bottom: 5px;" onclick="panggil(' . "'" . $rd->no_trx . "'" . ')"><i class="fa-solid fa-volume-high"></i> Panggil</button>
+                <div class="w-100 d-flex">
+                    ' . $button . '
+                </div>
+                <div class="btn-group dropstart w-100" style="margin-bottom: 5px;">
                     <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" ' . $disabled . '>
                         <i class="fa-solid fa-envelope-open-text"></i> Surat
                     </button>
@@ -206,6 +209,18 @@ class Emr extends CI_Controller
 
         // Kirimkan ke view
         echo json_encode($output);
+    }
+
+    // panggil px
+    public function panggil($no_trx)
+    {
+        $last = $this->db->query("SELECT MAX(panggil) AS panggil FROM layar_perawat LIMIT 1")->row()->panggil;
+        $cek = $this->db->query("UPDATE layar_perawat SET status = 1, panggil = $last + 1 WHERE no_trx = '$no_trx'");
+        if ($cek) {
+            echo json_encode(['status' => 1]);
+        } else {
+            echo json_encode(['status' => 0]);
+        }
     }
 
     // fungsi cetak suket_sakit

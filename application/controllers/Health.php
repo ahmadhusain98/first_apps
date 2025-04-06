@@ -1172,12 +1172,23 @@ class Health extends CI_Controller
             'shift'             => $shift,
         ];
 
+        $layar = [
+            'kode_cabang' => $kode_cabang,
+            'no_trx' => $no_trx,
+            'kode_ruang' => $kode_ruang,
+            'no_antrian' => $no_antrian,
+            'kode_poli' => $kode_poli,
+            'status' => 0,
+            'panggil' => 0,
+        ];
+
         if ($param == 1) { // jika param = 1
             aktifitas_user_transaksi('Pendaftaran', 'Mendaftarkan ' . $kode_member, $no_trx);
 
             // lakukan fungsi tambah ke table pendaftaran
             $cek = [
                 $this->M_global->insertData('pendaftaran', $isi),
+                $this->M_global->insertData('layar_perawat', $layar),
                 $this->M_global->updateData('member', ['status_regist' => 1, 'last_regist' => $no_trx], ['kode_member' => $kode_member]),
                 $this->M_global->updateData('bed_cabang', ['status_bed' => 1], ['kode_bed' => $kode_bed, 'kode_cabang' => $kode_cabang]),
                 $this->M_global->delData('daftar_ulang', ['kode_member' => $kode_member]),
@@ -1186,6 +1197,7 @@ class Health extends CI_Controller
             aktifitas_user_transaksi('Pendaftaran', 'Mengubah Pendaftaran' . $kode_member, $no_trx);
             // lakukan fungsi ubah ke table pendaftaran
             $cek = [
+                $this->M_global->updateData('layar_perawat', $layar, ['no_trx' => $no_trx]),
                 $this->M_global->updateData('pendaftaran', $isi, ['no_trx' => $no_trx]),
                 $this->M_global->delData('tarif_paket_pasien', ['no_trx' => $no_trx]),
                 $this->M_global->updateData('bed_cabang', ['status_bed' => 1], ['kode_bed' => $kode_bed, 'kode_cabang' => $kode_cabang]),

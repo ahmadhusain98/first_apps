@@ -28,7 +28,7 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-6">
@@ -318,5 +318,35 @@ $cek_sess_dokter = $this->M_global->getData('dokter', ['kode_dokter' => $cek_ses
 
     function tutupSurat() {
         $('#m_buatSurat').modal('hide');
+    }
+
+    function panggil(notrx) {
+        $.ajax({
+            url: siteUrl + 'Emr/panggil/' + notrx,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(result) {
+                if (result.status == 1) {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Berhasil Dipanggil!",
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+                } else {
+                    Swal.fire({
+                        position: "center",
+                        icon: "info",
+                        title: "Gagal Dipanggil!",
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+                }
+            },
+            error: function(error) {
+                error_proccess();
+            }
+        });
     }
 </script>
