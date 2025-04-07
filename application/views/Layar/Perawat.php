@@ -30,7 +30,7 @@
     setInterval(function() {
         panggil();
         antri();
-    }, 500);
+    }, 3000);
 
     function panggil() {
         <?php foreach ($ruang as $r) : ?>

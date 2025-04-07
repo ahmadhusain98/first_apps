@@ -68,47 +68,6 @@ class Layar extends CI_Controller
             </div>
         </div>
         <input type="hidden" name="now" id="now" value="<?= (($panggil) ? $panggil->no_antrian : '') ?>">
-        <script>
-            let currentNumber = document.getElementById('now').value;
-
-            function playAudio(number) {
-                const audioPath = '/assets/audio/';
-                const digits = number.split('');
-                let index = 0;
-
-                function playNext() {
-                    if (index < digits.length) {
-                        const audio = new Audio(audioPath + digits[index] + '.mp3');
-                        audio.onended = playNext;
-                        audio.play().catch(error => {
-                            console.error('Audio playback failed:', error);
-                        });
-                        index++;
-                    }
-                }
-
-                playNext();
-            }
-
-            document.addEventListener('DOMContentLoaded', () => {
-                const playButton = document.createElement('button');
-                playButton.textContent = 'Enable Audio';
-                playButton.style.display = 'none';
-                document.body.appendChild(playButton);
-
-                playButton.addEventListener('click', () => {
-                    playButton.style.display = 'none';
-                });
-
-                setInterval(() => {
-                    const newNumber = document.getElementById('now').value;
-                    if (newNumber && newNumber !== currentNumber) {
-                        currentNumber = newNumber;
-                        playAudio(currentNumber);
-                    }
-                }, 1000);
-            });
-        </script>
         <?php
     }
 
