@@ -214,7 +214,7 @@ class Emr extends CI_Controller
     // panggil px
     public function panggil($no_trx)
     {
-        $last = $this->db->query("SELECT MAX(panggil) AS panggil FROM layar_perawat LIMIT 1")->row()->panggil;
+        $last = $this->db->query("SELECT MAX(panggil) AS panggil FROM layar_perawat WHERE no_trx LIKE '%".date('Ymd')."%' ORDER BY no_trx DESC LIMIT 1")->row()->panggil;
         $cek = $this->db->query("UPDATE layar_perawat SET status = 1, panggil = $last + 1 WHERE no_trx = '$no_trx'");
         if ($cek) {
             echo json_encode(['status' => 1]);

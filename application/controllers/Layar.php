@@ -13,33 +13,9 @@ class Layar extends CI_Controller
         $this->load->model("M_auth");
         $this->load->model("M_order_emr");
 
-        if (!empty($this->session->userdata("email"))) { // jika session email masih ada
-
-            $id_menu = $this->M_global->getData('m_menu', ['url' => 'Transaksi'])->id;
-
-            // ambil isi data berdasarkan email session dari table user, kemudian tampung ke variable $user
-            $user = $this->M_global->getData("user", ["email" => $this->session->userdata("email")]);
-
-            $cek_akses_menu = $this->M_global->getData('akses_menu', ['id_menu' => $id_menu, 'kode_role' => $user->kode_role]);
-            if ($cek_akses_menu) {
-                // tampung data ke variable data public
-                $this->data = [
-                    'nama'      => $user->nama,
-                    'email'     => $user->email,
-                    'kode_role' => $user->kode_role,
-                    'actived'   => $user->actived,
-                    'foto'      => $user->foto,
-                    'shift'     => $this->session->userdata('shift'),
-                    'menu'      => 'Transaksi',
-                ];
-            } else {
-                // kirimkan kembali ke Auth
-                redirect('Where');
-            }
-        } else { // selain itu
-            // kirimkan kembali ke Auth
-            redirect('Auth');
-        }
+        // load libraries
+        $this->load->library('session');
+        $this->load->database();
     }
 
     public function perawat($cabang)
@@ -92,6 +68,47 @@ class Layar extends CI_Controller
             </div>
         </div>
         <input type="hidden" name="now" id="now" value="<?= (($panggil) ? $panggil->no_antrian : '') ?>">
+        <script>
+            let currentNumber = document.getElementById('now').value;
+
+            function playAudio(number) {
+                const audioPath = '/assets/audio/';
+                const digits = number.split('');
+                let index = 0;
+
+                function playNext() {
+                    if (index < digits.length) {
+                        const audio = new Audio(audioPath + digits[index] + '.mp3');
+                        audio.onended = playNext;
+                        audio.play().catch(error => {
+                            console.error('Audio playback failed:', error);
+                        });
+                        index++;
+                    }
+                }
+
+                playNext();
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const playButton = document.createElement('button');
+                playButton.textContent = 'Enable Audio';
+                playButton.style.display = 'none';
+                document.body.appendChild(playButton);
+
+                playButton.addEventListener('click', () => {
+                    playButton.style.display = 'none';
+                });
+
+                setInterval(() => {
+                    const newNumber = document.getElementById('now').value;
+                    if (newNumber && newNumber !== currentNumber) {
+                        currentNumber = newNumber;
+                        playAudio(currentNumber);
+                    }
+                }, 1000);
+            });
+        </script>
         <?php
     }
 
@@ -106,8 +123,7 @@ class Layar extends CI_Controller
               AND kode_ruang = "' . $kode_ruang . '" 
               AND kode_cabang = "' . $kode_cabang . '" 
               AND no_antrian <> "' . $now . '"
-              AND no_trx LIKE "%' . date('Ymd') . '%"
-              AND no_trx LIKE "%20250321%" LIMIT 2
+              AND no_trx LIKE "%' . date('Ymd') . '%" LIMIT 2
         ')->result();
         if ($panggil) :
             foreach ($panggil as $p) :

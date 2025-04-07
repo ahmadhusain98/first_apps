@@ -30,12 +30,11 @@
     setInterval(function() {
         panggil();
         antri();
-    }, 1000);
+    }, 500);
 
     function panggil() {
         <?php foreach ($ruang as $r) : ?>
                 (function(<?= $r->kode_ruang ?>) {
-                    console.log('<?= $r->kode_ruang ?>')
                     xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
